@@ -4,7 +4,7 @@ import { afterAll, afterEach, beforeAll } from "vitest";
 import { server } from "./src/test/msw-server";
 
 // Har test ka network MSW se — unhandled request par test fail ho (galti se asal API hit na ho)
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
+beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
 afterEach(() => {
   server.resetHandlers();
   cleanup();
