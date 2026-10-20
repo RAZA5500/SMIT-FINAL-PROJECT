@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { customerRoutes, publicRoutes } from "@/lib/routes/routes";
 
 const CONTACT_EMAIL = "info@freshes.com";
 
@@ -164,16 +165,16 @@ function SocialLinks() {
 }
 
 const QUICK_LINKS = [
-  { label: "About Us", href: "/" },
-  { label: "Shop", href: "/shop" },
-  { label: "Contact", href: "/" },
-  { label: "Blog", href: "/" },
+  { label: "About Us", href: publicRoutes.home },
+  { label: "Shop", href: publicRoutes.shop },
+  { label: "Contact", href: publicRoutes.home },
+  { label: "Blog", href: publicRoutes.home },
 ];
 
 const SERVICE_LINKS = [
-  { label: "My Account", href: "/" },
-  { label: "Order History", href: "/" },
-  { label: "Addresses", href: "/" },
+  { label: "My Account", href: customerRoutes.orders },
+  { label: "Order History", href: customerRoutes.orders },
+  { label: "Addresses", href: customerRoutes.addresses },
 ];
 
 export default function SiteFooter() {

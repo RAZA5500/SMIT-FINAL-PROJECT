@@ -1,0 +1,10 @@
+$ eslint "{src,apps,libs,test,prisma}/**/*.ts"  (check only, no --fix)
+eslint: 0 problems
+
+$ bun run typecheck
+$ tsc --noEmit -p tsconfig.json
+typecheck: no errors
+
+$ bun run build
+$ nest build
+build: ok

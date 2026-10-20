@@ -1,0 +1,55 @@
+$ next build
+▲ Next.js 16.2.12 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 6.8s
+  Running TypeScript ...
+  Finished TypeScript in 7.2s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/32) ...
+  Generating static pages using 11 workers (8/32) 
+  Generating static pages using 11 workers (16/32) 
+  Generating static pages using 11 workers (24/32) 
+✓ Generating static pages using 11 workers (32/32) in 1163ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /addresses
+├ ○ /admin/allergens
+├ ○ /admin/brands
+├ ○ /admin/brands/create
+├ ○ /admin/categories
+├ ○ /admin/coupons
+├ ○ /admin/customers
+├ ○ /admin/dashboard
+├ ○ /admin/inventory
+├ ○ /admin/inventory-transactions
+├ ○ /admin/notifications
+├ ○ /admin/order-listing
+├ ○ /admin/orders
+├ ƒ /admin/orders/[id]
+├ ○ /admin/products
+├ ƒ /admin/products/[id]/edit
+├ ○ /admin/products/new
+├ ○ /admin/profile
+├ ○ /admin/promotions
+├ ○ /admin/reviews
+├ ○ /admin/settings
+├ ○ /admin/testimonials
+├ ○ /cart
+├ ○ /checkout
+├ ○ /checkout/payment
+├ ○ /forgot-password
+├ ○ /login
+├ ○ /orders
+├ ƒ /orders/[id]
+├ ○ /register
+└ ○ /shop
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

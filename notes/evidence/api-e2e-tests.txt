@@ -1,0 +1,17 @@
+$ jest --config ./test/jest-e2e.json --runInBand
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+Datasource "db": PostgreSQL database "onlinemart_test", schema "public" at "localhost:5433"
+
+1 migration found in prisma/migrations
+
+
+No pending migrations to apply.
+[Nest] 13176  - 10/20/2026, 11:50:18 PM   ERROR [RefundService] Refund failed for payment a7ba3056-f3aa-4a4e-8c74-87ea01692f9d — will retry: gateway down
+
+Test Suites: 8 passed, 8 total
+Tests:       95 passed, 95 total
+Snapshots:   0 total
+Time:        69.692 s
+Ran all test suites.

@@ -1,0 +1,21 @@
+$ bun run test
+$ vitest run
+
+ RUN  v5.0.5 D:/SMIT_FINAL-PROJECT/student-web
+
+
+ Test Files  9 passed (9)
+      Tests  46 passed (46)
+   Start at  23:49:53
+   Duration  6.20s (environment 52%, tests 18%, setup 16%, import 11%, transform 2%)
+
+
+$ bun run lint
+$ eslint
+eslint: 0 problems
+
+$ bun run typecheck
+$ next typegen && tsc --noEmit
+Generating route types...
+✓ Types generated successfully
+typecheck: no errors

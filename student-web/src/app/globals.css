@@ -2,6 +2,9 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* Dark mode sirf `.dark` class se (shadcn default) — OS dark theme light Freshes design ko na badle */
+@custom-variant dark (&:is(.dark *));
+
 /* ---------------------------------------------------------------------------
    Inter — self-hosted with the same subsets and metric-matched fallback the
    production build ships, so text measures identically without a network hop.

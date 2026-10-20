@@ -77,7 +77,8 @@ export function AdminOrderDetailView({ id }: { id: string }) {
   const transitions = nextStatuses(order);
 
   return (
-    <main className="flex flex-1 flex-col gap-4 overflow-y-auto bg-navbar-bg p-4 sm:p-5">
+    // Fixed-height shell mein scroll — `*:shrink-0` taa ke cards (overflow-hidden) daba kar chhote na hon
+    <main className="flex flex-1 flex-col gap-4 overflow-y-auto bg-navbar-bg p-4 *:shrink-0 sm:p-5">
       <Card>
         <CardContent className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-col gap-2">
