@@ -4,7 +4,7 @@ import React, { useMemo, useState } from "react";
 import { ChevronDown, EllipsisVertical, Maximize2, RefreshCw, Search, SlidersHorizontal } from "lucide-react";
 import { ADMIN_SEARCH_INPUT_CLASS } from "@/components/admin/AdminListPage";
 import { ORDERS, ORDER_BOARD_TABS, ORDER_DETAILS } from "@/data/admin";
-import { formatPrice } from "@/data/products";
+import { formatMoney } from "@/lib/format";
 
 const CHROME_BUTTON =
   "inline-flex items-center justify-center gap-2 h-11 px-4 rounded-15 border border-gray-200 bg-white text-sm text-gray-600 hover:bg-gray-50 transition-colors shrink-0 cursor-pointer";
@@ -124,7 +124,7 @@ export default function AdminOrderListingPage() {
 
                   <div className="flex items-center justify-between mt-auto">
                     <span className="text-xs text-gray-400">items</span>
-                    <span className="text-sm font-semibold text-gray-900">£{formatPrice(o.total)}</span>
+                    <span className="text-sm font-semibold text-gray-900">{formatMoney(o.total)}</span>
                   </div>
 
                   <div className="flex items-center gap-1.5 flex-wrap">

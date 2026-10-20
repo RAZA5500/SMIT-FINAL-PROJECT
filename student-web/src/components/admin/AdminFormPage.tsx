@@ -72,10 +72,17 @@ export default function AdminFormPage({
   children,
   submitLabel,
   cancelHref,
+  formId,
+  onSubmit,
+  footer,
 }: {
   children: React.ReactNode;
-  submitLabel: string;
+  submitLabel?: string;
   cancelHref: string;
+  /** Live forms: RHF `handleSubmit` + apna footer (e.g. multi-step Back/Next) */
+  formId?: string;
+  onSubmit?: React.FormEventHandler<HTMLFormElement>;
+  footer?: React.ReactNode;
 }) {
   const router = useRouter();
 
@@ -83,19 +90,25 @@ export default function AdminFormPage({
     <main className="flex flex-col flex-1 bg-navbar-bg sm:p-4 sm:px-4 sm:py-5 overflow-y-auto lg:overflow-hidden min-h-0">
       <div className="bg-white rounded-xl shadow-card flex flex-col flex-1 min-h-0 overflow-hidden">
         <form
+          id={formId}
+          noValidate={Boolean(onSubmit)}
           className="flex flex-col gap-4 p-4 sm:p-6 flex-1 overflow-y-auto min-h-0"
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={onSubmit ?? ((e) => e.preventDefault())}
         >
           {children}
         </form>
 
-        <div className="flex justify-end items-center gap-3 px-6 py-4 border-gray-100 border-t shrink-0">
-          <button type="button" className={CANCEL_BUTTON_CLASS} onClick={() => router.push(cancelHref)}>
-            Cancel
-          </button>
-          <button type="submit" className={SUBMIT_BUTTON_CLASS}>
-            {submitLabel}
-          </button>
+        <div className="flex flex-wrap justify-end items-center gap-3 px-6 py-4 border-gray-100 border-t shrink-0">
+          {footer ?? (
+            <>
+              <button type="button" className={CANCEL_BUTTON_CLASS} onClick={() => router.push(cancelHref)}>
+                Cancel
+              </button>
+              <button type="submit" className={SUBMIT_BUTTON_CLASS}>
+                {submitLabel}
+              </button>
+            </>
+          )}
         </div>
       </div>
     </main>

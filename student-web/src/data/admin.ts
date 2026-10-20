@@ -27,31 +27,6 @@ export const ALLERGENS: AllergenRow[] = [
   { product: "Milk Pack", sku: "FRE-000033", allergen: "Gluten", presence: "Free From" },
 ];
 
-export interface InventoryRow {
-  product: string;
-  batchTracked: boolean;
-  status: "In Stock" | "Out Of Stock" | "Low Stock";
-  lowThreshold: number;
-  qtyOnHand: number;
-  batchCount: number | null;
-}
-
-export const INVENTORY: InventoryRow[] = [
-  { product: "Chicken Wings", batchTracked: false, status: "In Stock", lowThreshold: 15, qtyOnHand: 120, batchCount: null },
-  { product: "Chicken Thigh Fillets", batchTracked: true, status: "In Stock", lowThreshold: 10, qtyOnHand: 1000, batchCount: 1 },
-  { product: "Low Fat Fresh Milk", batchTracked: false, status: "In Stock", lowThreshold: 10, qtyOnHand: 100, batchCount: null },
-  { product: "Classic Potato Chips", batchTracked: false, status: "In Stock", lowThreshold: 10, qtyOnHand: 950, batchCount: null },
-  { product: "Pure Dairy Cream", batchTracked: false, status: "In Stock", lowThreshold: 10, qtyOnHand: 100, batchCount: null },
-  { product: "Premium Bananas", batchTracked: true, status: "In Stock", lowThreshold: 50, qtyOnHand: 1000, batchCount: 1 },
-  { product: "Frozen French Fries", batchTracked: false, status: "In Stock", lowThreshold: 50, qtyOnHand: 1000, batchCount: null },
-  { product: "Milk Pack", batchTracked: true, status: "In Stock", lowThreshold: 10, qtyOnHand: 2234, batchCount: 2 },
-  { product: "Full Cream Fresh Milk", batchTracked: true, status: "Out Of Stock", lowThreshold: 13, qtyOnHand: 0, batchCount: 1 },
-  { product: "Fresh Spinach", batchTracked: true, status: "Out Of Stock", lowThreshold: 100, qtyOnHand: 0, batchCount: 1 },
-  { product: "Fresh Bell Peppers", batchTracked: true, status: "Out Of Stock", lowThreshold: 20, qtyOnHand: 0, batchCount: 1 },
-  { product: "Royal Gala Apples", batchTracked: true, status: "Out Of Stock", lowThreshold: 25, qtyOnHand: 0, batchCount: 1 },
-  { product: "Crisp Romaine Lettuce", batchTracked: true, status: "Out Of Stock", lowThreshold: 30, qtyOnHand: 0, batchCount: 1 },
-];
-
 export type TransactionType = "RELEASED" | "CONSUMED" | "RESERVED" | "RECEIVED";
 
 export interface TransactionRow {
@@ -79,24 +54,6 @@ export const TRANSACTIONS: TransactionRow[] = Array.from({ length: 202 }, (_, i)
   return { product, type, quantity: 1 };
 });
 
-export interface UserRow {
-  name: string;
-  email: string;
-  phone?: string;
-  role: "Customer" | "Super Admin" | "Admin";
-  lastLogin?: string;
-  status: "Active" | "Inactive";
-}
-
-export const USERS: UserRow[] = [
-  { name: "Hamza khan", email: "hamzak80800@gmail.com", role: "Customer", lastLogin: "15 Sept 2026, 14:17", status: "Active" },
-  { name: "munimdalmiatest1", email: "munimdalmiatest2@gmail.com", role: "Customer", lastLogin: "16 Sept 2026, 21:59", status: "Active" },
-  { name: "berimo", email: "berimo3506@fidhost.com", role: "Customer", lastLogin: "07 Sept 2026, 08:29", status: "Active" },
-  { name: "Munim Customer New", email: "sorobix509@prorises.com", phone: "+441234567890", role: "Customer", lastLogin: "04 Sept 2026, 18:20", status: "Active" },
-  { name: "MR123", email: "mutahirkareem820@gmail.com", role: "Customer", lastLogin: "17 Sept 2026, 19:31", status: "Active" },
-  { name: "Shahbaz Affandi", email: "rajashabax4@gmail.com", role: "Customer", status: "Active" },
-  { name: "Admin User", email: "admin@gmail.com", role: "Super Admin", lastLogin: "Today, 22:05", status: "Active" },
-];
 
 export interface OrderRow {
   reference: string;

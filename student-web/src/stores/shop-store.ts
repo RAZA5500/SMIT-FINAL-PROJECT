@@ -35,8 +35,7 @@ export const useShopStore = create<ShopState>()((set) => ({
 
 /** Per-item debounce: aakhri click ke 350 ms baad sirf ek sync */
 export function scheduleCartSync(productId: string, sync: () => void): void {
-  const existing = syncTimers.get(productId);
-  if (existing) clearTimeout(existing);
+  cancelCartSync(productId);
   syncTimers.set(
     productId,
     setTimeout(() => {
@@ -44,4 +43,11 @@ export function scheduleCartSync(productId: string, sync: () => void): void {
       sync();
     }, CART_SYNC_DEBOUNCE_MS),
   );
+}
+
+/** Item remove ho raha ho to pending quantity sync na chale (warna 404) */
+export function cancelCartSync(productId: string): void {
+  const existing = syncTimers.get(productId);
+  if (existing) clearTimeout(existing);
+  syncTimers.delete(productId);
 }

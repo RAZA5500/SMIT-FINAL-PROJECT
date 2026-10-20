@@ -16,7 +16,7 @@ export const authButtonClass =
 export function AuthBackground() {
   return (
     <div className="absolute inset-0 z-0">
-      <Image alt="Background" fill sizes="100vw" priority className="object-cover" src="/login-bg.svg" />
+      <Image alt="Background" fill sizes="100vw" loading="eager" className="object-cover" src="/login-bg.svg" />
     </div>
   );
 }

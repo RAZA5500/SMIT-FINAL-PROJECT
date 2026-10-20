@@ -18,19 +18,18 @@ function requireNoteForOther(data: { reason: string; note?: string }, ctx: z.Ref
   }
 }
 
-export const customerCancelOrderSchema = z
-  .object({
-    reason: z.enum(CUSTOMER_CANCEL_REASONS, { error: "Please choose a reason" }),
-    note,
-  })
-  .superRefine(requireNoteForOther);
+/** Customer aur admin ki reason lists alag, rules same */
+export function cancelOrderSchema<const R extends readonly [string, ...string[]]>(reasons: R) {
+  return z
+    .object({
+      reason: z.enum(reasons, { error: "Please choose a reason" }),
+      note,
+    })
+    .superRefine(requireNoteForOther);
+}
 
-export const adminCancelOrderSchema = z
-  .object({
-    reason: z.enum(ADMIN_CANCEL_REASONS, { error: "Please choose a reason" }),
-    note,
-  })
-  .superRefine(requireNoteForOther);
+export const customerCancelOrderSchema = cancelOrderSchema(CUSTOMER_CANCEL_REASONS);
+export const adminCancelOrderSchema = cancelOrderSchema(ADMIN_CANCEL_REASONS);
 
 export type CustomerCancelOrderInput = z.input<typeof customerCancelOrderSchema>;
 export type CustomerCancelOrderValues = z.infer<typeof customerCancelOrderSchema>;

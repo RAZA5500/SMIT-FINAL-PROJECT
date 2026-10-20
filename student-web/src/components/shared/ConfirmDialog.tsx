@@ -20,7 +20,9 @@ interface ConfirmDialogProps {
   title: string;
   description?: string;
   confirmLabel?: string;
-  onConfirm: () => void;
+  /** Simple confirm; `formId` diya ho to button us form ko submit karta hai (validation form mein) */
+  onConfirm?: () => void;
+  formId?: string;
   isPending?: boolean;
   /** Destructive pattern: "cannot be undone" badge + confirm checkbox (FLOW-MD 07 §3) */
   destructive?: boolean;
@@ -46,6 +48,7 @@ function ConfirmDialogBody({
   description,
   confirmLabel = "Confirm",
   onConfirm,
+  formId,
   onCancel,
   isPending = false,
   destructive = false,
@@ -84,11 +87,13 @@ function ConfirmDialogBody({
           Cancel
         </Button>
         <LoadingButton
+          type={formId ? "submit" : "button"}
+          form={formId}
           variant={destructive ? "destructive" : "cta"}
           className={destructive ? "bg-destructive text-white hover:bg-destructive/90" : undefined}
           isLoading={isPending}
           disabled={!canConfirm || (destructive && !acknowledged)}
-          onClick={onConfirm}
+          onClick={formId ? undefined : onConfirm}
         >
           {confirmLabel}
         </LoadingButton>

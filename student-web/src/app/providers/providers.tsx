@@ -3,7 +3,6 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { Toaster } from "sonner";
-import { CartProvider } from "@/context/CartContext";
 import { queryClient } from "@/lib/query-client";
 import { useAuthStore } from "@/stores/auth-store";
 
@@ -16,7 +15,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <CartProvider>{children}</CartProvider>
+      {children}
       {/* Matches the live site: sonner, top-right, rich colours, 12px gap. */}
       <Toaster position="top-right" richColors closeButton expand gap={12} visibleToasts={3} />
     </QueryClientProvider>

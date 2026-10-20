@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import React from "react";
-import { ChevronDown, ChevronLeft, ChevronRight, Funnel, Plus, Search } from "lucide-react";
+import { ChevronDown, Funnel, Plus, Search } from "lucide-react";
+import { Pagination } from "@/components/shared/Pagination";
 
 /* Shell shared by every admin list screen: white card, sticky toolbar,
    scrolling table area and a pagination footer. */
@@ -27,6 +29,12 @@ const SEARCH_WRAPPER = {
 export const TH_CLASS = "px-3 py-4 font-semibold text-muted-green text-sm normal-case text-left";
 export const TH_CENTER_CLASS = "px-3 py-4 font-semibold text-muted-green text-sm normal-case text-center";
 export const TR_CLASS = "hover:bg-gray-50 border-table-row-border border-b transition-colors cursor-pointer";
+/** Live tables: row khud clickable nahi (actions menu / links se kaam) */
+export const TR_STATIC_CLASS = "hover:bg-gray-50 border-table-row-border border-b transition-colors";
+export const TD_CLASS = "px-3 py-3 text-sm text-gray-700";
+/** Shared SearchInput / SelectField ko admin toolbar ka look (h-12, shadow-btn) */
+export const ADMIN_SEARCH_FIELD_CLASS = "h-12 border-gray-200 focus-visible:border-brand-green";
+export const ADMIN_FILTER_FIELD_CLASS = "h-12 min-w-40 border-gray-300 shadow-btn";
 
 export function AdminSearch({
   value,
@@ -74,9 +82,9 @@ export function PrimaryAction({
     </>
   );
   return href ? (
-    <a href={href} className={className}>
+    <Link href={href} className={className}>
       {content}
-    </a>
+    </Link>
   ) : (
     <button type="button" onClick={onClick} className={className}>
       {content}
@@ -164,35 +172,11 @@ export function RowActions({
   );
 }
 
-function PageButton({
-  children,
-  active,
-  disabled,
-  onClick,
-  chrome,
-}: {
-  children: React.ReactNode;
-  active?: boolean;
-  disabled?: boolean;
-  onClick?: () => void;
-  chrome?: boolean;
-}) {
-  const base = chrome
-    ? "w-8 h-8 flex items-center justify-center rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-    : `w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium transition-all ${
-        active ? "bg-cta-green text-white shadow-sm" : "text-gray-600 hover:bg-gray-100"
-      }`;
-  return (
-    <button type="button" className={base} disabled={disabled} onClick={onClick}>
-      {children}
-    </button>
-  );
-}
-
 export default function AdminListPage({
   toolbar,
   toolbarClassName = "hidden lg:flex flex-col gap-2",
   mobileToolbar,
+  responsiveToolbar = false,
   children,
   total,
   page,
@@ -204,6 +188,8 @@ export default function AdminListPage({
   /** Production uses a single row on most screens; a few stack two rows. */
   toolbarClassName?: string;
   mobileToolbar?: React.ReactNode;
+  /** Live screens: toolbar ek hi dafa render (form ids duplicate nahi), chhoti screen par wrap */
+  responsiveToolbar?: boolean;
   children: React.ReactNode;
   total: number;
   page: number;
@@ -212,15 +198,19 @@ export default function AdminListPage({
   noun: string;
 }) {
   const pageCount = Math.max(1, Math.ceil(total / pageSize));
-  const first = total === 0 ? 0 : (page - 1) * pageSize + 1;
-  const last = Math.min(page * pageSize, total);
 
   return (
     <main className="flex flex-col flex-1 bg-navbar-bg sm:p-4 sm:px-4 sm:py-5 overflow-y-auto lg:overflow-hidden">
       <div className="flex flex-col flex-1 bg-white shadow-card sm:rounded-xl min-h-0">
         <div className="px-5 pt-4 pb-2 shrink-0">
-          <div className={toolbarClassName}>{toolbar}</div>
-          <div className="lg:hidden flex flex-col gap-3">{mobileToolbar ?? toolbar}</div>
+          {responsiveToolbar ? (
+            <div className="flex flex-wrap items-center gap-3">{toolbar}</div>
+          ) : (
+            <>
+              <div className={toolbarClassName}>{toolbar}</div>
+              <div className="lg:hidden flex flex-col gap-3">{mobileToolbar ?? toolbar}</div>
+            </>
+          )}
         </div>
 
         <div className="flex flex-col flex-1 min-h-0">
@@ -228,28 +218,19 @@ export default function AdminListPage({
             <div className="shadow-card m-5 border-table rounded-5 overflow-hidden overflow-x-auto">{children}</div>
           </div>
 
-          {/* Production hides the footer entirely when nothing matches. */}
-          <div
-            className={`${total === 0 ? "hidden " : ""}flex items-center justify-between px-5 py-3 border-t border-gray-100 bg-pagination-bg rounded-b-xl`}
-          >
-            <p className="text-sm text-gray-500">
-              Showing <span className="font-semibold text-gray-800">{`${first}-${last}`}</span> of{" "}
-              <span className="font-semibold text-gray-800">{total}</span> {noun}
-            </p>
-            <div className="flex items-center gap-1">
-              <PageButton chrome disabled={page <= 1} onClick={() => onPageChange(page - 1)}>
-                <ChevronLeft className="w-4 h-4" />
-              </PageButton>
-              {Array.from({ length: pageCount }, (_, i) => i + 1).map((p) => (
-                <PageButton key={p} active={p === page} onClick={() => onPageChange(p)}>
-                  {p}
-                </PageButton>
-              ))}
-              <PageButton chrome disabled={page >= pageCount} onClick={() => onPageChange(page + 1)}>
-                <ChevronRight className="w-4 h-4" />
-              </PageButton>
+          {/* Production hides the footer entirely when nothing matches (Pagination total 0 par null). */}
+          {total > 0 && (
+            <div className="px-5 py-3 border-t border-gray-100 bg-pagination-bg rounded-b-xl">
+              <Pagination
+                currentPage={page}
+                totalPages={pageCount}
+                total={total}
+                limit={pageSize}
+                onPageChange={onPageChange}
+                itemLabel={noun}
+              />
             </div>
-          </div>
+          )}
         </div>
       </div>
     </main>

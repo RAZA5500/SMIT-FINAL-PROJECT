@@ -1,7 +1,10 @@
+import type { Metadata } from "next";
+import { AddressesView } from "./(components)/AddressesView";
+
+export const metadata: Metadata = {
+  title: "Addresses",
+};
+
 export default function AddressesPage() {
-  return (
-    <main className="pt-24 pb-10 customer-container">
-      <h1 className="section-heading">My Addresses</h1>
-    </main>
-  );
+  return <AddressesView />;
 }

@@ -1,8 +1,11 @@
-export default async function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
+import type { Metadata } from "next";
+import { OrderDetailView } from "./(components)/OrderDetailView";
+
+export const metadata: Metadata = {
+  title: "Order Details",
+};
+
+export default async function OrderDetailPage({ params }: PageProps<"/orders/[id]">) {
   const { id } = await params;
-  return (
-    <main className="pt-24 pb-10 customer-container">
-      <h1 className="section-heading">Order {id}</h1>
-    </main>
-  );
+  return <OrderDetailView id={id} />;
 }

@@ -241,6 +241,7 @@
   --shadow-card: 0px 2px 8px 0px #0000000f;
   --shadow-btn: 0px 2px 8px 0px #0000001a;
   --shadow-overlay: 0px 2px 4px 0px #0000001a;
+  --shadow-product: 0px 10px 20px 0px #48484829;
 
   /* misc */
   --leading-120: 1.2;
@@ -307,6 +308,7 @@
 
   --search-max-width: 350px;
   --product-thumb-size: 70px;
+  --product-card-image-h: 270px;
   --size-modal-detail-h: 38.75rem;
   --dashboard-chart-height: 392px;
 
@@ -735,6 +737,9 @@
 }
 @utility w-product-thumb {
   width: var(--product-thumb-size);
+}
+@utility h-product-card-image {
+  height: var(--product-card-image-h);
 }
 @utility h-promo-card {
   height: var(--promo-card-h);

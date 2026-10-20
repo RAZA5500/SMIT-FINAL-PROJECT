@@ -1,7 +1,10 @@
+import type { Metadata } from "next";
+import { CartView } from "./(components)/CartView";
+
+export const metadata: Metadata = {
+  title: "Your Cart",
+};
+
 export default function CartPage() {
-  return (
-    <main className="pt-24 pb-10 customer-container">
-      <h1 className="section-heading">Your Cart</h1>
-    </main>
-  );
+  return <CartView />;
 }

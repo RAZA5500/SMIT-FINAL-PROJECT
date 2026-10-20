@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -193,13 +194,11 @@ export default function SiteFooter() {
       {/* ---------------------------------------------------------------- */}
       <div className="lg:hidden flex flex-col items-start pt-15 header-container">
         <Link className="inline-flex items-center" aria-label="Freshes home" href="/">
-          <img
+          <Image
             alt="Freshes"
-            width="113"
-            height="50"
-            decoding="async"
+            width={113}
+            height={50}
             className="w-28 h-12 object-contain"
-            style={{ color: "transparent" }}
             src="/branding/logo-footer.svg"
           />
         </Link>
@@ -290,13 +289,11 @@ export default function SiteFooter() {
       <div className="hidden lg:flex items-start gap-8 py-15 gap header-container">
         <div className="flex flex-col">
           <Link className="inline-flex relative items-center shrink-0" aria-label="Freshes home" href="/">
-            <img
+            <Image
               alt="Freshes"
-              width="156"
-              height="38"
-              decoding="async"
+              width={156}
+              height={38}
               className="w-footer-logo h-footer-logo object-contain object-left"
-              style={{ color: "transparent" }}
               src="/branding/logo-footer.svg"
             />
           </Link>

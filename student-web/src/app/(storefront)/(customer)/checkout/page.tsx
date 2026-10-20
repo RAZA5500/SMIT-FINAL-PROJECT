@@ -1,7 +1,10 @@
+import type { Metadata } from "next";
+import { CheckoutView } from "./(components)/CheckoutView";
+
+export const metadata: Metadata = {
+  title: "Checkout",
+};
+
 export default function CheckoutPage() {
-  return (
-    <main className="pt-24 pb-10 customer-container">
-      <h1 className="section-heading">Checkout</h1>
-    </main>
-  );
+  return <CheckoutView />;
 }

@@ -1,18 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
 
-const PRODUCT_IMAGE_STYLE: React.CSSProperties = {
-  position: "absolute",
-  height: "100%",
-  width: "100%",
-  left: 0,
-  top: 0,
-  right: 0,
-  bottom: 0,
-  color: "transparent",
-};
-
 const DESKTOP_CTA_CLASS =
-  "group/button inline-flex shrink-0 items-center justify-center rounded-5 border border-transparent bg-clip-padding text-xs/relaxed font-medium whitespace-nowrap transition-all duration-200 outline-none select-none disabled:pointer-events-none disabled:opacity-50 focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 cursor-pointer hover:-translate-y-0.5 hover:opacity-95 active:scale-[0.98] [&_svg]:pointer-events-none [&_svg]:shrink-0 rounded-5 bg-white text-brand-green shadow-none hover:bg-white hover:text-brand-green desktop:h-[77px] max-desktop:h-[50px] gap-2 px-8 desktop:px-[60px] max-desktop:text-lg desktop:text-[24px] leading-none [&_svg:not([class*='size-'])]:size-6 mt-section-md w-fit";
+  "group/button inline-flex shrink-0 items-center justify-center rounded-5 border border-transparent bg-clip-padding text-xs/relaxed font-medium whitespace-nowrap transition-all duration-200 outline-none select-none disabled:pointer-events-none disabled:opacity-50 focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 cursor-pointer hover:-translate-y-0.5 hover:opacity-95 active:scale-[0.98] [&_svg]:pointer-events-none [&_svg]:shrink-0 rounded-5 bg-white text-brand-green shadow-none hover:bg-white hover:text-brand-green desktop:h-[77px] max-desktop:h-[50px] gap-2 px-8 desktop:px-15 max-desktop:text-lg desktop:text-[24px] leading-none [&_svg:not([class*='size-'])]:size-6 mt-section-md w-fit";
 
 function ArrowGlyph({ className }: { className: string }) {
   return (
@@ -45,22 +35,20 @@ export default function HeroSection() {
       <div className="md:hidden relative w-full">
         <div className="relative w-full min-h-[40vh] overflow-hidden">
           <div className="bottom-0 left-0 z-0 absolute w-full">
-            <img
+            <Image
               alt=""
-              width="1440"
-              height="460"
-              decoding="async"
+              width={1440}
+              height={460}
               className="w-full h-48 object-cover object-left"
-              style={{ color: "transparent" }}
               src="/hero/green-wave-bg.svg"
             />
           </div>
           <div className="right-0 z-0 absolute inset-y-0 w-1/2 overflow-hidden pointer-events-none">
-            <img
+            <Image
               alt="Fresh products"
-              decoding="async"
+              fill
+              sizes="50vw"
               className="object-bottom object-contain select-none"
-              style={PRODUCT_IMAGE_STYLE}
               src="/hero/product-image.svg"
             />
           </div>
@@ -108,13 +96,12 @@ export default function HeroSection() {
       <div className="hidden md:block w-full">
         <div className="relative flex w-full h-[80vh] overflow-hidden">
           <div className="bottom-0 left-0 z-0 absolute w-full">
-            <img
+            <Image
               alt=""
-              width="1440"
-              height="460"
-              decoding="async"
+              width={1440}
+              height={460}
+              loading="eager"
               className="w-full h-auto"
-              style={{ color: "transparent" }}
               src="/hero/green-wave-bg.svg"
             />
           </div>
@@ -146,11 +133,12 @@ export default function HeroSection() {
             </div>
           </div>
           <div className="right-0 z-10 absolute inset-y-0 w-1/2 overflow-hidden pointer-events-none">
-            <img
+            <Image
               alt="Fresh products"
-              decoding="async"
+              fill
+              loading="eager"
+              sizes="50vw"
               className="object-bottom object-contain select-none"
-              style={PRODUCT_IMAGE_STYLE}
               src="/hero/product-image.svg"
             />
           </div>

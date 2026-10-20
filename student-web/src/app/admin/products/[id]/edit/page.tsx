@@ -1,4 +1,11 @@
-export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
+import type { Metadata } from "next";
+import { EditProductView } from "../../(components)/EditProductView";
+
+export const metadata: Metadata = {
+  title: "Edit Product",
+};
+
+export default async function EditProductPage({ params }: PageProps<"/admin/products/[id]/edit">) {
   const { id } = await params;
-  return <main className="flex-1 p-5">Edit product {id}</main>;
+  return <EditProductView id={id} />;
 }

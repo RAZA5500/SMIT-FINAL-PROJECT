@@ -25,8 +25,7 @@ import {
   Users,
   UserStar,
 } from "lucide-react";
-import { toast } from "sonner";
-import { publicRoutes } from "@/lib/routes/routes";
+import { useLogout } from "@/hooks/useLogout";
 import { useAuthStore } from "@/stores/auth-store";
 
 /* ------------------------------------------------------------------ */
@@ -165,16 +164,7 @@ function CollapsibleEntry({ entry, pathname }: { entry: Extract<NavEntry, { kind
 }
 
 function SidebarBody({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
-  const router = useRouter();
-  const clearSession = useAuthStore((state) => state.logout);
-
-  const logout = () => {
-    clearSession();
-    toast.success("Signed Out Successfully", {
-      description: "You have been logged out. See you soon!",
-    });
-    router.push(publicRoutes.login);
-  };
+  const logout = useLogout();
 
   return (
     <div data-sidebar="sidebar" data-slot="sidebar-inner" className="flex flex-col bg-sidebar size-full">
@@ -325,11 +315,26 @@ export const ADMIN_PAGE_TITLES: Record<string, string> = {
   "/admin/notifications": "Notifications",
 };
 
+/** Dynamic routes (`/admin/products/[id]/edit`, `/admin/orders/[id]`) — back button ke saath */
+const ADMIN_DYNAMIC_TITLES: { pattern: RegExp; title: string }[] = [
+  { pattern: /^\/admin\/products\/[^/]+\/edit$/, title: "Edit Product" },
+  { pattern: /^\/admin\/orders\/[^/]+$/, title: "Order Details" },
+];
+
+function adminPageTitle(pathname: string): { title?: string; showBack: boolean } {
+  const staticTitle = ADMIN_PAGE_TITLES[pathname];
+  if (staticTitle) {
+    return { title: staticTitle, showBack: pathname.endsWith("/create") || pathname.endsWith("/new") };
+  }
+  const dynamic = ADMIN_DYNAMIC_TITLES.find(({ pattern }) => pattern.test(pathname));
+  return { title: dynamic?.title, showBack: Boolean(dynamic) };
+}
+
 export function AdminNavbar({ onMenuClick }: { onMenuClick: () => void }) {
   const user = useAuthStore((state) => state.user);
   const pathname = usePathname();
   const router = useRouter();
-  const title = ADMIN_PAGE_TITLES[pathname];
+  const { title, showBack } = adminPageTitle(pathname);
   const initials = (user?.name || "Admin User")
     .split(/\s+/)
     .map((w) => w[0])
@@ -349,8 +354,8 @@ export function AdminNavbar({ onMenuClick }: { onMenuClick: () => void }) {
 
         {title ? (
           <>
-            {/* The create screens put a back control ahead of the title. */}
-            {(pathname.endsWith("/create") || pathname.endsWith("/new")) && (
+            {/* The create/edit/detail screens put a back control ahead of the title. */}
+            {showBack && (
               <button
                 type="button"
                 aria-label="Go back"

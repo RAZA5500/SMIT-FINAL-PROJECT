@@ -1,69 +1,56 @@
 "use client";
 
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-import { POPULAR_PRODUCTS } from "@/data/products";
-import { useCart } from "@/context/CartContext";
+import type { ReactNode } from "react";
+import { EmptyState } from "@/components/shared/EmptyState";
+import { ErrorState } from "@/components/shared/ErrorState";
+import { publicRoutes } from "@/lib/routes/routes";
+import { useGetProducts } from "@/services/products/queries";
 import ProductCard from "./ProductCard";
+import { ProductGridSkeleton } from "./ProductCardSkeleton";
 
+const GRID_CLASS = "grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4";
+const POPULAR_LIMIT = 12;
+
+/** Home "Popular Products" — catalog ke pehle products (backend default sort: newest) */
 export default function FreshDealsSection() {
-  const { cart, addToCart, removeFromCart } = useCart();
-  const [quantities, setQuantities] = useState<Record<string, number>>({});
+  const { data, isLoading, isError, error, refetch } = useGetProducts({ page: 1, limit: POPULAR_LIMIT });
 
-  const handleQuantityChange = (id: string, delta: number) => {
-    setQuantities((prev) => {
-      const next = Math.max(1, (prev[id] || 1) + delta);
-      return { ...prev, [id]: next };
-    });
-    if (delta < 0 && cart[id]) removeFromCart(id);
-  };
-
-  const handleAddToCart = (id: string) => {
-    const qty = quantities[id] || 1;
-    for (let i = 0; i < qty; i++) addToCart(id);
-  };
+  let content: ReactNode;
+  if (isLoading) {
+    content = <ProductGridSkeleton count={4} className={GRID_CLASS} />;
+  } else if (isError) {
+    content = (
+      <ErrorState title="Couldn't load products" message={error.message} onRetry={() => void refetch()} />
+    );
+  } else if (!data?.data.length) {
+    content = <EmptyState title="No products yet" message="New products will appear here soon." />;
+  } else {
+    content = (
+      <div className={GRID_CLASS}>
+        {data.data.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <section>
       <div className="product-container">
-        <div className="flex justify-between items-center mb-8">
+        <div className="mb-8 flex items-center justify-between">
           <h2 className="section-heading">Popular Products</h2>
           <Link
-            className="inline-flex items-center gap-3 hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 text-brand-green transition-opacity"
-            href="/shop"
+            className="inline-flex items-center gap-3 text-brand-green transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none"
+            href={publicRoutes.shop}
           >
-            <span className="text-sm md:text-base leading-none">View All</span>
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-2 md:w-4 h-2 md:h-4"
-            >
-              <path d="M4 12H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              <path
-                d="M13 5L20 12L13 19"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <span className="text-sm leading-none md:text-base">View All</span>
+            <ArrowRight className="size-2 md:size-4" aria-hidden="true" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-          {POPULAR_PRODUCTS.map((p) => (
-            <ProductCard
-              key={p.id}
-              product={p}
-              quantity={quantities[p.id] || 1}
-              onQuantityChange={handleQuantityChange}
-              onAddToCart={handleAddToCart}
-            />
-          ))}
-        </div>
+        {content}
       </div>
     </section>
   );

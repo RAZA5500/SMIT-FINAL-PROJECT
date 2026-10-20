@@ -1,7 +1,10 @@
+import type { Metadata } from "next";
+import { CheckoutPaymentView } from "./(components)/CheckoutPaymentView";
+
+export const metadata: Metadata = {
+  title: "Payment",
+};
+
 export default function CheckoutPaymentPage() {
-  return (
-    <main className="pt-24 pb-10 customer-container">
-      <h1 className="section-heading">Payment</h1>
-    </main>
-  );
+  return <CheckoutPaymentView />;
 }
