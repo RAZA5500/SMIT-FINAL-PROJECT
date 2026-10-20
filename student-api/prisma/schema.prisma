@@ -1,0 +1,300 @@
+// OnlineMart student project schema — FLOW-MD/03-database-design.md §3.
+// Jo constraints Prisma schema mein express nahi ho sakte (single admin, CHECK,
+// partial unique default address, sequences) woh init migration ke raw SQL mein hain (§3.1).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  CUSTOMER
+}
+
+enum StockStatus {
+  IN_STOCK
+  LOW_STOCK
+  OUT_OF_STOCK
+}
+
+enum TransactionType {
+  RECEIVED
+  ADJUSTMENT_INCREASE
+  ADJUSTMENT_DECREASE
+  CONSUMED
+  RELEASED
+}
+
+enum AdjustmentReason {
+  DAMAGE
+  RECOUNT
+  RETURN_TO_SUPPLIER
+  MANUAL_CORRECTION
+  RESTOCK
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  READY_FOR_PICKUP
+  READY_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+  REFUND_PENDING
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  FAILED
+  CANCELED
+  REFUNDED
+}
+
+enum DeliveryType {
+  DELIVERY
+  PICKUP
+}
+
+// Customer, admin aur system cancel reasons (api-reference Part 2)
+enum CancellationReason {
+  CHANGED_MIND
+  ORDERED_BY_MISTAKE
+  FOUND_BETTER_PRICE
+  DELIVERY_TOO_LONG
+  CUSTOMER_REQUEST
+  OUT_OF_STOCK
+  PAYMENT_ISSUE
+  PAYMENT_TIMEOUT
+  OTHER
+}
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique @db.VarChar(255)
+  passwordHash String // bcrypt hash — kabhi response mein nahi
+  name         String    @db.VarChar(100)
+  phone        String?   @unique @db.VarChar(20)
+  role         UserRole  @default(CUSTOMER)
+  isActive     Boolean   @default(true)
+  totalOrders  Int       @default(0)
+  totalSpent   Decimal   @default(0) @db.Decimal(10, 2)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  addresses Address[]
+  cart      Cart?
+  orders    Order[]
+
+  @@map("users")
+}
+
+model Address {
+  id          String   @id @default(uuid())
+  userId      String
+  addressLine String   @db.VarChar(100)
+  city        String   @db.VarChar(30)
+  county      String   @db.VarChar(30)
+  postcode    String   @db.VarChar(20)
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([id, userId])
+  @@index([userId])
+  @@map("addresses")
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String   @unique @db.VarChar(100)
+  slug        String   @unique @db.VarChar(120)
+  description String?  @db.VarChar(500)
+  isActive    Boolean  @default(true)
+  parentId    String?
+  depth       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children Category[] @relation("CategoryTree")
+  products Product[]
+
+  @@index([parentId])
+  @@map("categories")
+}
+
+model Product {
+  id                   String   @id @default(uuid())
+  name                 String   @db.VarChar(100)
+  slug                 String   @unique @db.VarChar(255)
+  sku                  String   @unique @db.VarChar(30)
+  categoryId           String
+  price                Decimal  @db.Decimal(10, 2)
+  minimumOrderQuantity Int
+  maximumOrderQuantity Int
+  isActive             Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  category   Category    @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  inventory  Inventory?
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+
+  @@unique([name, categoryId])
+  @@index([categoryId, isActive])
+  @@map("products")
+}
+
+model Inventory {
+  id                String      @id @default(uuid())
+  productId         String      @unique
+  qtyOnHand         Int
+  lowStockThreshold Int         @default(10)
+  stockStatus       StockStatus
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  product      Product                @relation(fields: [productId], references: [id], onDelete: Restrict)
+  transactions InventoryTransaction[]
+
+  @@map("inventory")
+}
+
+// Stock ledger — quantity hamesha positive; direction `type` batata hai
+model InventoryTransaction {
+  id          String            @id @default(uuid())
+  inventoryId String
+  type        TransactionType
+  quantity    Int
+  reason      AdjustmentReason?
+  note        String?           @db.VarChar(500)
+  performedBy String?
+  orderItemId String?
+  createdAt   DateTime          @default(now())
+
+  inventory Inventory  @relation(fields: [inventoryId], references: [id], onDelete: Restrict)
+  orderItem OrderItem? @relation(fields: [orderItemId], references: [id], onDelete: Restrict)
+
+  @@index([inventoryId, createdAt])
+  @@index([orderItemId, type])
+  @@map("inventory_transactions")
+}
+
+model Cart {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items CartItem[]
+
+  @@map("carts")
+}
+
+// Price column nahi — price hamesha product se (03 §4)
+model CartItem {
+  id        String   @id @default(uuid())
+  cartId    String
+  productId String
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@unique([cartId, productId])
+  @@map("cart_items")
+}
+
+model Order {
+  id                 String              @id @default(uuid())
+  orderNumber        String              @unique @db.VarChar(30)
+  userId             String
+  status             OrderStatus         @default(PENDING)
+  paymentStatus      PaymentStatus       @default(UNPAID)
+  deliveryType       DeliveryType
+  subtotal           Decimal             @db.Decimal(10, 2)
+  shippingCost       Decimal             @db.Decimal(10, 2)
+  total              Decimal             @db.Decimal(10, 2)
+  customerNotes      String?             @db.VarChar(500)
+  pickupScheduledAt  DateTime?
+  paymentExpiresAt   DateTime
+  confirmedAt        DateTime?
+  processedAt        DateTime?
+  readyAt            DateTime?
+  deliveredAt        DateTime?
+  cancelledAt        DateTime?
+  cancellationReason CancellationReason?
+  cancellationNote   String?             @db.VarChar(500)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  user     User          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  items    OrderItem[]
+  address  OrderAddress?
+  payments Payment[]
+
+  @@index([userId, createdAt])
+  @@index([status, paymentExpiresAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  productId String
+  quantity  Int
+  price     Decimal @db.Decimal(10, 2)
+  subtotal  Decimal @db.Decimal(10, 2)
+
+  order        Order                  @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  product      Product                @relation(fields: [productId], references: [id], onDelete: Restrict)
+  transactions InventoryTransaction[]
+
+  @@index([orderId])
+  @@map("order_items")
+}
+
+// Order ke waqt address ka snapshot
+model OrderAddress {
+  id          String @id @default(uuid())
+  orderId     String @unique
+  addressLine String @db.VarChar(100)
+  city        String @db.VarChar(30)
+  county      String @db.VarChar(30)
+  postcode    String @db.VarChar(20)
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  @@map("order_addresses")
+}
+
+model Payment {
+  id            String        @id @default(uuid())
+  orderId       String
+  gatewayRef    String        @unique @db.VarChar(100)
+  amount        Decimal       @db.Decimal(10, 2)
+  status        PaymentStatus @default(UNPAID)
+  failureReason String?       @db.VarChar(500)
+  paidAt        DateTime?
+  refundedAt    DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  @@index([orderId, status])
+  @@map("payments")
+}

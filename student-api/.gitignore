@@ -1,0 +1,16 @@
+# compiled output
+/dist
+
+# dependencies
+/node_modules
+
+# tests
+/coverage
+
+# env files — sirf .env.example commit hota hai
+.env
+.env.*
+!.env.example
+
+# typescript
+*.tsbuildinfo

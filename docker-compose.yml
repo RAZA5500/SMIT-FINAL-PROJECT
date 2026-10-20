@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: onlinemart-db
+    environment:
+      POSTGRES_USER: onlinemart
+      POSTGRES_PASSWORD: onlinemart
+      POSTGRES_DB: onlinemart
+    ports:
+      # Host par 5433 — 5432 aksar kisi aur local Postgres ke paas hota hai
+      - "5433:5432"
+    volumes:
+      - onlinemart-db-data:/var/lib/postgresql/data
+      # Pehli dafa container banne par alag test database bhi banata hai (FLOW-MD 12 §2)
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U onlinemart -d onlinemart"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  onlinemart-db-data:

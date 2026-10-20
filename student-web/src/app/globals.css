@@ -1,0 +1,995 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* ---------------------------------------------------------------------------
+   Inter — self-hosted with the same subsets and metric-matched fallback the
+   production build ships, so text measures identically without a network hop.
+--------------------------------------------------------------------------- */
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/inter/inter-cyrillic-ext.woff2") format("woff2");
+  unicode-range: U+460-52F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/inter/inter-cyrillic.woff2") format("woff2");
+  unicode-range: U+301, U+400-45F, U+490-491, U+4B0-4B1, U+2116;
+}
+
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/inter/inter-symbols.woff2") format("woff2");
+  unicode-range: U+1F??;
+}
+
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/inter/inter-greek.woff2") format("woff2");
+  unicode-range: U+370-377, U+37A-37F, U+384-38A, U+38C, U+38E-3A1, U+3A3-3FF;
+}
+
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/inter/inter-vietnamese.woff2") format("woff2");
+  unicode-range: U+102-103, U+110-111, U+128-129, U+168-169, U+1A0-1A1, U+1AF-1B0, U+300-301,
+    U+303-304, U+308-309, U+323, U+329, U+1EA0-1EF9, U+20AB;
+}
+
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/inter/inter-latin-ext.woff2") format("woff2");
+  unicode-range: U+100-2BA, U+2BD-2C5, U+2C7-2CC, U+2CE-2D7, U+2DD-2FF, U+304, U+308, U+329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/inter/inter-latin.woff2") format("woff2");
+  unicode-range: U+??, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+304, U+308, U+329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter Fallback";
+  src: local(Arial);
+  ascent-override: 90.44%;
+  descent-override: 22.52%;
+  line-gap-override: 0%;
+  size-adjust: 107.12%;
+}
+
+/* Boolean data-attribute variants (data-active, data-open, ...) shadcn/tailwind.css se aate hain. */
+
+/* ---------------------------------------------------------------------------
+   Design tokens — mirrored from the production Freshes build.
+   Values here drive the generated utilities, so they must stay exact.
+--------------------------------------------------------------------------- */
+@theme {
+  --breakpoint-shop: 1100px;
+  --breakpoint-desktop: 1400px;
+
+  --font-inter: Inter, sans-serif;
+  --font-heading: var(--font-sans);
+
+  /* production overrides Tailwind's gray-500 */
+  --color-gray-500: #4d4d4d;
+
+  /* brand */
+  --color-brand-green: #228b22;
+  --color-brand-green-dark: #1a6e1a;
+  --color-brand-green-forest: #006c0c;
+  --color-brand-green-light: #32cd32;
+  --color-brand-green-vivid: #51d845;
+  --color-brand-orange: #ff8c00;
+
+  /* neutrals & text */
+  --color-gray-dark: #101828;
+  --color-gray-medium: #4a5565;
+  --color-body-text: #212529;
+  --color-item-text: #0b140d;
+  --color-ink: #0a0a0a;
+  --color-placeholder: #0a0a0a80;
+  --color-price-text: #1a1a1a;
+  --color-price-strike: #999;
+  --color-summary-label: #303030;
+  --color-summary-note: #3d4a3d;
+  --color-icon-muted: #6a7282;
+  --color-text-muted: #6c757d;
+  --color-toggle-muted: #6f7a6a;
+  --color-muted-green: #5c675d;
+  --color-neutral-gray: gray;
+  --color-label: var(--slate-deep);
+  --color-slate-deep: #364153;
+  --color-label-dark-green: #3f4a3b;
+  --color-info-green: #466e3f;
+  --color-grey-green: #002603;
+  --color-green-grey: #171d15;
+  --color-cart-icon-dark: #242424;
+
+  /* surfaces */
+  --color-activity-badge-bg: #f0f5f0;
+  --color-icon-bg-green: #dff6de;
+  --color-icon-bg-orange: #f2a61824;
+  --color-icon-bg-red: #fee2e2;
+  --color-icon-wrap-bg: #fcfefc;
+  --color-info-card: #f8faf8;
+  --color-inventory-card: #f0f6e8;
+  --color-order-card-bg: #f7fcf7;
+  --color-pagination-bg: #f7f7f7;
+  --color-navbar-bg: #f7fcf7d9;
+  --color-sea-green: #0e5708;
+  --color-sea-green-bg: #dcfdd8;
+  --color-table-header: #f8f9fa;
+  --color-chip-muted: #efeded;
+  --color-footer-bg: #1a1a1a;
+  --color-track-bg: #e6e6e6;
+  --color-range-fill: #f0f9f0;
+  --color-range-input-bg: #f5fbee;
+  --color-stat-card-glass: #ffffff1a;
+  --color-overlay-bg: #fff3;
+  --color-modal-title: #171d15;
+  --color-modal-footer-bg: #f0f7ee;
+
+  /* borders */
+  --color-border-card: #e1e6e0;
+  --color-border-gray: #e9ecef;
+  --color-border-light: #f3f4f6;
+  --color-header-separator: #ddd;
+  --color-input-border: #d1d5dc;
+  --color-navbar-border: #228b224d;
+  --color-summary-divider: #bccbb9;
+  --color-table-row-border: #24242433;
+  --color-modal-divider: #becab74d;
+  --color-checkbox-bg: #dee5d74d;
+  --color-checkbox-border: #becab7;
+  --color-card-hover-border: #2c742f;
+  --color-actions-btn: #b4b4b4;
+
+  /* status */
+  --color-badge-decrease: #ffe5d9;
+  --color-cancel-red: #ba1a1a;
+  --color-destructive-red: #ba1a1a;
+  --color-error: #f22222;
+  --color-status-quarantine-bg: #fef9c2;
+  --color-status-quarantine-text: #894b00;
+  --color-status-expired-bg: #f2222233;
+  --color-status-expired-text: #f22222;
+  --color-promo-active-bg: #e7f4e2;
+  --color-promo-active-text: #286c18;
+  --color-promo-scheduled-bg: #e5f0ff;
+  --color-promo-scheduled-text: #1f4d9e;
+  --color-promo-expired-bg: #fbe5e5;
+  --color-promo-expired-text: #9e1f1f;
+  --color-notif-success-bg: #e8f5e9;
+  --color-notif-success-text: #2e7d32;
+  --color-notif-success-border: #a5d6a7;
+  --color-notif-warning-bg: #fff8e1;
+  --color-notif-warning-text: #e65100;
+  --color-notif-warning-border: #ffcc80;
+  --color-notif-error-bg: #ffebee;
+  --color-notif-error-text: #c62828;
+  --color-notif-error-border: #ef9a9a;
+
+  /* shadcn-style aliases so bg-sidebar / border-border / … resolve */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* type scale */
+  --text-fs-6: 6px;
+  --text-fs-8: 8px;
+  --text-fs-10: 10px;
+  --text-fs-11: 11px;
+  --text-fs-12: 0.75rem;
+  --text-fs-15: 0.9375rem;
+  --text-fs-26: 1.625rem;
+  --text-3xs: 0.6875rem;
+  --text-3xs--line-height: 1rem;
+  --text-body-lg: 1.375rem;
+  --text-cart-btn: 0.55rem;
+  --text-section-heading-md: 32px;
+  --text-promo-title: 2.5rem;
+
+  /* radii */
+  --radius-5: 0.3125rem;
+  --radius-6: 0.375rem;
+  --radius-10: 0.625rem;
+  --radius-12: 0.75rem;
+  --radius-15: 0.9375rem;
+  --radius-18: 1.125rem;
+  --radius-22: 1.375rem;
+  --radius-60: 3.75rem;
+
+  /* shadows */
+  --shadow-card: 0px 2px 8px 0px #0000000f;
+  --shadow-btn: 0px 2px 8px 0px #0000001a;
+  --shadow-overlay: 0px 2px 4px 0px #0000001a;
+
+  /* misc */
+  --leading-120: 1.2;
+  --leading-display-2xl: 140%;
+  --tracking-030: 0.03em;
+  --ease-shop-sidebar: cubic-bezier(0.16, 1, 0.3, 1);
+  --perspective-flip: 62.5rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Raw custom properties: layout sizing + shadcn palette.
+   These feed the @utility rules below and are referenced with var() directly.
+--------------------------------------------------------------------------- */
+:root {
+  --font-sans: "Inter", "Inter Fallback";
+
+  --background: #fff;
+  --foreground: #0a0a0a;
+  --border: #e5e5e5;
+  --input: #e5e5e5;
+  --ring: #a1a1a1;
+  --chart-1: #d4d4d4;
+  --chart-2: #737373;
+  --chart-5: #262626;
+  --sidebar: #0b2010;
+  --sidebar-foreground: #fff;
+  --sidebar-primary: #4ade80;
+  --sidebar-primary-foreground: #0b2010;
+  --sidebar-accent: #ffffff14;
+  --sidebar-accent-foreground: #fff;
+  --sidebar-border: #ffffff1a;
+  --sidebar-ring: #fff3;
+
+  /* shadcn/ui primitives (components/ui) — Freshes palette se map kiye gaye */
+  --card: #fff;
+  --card-foreground: #0a0a0a;
+  --popover: #fff;
+  --popover-foreground: #0a0a0a;
+  --primary: #228b22;
+  --primary-foreground: #fff;
+  --secondary: #f0f5f0;
+  --secondary-foreground: #0b140d;
+  --muted: #f3f4f6;
+  --muted-foreground: #6c757d;
+  --accent: #f0f9f0;
+  --accent-foreground: #0b140d;
+  --destructive: #ba1a1a;
+  --chart-3: #525252;
+  --chart-4: #404040;
+  --radius: 0.625rem;
+
+  --slate-deep: #364153;
+  --brand-gradient: linear-gradient(180deg, #228b22 0%, #32cd32 100%);
+  --gradient-brand-green: linear-gradient(135deg, #51d845 0%, #17780f 100%);
+  --gradient-avatar: linear-gradient(135deg, #17780f 0%, #51d845 100%);
+  --gradient-hero: linear-gradient(98.86deg, #17780f 0%, #005f0e 60%, #004013 100%);
+  --gradient-sidebar-logout: linear-gradient(107.57deg, #17780f 0%, #299420 100%);
+  --gradient-amber: linear-gradient(107.57deg, #f59e0b 0%, #d97706 100%);
+
+  --profile-avatar-size: 156px;
+  --profile-avatar-half: 78px;
+  --profile-avatar-clear: 88px;
+  --profile-avatar-clear-sm: 56px;
+
+  --search-max-width: 350px;
+  --product-thumb-size: 70px;
+  --size-modal-detail-h: 38.75rem;
+  --dashboard-chart-height: 392px;
+
+  --auth-split-gap: 72px;
+  --auth-subtitle-padding-top: 10px;
+  --auth-image-width: 664px;
+  --auth-image-height: 960px;
+  --auth-container-max-width: 1185px;
+  --auth-register-container-max-width: 1220px;
+  --auth-form-width: 448px;
+
+  --shop-hero-max-height: 340px;
+  --shop-sidebar-width: 18.75rem;
+  --shop-padding-left: 2.5rem;
+  --shop-grid-gap: 0.3125rem;
+
+  --cart-items-max-height: 38rem;
+  --cart-summary-height: 5.875rem;
+  --cart-preview-width: 18.75rem;
+  --cart-preview-footer-padding-y: 0.3125rem;
+  --cart-gap: 0.34375rem;
+  --cart-bar-h: 1.6875rem;
+  --space-cart-btn-x: 0.34375rem;
+  --space-cart-btn-y: 0.275rem;
+
+  --filter-btn-width: 220px;
+  --thumb-size: 15px;
+  --max-width-customer: 90rem;
+  --max-width-product-grid: 1320px;
+  --max-width-shop: 86.75rem;
+
+  --promo-card-h: 33.5rem;
+  --size-promo-cta-w: 10rem;
+  --size-promo-cta-h: 2.8125rem;
+  --space-promo-title-pt: 1rem;
+  --space-promo-cta-mt: 1.5rem;
+
+  --site-logo-width: 7.75rem;
+  --site-logo-height: 3.25rem;
+  --footer-logo-width: 9.75rem;
+  --footer-logo-height: 2.375rem;
+
+  --hero-section-height: 43.4375rem;
+  --hero-offer-gap: 1.125rem;
+  --hero-offer-accent-height: 6.09375rem;
+  --hero-offer-accent-width: 0.1875rem;
+
+  --size-button-xl: 4.8125rem;
+  --space-button-lg-x: 3.75rem;
+  --space-button-sm-y: 0.9375rem;
+  --space-section-md: 2.625rem;
+
+  --best-category-card-width: 18.75rem;
+  --best-category-card-width-sm: 13.125rem;
+  --best-category-card-min-h: 21.875rem;
+  --best-category-card-gap: 2rem;
+  --best-category-card-gap-sm: 1.25rem;
+  --best-category-image-width: 17.25rem;
+  --best-category-image-height: 13.05rem;
+  --best-category-image-width-sm: 11.25rem;
+  --best-category-image-height-sm: 8.4rem;
+  --best-category-thumbnail-width: 4rem;
+  --best-category-thumbnail-height: 2.75rem;
+
+  --category-card-img-h: 8rem;
+  --category-card-img-w: 8rem;
+  --category-text-max-w: 14.35rem;
+  --category-text-max-w-sm: 8rem;
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #fafafa;
+  --card: #171717;
+  --card-foreground: #fafafa;
+  --popover: #171717;
+  --popover-foreground: #fafafa;
+  --primary: #e5e5e5;
+  --primary-foreground: #171717;
+  --secondary: #262626;
+  --secondary-foreground: #fafafa;
+  --muted: #262626;
+  --muted-foreground: #a1a1a1;
+  --accent: #262626;
+  --accent-foreground: #fafafa;
+  --destructive: #ff6568;
+  --border: #ffffff1a;
+  --input: #ffffff26;
+  --ring: #737373;
+  --chart-1: #d4d4d4;
+  --chart-2: #737373;
+  --chart-3: #525252;
+  --chart-4: #404040;
+  --chart-5: #262626;
+  --sidebar: #171717;
+  --sidebar-foreground: #fafafa;
+  --sidebar-primary: #1447e6;
+  --sidebar-primary-foreground: #fafafa;
+  --sidebar-accent: #262626;
+  --sidebar-accent-foreground: #fafafa;
+  --sidebar-border: #ffffff1a;
+  --sidebar-ring: #737373;
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+@layer base {
+  * {
+    border-color: var(--border);
+    outline-color: var(--ring);
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  html {
+    font-family: Inter, sans-serif;
+    overflow-x: clip;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    overflow-x: clip;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Layout components
+--------------------------------------------------------------------------- */
+@layer components {
+  .header-container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  @media (min-width: 1400px) {
+    .header-container {
+      max-width: 1370px;
+    }
+  }
+
+  .product-container {
+    max-width: var(--max-width-product-grid);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  @media (min-width: 1300px) {
+    .product-container {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
+
+  .customer-container {
+    width: 100%;
+    max-width: var(--max-width-customer);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  @media (min-width: 840px) {
+    .customer-container {
+      padding-left: 120px;
+      padding-right: 120px;
+    }
+  }
+
+  .shop-container {
+    width: 100%;
+    max-width: var(--max-width-shop);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .shop-container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .shop-container {
+      padding-left: 1.5rem;
+      padding-right: 0;
+    }
+  }
+
+  @media (min-width: 1400px) {
+    .shop-container {
+      padding-left: var(--shop-padding-left);
+      padding-right: 0;
+    }
+  }
+
+  .shop-sidebar {
+    width: var(--shop-sidebar-width);
+    flex-shrink: 0;
+  }
+
+  .shop-hero-container {
+    height: var(--shop-hero-max-height);
+  }
+
+  .gap-shop-grid {
+    gap: var(--shop-grid-gap);
+  }
+
+  .max-h-cart-items {
+    max-height: var(--cart-items-max-height);
+  }
+
+  .h-cart-summary {
+    height: var(--cart-summary-height);
+  }
+
+  .ease-shop-sidebar {
+    transition-timing-function: var(--ease-shop-sidebar);
+  }
+
+  .site-header {
+    z-index: 50;
+    background-color: #228b22;
+    width: 100%;
+    position: fixed;
+    top: 0;
+  }
+
+  .font-inter {
+    font-family: Inter, sans-serif;
+  }
+
+  .nav-link {
+    position: relative;
+  }
+
+  .nav-link::after {
+    content: "";
+    background-color: currentColor;
+    width: 0;
+    height: 1.5px;
+    transition: all 0.2s;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  .landing-button {
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .landing-button:hover {
+    opacity: 0.95;
+    transform: translateY(-0.125rem);
+  }
+
+  .section-heading {
+    color: #111827;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  @media (min-width: 768px) {
+    .section-heading {
+      font-size: var(--text-section-heading-md);
+      line-height: var(--leading-120);
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Custom utilities (the production build defines these by hand)
+--------------------------------------------------------------------------- */
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #c7d2c7 transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: 0 0;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #c7d2c7;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #9ab39a;
+  }
+}
+
+@utility border-table {
+  border: 1px solid var(--color-table-row-border);
+
+  & > table > tbody > tr:last-child {
+    border-bottom-width: 0 !important;
+  }
+}
+
+@utility px-badge {
+  padding-inline: 1rem;
+}
+
+@utility py-sale-badge {
+  padding-block: 0.1875rem;
+}
+
+@utility content-empty {
+  content: "";
+}
+
+@utility py-badge {
+  padding-block: 0.5rem;
+}
+
+/* production ships this utility with an undefined var, so it is a no-op there too */
+@utility shadow-form {
+  box-shadow: var(--shadow-form);
+}
+
+@utility shop-product-grid {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  @media (min-width: 1400px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+@utility h-hero-section {
+  @media (min-width: 1400px) {
+    height: var(--hero-section-height);
+  }
+}
+
+@utility gap-auth-split {
+  gap: var(--auth-split-gap);
+}
+@utility gap-best-category {
+  gap: var(--best-category-card-gap);
+}
+@utility gap-best-category-sm {
+  gap: var(--best-category-card-gap-sm);
+}
+@utility gap-hero-offer {
+  gap: var(--hero-offer-gap);
+}
+@utility h-best-category-image {
+  height: var(--best-category-image-height);
+}
+@utility h-best-category-image-sm {
+  height: var(--best-category-image-height-sm);
+}
+@utility w-best-category-card {
+  width: var(--best-category-card-width);
+}
+@utility w-best-category-card-sm {
+  width: var(--best-category-card-width-sm);
+}
+@utility h-footer-logo {
+  height: var(--footer-logo-height);
+}
+@utility w-footer-logo {
+  width: var(--footer-logo-width);
+}
+@utility h-site-logo {
+  height: var(--site-logo-height);
+}
+@utility w-site-logo {
+  width: var(--site-logo-width);
+}
+@utility h-hero-offer-accent {
+  height: var(--hero-offer-accent-height);
+}
+@utility w-hero-offer-accent {
+  width: var(--hero-offer-accent-width);
+}
+@utility h-product-thumb {
+  height: var(--product-thumb-size);
+}
+@utility w-product-thumb {
+  width: var(--product-thumb-size);
+}
+@utility h-promo-card {
+  height: var(--promo-card-h);
+}
+@utility h-promo-cta {
+  height: var(--size-promo-cta-h);
+}
+@utility max-w-auth-container {
+  max-width: var(--auth-container-max-width);
+}
+@utility max-w-product-grid {
+  max-width: var(--max-width-product-grid);
+}
+@utility max-w-search {
+  max-width: var(--search-max-width);
+}
+@utility mt-section-md {
+  margin-top: var(--space-section-md);
+}
+@utility profile-details-heading {
+  padding-top: var(--profile-avatar-clear-sm);
+
+  @media (min-width: 640px) {
+    padding-top: var(--profile-avatar-clear);
+  }
+}
+@utility text-section-md {
+  font-size: var(--text-section-heading-md);
+}
+@utility text-promo-title {
+  font-size: var(--text-promo-title);
+}
+@utility text-label {
+  color: var(--slate-deep);
+}
+@utility rounded-badge {
+  border-radius: var(--radius-5);
+}
+@utility text-brand-gradient {
+  background: var(--gradient-sidebar-logout);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+@utility bg-hero-gradient {
+  background: var(--gradient-hero);
+}
+@utility bg-brand-gradient {
+  background: var(--brand-gradient);
+}
+@utility bg-gradient-amber {
+  background: var(--gradient-amber);
+}
+@utility bg-cta-green {
+  background: var(--gradient-sidebar-logout);
+  background-image: var(--gradient-sidebar-logout);
+}
+@utility bg-checkbox-label {
+  background-color: var(--color-checkbox-bg);
+  border-color: var(--color-checkbox-border);
+}
+@utility bg-footer-brand {
+  background-color: var(--color-footer-bg);
+}
+@utility bg-modal-footer {
+  background-color: var(--color-modal-footer-bg);
+}
+@utility bg-range-input {
+  background-color: var(--color-range-input-bg);
+}
+@utility bg-status-expired {
+  background-color: var(--color-status-expired-bg);
+}
+@utility text-status-expired {
+  color: var(--color-status-expired-text);
+}
+@utility bg-status-quarantine {
+  background-color: var(--color-status-quarantine-bg);
+}
+@utility text-status-quarantine {
+  color: var(--color-status-quarantine-text);
+}
+@utility bg-promo-active {
+  background-color: var(--color-promo-active-bg);
+}
+@utility text-promo-active {
+  color: var(--color-promo-active-text);
+}
+@utility bg-promo-scheduled {
+  background-color: var(--color-promo-scheduled-bg);
+}
+@utility text-promo-scheduled {
+  color: var(--color-promo-scheduled-text);
+}
+@utility bg-promo-expired {
+  background-color: var(--color-promo-expired-bg);
+}
+@utility text-promo-expired {
+  color: var(--color-promo-expired-text);
+}
+@utility bg-notif-success {
+  background-color: var(--color-notif-success-bg);
+}
+@utility text-notif-success {
+  color: var(--color-notif-success-text);
+}
+@utility border-notif-success {
+  border-color: var(--color-notif-success-border);
+}
+@utility bg-notif-warning {
+  background-color: var(--color-notif-warning-bg);
+}
+@utility text-notif-warning {
+  color: var(--color-notif-warning-text);
+}
+@utility border-notif-warning {
+  border-color: var(--color-notif-warning-border);
+}
+@utility bg-notif-error {
+  background-color: var(--color-notif-error-bg);
+}
+@utility text-notif-error {
+  color: var(--color-notif-error-text);
+}
+@utility border-notif-error {
+  border-color: var(--color-notif-error-border);
+}
+
+/* ---------------------------------------------------------------------------
+   Admin sidebar + data-attribute driven styles
+--------------------------------------------------------------------------- */
+[data-sidebar="menu-sub"] {
+  border-color: #ffffff80;
+  border-left-width: 2px;
+  padding-left: 0.5rem;
+}
+
+[data-sidebar="menu-button"] {
+  cursor: pointer;
+  min-height: 2.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+[data-collapsible="icon"] [data-sidebar="menu-button"] {
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+[data-collapsible="icon"] [data-sidebar="menu-button"] span {
+  display: none;
+}
+
+[data-collapsible="icon"] [data-sidebar="menu"] {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+[data-sidebar="menu-button"]:not([data-active]) {
+  color: #ffffffb3;
+}
+
+[data-sidebar="menu-button"][data-active] {
+  background: linear-gradient(95.59deg, #51d84538 0%, #17780f2e 100%);
+}
+
+[data-sidebar="menu-button"][data-active] svg {
+  color: var(--color-brand-green-vivid);
+}
+
+[data-sidebar="menu-item"]:has([data-sidebar="menu-button"][data-active]) {
+  position: relative;
+}
+
+[data-sidebar="menu-item"]:has([data-sidebar="menu-button"][data-active])::before {
+  content: "";
+  background: var(--color-brand-green-vivid);
+  border-radius: 0 2px 2px 0;
+  width: 3px;
+  height: 20px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+[data-collapsible="icon"] [data-sidebar="menu-item"]:has([data-sidebar="menu-button"][data-active])::before {
+  left: 20px;
+}
+
+[data-sidebar="menu-item"]:has([data-sidebar="menu-button"][data-active]):has([data-sidebar="menu-sub"])::before {
+  top: 1.25rem;
+  transform: translateY(-50%);
+}
+
+@media (min-width: 768px) {
+  .rating-icons svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+/* Testimonial strip: the list is tripled, so one third is a seamless loop. */
+/* ---------------------------------------------------------------------------
+   Compact admin controls below the `desktop` breakpoint
+--------------------------------------------------------------------------- */
+@media (max-width: 1399.98px) {
+  .admin-scope button[class*="h-10"],
+  .admin-scope button[class*="h-11"],
+  .admin-scope button[class*="h-12"],
+  .admin-scope [data-slot="select-trigger"],
+  .admin-scope [role="combobox"],
+  [role="dialog"] button[class*="h-10"],
+  [role="dialog"] button[class*="h-11"],
+  [role="dialog"] button[class*="h-12"],
+  [role="dialog"] [data-slot="select-trigger"],
+  [role="dialog"] [role="combobox"] {
+    height: 2.5rem !important;
+    min-height: 2.5rem !important;
+    max-height: 2.5rem !important;
+  }
+
+  .admin-scope input[class*="h-10"],
+  .admin-scope input[class*="h-11"],
+  .admin-scope input[class*="h-12"],
+  [role="dialog"] input[class*="h-10"],
+  [role="dialog"] input[class*="h-11"],
+  [role="dialog"] input[class*="h-12"] {
+    height: 2.5rem !important;
+    min-height: 2.5rem !important;
+    max-height: 2.5rem !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+
+/* shadcn/ui primitives ke color tokens (baaki aliases upar @theme mein). Radius scale
+   jaan boojh kar override nahi kiya — maujooda rounded-* design waisa hi rahe. */
+@theme inline {
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+}
