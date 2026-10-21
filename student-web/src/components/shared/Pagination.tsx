@@ -39,13 +39,10 @@ export function Pagination({
   const last = Math.min(currentPage * limit, total);
 
   return (
-    <nav
-      aria-label="Pagination"
-      className={cn("flex flex-wrap items-center justify-between gap-3", className)}
-    >
-      <p className="text-sm text-gray-500">
-        Showing <span className="font-semibold text-gray-800">{`${first}-${last}`}</span> of{" "}
-        <span className="font-semibold text-gray-800">{total}</span> {itemLabel}
+    <nav aria-label="Pagination" className={cn("flex flex-wrap items-center justify-between gap-3", className)}>
+      <p className="text-sm text-muted-foreground">
+        Showing <span className="numeric font-semibold text-foreground">{`${first}-${last}`}</span> of{" "}
+        <span className="numeric font-semibold text-foreground">{total}</span> {itemLabel}
       </p>
       <div className="flex items-center gap-1">
         <Button
@@ -61,8 +58,9 @@ export function Pagination({
           <Button
             key={page}
             size="icon-sm"
-            variant={page === currentPage ? "cta" : "ghost"}
+            variant={page === currentPage ? "default" : "ghost"}
             aria-current={page === currentPage ? "page" : undefined}
+            className="numeric"
             onClick={() => onPageChange(page)}
           >
             {page}

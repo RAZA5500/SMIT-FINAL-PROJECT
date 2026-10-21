@@ -3,10 +3,31 @@
 export const publicRoutes = {
   home: "/",
   shop: "/shop",
+  product: (id: string) => `/products/${id}`,
   login: "/login",
   register: "/register",
   forgotPassword: "/forgot-password",
 } as const;
+
+/** Shop ke filters URL mein — header search, category links aur back button sab isi se */
+export interface ShopUrlParams {
+  q?: string;
+  category?: string;
+  sort?: string;
+  min?: number;
+  max?: number;
+  page?: number;
+}
+
+export function shopUrl(params: ShopUrlParams = {}): string {
+  const search = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value === undefined || value === null || value === "") continue;
+    search.set(key, String(value));
+  }
+  const query = search.toString();
+  return query ? `${publicRoutes.shop}?${query}` : publicRoutes.shop;
+}
 
 export const customerRoutes = {
   cart: "/cart",

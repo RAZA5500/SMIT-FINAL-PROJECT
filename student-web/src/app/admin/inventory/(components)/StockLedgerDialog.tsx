@@ -7,7 +7,7 @@ import { Pagination } from "@/components/shared/Pagination";
 import { TableSkeleton } from "@/components/shared/TableSkeleton";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import type { TransactionType } from "@/constants/enums";
+import { STOCK_DECREASING_TRANSACTIONS } from "@/constants/enums";
 import { ADJUSTMENT_REASON_LABELS, TRANSACTION_TYPE_LABELS } from "@/constants/labels";
 import { formatDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -15,9 +15,6 @@ import { useGetInventoryTransactions } from "@/services/inventory/queries";
 import type { IInventory } from "@/services/inventory/types";
 
 const PAGE_SIZE = 10;
-
-/** Ledger mein quantity hamesha positive — direction type se */
-const DECREASES: TransactionType[] = ["ADJUSTMENT_DECREASE", "CONSUMED"];
 
 interface StockLedgerDialogProps {
   inventory: IInventory | null;
@@ -63,19 +60,19 @@ function StockLedger({ inventory }: { inventory: IInventory }) {
           </TableHeader>
           <TableBody>
             {data.data.map((transaction) => {
-              const decrease = DECREASES.includes(transaction.type);
+              const decrease = STOCK_DECREASING_TRANSACTIONS.includes(transaction.type);
               return (
                 <TableRow key={transaction.id}>
-                  <TableCell className="text-gray-500">{formatDateTime(transaction.createdAt)}</TableCell>
+                  <TableCell className="text-muted-foreground">{formatDateTime(transaction.createdAt)}</TableCell>
                   <TableCell>{TRANSACTION_TYPE_LABELS[transaction.type]}</TableCell>
                   <TableCell
-                    className={cn("text-right font-semibold", decrease ? "text-destructive" : "text-brand-green")}
+                    className={cn("text-right font-semibold", decrease ? "text-destructive" : "text-success")}
                   >
                     {decrease ? "−" : "+"}
                     {transaction.quantity}
                   </TableCell>
                   <TableCell>{transaction.reason ? ADJUSTMENT_REASON_LABELS[transaction.reason] : "—"}</TableCell>
-                  <TableCell className="max-w-56 truncate text-gray-500">
+                  <TableCell className="max-w-56 truncate text-muted-foreground">
                     {transaction.orderNumber ?? transaction.note ?? "—"}
                   </TableCell>
                 </TableRow>
@@ -98,7 +95,7 @@ function StockLedger({ inventory }: { inventory: IInventory }) {
   return (
     <>
       <DialogHeader>
-        <DialogTitle className="text-modal-title">Stock history</DialogTitle>
+        <DialogTitle>Stock history</DialogTitle>
         <DialogDescription>
           {inventory.product.name} ({inventory.product.sku}) — {inventory.qtyOnHand} in stock
         </DialogDescription>

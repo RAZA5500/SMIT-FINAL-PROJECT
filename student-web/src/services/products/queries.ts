@@ -1,4 +1,5 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { ApiError } from "@/lib/networking/request";
 import { productService } from "./index";
 import type { IFetchAdminProductsPayload, IFetchProductsPayload } from "./types";
 
@@ -15,11 +16,21 @@ export const adminProductKeys = {
   detail: (id: string) => ["adminProducts", "detail", id] as const,
 };
 
-export function useGetProducts(payload: IFetchProductsPayload) {
+export function useGetProducts(payload: IFetchProductsPayload, enabled = true) {
   return useQuery({
     queryKey: productKeys.list(payload),
     queryFn: ({ signal }) => productService.list(payload, signal),
     placeholderData: keepPreviousData,
+    enabled,
+  });
+}
+
+export function useGetProduct(id: string) {
+  return useQuery({
+    queryKey: productKeys.detail(id),
+    queryFn: ({ signal }) => productService.get(id, signal),
+    // 404 (inactive/missing) dobara try karne se nahi badalta
+    retry: (count, error) => !(error instanceof ApiError && error.status === 404) && count < 1,
   });
 }
 

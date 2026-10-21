@@ -1,27 +1,22 @@
 "use client";
 
-import { UserCheck, UserX } from "lucide-react";
+import { UserCheck, UserX, Users } from "lucide-react";
 import { useState, type ReactNode } from "react";
-import AdminListPage, {
-  ADMIN_FILTER_FIELD_CLASS,
-  ADMIN_SEARCH_FIELD_CLASS,
-  FilterIcon,
-  TD_CLASS,
-  TH_CENTER_CLASS,
-  TH_CLASS,
-  TR_STATIC_CLASS,
-} from "@/components/admin/AdminListPage";
+import { AdminPage } from "@/components/admin/AdminPage";
+import { DataTableCard, ToolbarFilters } from "@/components/admin/DataTableCard";
 import { RowActionsMenu } from "@/components/admin/RowActionsMenu";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
+import { Pagination } from "@/components/shared/Pagination";
 import { SearchInput } from "@/components/shared/SearchInput";
 import { SelectField } from "@/components/shared/SelectField";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { TableSkeleton } from "@/components/shared/TableSkeleton";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useDebounce } from "@/hooks/useDebounce";
-import { formatDate, formatDateTime, formatMoney } from "@/lib/format";
+import { formatDate, formatDateTime, formatMoney, initials } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useUpdateCustomerStatus } from "@/services/customers/mutations";
 import { useGetCustomers } from "@/services/customers/queries";
@@ -51,79 +46,68 @@ export function CustomersView() {
   });
   const updateStatus = useUpdateCustomerStatus();
 
-  const toolbar = (
-    <>
-      <SearchInput
-        value={search}
-        onValueChange={(value) => {
-          setSearch(value);
-          setPage(1);
-        }}
-        placeholder="Search by name, email or phone..."
-        className="max-w-search"
-        inputClassName={ADMIN_SEARCH_FIELD_CLASS}
-      />
-      <div className="ml-auto flex shrink-0 flex-wrap items-center gap-3">
-        <FilterIcon />
-        <SelectField
-          id="customer-status-filter"
-          options={STATUS_OPTIONS}
-          value={isActive === null ? ALL : String(isActive)}
-          onValueChange={(value) => {
-            setIsActive(!value || value === ALL ? null : value === "true");
-            setPage(1);
-          }}
-          className={ADMIN_FILTER_FIELD_CLASS}
-        />
-      </div>
-    </>
-  );
-
   let content: ReactNode;
   if (isLoading) {
-    content = <TableSkeleton columns={7} />;
+    content = <TableSkeleton columns={6} />;
   } else if (isError) {
     content = <ErrorState title="Couldn't load customers" message={error.message} onRetry={() => void refetch()} />;
   } else if (!data?.data.length) {
     content = (
       <EmptyState
-        title="No customers found"
-        message={debouncedSearch || isActive !== null ? "Try different filters." : "Customers appear here after they register."}
+        icon={<Users aria-hidden="true" />}
+        title={debouncedSearch || isActive !== null ? "No customers match" : "No customers yet"}
+        message={
+          debouncedSearch || isActive !== null ? "Try different filters." : "Customers appear here after they register."
+        }
       />
     );
   } else {
     content = (
-      <Table className={cn("min-w-215", isFetching && "opacity-60 transition-opacity")}>
+      <Table className="min-w-225">
         <TableHeader>
-          <TableRow className="border-gray-200">
-            <TableHead className={TH_CLASS}>Customer</TableHead>
-            <TableHead className={TH_CLASS}>Phone</TableHead>
-            <TableHead className={TH_CENTER_CLASS}>Orders</TableHead>
-            <TableHead className={TH_CENTER_CLASS}>Total spent</TableHead>
-            <TableHead className={TH_CLASS}>Last login</TableHead>
-            <TableHead className={TH_CLASS}>Joined</TableHead>
-            <TableHead className={TH_CENTER_CLASS}>Status</TableHead>
-            <TableHead className={TH_CENTER_CLASS}>Actions</TableHead>
+          <TableRow>
+            <TableHead>Customer</TableHead>
+            <TableHead>Phone</TableHead>
+            <TableHead className="text-right">Orders</TableHead>
+            <TableHead className="text-right">Total spent</TableHead>
+            <TableHead>Last login</TableHead>
+            <TableHead>Joined</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="w-12">
+              <span className="sr-only">Actions</span>
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.data.map((customer) => (
-            <TableRow key={customer.id} className={TR_STATIC_CLASS}>
-              <TableCell className={cn(TD_CLASS, "max-w-56")}>
-                <p className="truncate font-semibold text-body-text">{customer.name}</p>
-                <p className="truncate text-xs text-gray-500">{customer.email}</p>
+            <TableRow key={customer.id} className={cn(!customer.isActive && "text-muted-foreground")}>
+              <TableCell className="max-w-64">
+                <div className="flex items-center gap-3">
+                  <Avatar className="size-9">
+                    <AvatarFallback
+                      className={cn(
+                        "text-xs font-semibold",
+                        customer.isActive ? "bg-brand-soft text-brand" : "bg-muted text-muted-foreground",
+                      )}
+                    >
+                      {initials(customer.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0">
+                    <p className="truncate font-semibold text-foreground">{customer.name}</p>
+                    <p className="truncate text-xs text-muted-foreground">{customer.email}</p>
+                  </div>
+                </div>
               </TableCell>
-              <TableCell className={cn(TD_CLASS, "text-gray-500")}>{customer.phone ?? "—"}</TableCell>
-              <TableCell className={cn(TD_CLASS, "text-center")}>{customer.totalOrders}</TableCell>
-              <TableCell className={cn(TD_CLASS, "text-center font-semibold text-body-text")}>
-                {formatMoney(customer.totalSpent)}
-              </TableCell>
-              <TableCell className={cn(TD_CLASS, "text-gray-500")}>{formatDateTime(customer.lastLoginAt)}</TableCell>
-              <TableCell className={cn(TD_CLASS, "text-gray-500")}>{formatDate(customer.createdAt)}</TableCell>
-              <TableCell className={cn(TD_CLASS, "text-center")}>
+              <TableCell className="text-muted-foreground">{customer.phone ?? "—"}</TableCell>
+              <TableCell className="numeric text-right">{customer.totalOrders}</TableCell>
+              <TableCell className="numeric text-right font-semibold">{formatMoney(customer.totalSpent)}</TableCell>
+              <TableCell className="text-muted-foreground">{formatDateTime(customer.lastLoginAt)}</TableCell>
+              <TableCell className="text-muted-foreground">{formatDate(customer.createdAt)}</TableCell>
+              <TableCell>
                 <StatusBadge status={customer.isActive ? "ACTIVE" : "INACTIVE"} />
               </TableCell>
-              <TableCell className={TD_CLASS}>
+              <TableCell>
                 <RowActionsMenu
                   label={customer.name}
                   actions={[
@@ -143,18 +127,51 @@ export function CustomersView() {
   const deactivating = changing?.isActive ?? false;
 
   return (
-    <>
-      <AdminListPage
-        toolbar={toolbar}
-        responsiveToolbar
-        total={data?.meta.total ?? 0}
-        page={data?.meta.currentPage ?? page}
-        pageSize={data?.meta.limit ?? PAGE_SIZE}
-        onPageChange={setPage}
-        noun="customers"
+    <AdminPage title="Customers" description="Everyone with a Freskinto account. Deactivated customers can't sign in or order.">
+      <DataTableCard
+        busy={isFetching && !isLoading}
+        toolbar={
+          <>
+            <SearchInput
+              value={search}
+              onValueChange={(value) => {
+                setSearch(value);
+                setPage(1);
+              }}
+              placeholder="Name, email or phone…"
+              className="w-full md:max-w-xs"
+            />
+            <ToolbarFilters>
+              <SelectField
+                id="customer-status-filter"
+                aria-label="Filter by status"
+                size="sm"
+                options={STATUS_OPTIONS}
+                value={isActive === null ? ALL : String(isActive)}
+                onValueChange={(value) => {
+                  setIsActive(!value || value === ALL ? null : value === "true");
+                  setPage(1);
+                }}
+                containerClassName="w-36"
+              />
+            </ToolbarFilters>
+          </>
+        }
+        footer={
+          data && data.meta.total > 0 ? (
+            <Pagination
+              currentPage={data.meta.currentPage}
+              totalPages={data.meta.pages}
+              total={data.meta.total}
+              limit={data.meta.limit}
+              onPageChange={setPage}
+              itemLabel="customers"
+            />
+          ) : undefined
+        }
       >
         {content}
-      </AdminListPage>
+      </DataTableCard>
 
       <ConfirmDialog
         open={changing !== null}
@@ -175,6 +192,6 @@ export function CustomersView() {
           )
         }
       />
-    </>
+    </AdminPage>
   );
 }

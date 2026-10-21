@@ -1,27 +1,22 @@
 "use client";
 
-import { Pencil, Trash2 } from "lucide-react";
+import { FolderTree, Pencil, Plus, Trash2 } from "lucide-react";
 import { useMemo, useState, type ReactNode } from "react";
-import AdminListPage, {
-  ADMIN_FILTER_FIELD_CLASS,
-  ADMIN_SEARCH_FIELD_CLASS,
-  FilterIcon,
-  PrimaryAction,
-  TD_CLASS,
-  TH_CENTER_CLASS,
-  TH_CLASS,
-  TR_STATIC_CLASS,
-} from "@/components/admin/AdminListPage";
+import { AdminPage } from "@/components/admin/AdminPage";
+import { DataTableCard, ToolbarFilters } from "@/components/admin/DataTableCard";
 import { RowActionsMenu } from "@/components/admin/RowActionsMenu";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
+import { Pagination } from "@/components/shared/Pagination";
 import { SearchInput } from "@/components/shared/SearchInput";
 import { SelectField } from "@/components/shared/SelectField";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { TableSkeleton } from "@/components/shared/TableSkeleton";
+import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useDebounce } from "@/hooks/useDebounce";
+import { categoryTheme, TONE_CLASSES } from "@/lib/merchandising";
 import { cn } from "@/lib/utils";
 import { useDeleteCategory } from "@/services/categories/mutations";
 import { useGetAdminCategories } from "@/services/categories/queries";
@@ -38,6 +33,22 @@ const STATUS_OPTIONS = [
   { value: "true", label: "Active" },
   { value: "false", label: "Inactive" },
 ];
+
+function CategoryName({ category }: { category: ICategory }) {
+  const theme = categoryTheme(category.name);
+  const Icon = theme.icon;
+  return (
+    <div className="flex items-center gap-3">
+      <span className={cn("flex size-10 shrink-0 items-center justify-center rounded-xl", TONE_CLASSES[theme.tone].tile)}>
+        <Icon className={cn("size-5", TONE_CLASSES[theme.tone].icon)} aria-hidden="true" />
+      </span>
+      <div className="min-w-0">
+        <p className="truncate font-semibold text-foreground">{category.name}</p>
+        <p className="truncate text-xs text-muted-foreground">/{category.slug}</p>
+      </div>
+    </div>
+  );
+}
 
 export function CategoriesView() {
   const [search, setSearch] = useState("");
@@ -78,38 +89,7 @@ export function CategoriesView() {
     setFormOpen(true);
   };
 
-  const toolbar = (
-    <>
-      <SearchInput
-        value={search}
-        onValueChange={resetPage(setSearch)}
-        placeholder="Search by category name..."
-        className="max-w-search"
-        inputClassName={ADMIN_SEARCH_FIELD_CLASS}
-      />
-      <div className="ml-auto flex shrink-0 flex-wrap items-center gap-3">
-        <FilterIcon />
-        <SelectField
-          id="category-parent-filter"
-          options={[
-            { value: ALL, label: "All levels" },
-            ...topLevel.map((category) => ({ value: category.id, label: `Under ${category.name}` })),
-          ]}
-          value={parentId ?? ALL}
-          onValueChange={(value) => resetPage(setParentId)(!value || value === ALL ? null : value)}
-          className={ADMIN_FILTER_FIELD_CLASS}
-        />
-        <SelectField
-          id="category-status-filter"
-          options={STATUS_OPTIONS}
-          value={isActive === null ? ALL : String(isActive)}
-          onValueChange={(value) => resetPage(setIsActive)(!value || value === ALL ? null : value === "true")}
-          className={ADMIN_FILTER_FIELD_CLASS}
-        />
-        <PrimaryAction label="Create Category" onClick={() => openForm(null)} />
-      </div>
-    </>
-  );
+  const hasFilters = Boolean(debouncedSearch || parentId || isActive !== null);
 
   let content: ReactNode;
   if (isLoading) {
@@ -119,43 +99,51 @@ export function CategoriesView() {
   } else if (!data?.data.length) {
     content = (
       <EmptyState
-        title="No categories found"
-        message={debouncedSearch || parentId || isActive !== null ? "Try different filters." : "Create your first category."}
+        icon={<FolderTree aria-hidden="true" />}
+        title={hasFilters ? "No categories match" : "No categories yet"}
+        message={hasFilters ? "Try a different search or filter." : "Create your first aisle to start adding products."}
+        action={
+          !hasFilters && (
+            <Button onClick={() => openForm(null)}>
+              <Plus aria-hidden="true" />
+              New category
+            </Button>
+          )
+        }
       />
     );
   } else {
     content = (
-      <Table className={cn("min-w-175", isFetching && "opacity-60 transition-opacity")}>
+      <Table className="min-w-200">
         <TableHeader>
-          <TableRow className="border-gray-200">
-            <TableHead className={TH_CLASS}>Category</TableHead>
-            <TableHead className={TH_CLASS}>Parent</TableHead>
-            <TableHead className={TH_CLASS}>Description</TableHead>
-            <TableHead className={TH_CENTER_CLASS}>Sub-categories</TableHead>
-            <TableHead className={TH_CENTER_CLASS}>Products</TableHead>
-            <TableHead className={TH_CENTER_CLASS}>Status</TableHead>
-            <TableHead className={TH_CENTER_CLASS}>Actions</TableHead>
+          <TableRow>
+            <TableHead>Category</TableHead>
+            <TableHead>Parent</TableHead>
+            <TableHead>Description</TableHead>
+            <TableHead className="text-right">Sub-categories</TableHead>
+            <TableHead className="text-right">Products</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="w-12">
+              <span className="sr-only">Actions</span>
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.data.map((category) => (
-            <TableRow key={category.id} className={TR_STATIC_CLASS}>
-              <TableCell className={TD_CLASS}>
-                <p className="font-semibold text-gray-900">{category.name}</p>
-                <p className="text-xs text-gray-500">{category.slug}</p>
+            <TableRow key={category.id}>
+              <TableCell className="max-w-64">
+                <CategoryName category={category} />
               </TableCell>
-              <TableCell className={TD_CLASS}>
-                {category.parentId ? (nameById.get(category.parentId) ?? "—") : "Top-level"}
+              <TableCell className="text-muted-foreground">
+                {category.parentId ? (nameById.get(category.parentId) ?? "—") : "Top-level aisle"}
               </TableCell>
-              <TableCell className={cn(TD_CLASS, "max-w-64 truncate text-gray-500")}>
-                {category.description || "—"}
-              </TableCell>
-              <TableCell className={cn(TD_CLASS, "text-center")}>{category.childCount}</TableCell>
-              <TableCell className={cn(TD_CLASS, "text-center")}>{category.productCount}</TableCell>
-              <TableCell className={cn(TD_CLASS, "text-center")}>
+              <TableCell className="max-w-64 truncate text-muted-foreground">{category.description || "—"}</TableCell>
+              <TableCell className="numeric text-right">{category.childCount}</TableCell>
+              <TableCell className="numeric text-right font-medium">{category.productCount}</TableCell>
+              <TableCell>
                 <StatusBadge status={category.isActive ? "ACTIVE" : "INACTIVE"} />
               </TableCell>
-              <TableCell className={TD_CLASS}>
+              <TableCell>
                 <RowActionsMenu
                   label={category.name}
                   actions={[
@@ -172,18 +160,66 @@ export function CategoriesView() {
   }
 
   return (
-    <>
-      <AdminListPage
-        toolbar={toolbar}
-        responsiveToolbar
-        total={data?.meta.total ?? 0}
-        page={data?.meta.currentPage ?? page}
-        pageSize={data?.meta.limit ?? PAGE_SIZE}
-        onPageChange={setPage}
-        noun="categories"
+    <AdminPage
+      title="Categories"
+      description="Organise the shop into aisles. Products can only be added to active categories without sub-categories."
+      actions={
+        <Button onClick={() => openForm(null)}>
+          <Plus aria-hidden="true" />
+          New category
+        </Button>
+      }
+    >
+      <DataTableCard
+        busy={isFetching && !isLoading}
+        toolbar={
+          <>
+            <SearchInput
+              value={search}
+              onValueChange={resetPage(setSearch)}
+              placeholder="Search categories…"
+              className="w-full md:max-w-xs"
+            />
+            <ToolbarFilters>
+              <SelectField
+                id="category-parent-filter"
+                aria-label="Filter by parent"
+                size="sm"
+                options={[
+                  { value: ALL, label: "All levels" },
+                  ...topLevel.map((category) => ({ value: category.id, label: `In ${category.name}` })),
+                ]}
+                value={parentId ?? ALL}
+                onValueChange={(value) => resetPage(setParentId)(!value || value === ALL ? null : value)}
+                containerClassName="w-44"
+              />
+              <SelectField
+                id="category-status-filter"
+                aria-label="Filter by status"
+                size="sm"
+                options={STATUS_OPTIONS}
+                value={isActive === null ? ALL : String(isActive)}
+                onValueChange={(value) => resetPage(setIsActive)(!value || value === ALL ? null : value === "true")}
+                containerClassName="w-36"
+              />
+            </ToolbarFilters>
+          </>
+        }
+        footer={
+          data && data.meta.total > 0 ? (
+            <Pagination
+              currentPage={data.meta.currentPage}
+              totalPages={data.meta.pages}
+              total={data.meta.total}
+              limit={data.meta.limit}
+              onPageChange={setPage}
+              itemLabel="categories"
+            />
+          ) : undefined
+        }
       >
         {content}
-      </AdminListPage>
+      </DataTableCard>
 
       <CategoryFormDialog
         open={formOpen}
@@ -201,6 +237,6 @@ export function CategoriesView() {
         isPending={deleteCategory.isPending}
         onConfirm={() => deleting && deleteCategory.mutate(deleting.id, { onSuccess: () => setDeleting(null) })}
       />
-    </>
+    </AdminPage>
   );
 }

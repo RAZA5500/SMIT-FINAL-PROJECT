@@ -63,7 +63,7 @@ function AddInventoryForm({ onDone }: { onDone: () => void }) {
   return (
     <>
       <DialogHeader>
-        <DialogTitle className="text-modal-title">Add inventory</DialogTitle>
+        <DialogTitle>Add inventory</DialogTitle>
         <DialogDescription>Set the opening stock for a product that has no inventory yet.</DialogDescription>
       </DialogHeader>
 
@@ -123,7 +123,7 @@ function AddInventoryForm({ onDone }: { onDone: () => void }) {
         <Button variant="outline" onClick={onDone} disabled={createInventory.isPending}>
           Cancel
         </Button>
-        <LoadingButton type="submit" form={FORM_ID} variant="cta" isLoading={createInventory.isPending}>
+        <LoadingButton type="submit" form={FORM_ID} isLoading={createInventory.isPending}>
           Add inventory
         </LoadingButton>
       </DialogFooter>

@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { InputField } from "@/components/shared/InputField";
 import { LoadingButton } from "@/components/shared/LoadingButton";
+import { ProductImage } from "@/components/shared/ProductImage";
 import { SelectField } from "@/components/shared/SelectField";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { TextAreaField } from "@/components/shared/TextAreaField";
@@ -66,17 +67,18 @@ function AdjustStockForm({ inventory, onDone }: { inventory: IInventory; onDone:
   return (
     <>
       <DialogHeader>
-        <DialogTitle className="text-modal-title">Adjust stock</DialogTitle>
+        <DialogTitle>Adjust stock</DialogTitle>
         <DialogDescription>Use a negative quantity to remove stock and a positive one to add it.</DialogDescription>
       </DialogHeader>
 
-      <div className="flex items-center justify-between gap-3 rounded-10 bg-gray-50 px-4 py-3 text-sm">
-        <span className="min-w-0">
-          <span className="block truncate font-medium text-gray-900">{inventory.product.name}</span>
-          <span className="text-xs text-gray-500">{inventory.product.sku}</span>
+      <div className="flex items-center gap-3 rounded-xl bg-muted px-3.5 py-3 text-sm">
+        <ProductImage name={inventory.product.name} sizes="44px" className="size-11 shrink-0 rounded-lg" imageClassName="p-1" />
+        <span className="min-w-0 flex-1">
+          <span className="block truncate font-semibold">{inventory.product.name}</span>
+          <span className="text-xs text-muted-foreground">{inventory.product.sku}</span>
         </span>
-        <span className="flex shrink-0 items-center gap-2">
-          <span className="font-semibold text-gray-900">{inventory.qtyOnHand} in stock</span>
+        <span className="flex shrink-0 flex-col items-end gap-1">
+          <span className="numeric font-semibold">{inventory.qtyOnHand} in stock</span>
           <StatusBadge status={inventory.stockStatus} />
         </span>
       </div>
@@ -127,7 +129,7 @@ function AdjustStockForm({ inventory, onDone }: { inventory: IInventory; onDone:
         <Button variant="outline" onClick={onDone} disabled={adjustInventory.isPending}>
           Cancel
         </Button>
-        <LoadingButton type="submit" form={FORM_ID} variant="cta" isLoading={adjustInventory.isPending}>
+        <LoadingButton type="submit" form={FORM_ID} isLoading={adjustInventory.isPending}>
           Save adjustment
         </LoadingButton>
       </DialogFooter>

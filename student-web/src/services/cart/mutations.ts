@@ -13,10 +13,10 @@ export function useAddCartItem({ silent }: IMutationOptions = {}) {
     onSuccess: (cart) => {
       qc.setQueryData(cartKeys.cart, cart);
       void qc.invalidateQueries({ queryKey: cartKeys.cart });
-      if (!silent) toastSuccess("Added to cart");
+      if (!silent) toastSuccess("Added to basket");
     },
     onError: (error: Error) => {
-      if (!silent) toastError("Couldn't add to cart", error.message);
+      if (!silent) toastError("Couldn't add to basket", error.message);
     },
   });
 }
@@ -41,7 +41,7 @@ export function useRemoveCartItem({ silent }: IMutationOptions = {}) {
     mutationFn: (itemId: string) => cartService.removeItem(itemId),
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: cartKeys.cart });
-      if (!silent) toastSuccess("Removed from cart");
+      if (!silent) toastSuccess("Removed from basket");
     },
     onError: (error: Error) => {
       if (!silent) toastError("Couldn't remove item", error.message);
@@ -55,10 +55,10 @@ export function useClearCart({ silent }: IMutationOptions = {}) {
     mutationFn: () => cartService.clear(),
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: cartKeys.cart });
-      if (!silent) toastSuccess("Cart cleared");
+      if (!silent) toastSuccess("Basket cleared");
     },
     onError: (error: Error) => {
-      if (!silent) toastError("Couldn't clear cart", error.message);
+      if (!silent) toastError("Couldn't clear basket", error.message);
     },
   });
 }

@@ -1,32 +1,85 @@
 "use client";
 
-import { Package } from "lucide-react";
+import { ArrowRight, Clock, Package, Store, Truck } from "lucide-react";
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { CustomerPage } from "@/components/customer/CustomerPage";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
+import { FilterChips, type FilterChipOption } from "@/components/shared/FilterChips";
+import { OrderProgress } from "@/components/shared/order/OrderProgress";
 import { Pagination } from "@/components/shared/Pagination";
-import { SelectField } from "@/components/shared/SelectField";
 import { StatusBadge } from "@/components/shared/StatusBadge";
-import { TableSkeleton } from "@/components/shared/TableSkeleton";
 import { buttonVariants } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ORDER_STATUSES, type OrderStatus } from "@/constants/enums";
 import { DELIVERY_TYPE_LABELS, ORDER_STATUS_LABELS } from "@/constants/labels";
 import { formatDateTime, formatMoney } from "@/lib/format";
-import { customerRoutes, publicRoutes } from "@/lib/routes/routes";
+import { customerRoutes, shopUrl } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
 import { useGetCustomerOrders } from "@/services/orders/queries";
+import type { IOrderSummary } from "@/services/orders/types";
 
 const PAGE_SIZE = 10;
-const ALL_STATUSES = "ALL";
 
-const STATUS_OPTIONS = [
-  { value: ALL_STATUSES, label: "All statuses" },
+const STATUS_OPTIONS: FilterChipOption<OrderStatus | null>[] = [
+  { value: null, label: "All orders" },
   ...ORDER_STATUSES.map((status) => ({ value: status, label: ORDER_STATUS_LABELS[status] })),
 ];
+
+function OrderCard({ order }: { order: IOrderSummary }) {
+  const awaitingPayment =
+    order.status === "PENDING" && (order.paymentStatus === "UNPAID" || order.paymentStatus === "FAILED");
+  const DeliveryIcon = order.deliveryType === "PICKUP" ? Store : Truck;
+
+  return (
+    <li className="relative flex flex-col gap-4 rounded-3xl bg-card p-5 shadow-soft ring-1 ring-border transition hover:shadow-lift sm:p-6">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="flex flex-col gap-1">
+          <Link
+            href={customerRoutes.orderDetail(order.id)}
+            className="font-heading text-lg font-bold after:absolute after:inset-0 after:rounded-3xl hover:text-brand"
+          >
+            {order.orderNumber}
+          </Link>
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
+            <span>{formatDateTime(order.createdAt)}</span>
+            <span aria-hidden="true">·</span>
+            <span className="inline-flex items-center gap-1">
+              <DeliveryIcon className="size-3.5" aria-hidden="true" />
+              {DELIVERY_TYPE_LABELS[order.deliveryType]}
+            </span>
+            <span aria-hidden="true">·</span>
+            <span>
+              {order.itemCount} {order.itemCount === 1 ? "item" : "items"}
+            </span>
+          </p>
+        </div>
+        <p className="numeric font-heading text-xl font-bold">{formatMoney(order.total)}</p>
+      </div>
+
+      <OrderProgress status={order.status} />
+
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <StatusBadge status={order.status} />
+          <StatusBadge status={order.paymentStatus} />
+        </div>
+        {awaitingPayment ? (
+          <span className="relative z-10 inline-flex items-center gap-1.5 text-sm font-semibold text-warning">
+            <Clock className="size-4" aria-hidden="true" />
+            Awaiting payment — open to pay
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-1 text-sm font-semibold text-brand">
+            View details
+            <ArrowRight className="size-4" aria-hidden="true" />
+          </span>
+        )}
+      </div>
+    </li>
+  );
+}
 
 export function OrdersView() {
   const [page, setPage] = useState(1);
@@ -37,34 +90,30 @@ export function OrdersView() {
     status: status ?? undefined,
   });
 
-  const filter = (
-    <SelectField
-      id="order-status-filter"
-      options={STATUS_OPTIONS}
-      value={status ?? ALL_STATUSES}
-      onValueChange={(value) => {
-        setStatus(!value || value === ALL_STATUSES ? null : (value as OrderStatus));
-        setPage(1);
-      }}
-      containerClassName="w-52"
-    />
-  );
-
   let content: ReactNode;
   if (isLoading) {
-    content = <TableSkeleton columns={6} />;
+    content = (
+      <ul className="flex flex-col gap-4" aria-label="Loading" aria-busy="true">
+        {Array.from({ length: 3 }, (_, i) => (
+          <Skeleton key={i} className="h-40 w-full rounded-3xl" />
+        ))}
+      </ul>
+    );
   } else if (isError) {
     content = <ErrorState title="Couldn't load your orders" message={error.message} onRetry={() => void refetch()} />;
   } else if (!data?.data.length) {
     content = status ? (
-      <EmptyState title="No orders with this status" message="Try a different status filter." />
+      <EmptyState
+        title={`No ${ORDER_STATUS_LABELS[status].toLowerCase()} orders`}
+        message="Try another status to see more of your orders."
+      />
     ) : (
       <EmptyState
-        icon={<Package className="size-6" aria-hidden="true" />}
+        icon={<Package aria-hidden="true" />}
         title="No orders yet"
-        message="Your orders will appear here."
+        message="When you place an order, you can track it here from basket to doorstep."
         action={
-          <Link href={publicRoutes.shop} className={buttonVariants({ variant: "brand", size: "xl" })}>
+          <Link href={shopUrl()} className={buttonVariants({ size: "lg" })}>
             Start shopping
           </Link>
         }
@@ -72,51 +121,12 @@ export function OrdersView() {
     );
   } else {
     content = (
-      <div className="flex flex-col gap-4 p-4">
-        <Table className={cn(isFetching && "opacity-60 transition-opacity")}>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Order</TableHead>
-              <TableHead>Placed</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead className="text-right">Items</TableHead>
-              <TableHead className="text-right">Total</TableHead>
-              <TableHead>Payment</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="sr-only">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.data.map((order) => (
-              <TableRow key={order.id}>
-                <TableCell className="font-semibold text-gray-900">
-                  <Link href={customerRoutes.orderDetail(order.id)} className="hover:text-brand-green hover:underline">
-                    {order.orderNumber}
-                  </Link>
-                </TableCell>
-                <TableCell className="whitespace-nowrap text-gray-500">{formatDateTime(order.createdAt)}</TableCell>
-                <TableCell>{DELIVERY_TYPE_LABELS[order.deliveryType]}</TableCell>
-                <TableCell className="text-right">{order.itemCount}</TableCell>
-                <TableCell className="text-right font-medium">{formatMoney(order.total)}</TableCell>
-                <TableCell>
-                  <StatusBadge status={order.paymentStatus} />
-                </TableCell>
-                <TableCell>
-                  <StatusBadge status={order.status} />
-                </TableCell>
-                <TableCell className="text-right">
-                  <Link
-                    href={customerRoutes.orderDetail(order.id)}
-                    className={buttonVariants({ variant: "outline", size: "sm" })}
-                    aria-label={`View order ${order.orderNumber}`}
-                  >
-                    View
-                  </Link>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+      <div className="flex flex-col gap-6">
+        <ul className={cn("flex flex-col gap-4", isFetching && "opacity-60 transition-opacity")}>
+          {data.data.map((order) => (
+            <OrderCard key={order.id} order={order} />
+          ))}
+        </ul>
         <Pagination
           currentPage={data.meta.currentPage}
           totalPages={data.meta.pages}
@@ -130,8 +140,22 @@ export function OrdersView() {
   }
 
   return (
-    <CustomerPage title="My Orders" description="Track, pay for or cancel your orders." actions={filter}>
-      <Card className="py-0">{content}</Card>
+    <CustomerPage
+      eyebrow="My account"
+      title="My orders"
+      description="Track, pay for or cancel your orders."
+      breadcrumbs={[{ label: "My orders" }]}
+    >
+      <FilterChips
+        aria-label="Filter by status"
+        options={STATUS_OPTIONS}
+        value={status}
+        onChange={(next) => {
+          setStatus(next);
+          setPage(1);
+        }}
+      />
+      {content}
     </CustomerPage>
   );
 }

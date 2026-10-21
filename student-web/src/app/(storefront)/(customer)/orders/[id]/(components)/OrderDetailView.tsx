@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, CreditCard, XCircle } from "lucide-react";
+import { ArrowLeft, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { CustomerPage } from "@/components/customer/CustomerPage";
@@ -22,6 +22,7 @@ import { customerRoutes } from "@/lib/routes/routes";
 import { useCancelOrder } from "@/services/orders/mutations";
 import { useGetCustomerOrderDetail } from "@/services/orders/queries";
 import type { IOrder } from "@/services/orders/types";
+import { OrderStatusBanner } from "./OrderStatusBanner";
 import { PayNowDialog } from "./PayNowDialog";
 
 /** PENDING + UNPAID/FAILED + deadline baqi → customer dobara pay kar sakta hai */
@@ -33,15 +34,18 @@ function canRetryPayment(order: IOrder, now: number): boolean {
   );
 }
 
+const BREADCRUMB_ORDERS = { label: "My orders", href: customerRoutes.orders };
+
 export function OrderDetailView({ id }: { id: string }) {
   const { data: order, isLoading, isError, error, refetch } = useGetCustomerOrderDetail(id);
   const cancelOrder = useCancelOrder();
-  const now = useNow();
+  // Payment countdown ke liye har second; baaki statuses mein 30s kaafi
+  const now = useNow(order?.status === "PENDING" ? 1000 : 30_000);
   const [cancelOpen, setCancelOpen] = useState(false);
   const [payOpen, setPayOpen] = useState(false);
 
   const backLink = (
-    <Link href={customerRoutes.orders} className={buttonVariants({ variant: "ghost", size: "xl" })}>
+    <Link href={customerRoutes.orders} className={buttonVariants({ variant: "outline" })}>
       <ArrowLeft aria-hidden="true" />
       All orders
     </Link>
@@ -49,10 +53,10 @@ export function OrderDetailView({ id }: { id: string }) {
 
   if (isLoading) {
     return (
-      <CustomerPage title="Order details">
+      <CustomerPage title="Order details" breadcrumbs={[BREADCRUMB_ORDERS, { label: "Order" }]}>
         <div className="grid items-start gap-6 lg:grid-cols-3" aria-label="Loading" aria-busy="true">
-          <Skeleton className="h-72 w-full rounded-xl lg:col-span-2" />
-          <Skeleton className="h-72 w-full rounded-xl" />
+          <Skeleton className="h-80 w-full rounded-3xl lg:col-span-2" />
+          <Skeleton className="h-80 w-full rounded-3xl" />
         </div>
       </CustomerPage>
     );
@@ -61,7 +65,7 @@ export function OrderDetailView({ id }: { id: string }) {
   if (isError || !order) {
     const notFound = error instanceof ApiError && error.status === 404;
     return (
-      <CustomerPage title="Order details" actions={backLink}>
+      <CustomerPage title="Order details" breadcrumbs={[BREADCRUMB_ORDERS, { label: "Order" }]} actions={backLink}>
         <ErrorState
           title={notFound ? "Order not found" : "Couldn't load this order"}
           message={notFound ? "This order doesn't exist or doesn't belong to your account." : error?.message}
@@ -76,49 +80,35 @@ export function OrderDetailView({ id }: { id: string }) {
 
   return (
     <CustomerPage
-      title={`Order ${order.orderNumber}`}
-      description={`Placed ${formatDateTime(order.createdAt)}`}
+      eyebrow="Order details"
+      title={order.orderNumber}
+      description={
+        <span className="flex flex-wrap items-center gap-2">
+          Placed {formatDateTime(order.createdAt)}
+          <StatusBadge status={order.status} />
+          <StatusBadge status={order.paymentStatus} />
+        </span>
+      }
+      breadcrumbs={[BREADCRUMB_ORDERS, { label: order.orderNumber }]}
       actions={
-        <>
-          {backLink}
-          {canCancel && (
-            <Button variant="outline" size="xl" className="text-destructive" onClick={() => setCancelOpen(true)}>
-              <XCircle aria-hidden="true" />
-              Cancel order
-            </Button>
-          )}
-          {canPay && (
-            <Button variant="brand" size="xl" onClick={() => setPayOpen(true)}>
-              <CreditCard aria-hidden="true" />
-              Pay now
-            </Button>
-          )}
-        </>
+        canCancel && (
+          <Button variant="outline" className="text-destructive hover:text-destructive" onClick={() => setCancelOpen(true)}>
+            <XCircle aria-hidden="true" />
+            Cancel order
+          </Button>
+        )
       }
     >
-      <div className="flex flex-wrap items-center gap-2">
-        <StatusBadge status={order.status} />
-        <StatusBadge status={order.paymentStatus} />
-        {order.status === "PENDING" && (
-          <span className="text-sm text-gray-500">
-            {canPay
-              ? `Complete payment by ${formatDateTime(order.paymentExpiresAt)} or the order will be cancelled automatically.`
-              : "The payment window has closed — this order will be cancelled shortly."}
-          </span>
-        )}
-        {order.status === "REFUND_PENDING" && (
-          <span className="text-sm text-gray-500">Your refund is being processed.</span>
-        )}
-      </div>
+      <OrderStatusBanner order={order} now={now} canPay={canPay} onPay={() => setPayOpen(true)} />
 
       <div className="grid items-start gap-6 lg:grid-cols-3">
         <div className="flex flex-col gap-6 lg:col-span-2">
           <OrderItemsCard order={order} />
-          <OrderTimelineCard order={order} />
+          <OrderPaymentsCard order={order} />
         </div>
         <div className="flex flex-col gap-6">
+          <OrderTimelineCard order={order} />
           <OrderDetailsCard order={order} />
-          <OrderPaymentsCard order={order} />
         </div>
       </div>
 

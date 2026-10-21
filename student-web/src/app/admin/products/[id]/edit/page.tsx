@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { EditProductView } from "../../(components)/EditProductView";
 
 export const metadata: Metadata = {
-  title: "Edit Product",
+  title: "Edit product",
 };
 
 export default async function EditProductPage({ params }: PageProps<"/admin/products/[id]/edit">) {

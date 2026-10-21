@@ -25,6 +25,12 @@ export const productService = {
     return response.data!;
   },
 
+  /** Public detail — inactive product par backend 404 deta hai */
+  get: async (id: string, signal?: AbortSignal): Promise<IProduct> => {
+    const response = await request<IProduct>(API_ENDPOINTS.products.detail(id), undefined, { signal });
+    return response.data!;
+  },
+
   listAdmin: async (
     payload: IFetchAdminProductsPayload,
     signal?: AbortSignal,

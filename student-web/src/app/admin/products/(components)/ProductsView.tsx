@@ -1,30 +1,25 @@
 "use client";
 
-import { Eye, EyeOff, Pencil } from "lucide-react";
+import { ExternalLink, Eye, EyeOff, Package, Pencil, Plus } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, type ReactNode } from "react";
-import AdminListPage, {
-  ADMIN_FILTER_FIELD_CLASS,
-  ADMIN_SEARCH_FIELD_CLASS,
-  FilterIcon,
-  PrimaryAction,
-  TD_CLASS,
-  TH_CENTER_CLASS,
-  TH_CLASS,
-  TR_STATIC_CLASS,
-} from "@/components/admin/AdminListPage";
+import { AdminPage } from "@/components/admin/AdminPage";
+import { DataTableCard, ToolbarFilters } from "@/components/admin/DataTableCard";
 import { RowActionsMenu } from "@/components/admin/RowActionsMenu";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
+import { Pagination } from "@/components/shared/Pagination";
+import { ProductImage } from "@/components/shared/ProductImage";
 import { SearchInput } from "@/components/shared/SearchInput";
 import { SelectField } from "@/components/shared/SelectField";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { TableSkeleton } from "@/components/shared/TableSkeleton";
+import { buttonVariants } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useDebounce } from "@/hooks/useDebounce";
 import { formatMoney } from "@/lib/format";
-import { adminRoutes } from "@/lib/routes/routes";
-import { cn } from "@/lib/utils";
+import { adminRoutes, publicRoutes } from "@/lib/routes/routes";
 import { useGetAdminCategories } from "@/services/categories/queries";
 import { useUpdateProduct } from "@/services/products/mutations";
 import { useGetAdminProducts } from "@/services/products/queries";
@@ -43,8 +38,8 @@ const STATUS_OPTIONS = [
 const SORT_OPTIONS: { value: ProductSort; label: string }[] = [
   { value: "newest", label: "Newest first" },
   { value: "name_asc", label: "Name: A to Z" },
-  { value: "price_asc", label: "Price: Low to High" },
-  { value: "price_desc", label: "Price: High to Low" },
+  { value: "price_asc", label: "Price: low to high" },
+  { value: "price_desc", label: "Price: high to low" },
 ];
 
 export function ProductsView() {
@@ -84,107 +79,98 @@ export function ProductsView() {
     setPage(1);
   };
 
-  const toolbar = (
-    <>
-      <SearchInput
-        value={search}
-        onValueChange={onFilter(setSearch)}
-        placeholder="Search by product name or SKU..."
-        className="max-w-search"
-        inputClassName={ADMIN_SEARCH_FIELD_CLASS}
-      />
-      <div className="ml-auto flex shrink-0 flex-wrap items-center gap-3">
-        <FilterIcon />
-        <SelectField
-          id="product-category-filter"
-          options={categoryOptions}
-          value={categoryId ?? ALL}
-          onValueChange={(value) => onFilter(setCategoryId)(!value || value === ALL ? null : value)}
-          className={ADMIN_FILTER_FIELD_CLASS}
-        />
-        <SelectField
-          id="product-status-filter"
-          options={STATUS_OPTIONS}
-          value={isActive === null ? ALL : String(isActive)}
-          onValueChange={(value) => onFilter(setIsActive)(!value || value === ALL ? null : value === "true")}
-          className={ADMIN_FILTER_FIELD_CLASS}
-        />
-        <SelectField
-          id="product-sort"
-          options={SORT_OPTIONS}
-          value={sortBy}
-          onValueChange={(value) => onFilter(setSortBy)(value ?? "newest")}
-          className={ADMIN_FILTER_FIELD_CLASS}
-        />
-        <PrimaryAction label="Create Product" href={adminRoutes.productNew} />
-      </div>
-    </>
+  const hasFilters = Boolean(debouncedSearch || categoryId || isActive !== null);
+  const newProductLink = (
+    <Link href={adminRoutes.productNew} className={buttonVariants()}>
+      <Plus aria-hidden="true" />
+      New product
+    </Link>
   );
 
   let content: ReactNode;
   if (isLoading) {
-    content = <TableSkeleton columns={7} />;
+    content = <TableSkeleton columns={6} />;
   } else if (isError) {
     content = <ErrorState title="Couldn't load products" message={error.message} onRetry={() => void refetch()} />;
   } else if (!data?.data.length) {
     content = (
       <EmptyState
-        title="No products found"
-        message={debouncedSearch || categoryId || isActive !== null ? "Try different filters." : "Create your first product."}
+        icon={<Package aria-hidden="true" />}
+        title={hasFilters ? "No products match" : "No products yet"}
+        message={hasFilters ? "Try a different search or filter." : "Create your first product, then add stock from Inventory."}
+        action={!hasFilters && newProductLink}
       />
     );
   } else {
     content = (
-      <Table className={cn("min-w-225", isFetching && "opacity-60 transition-opacity")}>
+      <Table className="min-w-225">
         <TableHeader>
-          <TableRow className="border-gray-200">
-            <TableHead className={TH_CLASS}>Product</TableHead>
-            <TableHead className={TH_CLASS}>Category</TableHead>
-            <TableHead className={TH_CLASS}>Price</TableHead>
-            <TableHead className={TH_CENTER_CLASS}>Order qty</TableHead>
-            <TableHead className={TH_CENTER_CLASS}>Stock</TableHead>
-            <TableHead className={TH_CENTER_CLASS}>Status</TableHead>
-            <TableHead className={TH_CENTER_CLASS}>Actions</TableHead>
+          <TableRow>
+            <TableHead>Product</TableHead>
+            <TableHead>Category</TableHead>
+            <TableHead className="text-right">Price</TableHead>
+            <TableHead className="text-right">Order qty</TableHead>
+            <TableHead>Stock</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="w-12">
+              <span className="sr-only">Actions</span>
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.data.map((product) => (
-            <TableRow key={product.id} className={TR_STATIC_CLASS}>
-              <TableCell className={cn(TD_CLASS, "max-w-56")}>
-                <p className="truncate text-base font-semibold text-body-text">{product.name}</p>
-                <p className="truncate text-sm font-light text-gray-500">SKU: {product.sku}</p>
+            <TableRow key={product.id}>
+              <TableCell className="max-w-72">
+                <div className="flex items-center gap-3">
+                  <ProductImage
+                    name={product.name}
+                    categoryName={product.category.name}
+                    sizes="44px"
+                    className="size-11 shrink-0 rounded-lg ring-1 ring-border"
+                    imageClassName="p-1"
+                  />
+                  <div className="min-w-0">
+                    <Link
+                      href={adminRoutes.productEdit(product.id)}
+                      className="block truncate font-semibold text-foreground hover:text-brand"
+                    >
+                      {product.name}
+                    </Link>
+                    <p className="truncate text-xs text-muted-foreground">{product.sku}</p>
+                  </div>
+                </div>
               </TableCell>
-              <TableCell className={cn(TD_CLASS, "text-gray-500")}>{product.category.name}</TableCell>
-              <TableCell className={cn(TD_CLASS, "font-semibold text-body-text")}>
-                {formatMoney(product.price)}
-              </TableCell>
-              <TableCell className={cn(TD_CLASS, "text-center")}>
+              <TableCell className="text-muted-foreground">{product.category.name}</TableCell>
+              <TableCell className="numeric text-right font-semibold">{formatMoney(product.price)}</TableCell>
+              <TableCell className="numeric text-right text-muted-foreground">
                 {product.minimumOrderQuantity}–{product.maximumOrderQuantity}
               </TableCell>
-              <TableCell className={cn(TD_CLASS, "text-center")}>
+              <TableCell>
                 {product.inventoryId ? (
-                  <span className="inline-flex flex-col items-center gap-1">
-                    <span className="font-medium text-gray-900">{product.qtyOnHand}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="numeric w-8 font-semibold">{product.qtyOnHand}</span>
                     <StatusBadge status={product.stockStatus} />
-                  </span>
+                  </div>
                 ) : (
-                  <span className="text-xs text-gray-400">No inventory</span>
+                  <span className="text-xs text-muted-foreground">No inventory yet</span>
                 )}
               </TableCell>
-              <TableCell className={cn(TD_CLASS, "text-center")}>
+              <TableCell>
                 <StatusBadge status={product.isActive ? "ACTIVE" : "INACTIVE"} />
               </TableCell>
-              <TableCell className={TD_CLASS}>
+              <TableCell>
                 <RowActionsMenu
                   label={product.name}
                   actions={[
                     { label: "Edit", icon: Pencil, onSelect: () => router.push(adminRoutes.productEdit(product.id)) },
+                    ...(product.isActive
+                      ? [{ label: "View in shop", icon: ExternalLink, onSelect: () => router.push(publicRoutes.product(product.id)) }]
+                      : []),
                     {
                       label: product.isActive ? "Deactivate" : "Activate",
                       icon: product.isActive ? EyeOff : Eye,
                       disabled: updateProduct.isPending,
-                      onSelect: () =>
-                        updateProduct.mutate({ id: product.id, payload: { isActive: !product.isActive } }),
+                      onSelect: () => updateProduct.mutate({ id: product.id, payload: { isActive: !product.isActive } }),
                     },
                   ]}
                 />
@@ -197,16 +183,67 @@ export function ProductsView() {
   }
 
   return (
-    <AdminListPage
-      toolbar={toolbar}
-      responsiveToolbar
-      total={data?.meta.total ?? 0}
-      page={data?.meta.currentPage ?? page}
-      pageSize={data?.meta.limit ?? PAGE_SIZE}
-      onPageChange={setPage}
-      noun="products"
+    <AdminPage
+      title="Products"
+      description="Everything on the shelves. Prices and order limits are enforced at checkout."
+      actions={newProductLink}
     >
-      {content}
-    </AdminListPage>
+      <DataTableCard
+        busy={isFetching && !isLoading}
+        toolbar={
+          <>
+            <SearchInput
+              value={search}
+              onValueChange={onFilter(setSearch)}
+              placeholder="Search by name or SKU…"
+              className="w-full md:max-w-xs"
+            />
+            <ToolbarFilters>
+              <SelectField
+                id="product-category-filter"
+                aria-label="Filter by category"
+                size="sm"
+                options={categoryOptions}
+                value={categoryId ?? ALL}
+                onValueChange={(value) => onFilter(setCategoryId)(!value || value === ALL ? null : value)}
+                containerClassName="w-48"
+              />
+              <SelectField
+                id="product-status-filter"
+                aria-label="Filter by status"
+                size="sm"
+                options={STATUS_OPTIONS}
+                value={isActive === null ? ALL : String(isActive)}
+                onValueChange={(value) => onFilter(setIsActive)(!value || value === ALL ? null : value === "true")}
+                containerClassName="w-36"
+              />
+              <SelectField
+                id="product-sort"
+                aria-label="Sort products"
+                size="sm"
+                options={SORT_OPTIONS}
+                value={sortBy}
+                onValueChange={(value) => onFilter(setSortBy)(value ?? "newest")}
+                containerClassName="w-44"
+              />
+            </ToolbarFilters>
+          </>
+        }
+        footer={
+          data && data.meta.total > 0 ? (
+            <Pagination
+              currentPage={data.meta.currentPage}
+              totalPages={data.meta.pages}
+              total={data.meta.total}
+              limit={data.meta.limit}
+              onPageChange={setPage}
+              itemLabel="products"
+            />
+          ) : undefined
+        }
+      >
+        {content}
+      </DataTableCard>
+    </AdminPage>
   );
 }

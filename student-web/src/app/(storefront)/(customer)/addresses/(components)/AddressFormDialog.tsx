@@ -73,8 +73,8 @@ function AddressForm({ address, onDone }: { address: IAddress | null; onDone: ()
   return (
     <>
       <DialogHeader>
-        <DialogTitle className="text-modal-title">{address ? "Edit address" : "Add a new address"}</DialogTitle>
-        <DialogDescription>Saved addresses can be chosen at checkout.</DialogDescription>
+        <DialogTitle>{address ? "Edit address" : "Add a new address"}</DialogTitle>
+        <DialogDescription>Saved addresses appear at checkout for one-tap delivery.</DialogDescription>
       </DialogHeader>
 
       <form
@@ -88,13 +88,14 @@ function AddressForm({ address, onDone }: { address: IAddress | null; onDone: ()
           label="Address"
           required
           autoComplete="street-address"
+          placeholder="House number and street"
           containerClassName="sm:col-span-2"
           error={errors.addressLine?.message}
           {...register("addressLine")}
         />
         <InputField
           id="city"
-          label="City"
+          label="Town / city"
           required
           autoComplete="address-level2"
           error={errors.city?.message}
@@ -113,6 +114,7 @@ function AddressForm({ address, onDone }: { address: IAddress | null; onDone: ()
           label="Postcode"
           required
           autoComplete="postal-code"
+          placeholder="e.g. E1 6AN"
           error={errors.postcode?.message}
           {...register("postcode")}
         />
@@ -124,6 +126,7 @@ function AddressForm({ address, onDone }: { address: IAddress | null; onDone: ()
               <CheckboxField
                 id="isDefault"
                 label="Make this my default address"
+                description="Pre-selected at checkout"
                 checked={field.value}
                 onCheckedChange={field.onChange}
                 className="self-end sm:col-span-2"
@@ -137,7 +140,7 @@ function AddressForm({ address, onDone }: { address: IAddress | null; onDone: ()
         <Button variant="outline" onClick={onDone} disabled={isPending}>
           Cancel
         </Button>
-        <LoadingButton type="submit" form={FORM_ID} variant="brand" isLoading={isPending}>
+        <LoadingButton type="submit" form={FORM_ID} isLoading={isPending}>
           {address ? "Save changes" : "Save address"}
         </LoadingButton>
       </DialogFooter>

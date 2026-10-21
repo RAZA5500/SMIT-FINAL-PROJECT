@@ -1,22 +1,25 @@
 "use client";
 
-import { ArrowRight, ShoppingBasket, Trash2 } from "lucide-react";
+import { ArrowRight, CircleAlert, ShoppingBasket, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { cartHasIssues } from "@/components/customer/cart/cart-availability";
 import { CartLine } from "@/components/customer/cart/CartLine";
 import { CartSummary } from "@/components/customer/cart/CartSummary";
 import { CustomerPage } from "@/components/customer/CustomerPage";
+import { ProductRail } from "@/components/customer/product/ProductRail";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { customerRoutes, publicRoutes } from "@/lib/routes/routes";
+import { formatMoney } from "@/lib/format";
+import { customerRoutes, shopUrl } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
 import { useClearCart } from "@/services/cart/mutations";
 import { useGetCart } from "@/services/cart/queries";
+import type { ICart } from "@/services/cart/types";
+import { useGetProducts } from "@/services/products/queries";
 
 export function CartView() {
   const { data: cart, isLoading, isError, error, refetch } = useGetCart();
@@ -24,76 +27,47 @@ export function CartView() {
   const [confirmClear, setConfirmClear] = useState(false);
 
   const items = cart?.items ?? [];
-  const hasIssues = cartHasIssues(items);
 
-  const clearAction = items.length > 0 && (
-    <Button variant="outline" size="xl" onClick={() => setConfirmClear(true)}>
-      <Trash2 aria-hidden="true" />
-      Clear cart
-    </Button>
-  );
-
-  return (
-    <CustomerPage title="Your Cart" description="Review your items before checkout." actions={clearAction}>
-      {isLoading ? (
-        <CartPageSkeleton />
-      ) : isError ? (
-        <ErrorState title="Couldn't load your cart" message={error.message} onRetry={() => void refetch()} />
-      ) : !cart || items.length === 0 ? (
+  let content;
+  if (isLoading) {
+    content = <CartPageSkeleton />;
+  } else if (isError) {
+    content = <ErrorState title="Couldn't load your basket" message={error.message} onRetry={() => void refetch()} />;
+  } else if (!cart || items.length === 0) {
+    content = (
+      <div className="rounded-3xl bg-card shadow-soft ring-1 ring-border">
         <EmptyState
-          icon={<ShoppingBasket className="size-6" aria-hidden="true" />}
-          title="Your cart is empty"
-          message="Browse the shop and add products to your cart."
+          icon={<ShoppingBasket aria-hidden="true" />}
+          title="Your basket is empty"
+          message="Fresh produce, poultry and everyday essentials are waiting — and delivery is always free."
           action={
-            <Link href={publicRoutes.shop} className={buttonVariants({ variant: "brand", size: "xl" })}>
-              Browse products
+            <Link href={shopUrl()} className={buttonVariants({ size: "lg" })}>
+              Start shopping
+              <ArrowRight aria-hidden="true" />
             </Link>
           }
         />
-      ) : (
-        <div className="grid items-start gap-6 lg:grid-cols-3">
-          <Card className="py-0 lg:col-span-2">
-            {items.map((item) => (
-              <CartLine key={item.id} item={item} className="last:border-b-0" />
-            ))}
-          </Card>
+      </div>
+    );
+  } else {
+    content = <FilledBasket cart={cart} onClear={() => setConfirmClear(true)} />;
+  }
 
-          <CartSummary cart={cart}>
-            {hasIssues && (
-              <p role="alert" className="text-xs text-destructive">
-                Some items need your attention before you can check out.
-              </p>
-            )}
-            {hasIssues ? (
-              <Button variant="brand" size="xl" disabled className="w-full">
-                Proceed to checkout
-                <ArrowRight aria-hidden="true" />
-              </Button>
-            ) : (
-              <Link
-                href={customerRoutes.checkout}
-                className={cn(buttonVariants({ variant: "brand", size: "xl" }), "w-full")}
-              >
-                Proceed to checkout
-                <ArrowRight aria-hidden="true" />
-              </Link>
-            )}
-            <Link
-              href={publicRoutes.shop}
-              className={cn(buttonVariants({ variant: "ghost", size: "xl" }), "w-full text-brand-green")}
-            >
-              Continue shopping
-            </Link>
-          </CartSummary>
-        </div>
-      )}
+  return (
+    <CustomerPage
+      title="Your basket"
+      breadcrumbs={[{ label: "Basket" }]}
+      description={items.length > 0 ? `${cart?.itemCount} items ready for checkout.` : undefined}
+    >
+      {content}
+      <SuggestedProducts excludeIds={items.map((item) => item.productId)} />
 
       <ConfirmDialog
         open={confirmClear}
         onOpenChange={setConfirmClear}
-        title="Clear your cart?"
-        description="All items will be removed from your cart."
-        confirmLabel="Clear cart"
+        title="Clear your basket?"
+        description="All items will be removed from your basket."
+        confirmLabel="Clear basket"
         isPending={clearCart.isPending}
         onConfirm={() => clearCart.mutate(undefined, { onSuccess: () => setConfirmClear(false) })}
       />
@@ -101,15 +75,107 @@ export function CartView() {
   );
 }
 
+function FilledBasket({ cart, onClear }: { cart: ICart; onClear: () => void }) {
+  const hasIssues = cartHasIssues(cart.items);
+
+  const checkoutAction = hasIssues ? (
+    <Button size="xl" disabled className="w-full">
+      Checkout
+      <ArrowRight aria-hidden="true" />
+    </Button>
+  ) : (
+    <Link href={customerRoutes.checkout} className={cn(buttonVariants({ size: "xl" }), "w-full")}>
+      Checkout
+      <ArrowRight aria-hidden="true" />
+    </Link>
+  );
+
+  return (
+    <>
+      <div className="grid items-start gap-6 lg:grid-cols-3 lg:gap-8">
+        <section aria-label="Basket items" className="rounded-3xl bg-card shadow-soft ring-1 ring-border lg:col-span-2">
+          <div className="flex items-center justify-between gap-3 border-b px-5 py-4 sm:px-6">
+            <h2 className="font-sans text-sm font-semibold">
+              {cart.items.length} {cart.items.length === 1 ? "product" : "products"}
+            </h2>
+            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-destructive" onClick={onClear}>
+              <Trash2 aria-hidden="true" />
+              Clear basket
+            </Button>
+          </div>
+          {hasIssues && (
+            <p role="alert" className="flex items-center gap-2 border-b bg-tomato-soft px-5 py-3 text-sm font-medium text-destructive sm:px-6">
+              <CircleAlert className="size-4 shrink-0" aria-hidden="true" />
+              Some items need your attention before you can check out.
+            </p>
+          )}
+          <div className="divide-y px-5 sm:px-6">
+            {cart.items.map((item) => (
+              <CartLine key={item.id} item={item} />
+            ))}
+          </div>
+        </section>
+
+        <CartSummary cart={cart} className="lg:sticky lg:top-24">
+          {checkoutAction}
+          <Link href={shopUrl()} className={cn(buttonVariants({ variant: "ghost" }), "w-full")}>
+            Continue shopping
+          </Link>
+        </CartSummary>
+      </div>
+
+      {/* Phone: checkout hamesha nazar mein — tab bar ke upar */}
+      <div className="fixed inset-x-0 bottom-16 z-30 border-t bg-card/95 px-4 py-3 backdrop-blur md:hidden">
+        <div className="flex items-center gap-3">
+          <div className="flex flex-col">
+            <span className="text-xs text-muted-foreground">Total</span>
+            <span className="numeric font-heading text-xl font-bold">{formatMoney(cart.grandTotal)}</span>
+          </div>
+          <div className="flex-1">{checkoutAction}</div>
+        </div>
+      </div>
+      <div className="h-16 md:hidden" aria-hidden="true" />
+    </>
+  );
+}
+
+/** Upsell — naye products jo basket mein nahi */
+function SuggestedProducts({ excludeIds }: { excludeIds: string[] }) {
+  const { data, isLoading, isError, error, refetch } = useGetProducts({ limit: 16, sortBy: "newest" });
+  const products = data?.data.filter((product) => !excludeIds.includes(product.id)).slice(0, 12);
+  if (!isLoading && !isError && !products?.length) return null;
+
+  return (
+    <ProductRail
+      title="You might also like"
+      description="Fresh additions to round off your shop."
+      href={shopUrl()}
+      products={products}
+      isLoading={isLoading}
+      isError={isError}
+      errorMessage={error?.message}
+      onRetry={() => void refetch()}
+      className="pt-6"
+    />
+  );
+}
+
 function CartPageSkeleton() {
   return (
-    <div className="grid items-start gap-6 lg:grid-cols-3" aria-label="Loading" aria-busy="true">
-      <div className="flex flex-col gap-3 rounded-xl p-4 ring-1 ring-foreground/10 lg:col-span-2">
+    <div className="grid items-start gap-6 lg:grid-cols-3 lg:gap-8" aria-label="Loading" aria-busy="true">
+      <div className="flex flex-col gap-5 rounded-3xl bg-card p-6 ring-1 ring-border lg:col-span-2">
         {Array.from({ length: 3 }, (_, i) => (
-          <Skeleton key={i} className="h-16 w-full" />
+          <div key={i} className="flex gap-4">
+            <Skeleton className="size-24 rounded-xl" />
+            <div className="flex flex-1 flex-col gap-2">
+              <Skeleton className="h-4 w-3/5" />
+              <Skeleton className="h-3 w-1/4" />
+              <Skeleton className="h-9 w-32 rounded-full" />
+            </div>
+          </div>
         ))}
       </div>
-      <Skeleton className="h-56 w-full rounded-xl" />
+      <Skeleton className="h-80 w-full rounded-2xl" />
     </div>
   );
 }

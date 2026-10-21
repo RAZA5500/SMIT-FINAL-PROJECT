@@ -1,7 +1,7 @@
 "use client";
 
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Search, X } from "lucide-react";
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
 import { cn } from "@/lib/utils";
 
 interface SearchInputProps {
@@ -10,7 +10,7 @@ interface SearchInputProps {
   onValueChange: (value: string) => void;
   placeholder?: string;
   className?: string;
-  /** Screen ka apna look (e.g. shop ka bara gray search box) */
+  /** Screen ka apna look (e.g. toolbar ka chhota search) */
   inputClassName?: string;
   "aria-label"?: string;
 }
@@ -24,19 +24,25 @@ export function SearchInput({
   "aria-label": ariaLabel,
 }: SearchInputProps) {
   return (
-    <div className={cn("relative w-full", className)}>
-      <Search className="pointer-events-none absolute top-1/2 left-3 z-10 size-4 -translate-y-1/2 text-gray-400" />
-      <Input
+    <InputGroup className={cn("w-full", className)}>
+      <InputGroupAddon>
+        <Search aria-hidden="true" />
+      </InputGroupAddon>
+      <InputGroupInput
         type="search"
         value={value}
         onChange={(event) => onValueChange(event.target.value)}
         placeholder={placeholder}
         aria-label={ariaLabel ?? placeholder}
-        className={cn(
-          "h-11 rounded-15 border-gray-200 bg-white pl-9 text-sm placeholder:text-gray-400",
-          inputClassName,
-        )}
+        className={cn("[&::-webkit-search-cancel-button]:hidden", inputClassName)}
       />
-    </div>
+      {value && (
+        <InputGroupAddon align="inline-end">
+          <InputGroupButton size="icon-xs" aria-label="Clear search" onClick={() => onValueChange("")}>
+            <X aria-hidden="true" />
+          </InputGroupButton>
+        </InputGroupAddon>
+      )}
+    </InputGroup>
   );
 }

@@ -2,28 +2,25 @@
 
 import { CircleCheck, CircleX, FlaskConical } from "lucide-react";
 import { Controller, type Control } from "react-hook-form";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { cn } from "@/lib/utils";
+import { FieldMessage } from "@/components/shared/FieldMessage";
+import { RadioGroup } from "@/components/ui/radio-group";
 import { MOCK_PAYMENT_OUTCOMES, type MockPaymentFormValues } from "@/modules/zod/payment.model";
+import { ChoiceCard } from "../checkout/ChoiceCard";
 
 const OUTCOMES: Record<MockPaymentFormValues["outcome"], { label: string; hint: string; icon: typeof CircleCheck }> = {
-  succeeded: { label: "Approve payment", hint: "Simulates a successful card payment", icon: CircleCheck },
-  failed: { label: "Decline payment", hint: "Simulates a declined card", icon: CircleX },
+  succeeded: { label: "Test card — approve", hint: "Simulates a successful payment", icon: CircleCheck },
+  failed: { label: "Test card — decline", hint: "Simulates a declined card", icon: CircleX },
 };
 
 /** Student mock gateway — card form ki jagah outcome (FLOW-MD 08 §16) */
-export function MockOutcomeField({
-  control,
-  disabled,
-}: {
-  control: Control<MockPaymentFormValues>;
-  disabled?: boolean;
-}) {
+export function MockOutcomeField({ control, disabled }: { control: Control<MockPaymentFormValues>; disabled?: boolean }) {
   return (
-    <div className="flex flex-col gap-3">
-      <p className="flex items-center gap-2 rounded-10 bg-amber-50 px-3 py-2 text-xs text-amber-700">
-        <FlaskConical className="size-4 shrink-0" aria-hidden="true" />
-        Test payment — no real card is charged.
+    <div className="flex flex-col gap-4">
+      <p className="flex items-start gap-2.5 rounded-xl bg-saffron-soft px-3.5 py-3 text-sm text-warning">
+        <FlaskConical className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+        <span>
+          <span className="font-semibold">Test payment.</span> This store uses a demo gateway — no real card is charged.
+        </span>
       </p>
       <Controller
         control={control}
@@ -40,31 +37,17 @@ export function MockOutcomeField({
               {MOCK_PAYMENT_OUTCOMES.map((outcome) => {
                 const { label, hint, icon: Icon } = OUTCOMES[outcome];
                 return (
-                  <label
+                  <ChoiceCard
                     key={outcome}
-                    className={cn(
-                      "flex cursor-pointer items-center gap-3 rounded-15 border p-4 transition-colors",
-                      field.value === outcome ? "border-brand-green bg-accent" : "border-gray-200 hover:border-gray-300",
-                    )}
-                  >
-                    <RadioGroupItem value={outcome} />
-                    <Icon
-                      className={cn("size-5", outcome === "succeeded" ? "text-brand-green" : "text-destructive")}
-                      aria-hidden="true"
-                    />
-                    <span className="flex flex-col">
-                      <span className="text-sm font-medium text-gray-900">{label}</span>
-                      <span className="text-xs text-gray-500">{hint}</span>
-                    </span>
-                  </label>
+                    value={outcome}
+                    title={label}
+                    description={hint}
+                    icon={<Icon className={outcome === "succeeded" ? "text-success" : "text-destructive"} aria-hidden="true" />}
+                  />
                 );
               })}
             </RadioGroup>
-            {fieldState.error && (
-              <p role="alert" className="text-xs text-destructive">
-                {fieldState.error.message}
-              </p>
-            )}
+            <FieldMessage id="outcome" error={fieldState.error?.message} />
           </>
         )}
       />

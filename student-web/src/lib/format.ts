@@ -27,3 +27,14 @@ export function formatDate(value: string | Date | null | undefined): string {
   if (!value) return "—";
   return dateFormatter.format(new Date(value));
 }
+
+/** Avatar ke liye naam ke pehle do huroof ("Ayesha Khan" → "AK") */
+export function initials(name: string | null | undefined): string {
+  return (name || "?")
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word) => word[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}

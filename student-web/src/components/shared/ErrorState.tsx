@@ -1,5 +1,6 @@
-import { CircleAlert, RefreshCw } from "lucide-react";
+import { CloudOff, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { cn } from "@/lib/utils";
 
 interface ErrorStateProps {
@@ -17,23 +18,25 @@ export function ErrorState({
   className,
 }: ErrorStateProps) {
   return (
-    <div
-      role="alert"
-      className={cn("flex flex-col items-center justify-center gap-3 px-6 py-12 text-center", className)}
-    >
-      <div className="flex size-12 items-center justify-center rounded-full bg-icon-bg-red text-destructive">
-        <CircleAlert className="size-6" aria-hidden="true" />
-      </div>
-      <div className="flex flex-col gap-1">
-        <h3 className="text-base font-semibold text-gray-900">{title}</h3>
-        <p className="max-w-sm text-sm text-gray-500">{message}</p>
-      </div>
+    <Empty role="alert" className={cn("py-14", className)}>
+      <EmptyHeader>
+        <EmptyMedia className="relative mb-3">
+          <span className="absolute -inset-3 rounded-full bg-tomato-soft" aria-hidden="true" />
+          <span className="relative flex size-14 items-center justify-center rounded-full bg-card text-destructive shadow-soft ring-1 ring-border">
+            <CloudOff className="size-6" aria-hidden="true" />
+          </span>
+        </EmptyMedia>
+        <EmptyTitle className="text-lg font-semibold">{title}</EmptyTitle>
+        <EmptyDescription className="max-w-sm">{message}</EmptyDescription>
+      </EmptyHeader>
       {onRetry && (
-        <Button variant="outline" onClick={onRetry}>
-          <RefreshCw />
-          Try again
-        </Button>
+        <EmptyContent className="pt-1">
+          <Button variant="outline" onClick={onRetry}>
+            <RefreshCw aria-hidden="true" />
+            Try again
+          </Button>
+        </EmptyContent>
       )}
-    </div>
+    </Empty>
   );
 }

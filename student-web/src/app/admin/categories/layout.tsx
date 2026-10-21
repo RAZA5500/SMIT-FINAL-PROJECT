@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Category Management",
+  title: "Categories",
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

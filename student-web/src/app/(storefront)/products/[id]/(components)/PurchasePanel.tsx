@@ -1,0 +1,128 @@
+"use client";
+
+import { ShoppingBasket } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+import { QuantityStepper } from "@/components/customer/product/QuantityStepper";
+import { LoadingButton } from "@/components/shared/LoadingButton";
+import { Button } from "@/components/ui/button";
+import { useCartItemQuantity } from "@/hooks/useCartItemQuantity";
+import { formatMoney } from "@/lib/format";
+import { loginUrl } from "@/lib/routes/routes";
+import { toastError } from "@/lib/toast";
+import { useAddCartItem } from "@/services/cart/mutations";
+import { useGetCart } from "@/services/cart/queries";
+import type { ICartItem } from "@/services/cart/types";
+import type { IProduct } from "@/services/products/types";
+import { useAuthStore } from "@/stores/auth-store";
+import { useUiStore } from "@/stores/ui-store";
+
+/**
+ * Product page ka buy box: pehle quantity chuno (min..max), phir add. Basket mein
+ * aa jaye to wahi live stepper jo card par hai (debounced PATCH).
+ */
+export function PurchasePanel({ product }: { product: IProduct }) {
+  const { data: cart } = useGetCart();
+  const line = cart?.items.find((item) => item.productId === product.id);
+
+  if (product.stockStatus === "OUT_OF_STOCK" && !line) {
+    return (
+      <div className="flex flex-col gap-2 rounded-2xl bg-muted p-5">
+        <Button size="xl" variant="secondary" disabled className="w-full">
+          Out of stock
+        </Button>
+        <p className="text-center text-sm text-muted-foreground">We&apos;re restocking — check back soon.</p>
+      </div>
+    );
+  }
+
+  return line ? <InBasket item={line} /> : <AddToBasket product={product} />;
+}
+
+function AddToBasket({ product }: { product: IProduct }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const token = useAuthStore((state) => state.token);
+  const user = useAuthStore((state) => state.user);
+  const setCartOpen = useUiStore((state) => state.setCartOpen);
+  const addItem = useAddCartItem({ silent: true });
+  const [quantity, setQuantity] = useState(product.minimumOrderQuantity);
+
+  const add = () => {
+    if (!token || !user) {
+      router.push(loginUrl(pathname));
+      return;
+    }
+    if (user.role !== "CUSTOMER") {
+      toastError("Shopping is for customers", "Admin accounts can't add items to a basket.");
+      return;
+    }
+    addItem.mutate(
+      { productId: product.id, quantity },
+      {
+        onSuccess: () =>
+          toast.success("Added to basket", {
+            description: `${quantity} × ${product.name}`,
+            action: { label: "View basket", onClick: () => setCartOpen(true) },
+          }),
+        onError: (error) => toastError("Couldn't add to basket", error.message),
+      },
+    );
+  };
+
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <QuantityStepper
+          size="lg"
+          label={product.name}
+          quantity={quantity}
+          canDecrease={quantity > product.minimumOrderQuantity}
+          canIncrease={quantity < product.maximumOrderQuantity}
+          onDecrease={() => setQuantity((q) => Math.max(product.minimumOrderQuantity, q - 1))}
+          onIncrease={() => setQuantity((q) => Math.min(product.maximumOrderQuantity, q + 1))}
+          className="w-full sm:w-36"
+        />
+        <LoadingButton size="xl" className="flex-1" isLoading={addItem.isPending} loadingText="Adding…" onClick={add}>
+          <ShoppingBasket aria-hidden="true" />
+          Add to basket
+        </LoadingButton>
+      </div>
+      <p className="text-xs text-muted-foreground">
+        Order between {product.minimumOrderQuantity} and {product.maximumOrderQuantity} per order.
+      </p>
+    </div>
+  );
+}
+
+function InBasket({ item }: { item: ICartItem }) {
+  const setCartOpen = useUiStore((state) => state.setCartOpen);
+  const { quantity, atMinimum, canIncrease, increase, decrease, isRemoving } = useCartItemQuantity(item);
+
+  return (
+    <div className="flex flex-col gap-3 rounded-2xl bg-lime-soft p-4 ring-1 ring-lime/60">
+      <p className="text-sm font-semibold text-brand">
+        In your basket · <span className="numeric">{formatMoney(item.lineTotal)}</span>
+      </p>
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <QuantityStepper
+          size="lg"
+          variant="solid"
+          label={item.name}
+          quantity={quantity}
+          removeAtMinimum
+          atMinimum={atMinimum}
+          canIncrease={canIncrease}
+          disabled={isRemoving}
+          onDecrease={decrease}
+          onIncrease={increase}
+          className="w-full sm:w-40"
+        />
+        <Button size="xl" variant="outline" className="flex-1" onClick={() => setCartOpen(true)}>
+          View basket
+        </Button>
+      </div>
+    </div>
+  );
+}

@@ -1,6 +1,8 @@
 "use client";
 
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { AdminPage } from "@/components/admin/AdminPage";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,26 +16,33 @@ export function EditProductView({ id }: { id: string }) {
 
   if (isLoading) {
     return (
-      <main className="flex flex-1 flex-col gap-4 bg-navbar-bg p-4 sm:p-5" aria-label="Loading" aria-busy="true">
-        <Skeleton className="h-12 w-full rounded-xl" />
-        <Skeleton className="h-64 w-full rounded-xl" />
-      </main>
+      <AdminPage title="Edit product">
+        <div className="grid gap-6 xl:grid-cols-3" aria-label="Loading" aria-busy="true">
+          <Skeleton className="h-96 w-full rounded-2xl xl:col-span-2" />
+          <Skeleton className="h-96 w-full rounded-2xl" />
+        </div>
+      </AdminPage>
     );
   }
 
   if (isError || !product) {
     const notFound = error instanceof ApiError && error.status === 404;
     return (
-      <main className="flex flex-1 flex-col items-center bg-navbar-bg p-4 sm:p-5">
+      <AdminPage
+        title="Edit product"
+        actions={
+          <Link href={adminRoutes.products} className={buttonVariants({ variant: "outline" })}>
+            <ArrowLeft aria-hidden="true" />
+            All products
+          </Link>
+        }
+      >
         <ErrorState
           title={notFound ? "Product not found" : "Couldn't load this product"}
           message={notFound ? "It may have been removed." : error?.message}
           onRetry={notFound ? undefined : () => void refetch()}
         />
-        <Link href={adminRoutes.products} className={buttonVariants({ variant: "outline" })}>
-          Back to products
-        </Link>
-      </main>
+      </AdminPage>
     );
   }
 

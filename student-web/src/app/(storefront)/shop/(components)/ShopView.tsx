@@ -1,81 +1,108 @@
 "use client";
 
-import { Funnel } from "lucide-react";
-import { useState, type ReactNode } from "react";
-import ProductCard from "@/components/customer/ProductCard";
-import { ProductGridSkeleton } from "@/components/customer/ProductCardSkeleton";
-import CartPanel from "@/components/customer/shop/CartPanel";
-import ShopFilters, {
-  PRICE_CEILING,
-  PRICE_FLOOR,
-  type ShopFilterState,
-} from "@/components/customer/shop/ShopFilters";
+import { SearchX, SlidersHorizontal } from "lucide-react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
+import { PageBreadcrumbs, type Crumb } from "@/components/customer/CustomerPage";
+import { CATEGORY_LIST_LIMIT } from "@/components/customer/layout/CategoryBar";
+import { ProductCard } from "@/components/customer/product/ProductCard";
+import { ProductGridSkeleton } from "@/components/customer/product/ProductCardSkeleton";
+import { ActiveFilters } from "@/components/customer/shop/ActiveFilters";
+import { buildCategoryTree, findCategory, findParent } from "@/components/customer/shop/category-tree";
+import { ShopFilters } from "@/components/customer/shop/ShopFilters";
+import { useShopParams } from "@/components/customer/shop/use-shop-params";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { Pagination } from "@/components/shared/Pagination";
-import { SearchInput } from "@/components/shared/SearchInput";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useDebounce } from "@/hooks/useDebounce";
+import { SelectField } from "@/components/shared/SelectField";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Skeleton } from "@/components/ui/skeleton";
+import { shopUrl } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
+import { useGetCategories } from "@/services/categories/queries";
 import { useGetProducts } from "@/services/products/queries";
+import type { ProductSort } from "@/services/products/types";
+import { SubcategoryChips } from "./SubcategoryChips";
 
-const PAGE_SIZE = 12;
-const GRID_CLASS = "grid shop-product-grid gap-5";
+const PAGE_SIZE = 24;
+const GRID_CLASS = "grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 xl:grid-cols-4";
 
-const INITIAL_FILTERS: ShopFilterState = {
-  categoryId: null,
-  minPrice: PRICE_FLOOR,
-  maxPrice: PRICE_CEILING,
-  sort: null,
-};
+/** Backend sirf yeh sorts support karta hai (api-reference Part 2); default newest */
+const SORT_OPTIONS: { value: ProductSort; label: string }[] = [
+  { value: "newest", label: "Newest first" },
+  { value: "price_asc", label: "Price: low to high" },
+  { value: "price_desc", label: "Price: high to low" },
+  { value: "name_asc", label: "Name: A to Z" },
+];
 
-/** Shop: categories ∥ products parallel load; filter badle to page 1 (FLOW-MD 08 §11, 11 §7) */
+/** Shop: filters URL mein; categories ∥ products parallel load (FLOW-MD 08 §11, 11 §7) */
 export function ShopView() {
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
-  const [filters, setFilters] = useState<ShopFilterState>(INITIAL_FILTERS);
+  const shop = useShopParams();
   const [filtersOpen, setFiltersOpen] = useState(false);
-
-  // Typing aur slider drag har tabdeeli par request na bhejein
-  const debouncedSearch = useDebounce(search.trim());
-  const minPrice = useDebounce(filters.minPrice);
-  const maxPrice = useDebounce(filters.maxPrice);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const { data, isLoading, isFetching, isError, error, refetch } = useGetProducts({
-    page,
+    page: shop.page,
     limit: PAGE_SIZE,
-    q: debouncedSearch || undefined,
-    categoryId: filters.categoryId ?? undefined,
-    minPrice: minPrice !== PRICE_FLOOR ? minPrice : undefined,
-    maxPrice: maxPrice !== PRICE_CEILING ? maxPrice : undefined,
-    sortBy: filters.sort ?? undefined,
+    q: shop.q || undefined,
+    categoryId: shop.category ?? undefined,
+    minPrice: shop.min ?? undefined,
+    maxPrice: shop.max ?? undefined,
+    sortBy: shop.sort ?? undefined,
   });
+  const { data: categories } = useGetCategories({ limit: CATEGORY_LIST_LIMIT });
+  const tree = useMemo(() => buildCategoryTree(categories?.data ?? []), [categories]);
+  const category = findCategory(tree, shop.category);
+  const parent = findParent(tree, shop.category);
 
-  const patchFilters = (next: Partial<ShopFilterState>) => {
-    setFilters((prev) => ({ ...prev, ...next }));
-    setPage(1);
+  const title = shop.q
+    ? category
+      ? `“${shop.q}” in ${category.name}`
+      : `Results for “${shop.q}”`
+    : (category?.name ?? "All products");
+
+  const crumbs: Crumb[] = [{ label: "Shop", href: shopUrl() }];
+  if (parent) crumbs.push({ label: parent.name, href: shopUrl({ category: parent.id }) });
+  if (category) crumbs.push({ label: category.name });
+
+  const goToPage = (page: number) => {
+    shop.update({ page });
+    resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const onSearch = (value: string) => {
-    setSearch(value);
-    setPage(1);
-  };
+  const sortSelect = (id: string) => (
+    <SelectField
+      id={id}
+      aria-label="Sort products"
+      options={SORT_OPTIONS}
+      value={shop.sort ?? "newest"}
+      onValueChange={(sort) => shop.update({ sort: sort === "newest" ? null : sort })}
+      containerClassName="w-full sm:w-52"
+    />
+  );
 
   let content: ReactNode;
   if (isLoading) {
-    content = <ProductGridSkeleton count={6} className={GRID_CLASS} />;
+    content = <ProductGridSkeleton count={8} className={GRID_CLASS} />;
   } else if (isError) {
-    content = (
-      <ErrorState title="Couldn't load products" message={error.message} onRetry={() => void refetch()} />
-    );
+    content = <ErrorState title="Couldn't load products" message={error.message} onRetry={() => void refetch()} />;
   } else if (!data?.data.length) {
-    content = <EmptyState title="No products found" message="Try a different search or filter." />;
+    content = shop.hasFilters ? (
+      <EmptyState
+        icon={<SearchX aria-hidden="true" />}
+        title="No products match your filters"
+        message="Try a different search, widen the price range or browse another aisle."
+        action={<Button onClick={shop.clear}>Clear all filters</Button>}
+      />
+    ) : (
+      <EmptyState title="No products yet" message="New products will appear here soon." />
+    );
   } else {
     content = (
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-8">
         <div className={cn(GRID_CLASS, isFetching && "opacity-60 transition-opacity")}>
-          {data.data.map((product) => (
-            <ProductCard key={product.id} product={product} variant="shop" />
+          {data.data.map((product, index) => (
+            <ProductCard key={product.id} product={product} eager={index < 4} />
           ))}
         </div>
         <Pagination
@@ -83,66 +110,72 @@ export function ShopView() {
           totalPages={data.meta.pages}
           total={data.meta.total}
           limit={data.meta.limit}
-          onPageChange={setPage}
+          onPageChange={goToPage}
           itemLabel="products"
+          className="border-t pt-6"
         />
       </div>
     );
   }
 
   return (
-    <div className="mt-23">
-      <div className="flex min-h-[calc(100vh-5.75rem)] bg-white">
-        <main className="min-w-0 flex-1">
-          <div className="shop-container scrollbar-hide pt-5 pr-6 pb-10 pl-6 lg:pl-10">
-            <div className="flex items-start gap-6">
-              <aside className="hidden w-52 shrink-0 shop:block">
-                <ShopFilters state={filters} onChange={patchFilters} />
-              </aside>
-
-              <div className="flex min-w-0 flex-1 flex-col gap-5">
-                <div className="flex items-center gap-3">
-                  <SearchInput
-                    value={search}
-                    onValueChange={onSearch}
-                    placeholder="Search for products..."
-                    className="flex-1"
-                    inputClassName="h-12 rounded-10 border-gray-300 bg-gray-50 pl-10 text-xs text-neutral-gray md:text-sm"
-                  />
-                  <button
-                    type="button"
-                    className="inline-flex h-12 shrink-0 items-center gap-2 rounded-lg bg-brand-green px-4 font-inter text-fs-12 leading-none font-medium text-white shop:hidden"
-                    onClick={() => setFiltersOpen(true)}
-                  >
-                    Filter
-                    <Funnel className="size-4" aria-hidden="true" />
-                  </button>
-                </div>
-
-                <section aria-label="Products" aria-busy={isFetching || undefined}>
-                  {content}
-                </section>
-              </div>
-            </div>
-          </div>
-        </main>
-
-        <aside className="hidden w-100 shrink-0 flex-col pt-5 pr-6 lg:flex">
-          <div className="sticky top-28 flex h-[calc(100vh-8.5rem)] flex-col overflow-hidden rounded-15 border border-gray-200 bg-white shadow-card">
-            <CartPanel />
-          </div>
-        </aside>
+    <div className="container-page flex flex-col gap-6 py-6 sm:py-8">
+      <div className="flex flex-col gap-3">
+        <PageBreadcrumbs items={crumbs} />
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl font-bold sm:text-4xl">{title}</h1>
+          {data ? (
+            <p className="text-sm text-muted-foreground" aria-live="polite">
+              {data.meta.total} {data.meta.total === 1 ? "product" : "products"} · Free delivery on every order
+            </p>
+          ) : (
+            <Skeleton className="h-4 w-48" />
+          )}
+        </div>
+        <SubcategoryChips tree={tree} selected={shop.category} onSelect={(id) => shop.update({ category: id })} />
       </div>
 
-      {/* Chhoti screens par sidebar ki jagah filters dialog */}
-      <Dialog open={filtersOpen} onOpenChange={setFiltersOpen}>
-        <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-sm">
-          <DialogHeader>
-            <DialogTitle>Filters</DialogTitle>
-          </DialogHeader>
-          <ShopFilters state={filters} onChange={patchFilters} />
-        </DialogContent>
-      </Dialog>
+      <div className="flex items-start gap-8">
+        <aside className="hidden w-64 shrink-0 lg:block" aria-label="Filters">
+          <div className="sticky top-24 rounded-2xl bg-card p-5 shadow-soft ring-1 ring-border">
+            <ShopFilters params={shop} update={shop.update} />
+          </div>
+        </aside>
+
+        <section ref={resultsRef} aria-label="Products" aria-busy={isFetching || undefined} className="min-w-0 flex-1 scroll-mt-28">
+          <div className="mb-5 flex flex-wrap items-center gap-3">
+            <Button variant="outline" className="lg:hidden" onClick={() => setFiltersOpen(true)}>
+              <SlidersHorizontal aria-hidden="true" />
+              Filters
+            </Button>
+            <div className="min-w-0 flex-1">
+              <ActiveFilters params={shop} categoryName={category?.name} update={shop.update} clear={shop.clear} />
+            </div>
+            <div className="hidden sm:block">{sortSelect("shop-sort")}</div>
+          </div>
+          {content}
+        </section>
+      </div>
+
+      <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
+        <SheetContent side="bottom" className="max-h-5/6 gap-0 rounded-t-3xl p-0">
+          <SheetHeader className="border-b px-5 py-4">
+            <SheetTitle>Filter &amp; sort</SheetTitle>
+          </SheetHeader>
+          <div className="flex flex-col gap-5 overflow-y-auto px-5 py-5">
+            <div className="flex flex-col gap-3">
+              <h2 className="font-sans text-xs font-semibold tracking-widest text-muted-foreground uppercase">Sort by</h2>
+              {sortSelect("shop-sort-mobile")}
+            </div>
+            <ShopFilters params={shop} update={shop.update} />
+          </div>
+          <SheetFooter className="border-t bg-card px-5 py-4">
+            <Button size="lg" className="w-full" onClick={() => setFiltersOpen(false)}>
+              {data ? `Show ${data.meta.total} ${data.meta.total === 1 ? "product" : "products"}` : "Show products"}
+            </Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

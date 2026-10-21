@@ -8,16 +8,10 @@ interface LoadingButtonProps extends ComponentProps<typeof Button> {
 }
 
 /** Pending mein disabled + spinner — double click se duplicate request nahi (FLOW-MD 07 §7, 11 §2) */
-export function LoadingButton({
-  isLoading = false,
-  loadingText,
-  disabled,
-  children,
-  ...props
-}: LoadingButtonProps) {
+export function LoadingButton({ isLoading = false, loadingText, disabled, children, ...props }: LoadingButtonProps) {
   return (
     <Button disabled={disabled || isLoading} aria-busy={isLoading || undefined} {...props}>
-      {isLoading && <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />}
+      {isLoading && <LoaderCircle className="animate-spin" aria-hidden="true" />}
       {isLoading && loadingText ? loadingText : children}
     </Button>
   );

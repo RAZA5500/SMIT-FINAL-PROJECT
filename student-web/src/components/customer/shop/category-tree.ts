@@ -3,6 +3,8 @@ import type { ICategory } from "@/services/categories/types";
 export interface CategoryNode {
   id: string;
   name: string;
+  /** Sirf is category ke apne products (backend `productCount`) */
+  productCount: number;
   children: CategoryNode[];
 }
 
@@ -13,7 +15,10 @@ export interface CategoryNode {
 export function buildCategoryTree(categories: ICategory[]): CategoryNode[] {
   const ids = new Set(categories.map((category) => category.id));
   const nodes = new Map<string, CategoryNode>(
-    categories.map((category) => [category.id, { id: category.id, name: category.name, children: [] }]),
+    categories.map((category) => [
+      category.id,
+      { id: category.id, name: category.name, productCount: category.productCount, children: [] },
+    ]),
   );
   const roots: CategoryNode[] = [];
 
@@ -30,12 +35,27 @@ export function buildCategoryTree(categories: ICategory[]): CategoryNode[] {
   return roots;
 }
 
+/** Products sirf leaf categories mein hote hain — parent ka total = apne + children ke */
+export function totalProducts(node: CategoryNode): number {
+  return node.productCount + node.children.reduce((sum, child) => sum + totalProducts(child), 0);
+}
+
 export function findCategoryName(nodes: CategoryNode[], id: string | null): string | undefined {
+  return findCategory(nodes, id)?.name;
+}
+
+export function findCategory(nodes: CategoryNode[], id: string | null): CategoryNode | undefined {
   if (!id) return undefined;
   for (const node of nodes) {
-    if (node.id === id) return node.name;
-    const child = findCategoryName(node.children, id);
+    if (node.id === id) return node;
+    const child = findCategory(node.children, id);
     if (child) return child;
   }
   return undefined;
+}
+
+/** Child ho to us ka parent (breadcrumbs / active top-level pill) */
+export function findParent(nodes: CategoryNode[], id: string | null): CategoryNode | undefined {
+  if (!id) return undefined;
+  return nodes.find((node) => node.children.some((child) => child.id === id));
 }

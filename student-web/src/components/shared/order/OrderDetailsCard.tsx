@@ -1,59 +1,65 @@
-import { CalendarClock, MapPin, NotebookPen, User } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CalendarClock, MapPin, NotebookPen, Store, Truck, UserRound } from "lucide-react";
+import type { ReactNode } from "react";
 import { CANCELLATION_REASON_LABELS, DELIVERY_TYPE_LABELS } from "@/constants/labels";
 import { formatDateTime } from "@/lib/format";
 import type { IOrder } from "@/services/orders/types";
 
+function DetailRow({ icon, label, children }: { icon: ReactNode; label: string; children: ReactNode }) {
+  return (
+    <div className="flex items-start gap-3">
+      <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground [&_svg]:size-4">
+        {icon}
+      </span>
+      <div className="flex min-w-0 flex-col">
+        <span className="text-xs font-medium text-muted-foreground">{label}</span>
+        <span className="text-sm text-foreground">{children}</span>
+      </div>
+    </div>
+  );
+}
+
 /** Delivery/pickup, customer, notes aur cancellation ki wajah */
 export function OrderDetailsCard({ order, showCustomer = false }: { order: IOrder; showCustomer?: boolean }) {
+  const pickup = order.deliveryType === "PICKUP";
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-base font-semibold text-gray-900">
-          {DELIVERY_TYPE_LABELS[order.deliveryType]}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-3 text-sm text-gray-700">
+    <section className="flex flex-col gap-4 rounded-3xl bg-card p-5 shadow-soft ring-1 ring-border sm:p-6">
+      <h2 className="flex items-center gap-2 text-lg font-bold">
+        {pickup ? <Store className="size-5 text-brand" aria-hidden="true" /> : <Truck className="size-5 text-brand" aria-hidden="true" />}
+        {DELIVERY_TYPE_LABELS[order.deliveryType]}
+      </h2>
+      <div className="flex flex-col gap-4">
         {showCustomer && (
-          <p className="flex items-start gap-2">
-            <User className="mt-0.5 size-4 shrink-0 text-brand-green" aria-hidden="true" />
-            <span>
-              {order.customer.name}
-              <span className="block text-xs text-gray-500">{order.customer.email}</span>
-            </span>
-          </p>
+          <DetailRow icon={<UserRound aria-hidden="true" />} label="Customer">
+            {order.customer.name}
+            <span className="block truncate text-xs text-muted-foreground">{order.customer.email}</span>
+          </DetailRow>
         )}
-        {order.deliveryType === "PICKUP" ? (
-          <p className="flex items-center gap-2">
-            <CalendarClock className="size-4 shrink-0 text-brand-green" aria-hidden="true" />
-            Pickup at {formatDateTime(order.pickupScheduledAt)}
-          </p>
+        {pickup ? (
+          <DetailRow icon={<CalendarClock aria-hidden="true" />} label="Collection time">
+            {formatDateTime(order.pickupScheduledAt)}
+          </DetailRow>
         ) : (
           order.address && (
-            <p className="flex items-start gap-2">
-              <MapPin className="mt-0.5 size-4 shrink-0 text-brand-green" aria-hidden="true" />
-              <span>
-                {order.address.addressLine}, {order.address.city}, {order.address.county},{" "}
-                {order.address.postcode}
-              </span>
-            </p>
+            <DetailRow icon={<MapPin aria-hidden="true" />} label="Delivery address">
+              {order.address.addressLine}, {order.address.city}, {order.address.county}, {order.address.postcode}
+            </DetailRow>
           )
         )}
         {order.customerNotes && (
-          <p className="flex items-start gap-2">
-            <NotebookPen className="mt-0.5 size-4 shrink-0 text-brand-green" aria-hidden="true" />
+          <DetailRow icon={<NotebookPen aria-hidden="true" />} label="Notes">
             {order.customerNotes}
-          </p>
+          </DetailRow>
         )}
         {order.cancellationReason && (
-          <div className="rounded-10 bg-red-50 px-3 py-2 text-xs text-red-700">
-            <p className="font-medium">
+          <div className="rounded-xl bg-tomato-soft px-4 py-3 text-sm text-destructive">
+            <p className="font-semibold">
               Cancelled: {CANCELLATION_REASON_LABELS[order.cancellationReason] ?? order.cancellationReason}
             </p>
-            {order.cancellationNote && <p className="mt-0.5">{order.cancellationNote}</p>}
+            {order.cancellationNote && <p className="mt-0.5 text-destructive/80">{order.cancellationNote}</p>}
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   );
 }

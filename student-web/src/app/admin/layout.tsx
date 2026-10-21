@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import AdminShell from "@/components/admin/AdminShell";
+import { AdminShell } from "@/components/admin/AdminShell";
 
 export const metadata: Metadata = {
   title: {
-    default: "Freshes Admin",
-    template: "%s - Freshes Admin",
+    default: "Admin",
+    template: "%s · Freskinto Admin",
   },
 };
 

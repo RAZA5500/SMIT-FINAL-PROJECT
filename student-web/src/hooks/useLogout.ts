@@ -12,7 +12,7 @@ export function useLogout() {
 
   return () => {
     clearSession();
-    toastSuccess("Signed Out Successfully", "You have been logged out. See you soon!");
+    toastSuccess("You're signed out", "See you soon — your basket will be waiting.");
     router.push(publicRoutes.login);
   };
 }

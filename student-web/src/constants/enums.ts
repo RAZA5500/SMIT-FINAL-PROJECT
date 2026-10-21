@@ -62,6 +62,9 @@ export const TRANSACTION_TYPES = [
 ] as const;
 export type TransactionType = (typeof TRANSACTION_TYPES)[number];
 
+/** Ledger mein quantity hamesha positive — direction type se (baqi sab stock barhate hain) */
+export const STOCK_DECREASING_TRANSACTIONS: readonly TransactionType[] = ["ADJUSTMENT_DECREASE", "CONSUMED"];
+
 /** Admin status transitions (FLOW-MD 01 §19) — UI sirf allowed buttons dikhata hai, backend phir bhi check karta hai */
 export const ADMIN_NEXT_STATUSES: Record<OrderStatus, OrderStatus[]> = {
   PENDING: [],

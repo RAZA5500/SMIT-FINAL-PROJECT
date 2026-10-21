@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Create Account",
-  description: "Create a new account to start shopping for fresh produce.",
+  title: "Create account",
+  description: "Create a free Freskinto account and start shopping fresh groceries with free delivery.",
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

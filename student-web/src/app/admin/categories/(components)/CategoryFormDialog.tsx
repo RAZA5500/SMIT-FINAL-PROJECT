@@ -108,7 +108,7 @@ function CategoryForm({
   return (
     <>
       <DialogHeader>
-        <DialogTitle className="text-modal-title">{category ? "Edit category" : "Create category"}</DialogTitle>
+        <DialogTitle>{category ? "Edit category" : "Create category"}</DialogTitle>
         <DialogDescription>Products can only be added to active categories without sub-categories.</DialogDescription>
       </DialogHeader>
 
@@ -164,7 +164,7 @@ function CategoryForm({
         <Button variant="outline" onClick={onDone} disabled={isPending}>
           Cancel
         </Button>
-        <LoadingButton type="submit" form={FORM_ID} variant="cta" isLoading={isPending}>
+        <LoadingButton type="submit" form={FORM_ID} isLoading={isPending}>
           {category ? "Save changes" : "Create category"}
         </LoadingButton>
       </DialogFooter>

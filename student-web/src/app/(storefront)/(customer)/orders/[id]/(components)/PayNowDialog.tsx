@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Lock } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { MockOutcomeField } from "@/components/customer/payment/MockOutcomeField";
 import { LoadingButton } from "@/components/shared/LoadingButton";
@@ -61,7 +62,7 @@ function PayNowForm({ order, onDone }: { order: IOrder; onDone: () => void }) {
   return (
     <>
       <DialogHeader>
-        <DialogTitle className="text-modal-title">Pay for {order.orderNumber}</DialogTitle>
+        <DialogTitle>Pay for {order.orderNumber}</DialogTitle>
         <DialogDescription>
           Pay {formatMoney(order.total)} by {formatDateTime(order.paymentExpiresAt)} or the order will be cancelled
           automatically.
@@ -74,13 +75,8 @@ function PayNowForm({ order, onDone }: { order: IOrder; onDone: () => void }) {
         <Button variant="outline" onClick={onDone} disabled={isPending}>
           Not now
         </Button>
-        <LoadingButton
-          type="submit"
-          form={FORM_ID}
-          variant="brand"
-          isLoading={isPending}
-          loadingText="Processing payment…"
-        >
+        <LoadingButton type="submit" form={FORM_ID} isLoading={isPending} loadingText="Processing payment…">
+          <Lock aria-hidden="true" />
           Pay {formatMoney(order.total)}
         </LoadingButton>
       </DialogFooter>

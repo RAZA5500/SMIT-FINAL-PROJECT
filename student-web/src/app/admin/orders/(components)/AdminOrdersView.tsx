@@ -1,29 +1,25 @@
 "use client";
 
+import { ArrowRight, ReceiptText, Store, Truck } from "lucide-react";
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
-import AdminListPage, {
-  ADMIN_FILTER_FIELD_CLASS,
-  ADMIN_SEARCH_FIELD_CLASS,
-  FilterIcon,
-  TD_CLASS,
-  TH_CENTER_CLASS,
-  TH_CLASS,
-  TR_STATIC_CLASS,
-} from "@/components/admin/AdminListPage";
+import { AdminPage } from "@/components/admin/AdminPage";
+import { DataTableCard, ToolbarFilters } from "@/components/admin/DataTableCard";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
-import { InputField } from "@/components/shared/InputField";
+import { Pagination } from "@/components/shared/Pagination";
 import { SearchInput } from "@/components/shared/SearchInput";
 import { SelectField } from "@/components/shared/SelectField";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { TableSkeleton } from "@/components/shared/TableSkeleton";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ORDER_STATUSES, PAYMENT_STATUSES, type OrderStatus, type PaymentStatus } from "@/constants/enums";
 import { DELIVERY_TYPE_LABELS, ORDER_STATUS_LABELS, PAYMENT_STATUS_LABELS } from "@/constants/labels";
 import { useDebounce } from "@/hooks/useDebounce";
-import { formatDateTime, formatMoney } from "@/lib/format";
+import { formatDateTime, formatMoney, initials } from "@/lib/format";
 import { adminRoutes } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
 import { useGetAdminOrders } from "@/services/orders/queries";
@@ -71,136 +67,162 @@ export function AdminOrdersView() {
   };
   const hasFilters = Boolean(debouncedSearch || status || paymentStatus || dateFrom || dateTo);
 
-  const toolbar = (
-    <>
-      <SearchInput
-        value={search}
-        onValueChange={onFilter(setSearch)}
-        placeholder="Search by order # or customer..."
-        className="max-w-search"
-        inputClassName={ADMIN_SEARCH_FIELD_CLASS}
-      />
-      <div className="ml-auto flex shrink-0 flex-wrap items-center gap-3">
-        <FilterIcon />
-        <SelectField
-          id="admin-order-status-filter"
-          options={STATUS_OPTIONS}
-          value={status ?? ALL}
-          onValueChange={(value) => onFilter(setStatus)(!value || value === ALL ? null : (value as OrderStatus))}
-          className={ADMIN_FILTER_FIELD_CLASS}
-        />
-        <SelectField
-          id="admin-order-payment-filter"
-          options={PAYMENT_OPTIONS}
-          value={paymentStatus ?? ALL}
-          onValueChange={(value) =>
-            onFilter(setPaymentStatus)(!value || value === ALL ? null : (value as PaymentStatus))
-          }
-          className={ADMIN_FILTER_FIELD_CLASS}
-        />
-        <InputField
-          id="admin-order-date-from"
-          type="date"
-          aria-label="Placed from"
-          value={dateFrom}
-          max={dateTo || undefined}
-          onChange={(event) => onFilter(setDateFrom)(event.target.value)}
-          className="h-12 border-gray-300 shadow-btn"
-        />
-        <InputField
-          id="admin-order-date-to"
-          type="date"
-          aria-label="Placed to"
-          value={dateTo}
-          min={dateFrom || undefined}
-          onChange={(event) => onFilter(setDateTo)(event.target.value)}
-          className="h-12 border-gray-300 shadow-btn"
-        />
-      </div>
-    </>
-  );
-
   let content: ReactNode;
   if (isLoading) {
-    content = <TableSkeleton columns={8} />;
+    content = <TableSkeleton columns={7} />;
   } else if (isError) {
     content = <ErrorState title="Couldn't load orders" message={error.message} onRetry={() => void refetch()} />;
   } else if (!data?.data.length) {
     content = (
       <EmptyState
-        title="No orders found"
-        message={hasFilters ? "Try different filters." : "Orders will appear here once customers check out."}
+        icon={<ReceiptText aria-hidden="true" />}
+        title={hasFilters ? "No orders match" : "No orders yet"}
+        message={hasFilters ? "Try different filters." : "Orders appear here as soon as customers check out."}
       />
     );
   } else {
     content = (
-      <Table className={cn("min-w-215", isFetching && "opacity-60 transition-opacity")}>
+      <Table className="min-w-240">
         <TableHeader>
-          <TableRow className="border-gray-200">
-            <TableHead className={TH_CLASS}>Order #</TableHead>
-            <TableHead className={TH_CLASS}>Customer</TableHead>
-            <TableHead className={TH_CENTER_CLASS}>Delivery type</TableHead>
-            <TableHead className={TH_CENTER_CLASS}>Items</TableHead>
-            <TableHead className={TH_CENTER_CLASS}>Total</TableHead>
-            <TableHead className={TH_CENTER_CLASS}>Payment</TableHead>
-            <TableHead className={TH_CENTER_CLASS}>Order status</TableHead>
-            <TableHead className={TH_CLASS}>Date &amp; time</TableHead>
-            <TableHead className={TH_CENTER_CLASS}>Actions</TableHead>
+          <TableRow>
+            <TableHead>Order</TableHead>
+            <TableHead>Customer</TableHead>
+            <TableHead>Fulfilment</TableHead>
+            <TableHead className="text-right">Items</TableHead>
+            <TableHead className="text-right">Total</TableHead>
+            <TableHead>Payment</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="w-24">
+              <span className="sr-only">Actions</span>
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.data.map((order) => (
-            <TableRow key={order.id} className={TR_STATIC_CLASS}>
-              <TableCell className={cn(TD_CLASS, "font-semibold text-body-text")}>
-                <Link href={adminRoutes.orderDetail(order.id)} className="hover:text-brand-green hover:underline">
-                  {order.orderNumber}
-                </Link>
-              </TableCell>
-              <TableCell className={cn(TD_CLASS, "max-w-48")}>
-                <p className="truncate text-gray-900">{order.customer.name}</p>
-                <p className="truncate text-xs text-gray-500">{order.customer.email}</p>
-              </TableCell>
-              <TableCell className={cn(TD_CLASS, "text-center text-gray-500")}>
-                {DELIVERY_TYPE_LABELS[order.deliveryType]}
-              </TableCell>
-              <TableCell className={cn(TD_CLASS, "text-center")}>{order.itemCount}</TableCell>
-              <TableCell className={cn(TD_CLASS, "text-center font-semibold text-body-text")}>
-                {formatMoney(order.total)}
-              </TableCell>
-              <TableCell className={cn(TD_CLASS, "text-center")}>
-                <StatusBadge status={order.paymentStatus} />
-              </TableCell>
-              <TableCell className={cn(TD_CLASS, "text-center")}>
-                <StatusBadge status={order.status} />
-              </TableCell>
-              <TableCell className={cn(TD_CLASS, "text-gray-500")}>{formatDateTime(order.createdAt)}</TableCell>
-              <TableCell className={cn(TD_CLASS, "text-center")}>
-                <Link
-                  href={adminRoutes.orderDetail(order.id)}
-                  className={buttonVariants({ variant: "outline", size: "sm" })}
-                  aria-label={`View order ${order.orderNumber}`}
-                >
-                  View
-                </Link>
-              </TableCell>
-            </TableRow>
-          ))}
+          {data.data.map((order) => {
+            const DeliveryIcon = order.deliveryType === "PICKUP" ? Store : Truck;
+            return (
+              <TableRow key={order.id}>
+                <TableCell>
+                  <Link href={adminRoutes.orderDetail(order.id)} className="font-semibold text-foreground hover:text-brand">
+                    {order.orderNumber}
+                  </Link>
+                  <p className="text-xs text-muted-foreground">{formatDateTime(order.createdAt)}</p>
+                </TableCell>
+                <TableCell className="max-w-56">
+                  <div className="flex items-center gap-2.5">
+                    <Avatar size="sm" className="size-8">
+                      <AvatarFallback className="bg-brand-soft text-xs font-semibold text-brand">
+                        {initials(order.customer.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0">
+                      <p className="truncate font-medium">{order.customer.name}</p>
+                      <p className="truncate text-xs text-muted-foreground">{order.customer.email}</p>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <span className="inline-flex items-center gap-1.5 text-muted-foreground">
+                    <DeliveryIcon className="size-4" aria-hidden="true" />
+                    {DELIVERY_TYPE_LABELS[order.deliveryType]}
+                  </span>
+                </TableCell>
+                <TableCell className="numeric text-right">{order.itemCount}</TableCell>
+                <TableCell className="numeric text-right font-semibold">{formatMoney(order.total)}</TableCell>
+                <TableCell>
+                  <StatusBadge status={order.paymentStatus} />
+                </TableCell>
+                <TableCell>
+                  <StatusBadge status={order.status} />
+                </TableCell>
+                <TableCell className="text-right">
+                  <Link
+                    href={adminRoutes.orderDetail(order.id)}
+                    className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "text-brand")}
+                    aria-label={`View order ${order.orderNumber}`}
+                  >
+                    View
+                    <ArrowRight aria-hidden="true" />
+                  </Link>
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     );
   }
 
   return (
-    <AdminListPage
-      toolbar={toolbar}
-      responsiveToolbar
-      total={data?.meta.total ?? 0}
-      page={data?.meta.currentPage ?? page}
-      pageSize={data?.meta.limit ?? PAGE_SIZE}
-      onPageChange={setPage}
-      noun="orders"
-    >
-      {content}
-    </AdminListPage>
+    <AdminPage title="Orders" description="Move paid orders through preparation to delivery or collection.">
+      <DataTableCard
+        busy={isFetching && !isLoading}
+        toolbar={
+          <>
+            <SearchInput
+              value={search}
+              onValueChange={onFilter(setSearch)}
+              placeholder="Order number or customer…"
+              className="w-full md:max-w-xs"
+            />
+            <ToolbarFilters>
+              <SelectField
+                id="admin-order-status-filter"
+                aria-label="Filter by order status"
+                size="sm"
+                options={STATUS_OPTIONS}
+                value={status ?? ALL}
+                onValueChange={(value) => onFilter(setStatus)(!value || value === ALL ? null : (value as OrderStatus))}
+                containerClassName="w-44"
+              />
+              <SelectField
+                id="admin-order-payment-filter"
+                aria-label="Filter by payment status"
+                size="sm"
+                options={PAYMENT_OPTIONS}
+                value={paymentStatus ?? ALL}
+                onValueChange={(value) =>
+                  onFilter(setPaymentStatus)(!value || value === ALL ? null : (value as PaymentStatus))
+                }
+                containerClassName="w-40"
+              />
+              <div className="flex items-center gap-1.5">
+                <Input
+                  type="date"
+                  aria-label="Placed from"
+                  value={dateFrom}
+                  max={dateTo || undefined}
+                  onChange={(event) => onFilter(setDateFrom)(event.target.value)}
+                  className="h-8 w-38 text-sm"
+                />
+                <span className="text-xs text-muted-foreground">to</span>
+                <Input
+                  type="date"
+                  aria-label="Placed to"
+                  value={dateTo}
+                  min={dateFrom || undefined}
+                  onChange={(event) => onFilter(setDateTo)(event.target.value)}
+                  className="h-8 w-38 text-sm"
+                />
+              </div>
+            </ToolbarFilters>
+          </>
+        }
+        footer={
+          data && data.meta.total > 0 ? (
+            <Pagination
+              currentPage={data.meta.currentPage}
+              totalPages={data.meta.pages}
+              total={data.meta.total}
+              limit={data.meta.limit}
+              onPageChange={setPage}
+              itemLabel="orders"
+            />
+          ) : undefined
+        }
+      >
+        {content}
+      </DataTableCard>
+    </AdminPage>
   );
 }

@@ -1,14 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Eye, EyeOff, Lock, Mail, User } from "lucide-react";
+import { ArrowRight, Mail, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { CheckboxField } from "@/components/shared/CheckboxField";
 import { InputField } from "@/components/shared/InputField";
 import { LoadingButton } from "@/components/shared/LoadingButton";
+import { PasswordField } from "@/components/shared/PasswordField";
 import { scrollToFirstError } from "@/lib/forms";
 import { ApiError } from "@/lib/networking/request";
 import { publicRoutes } from "@/lib/routes/routes";
@@ -20,8 +20,6 @@ const FORM_ID = "register-form";
 
 export function RegisterForm() {
   const router = useRouter();
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const registerUser = useRegister();
 
   const {
@@ -42,7 +40,7 @@ export function RegisterForm() {
       { name: data.fullName, email: data.email, password: data.password },
       {
         onSuccess: () => {
-          toastSuccess("Account created", "You can now sign in.");
+          toastSuccess("Account created", "Sign in to start your first basket.");
           router.push(publicRoutes.login);
         },
         onError: (error) => {
@@ -60,16 +58,16 @@ export function RegisterForm() {
     <form
       id={FORM_ID}
       noValidate
-      className="flex flex-col gap-3 md:gap-4"
+      className="flex flex-col gap-4"
       onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))}
     >
       <InputField
         id="fullName"
-        label="Full Name"
+        label="Full name"
         required
-        placeholder="John Doe"
+        placeholder="Ayesha Khan"
         autoComplete="name"
-        leftIcon={<User className="size-4" aria-hidden="true" />}
+        leftIcon={<UserRound aria-hidden="true" />}
         error={errors.fullName?.message}
         {...register("fullName")}
       />
@@ -78,52 +76,32 @@ export function RegisterForm() {
         type="email"
         label="Email"
         required
-        placeholder="john.doe@example.com"
+        placeholder="you@example.com"
         autoComplete="username"
-        leftIcon={<Mail className="size-4" aria-hidden="true" />}
+        leftIcon={<Mail aria-hidden="true" />}
         error={errors.email?.message}
         {...register("email")}
       />
-      <InputField
-        id="password"
-        type={showPassword ? "text" : "password"}
-        label="Password"
-        required
-        placeholder="Create a strong password"
-        autoComplete="new-password"
-        leftIcon={<Lock className="size-4" aria-hidden="true" />}
-        rightIcon={
-          <button
-            type="button"
-            aria-label={showPassword ? "Hide password" : "Show password"}
-            onClick={() => setShowPassword((value) => !value)}
-          >
-            {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-          </button>
-        }
-        error={errors.password?.message}
-        {...register("password")}
-      />
-      <InputField
-        id="confirmPassword"
-        type={showConfirmPassword ? "text" : "password"}
-        label="Confirm Password"
-        required
-        placeholder="Confirm your password"
-        autoComplete="new-password"
-        leftIcon={<Lock className="size-4" aria-hidden="true" />}
-        rightIcon={
-          <button
-            type="button"
-            aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-            onClick={() => setShowConfirmPassword((value) => !value)}
-          >
-            {showConfirmPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-          </button>
-        }
-        error={errors.confirmPassword?.message}
-        {...register("confirmPassword")}
-      />
+      <div className="grid gap-4 sm:grid-cols-2">
+        <PasswordField
+          id="password"
+          label="Password"
+          required
+          placeholder="8+ characters"
+          autoComplete="new-password"
+          error={errors.password?.message}
+          {...register("password")}
+        />
+        <PasswordField
+          id="confirmPassword"
+          label="Confirm password"
+          required
+          placeholder="Repeat password"
+          autoComplete="new-password"
+          error={errors.confirmPassword?.message}
+          {...register("confirmPassword")}
+        />
+      </div>
 
       <Controller
         control={control}
@@ -135,12 +113,7 @@ export function RegisterForm() {
             checked={field.value}
             onCheckedChange={field.onChange}
             error={errors.terms?.message}
-            label={
-              <span className="text-fs-12">
-                I agree to the <span className="text-brand-green">Terms of Service</span> and{" "}
-                <span className="text-brand-green">Privacy Policy</span>
-              </span>
-            }
+            label="I agree to the Terms of Service and Privacy Policy"
           />
         )}
       />
@@ -150,16 +123,16 @@ export function RegisterForm() {
         size="xl"
         isLoading={registerUser.isPending}
         loadingText="Creating account..."
-        className="mt-2 w-full bg-brand-gradient font-semibold text-white shadow-md hover:opacity-95"
+        className="mt-1 w-full"
       >
-        Create Account
+        Create account
         <ArrowRight aria-hidden="true" />
       </LoadingButton>
 
-      <p className="pt-3 text-center text-sm text-gray-500 md:pt-5">
+      <p className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}
-        <Link className="font-semibold text-brand-green hover:underline" href={publicRoutes.login}>
-          Sign in now
+        <Link className="font-semibold text-brand hover:underline" href={publicRoutes.login}>
+          Sign in
         </Link>
       </p>
     </form>

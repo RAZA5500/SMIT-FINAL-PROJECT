@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Shop Fresh Produce",
-  description: "Browse fresh fruits, vegetables, seafood, and groceries from Freshes.",
+  title: "Shop",
+  description: "Browse fresh fruit & veg, poultry, dairy and everyday essentials — free delivery on every order.",
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

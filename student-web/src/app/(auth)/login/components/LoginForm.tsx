@@ -1,14 +1,15 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { ArrowRight, Mail } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { CheckboxField } from "@/components/shared/CheckboxField";
 import { InputField } from "@/components/shared/InputField";
 import { LoadingButton } from "@/components/shared/LoadingButton";
+import { PasswordField } from "@/components/shared/PasswordField";
 import { scrollToFirstError } from "@/lib/forms";
 import { homeForRole, publicRoutes, safeRedirect } from "@/lib/routes/routes";
 import { toastError, toastSuccess } from "@/lib/toast";
@@ -30,7 +31,6 @@ function destinationFor(role: UserRole, redirectParam: string | null): string {
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [showPassword, setShowPassword] = useState(false);
   const hasHydrated = useAuthStore((state) => state._hasHydrated);
   const token = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
@@ -61,7 +61,7 @@ export function LoginForm() {
       {
         onSuccess: ({ accessToken, user: signedIn }) => {
           setSession(accessToken, signedIn, data.rememberMe);
-          toastSuccess("Welcome back!", "You are now signed in.");
+          toastSuccess(`Welcome back, ${signedIn.name.split(" ")[0]}!`, "You're signed in.");
           router.replace(destinationFor(signedIn.role, redirectParam));
         },
         onError: (error) => toastError("Sign in failed", error.message),
@@ -73,72 +73,59 @@ export function LoginForm() {
     <form
       id={FORM_ID}
       noValidate
-      className="flex flex-col gap-3"
+      className="flex flex-col gap-5"
       onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))}
     >
       <InputField
         id="email"
         type="email"
         label="Email Address"
-        placeholder="Enter your email address"
+        placeholder="you@example.com"
         autoComplete="username"
-        leftIcon={<Mail className="size-4" aria-hidden="true" />}
+        leftIcon={<Mail aria-hidden="true" />}
         error={errors.email?.message}
         {...register("email")}
       />
-      <InputField
-        id="password"
-        type={showPassword ? "text" : "password"}
-        label="Password"
-        placeholder="Enter your password"
-        autoComplete="current-password"
-        leftIcon={<Lock className="size-4" aria-hidden="true" />}
-        rightIcon={
-          <button
-            type="button"
-            aria-label={showPassword ? "Hide password" : "Show password"}
-            onClick={() => setShowPassword((value) => !value)}
-          >
-            {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-          </button>
-        }
-        error={errors.password?.message}
-        {...register("password")}
-      />
-
-      <div className="flex items-center justify-between pt-2">
-        <Controller
-          control={control}
-          name="rememberMe"
-          render={({ field }) => (
-            <CheckboxField
-              id="rememberMe"
-              label="Remember me"
-              checked={field.value}
-              onCheckedChange={field.onChange}
-            />
-          )}
+      <div className="flex flex-col gap-2">
+        <PasswordField
+          id="password"
+          label="Password"
+          placeholder="Your password"
+          autoComplete="current-password"
+          error={errors.password?.message}
+          {...register("password")}
         />
-        <Link className="text-sm font-medium text-brand-green hover:underline" href={publicRoutes.forgotPassword}>
+        <Link
+          className="self-end text-sm font-semibold text-brand hover:underline"
+          href={publicRoutes.forgotPassword}
+        >
           Forgot password?
         </Link>
       </div>
 
-      <LoadingButton
-        type="submit"
-        size="xl"
-        isLoading={login.isPending}
-        loadingText="Signing in..."
-        className="mt-4 w-full bg-brand-gradient font-semibold text-white shadow-md hover:opacity-95 md:mt-5"
-      >
+      <Controller
+        control={control}
+        name="rememberMe"
+        render={({ field }) => (
+          <CheckboxField
+            id="rememberMe"
+            label="Keep me signed in"
+            description="Stay signed in on this device"
+            checked={field.value}
+            onCheckedChange={field.onChange}
+          />
+        )}
+      />
+
+      <LoadingButton type="submit" size="xl" isLoading={login.isPending} loadingText="Signing in..." className="w-full">
         Sign in
         <ArrowRight aria-hidden="true" />
       </LoadingButton>
 
-      <p className="pt-3 text-center text-sm text-gray-500 md:pt-5">
-        Don&#39;t have an account?{" "}
-        <Link className="font-semibold text-brand-green hover:underline" href={publicRoutes.register}>
-          Sign up now
+      <p className="text-center text-sm text-muted-foreground">
+        New to Freskinto?{" "}
+        <Link className="font-semibold text-brand hover:underline" href={publicRoutes.register}>
+          Create a free account
         </Link>
       </p>
     </form>

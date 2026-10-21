@@ -1,14 +1,9 @@
 "use client";
 
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { FieldMessage } from "./FieldMessage";
 
 export interface SelectOption<T extends string = string> {
   value: T;
@@ -25,6 +20,9 @@ export interface SelectFieldProps<T extends string = string> {
   error?: string;
   required?: boolean;
   disabled?: boolean;
+  /** Toolbar filters ke liye chhota trigger */
+  size?: "sm" | "default";
+  "aria-label"?: string;
   className?: string;
   containerClassName?: string;
 }
@@ -40,15 +38,21 @@ export function SelectField<T extends string = string>({
   error,
   required,
   disabled,
+  size = "default",
+  "aria-label": ariaLabel,
   className,
   containerClassName,
 }: SelectFieldProps<T>) {
   return (
     <div className={cn("flex flex-col gap-1.5", containerClassName)}>
       {label && (
-        <Label htmlFor={id} className="font-normal text-slate-deep">
+        <Label htmlFor={id} className="text-foreground">
           {label}
-          {required && <span className="text-red-500">*</span>}
+          {required && (
+            <span className="text-destructive" aria-hidden="true">
+              *
+            </span>
+          )}
         </Label>
       )}
       <Select
@@ -59,9 +63,11 @@ export function SelectField<T extends string = string>({
       >
         <SelectTrigger
           id={id}
+          size={size}
+          aria-label={label ? undefined : ariaLabel}
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? `${id}-error` : undefined}
-          className={cn("h-11 w-full rounded-15 border-gray-200 bg-white text-sm", className)}
+          className={cn("w-full", className)}
         >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
@@ -73,11 +79,7 @@ export function SelectField<T extends string = string>({
           ))}
         </SelectContent>
       </Select>
-      {error && (
-        <p id={`${id}-error`} role="alert" className="text-xs text-destructive">
-          {error}
-        </p>
-      )}
+      <FieldMessage id={id} error={error} />
     </div>
   );
 }
