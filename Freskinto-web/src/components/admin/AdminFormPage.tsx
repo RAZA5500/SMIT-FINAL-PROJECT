@@ -1,10 +1,6 @@
 import { ArrowLeft } from "lucide-react";
 import type { FormEventHandler, ReactNode } from "react";
-import { Box } from "@/components/ui/box";
 import { Card, CardContent } from "@/components/ui/card";
-import { Flex, Stack } from "@/components/ui/flex";
-import { Form } from "@/components/ui/form";
-import { Grid } from "@/components/ui/grid";
 import { ButtonLink } from "@/components/shared/ButtonLink";
 import { cn } from "@/lib/utils";
 import { AdminPage } from "./AdminPage";
@@ -35,14 +31,12 @@ export function AdminFormPage({
   onSubmit,
   footer,
   aside,
-  demo,
   children,
 }: AdminFormPageProps) {
   return (
     <AdminPage
       title={title}
       description={description}
-      demo={demo}
       actions={
         <ButtonLink href={backHref} variant="outline">
           <ArrowLeft data-icon="inline-start" aria-hidden="true" />
@@ -51,25 +45,25 @@ export function AdminFormPage({
       }
       className={cn("pb-0 sm:pb-0 lg:pb-0")}
     >
-      <Grid align="start" gap="6" className={cn(aside && "xl:grid-cols-3")}>
+      <div className={cn("grid items-start gap-6", aside && "xl:grid-cols-3")}>
         <Card className={cn(aside && "xl:col-span-2")}>
           <CardContent>
-            <Form id={formId} onSubmit={onSubmit ?? ((event) => event.preventDefault())}>
+            <form id={formId} onSubmit={onSubmit ?? ((event) => event.preventDefault())}>
               {children}
-            </Form>
+            </form>
           </CardContent>
         </Card>
         {aside && (
-          <Stack as="aside" gap="4" className={cn("xl:sticky xl:top-24")}>
+          <aside className={cn("flex flex-col gap-4 xl:sticky xl:top-24")}>
             {aside}
-          </Stack>
+          </aside>
         )}
-      </Grid>
-      <Box className={cn("sticky bottom-0 z-20 -mx-4 mt-auto border-t bg-background/90 px-4 py-4 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8")}>
-        <Flex wrap align="center" justify="end" gap="2.5">
+      </div>
+      <div className={cn("sticky bottom-0 z-20 -mx-4 mt-auto border-t bg-background/90 px-4 py-4 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8")}>
+        <div className="flex flex-wrap items-center justify-end gap-2.5">
           {footer}
-        </Flex>
-      </Box>
+        </div>
+      </div>
     </AdminPage>
   );
 }

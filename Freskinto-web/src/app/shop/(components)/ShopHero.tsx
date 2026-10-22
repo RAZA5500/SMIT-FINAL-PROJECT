@@ -10,20 +10,25 @@ const PERKS = [
   { icon: Clock, title: "Pay in minutes", text: `Confirmed when you pay (${STORE.paymentWindowMinutes} min window)` },
 ];
 
-/** Modern hero: bold sans headline, gradient accent, two CTAs, photo collage (lg+) */
+/** Botanical editorial hero: Fraunces serif headline, botanical gradient accent, photo collage (lg+) */
 export function ShopHero() {
   return (
-    <section aria-labelledby="shop-hero-title" className="relative isolate overflow-hidden rounded-2xl bg-brand-soft">
-      <div aria-hidden="true" className="texture-dots absolute inset-0 -z-10 text-brand-green/5" />
+    <section
+      aria-labelledby="shop-hero-title"
+      className="relative isolate overflow-hidden rounded-2xl border border-brand-green/15 bg-gradient-to-br from-brand-soft via-brand-soft/80 to-tile-butter/40 shadow-soft"
+    >
+      <div aria-hidden="true" className="texture-dots absolute inset-0 -z-10 text-brand-green/10" />
       <div className="grid items-center gap-10 p-6 sm:p-10 lg:grid-cols-12 lg:gap-6 lg:p-14">
         <div className="flex flex-col gap-6 lg:col-span-7">
           <p className="kicker flex items-center gap-3">
             <span aria-hidden="true" className="h-px w-8 bg-brand-green" />
             The neighbourhood market
           </p>
-          <h1 id="shop-hero-title" className="animate-fade-up text-fs-48 text-foreground sm:text-fs-64">
+          <h1 id="shop-hero-title" className="animate-fade-up font-heading text-fs-48 text-foreground sm:text-fs-64">
             Fresh from the market,{" "}
-            <span className="bg-brand-gradient bg-clip-text font-bold text-transparent">delivered to your door.</span>
+            <span className="bg-brand-gradient bg-clip-text font-serif italic font-normal text-transparent">
+              delivered to your door.
+            </span>
           </h1>
           <p className="max-w-xl text-base text-muted-foreground sm:text-lg">
             Produce, poultry, dairy and everyday essentials from your neighbourhood stalls — free delivery on every
@@ -37,12 +42,12 @@ export function ShopHero() {
               Browse aisles
             </ButtonLink>
           </div>
-          <ul className="grid gap-4 border-t border-brand-green/10 pt-6 sm:grid-cols-3">
+          <ul className="grid gap-4 border-t border-brand-green/15 pt-6 sm:grid-cols-3">
             {PERKS.map(({ icon: Icon, title, text }) => (
               <li key={title} className="flex items-start gap-3">
                 <span
                   aria-hidden="true"
-                  className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-card text-brand-green shadow-soft"
+                  className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-card text-brand-green shadow-soft ring-1 ring-brand-green/10"
                 >
                   <Icon className="size-4" />
                 </span>
@@ -59,13 +64,13 @@ export function ShopHero() {
           <div className="relative col-span-4 col-start-1 row-span-4 row-start-1 overflow-hidden rounded-2xl shadow-lift">
             <Image src="/images/editorial/produce-aisle.webp" alt="" fill priority sizes="30vw" className="object-cover" />
           </div>
-          <div className="relative col-span-3 col-start-4 row-span-3 row-start-3 overflow-hidden rounded-2xl border-4 border-brand-soft shadow-lift">
+          <div className="relative col-span-3 col-start-4 row-span-3 row-start-3 overflow-hidden rounded-2xl border-4 border-card shadow-lift">
             <Image src="/images/editorial/fruit-crates.webp" alt="" fill sizes="25vw" className="object-cover" />
           </div>
           <div className="relative col-span-2 col-start-1 row-span-2 row-start-5 overflow-hidden rounded-xl shadow-soft">
             <Image src="/images/editorial/cheese-board.webp" alt="" fill sizes="15vw" className="object-cover" />
           </div>
-          <span className="absolute -top-1 right-4 animate-float rounded-lg bg-brand-green px-4 py-2 text-fs-13 font-bold text-white shadow-lift">
+          <span className="absolute -top-1 right-4 animate-float rounded-full bg-brand-green-forest px-4 py-2 text-fs-13 font-semibold text-white shadow-lift ring-1 ring-white/20">
             Free delivery
           </span>
         </div>

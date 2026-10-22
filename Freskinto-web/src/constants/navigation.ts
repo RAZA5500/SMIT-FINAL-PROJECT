@@ -1,6 +1,7 @@
 import {
   Boxes,
   FolderTree,
+  Home,
   MapPin,
   Package,
   ReceiptText,
@@ -25,6 +26,7 @@ export interface NavGroup {
 
 /** Storefront header / mobile nav / footer ke primary links */
 export const CUSTOMER_NAV: NavItem[] = [
+  { label: "Home", href: publicRoutes.home, icon: Home },
   { label: "Shop", href: publicRoutes.shop, icon: Store },
   { label: "Basket", href: customerRoutes.cart, icon: ShoppingBasket },
   { label: "Orders", href: customerRoutes.orders, icon: Package },

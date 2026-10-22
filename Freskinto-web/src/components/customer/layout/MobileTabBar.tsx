@@ -1,6 +1,6 @@
 "use client";
 
-import { Package, ShoppingBasket, Store, UserRound, type LucideIcon } from "lucide-react";
+import { Home, Package, ShoppingBasket, Store, UserRound, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
@@ -39,7 +39,13 @@ export function MobileTabBar() {
       aria-label="Quick navigation"
       className="pb-safe fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 backdrop-blur lg:hidden"
     >
-      <div className="grid grid-cols-4">
+      <div className="grid grid-cols-5">
+        <TabLink
+          href={publicRoutes.home}
+          icon={Home}
+          label="Home"
+          active={pathname === publicRoutes.home}
+        />
         <TabLink
           href={publicRoutes.shop}
           icon={Store}

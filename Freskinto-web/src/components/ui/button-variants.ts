@@ -1,8 +1,8 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
 /**
- * Freskinto buttons — modern indigo theme. `cta` is the bold indigo pill,
- * `signin` uses the gradient, `destructive` solid red confirm. Server components
+ * Freskinto buttons — botanical market theme. `cta` is the deep forest emerald pill,
+ * `signin` uses the lush emerald gradient, `destructive` solid red confirm. Server components
  * bhi (Link ko button jaisa dikhane ke liye) yahin se import karte hain — "use client" nahi.
  */
 export const buttonVariants = cva(

@@ -1,12 +1,11 @@
 "use client";
 
 import { ArrowLeft } from "lucide-react";
-import { Grid } from "@/components/ui/grid";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AdminPage } from "@/components/admin/AdminPage";
 import { ButtonLink } from "@/components/shared/ButtonLink";
 import { ErrorState } from "@/components/shared/ErrorState";
-import { ApiError } from "@/lib/networking/request";
+import { ApiError } from "@/lib/api";
 import { adminRoutes } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
 import { useGetAdminProduct } from "@/services/products/queries";
@@ -18,10 +17,10 @@ export function EditProductView({ id }: { id: string }) {
   if (isLoading) {
     return (
       <AdminPage title="Edit product">
-        <Grid gap="6" aria-label="Loading" aria-busy="true" className={cn("xl:grid-cols-3")}>
+        <div aria-label="Loading" aria-busy="true" className={cn("grid gap-6 xl:grid-cols-3")}>
           <Skeleton className={cn("h-96 w-full rounded-2xl xl:col-span-2")} />
           <Skeleton className={cn("h-96 w-full rounded-2xl")} />
-        </Grid>
+        </div>
       </AdminPage>
     );
   }

@@ -1,16 +1,11 @@
-"use client";
-
 import { ExternalLink, Eye, EyeOff, Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Flex, Stack } from "@/components/ui/flex";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Text } from "@/components/ui/typography";
 import { RowActionsMenu } from "@/components/admin/RowActionsMenu";
 import { ProductImage } from "@/components/shared/ProductImage";
 import { StatusBadge } from "@/components/shared/StatusBadge";
-import { formatMoney } from "@/lib/format";
 import { adminRoutes, publicRoutes } from "@/lib/routes/routes";
-import { cn } from "@/lib/utils";
+import { cn, formatMoney } from "@/lib/utils";
 import type { IAdminProduct } from "@/services/products/types";
 
 export interface ProductTableProps {
@@ -39,9 +34,7 @@ export function ProductTable({
           <TableHead>Stock</TableHead>
           <TableHead>Status</TableHead>
           <TableHead className={cn("w-12")}>
-            <Text as="span" className={cn("sr-only")}>
-              Actions
-            </Text>
+            <span className="sr-only">Actions</span>
           </TableHead>
         </TableRow>
       </TableHeader>
@@ -49,11 +42,11 @@ export function ProductTable({
         {products.map((product) => (
           <TableRow key={product.id} className={cn(!product.isActive && "text-muted-foreground")}>
             <TableCell className={cn("max-w-72")}>
-              <Flex align="center" gap="3">
+              <div className="flex items-center gap-3">
                 <div className="size-10 shrink-0 overflow-hidden rounded-xl border bg-muted">
                   <ProductImage name={product.name} categoryName={product.category.name} />
                 </div>
-                <Stack gap="0.5" className={cn("min-w-0")}>
+                <div className="flex flex-col gap-0.5 min-w-0">
                   <button
                     type="button"
                     onClick={() => onViewProduct(product)}
@@ -61,11 +54,11 @@ export function ProductTable({
                   >
                     {product.name}
                   </button>
-                  <Text variant="code" tone="muted" className={cn("truncate")}>
+                  <span className="font-mono text-fs-12 text-muted-foreground truncate">
                     {product.sku}
-                  </Text>
-                </Stack>
-              </Flex>
+                  </span>
+                </div>
+              </div>
             </TableCell>
             <TableCell>{product.category.name}</TableCell>
             <TableCell className={cn("text-right font-semibold tabular-nums")}>
@@ -76,16 +69,16 @@ export function ProductTable({
             </TableCell>
             <TableCell>
               {product.inventoryId ? (
-                <Flex align="center" gap="2">
-                  <Text as="span" weight="semibold" numeric className={cn("w-8")}>
+                <div className="flex items-center gap-2">
+                  <span className="w-8 font-semibold tabular-nums">
                     {product.qtyOnHand}
-                  </Text>
+                  </span>
                   <StatusBadge status={product.stockStatus} />
-                </Flex>
+                </div>
               ) : (
-                <Text as="span" variant="small" tone="muted">
+                <span className="text-fs-12 text-muted-foreground">
                   No inventory yet
-                </Text>
+                </span>
               )}
             </TableCell>
             <TableCell>

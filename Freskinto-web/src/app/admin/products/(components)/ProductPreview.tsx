@@ -2,9 +2,7 @@ import { Plus, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Stack } from "@/components/ui/flex";
-import { Text } from "@/components/ui/typography";
-import { ShelfLabel } from "@/components/shared/Price";
+import { Price } from "@/components/shared/Price";
 import { ProductImage } from "@/components/shared/ProductImage";
 import { productPackshot } from "@/lib/merchandising";
 import { cn } from "@/lib/utils";
@@ -39,32 +37,34 @@ export function ProductPreview({ name, categoryName, price, minimumOrderQuantity
         </CardAction>
       </CardHeader>
       <CardContent className={cn("flex flex-col gap-3")}>
-        <Card aria-hidden="true" className={cn("mx-auto w-full max-w-60 gap-0 py-0")}>
+        <Card aria-hidden="true" className={cn("mx-auto w-full max-w-60 gap-0 py-0 overflow-hidden")}>
           <ProductImage name={displayName} categoryName={categoryName} sizes="240px" />
-          <Stack gap="3" className={cn("p-3.5")}>
-            <Stack gap="1">
-              <Text variant="small" tone="muted" className={cn("truncate")}>
+          <div className="flex flex-col gap-3 p-3.5">
+            <div className="flex flex-col gap-1">
+              <span className="text-fs-11 font-bold tracking-wider text-muted-foreground uppercase truncate">
                 {categoryName || "Category"}
-              </Text>
-              <Text weight="semibold" className={cn("line-clamp-2 min-h-10 leading-5")}>
+              </span>
+              <p className="line-clamp-2 min-h-10 text-sm font-semibold leading-5 text-foreground">
                 {displayName}
-              </Text>
-            </Stack>
-            <ShelfLabel
-              amount={Number.isFinite(priceValue) && priceValue > 0 ? priceValue : 0}
-              caption={minQty > 1 ? `Min. ${minQty}` : "Each"}
-            />
-            <Button size="sm" tabIndex={-1} className={cn("pointer-events-none w-full")}>
+              </p>
+            </div>
+            <div className="flex items-baseline justify-between gap-2">
+              <Price amount={Number.isFinite(priceValue) && priceValue > 0 ? priceValue : 0} size="md" tone="brand" />
+              <span className="text-fs-12 text-muted-foreground">
+                {minQty > 1 ? `Min. ${minQty}` : "each"}
+              </span>
+            </div>
+            <Button size="sm" tabIndex={-1} className={cn("pointer-events-none w-full rounded-full")}>
               <Plus data-icon="inline-start" aria-hidden="true" />
               Add to basket
             </Button>
-          </Stack>
+          </div>
         </Card>
-        <Text variant="small" tone="muted">
+        <p className="text-fs-12 text-muted-foreground">
           {hasPhoto
             ? "A matching demo photo is used for this name."
             : "No demo photo matches this name — the shop shows the category icon instead."}
-        </Text>
+        </p>
       </CardContent>
     </Card>
   );

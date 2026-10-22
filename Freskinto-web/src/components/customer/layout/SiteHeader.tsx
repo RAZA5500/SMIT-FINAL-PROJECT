@@ -67,6 +67,7 @@ function MarketHeader() {
   const hasHydrated = useAuthStore((state) => state._hasHydrated);
   const isCustomer = useAuthStore((state) => state.user?.role === "CUSTOMER");
 
+  const onHome = pathname === publicRoutes.home;
   const onShop = pathname.startsWith(publicRoutes.shop) || pathname.startsWith("/products");
   const onOrders = pathname.startsWith(customerRoutes.orders);
 
@@ -91,6 +92,7 @@ function MarketHeader() {
         <HomeLink />
 
         <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
+          <NavLink href={publicRoutes.home} label="Home" active={onHome} />
           <NavLink href={publicRoutes.shop} label="Shop" active={onShop} />
           {hasHydrated && isCustomer && <NavLink href={customerRoutes.orders} label="Orders" active={onOrders} />}
         </nav>

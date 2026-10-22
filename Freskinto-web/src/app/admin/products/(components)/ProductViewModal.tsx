@@ -3,16 +3,12 @@
 import { ExternalLink, Package, Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Flex, Stack } from "@/components/ui/flex";
-import { Grid } from "@/components/ui/grid";
-import { Item, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
-import { Text } from "@/components/ui/typography";
 import { AppModal } from "@/components/shared/AppModal";
 import { ButtonLink } from "@/components/shared/ButtonLink";
 import { ProductImage } from "@/components/shared/ProductImage";
 import { StatusBadge } from "@/components/shared/StatusBadge";
-import { formatDateTime, formatMoney } from "@/lib/format";
 import { adminRoutes, publicRoutes } from "@/lib/routes/routes";
+import { formatDateTime, formatMoney } from "@/lib/utils";
 import type { IAdminProduct } from "@/services/products/types";
 
 export interface ProductViewModalProps {
@@ -32,18 +28,18 @@ export function ProductViewModal({ product, open, onOpenChange }: ProductViewMod
       onOpenChange={onOpenChange}
       size="lg"
       title={
-        <Flex align="center" gap="2.5">
+        <div className="flex items-center gap-2.5">
           <Package className="size-5 text-brand-green" aria-hidden="true" />
           <span>Product details</span>
-        </Flex>
+        </div>
       }
       description={`SKU: ${product.sku} · ${product.category.name}`}
       footer={
-        <Flex align="center" justify="between" className="w-full">
+        <div className="flex w-full items-center justify-between">
           <Button variant="ghost" onClick={() => onOpenChange(false)}>
             Close
           </Button>
-          <Flex align="center" gap="2">
+          <div className="flex items-center gap-2">
             {product.isActive && (
               <ButtonLink
                 href={publicRoutes.product(product.id)}
@@ -66,76 +62,68 @@ export function ProductViewModal({ product, open, onOpenChange }: ProductViewMod
               <Pencil data-icon="inline-start" aria-hidden="true" />
               Edit product
             </Button>
-          </Flex>
-        </Flex>
+          </div>
+        </div>
       }
     >
-      <Stack gap="5" className="py-1">
-        <Flex gap="4" align="start">
+      <div className="flex flex-col gap-5 py-1">
+        <div className="flex items-start gap-4">
           <div className="size-24 shrink-0 overflow-hidden rounded-2xl border border-border bg-muted">
             <ProductImage name={product.name} categoryName={product.category.name} />
           </div>
-          <Stack gap="1.5" className="min-w-0 flex-1">
-            <Flex wrap align="center" gap="2">
+          <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+            <div className="flex flex-wrap items-center gap-2">
               <StatusBadge status={product.isActive ? "ACTIVE" : "INACTIVE"} />
               {product.inventoryId ? (
                 <StatusBadge status={product.stockStatus} />
               ) : (
-                <Text variant="small" tone="muted">
+                <span className="text-fs-12 text-muted-foreground">
                   No inventory tracked
-                </Text>
+                </span>
               )}
-            </Flex>
-            <Text weight="bold" size="lg" className="truncate text-foreground font-semibold">
+            </div>
+            <p className="truncate font-semibold text-foreground text-lg">
               {product.name}
-            </Text>
-            <Text variant="code" tone="muted">
+            </p>
+            <p className="font-mono text-fs-12 text-muted-foreground">
               /{product.slug}
-            </Text>
-          </Stack>
-        </Flex>
+            </p>
+          </div>
+        </div>
 
-        <Grid cols="2" gap="3">
-          <Item variant="muted" size="sm" className="rounded-xl">
-            <ItemContent className="gap-0.5">
-              <ItemDescription className="text-xs">Selling price</ItemDescription>
-              <ItemTitle className="font-semibold tabular-nums text-brand-green">
-                {formatMoney(product.price)}
-              </ItemTitle>
-            </ItemContent>
-          </Item>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-xl border border-border bg-muted/60 p-3">
+            <p className="text-xs text-muted-foreground">Selling price</p>
+            <p className="font-semibold tabular-nums text-brand-green">
+              {formatMoney(product.price)}
+            </p>
+          </div>
 
-          <Item variant="muted" size="sm" className="rounded-xl">
-            <ItemContent className="gap-0.5">
-              <ItemDescription className="text-xs">Category</ItemDescription>
-              <ItemTitle className="truncate font-semibold">{product.category.name}</ItemTitle>
-            </ItemContent>
-          </Item>
+          <div className="rounded-xl border border-border bg-muted/60 p-3">
+            <p className="text-xs text-muted-foreground">Category</p>
+            <p className="truncate font-semibold text-foreground">{product.category.name}</p>
+          </div>
 
-          <Item variant="muted" size="sm" className="rounded-xl">
-            <ItemContent className="gap-0.5">
-              <ItemDescription className="text-xs">Order limits (Min / Max)</ItemDescription>
-              <ItemTitle className="font-semibold tabular-nums">
-                {product.minimumOrderQuantity} / {product.maximumOrderQuantity}
-              </ItemTitle>
-            </ItemContent>
-          </Item>
+          <div className="rounded-xl border border-border bg-muted/60 p-3">
+            <p className="text-xs text-muted-foreground">Order limits (Min / Max)</p>
+            <p className="font-semibold tabular-nums text-foreground">
+              {product.minimumOrderQuantity} / {product.maximumOrderQuantity}
+            </p>
+          </div>
 
-          <Item variant="muted" size="sm" className="rounded-xl">
-            <ItemContent className="gap-0.5">
-              <ItemDescription className="text-xs">Quantity on hand</ItemDescription>
-              <ItemTitle className="font-semibold tabular-nums">
-                {product.qtyOnHand ?? 0} units
-              </ItemTitle>
-            </ItemContent>
-          </Item>
-        </Grid>
+          <div className="rounded-xl border border-border bg-muted/60 p-3">
+            <p className="text-xs text-muted-foreground">Quantity on hand</p>
+            <p className="font-semibold tabular-nums text-foreground">
+              {product.qtyOnHand ?? 0} units
+            </p>
+          </div>
+        </div>
 
-        <Flex justify="between" className="border-t border-border/80 pt-3 text-xs text-muted-foreground">
+        <div className="flex items-center justify-between border-t border-border/80 pt-3 text-xs text-muted-foreground">
           <span>Created: {formatDateTime(product.createdAt)}</span>
           <span>Updated: {formatDateTime(product.updatedAt)}</span>
-        </Flex>
-      </Stack>
+        </div>
+      </div>
     </AppModal>
   );
 }

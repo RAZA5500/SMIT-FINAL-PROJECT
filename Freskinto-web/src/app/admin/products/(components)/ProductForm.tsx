@@ -7,7 +7,6 @@ import { useMemo, useState } from "react";
 import { Controller, useForm, useWatch, type FieldErrors } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Grid } from "@/components/ui/grid";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { AdminFormPage } from "@/components/admin/AdminFormPage";
 import { describedBy, FieldMessage } from "@/components/shared/FieldMessage";
@@ -16,10 +15,9 @@ import { LoadingButton } from "@/components/shared/LoadingButton";
 import { RequiredMark } from "@/components/shared/RequiredMark";
 import { SelectField } from "@/components/shared/SelectField";
 import { SwitchField } from "@/components/shared/SwitchField";
-import { scrollToFirstError } from "@/lib/forms";
-import { ApiError } from "@/lib/networking/request";
+import { ApiError } from "@/lib/api";
 import { adminRoutes } from "@/lib/routes/routes";
-import { cn } from "@/lib/utils";
+import { cn, scrollToFirstError } from "@/lib/utils";
 import {
   PRODUCT_FORM_TABS,
   productSchema,
@@ -217,7 +215,7 @@ export function ProductForm({ product }: { product?: IAdminProduct }) {
 
       {tab === "pricing" && (
         <FieldGroup>
-          <Grid gap="5" className={cn("sm:grid-cols-3")}>
+          <div className="grid gap-5 sm:grid-cols-3">
             <Field data-invalid={errors.price ? true : undefined}>
               <FieldLabel htmlFor="price">
                 Price
@@ -262,7 +260,7 @@ export function ProductForm({ product }: { product?: IAdminProduct }) {
               error={errors.maximumOrderQuantity?.message}
               {...register("maximumOrderQuantity")}
             />
-          </Grid>
+          </div>
           <FieldDescription>
             Customers add the minimum on their first click and can&apos;t exceed the maximum (or the stock on hand).
           </FieldDescription>

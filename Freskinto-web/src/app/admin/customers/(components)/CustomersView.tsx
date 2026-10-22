@@ -3,13 +3,11 @@
 import { UserCheck, UserX, Users } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Flex, Stack } from "@/components/ui/flex";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Text } from "@/components/ui/typography";
 import { AdminPage } from "@/components/admin/AdminPage";
 import { DataTableCard, ToolbarFilters } from "@/components/admin/DataTableCard";
 import { RowActionsMenu } from "@/components/admin/RowActionsMenu";
-import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
+import { DeleteDialog } from "@/components/shared/DeleteDialog";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { Pagination } from "@/components/shared/Pagination";
@@ -18,8 +16,7 @@ import { SelectField } from "@/components/shared/SelectField";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { TableSkeleton } from "@/components/shared/TableSkeleton";
 import { useDebounce } from "@/hooks/useDebounce";
-import { formatDate, formatDateTime, formatMoney, initials } from "@/lib/format";
-import { cn } from "@/lib/utils";
+import { cn, formatDate, formatDateTime, formatMoney, initials } from "@/lib/utils";
 import { useUpdateCustomerStatus } from "@/services/customers/mutations";
 import { useGetCustomers } from "@/services/customers/queries";
 import type { ICustomer } from "@/services/customers/types";
@@ -75,9 +72,7 @@ export function CustomersView() {
             <TableHead>Joined</TableHead>
             <TableHead>Status</TableHead>
             <TableHead className={cn("w-12")}>
-              <Text as="span" className={cn("sr-only")}>
-                Actions
-              </Text>
+              <span className="sr-only">Actions</span>
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -85,7 +80,7 @@ export function CustomersView() {
           {data.data.map((customer) => (
             <TableRow key={customer.id} className={cn(!customer.isActive && "text-muted-foreground")}>
               <TableCell className={cn("max-w-64")}>
-                <Flex align="center" gap="3">
+                <div className="flex items-center gap-3">
                   <Avatar className={cn("size-9")}>
                     <AvatarFallback
                       className={cn(
@@ -96,15 +91,15 @@ export function CustomersView() {
                       {initials(customer.name)}
                     </AvatarFallback>
                   </Avatar>
-                  <Stack gap="0.5" className={cn("min-w-0")}>
-                    <Text weight="semibold" className={cn("truncate text-foreground")}>
+                  <div className="flex flex-col gap-0.5 min-w-0">
+                    <p className="font-semibold truncate text-foreground">
                       {customer.name}
-                    </Text>
-                    <Text variant="small" tone="muted" className={cn("truncate")}>
+                    </p>
+                    <p className="text-fs-12 text-muted-foreground truncate">
                       {customer.email}
-                    </Text>
-                  </Stack>
-                </Flex>
+                    </p>
+                  </div>
+                </div>
               </TableCell>
               <TableCell className={cn("text-muted-foreground")}>{customer.phone ?? "—"}</TableCell>
               <TableCell className={cn("text-right tabular-nums")}>{customer.totalOrders}</TableCell>
@@ -184,7 +179,7 @@ export function CustomersView() {
         {content}
       </DataTableCard>
 
-      <ConfirmDialog
+      <DeleteDialog
         open={changing !== null}
         onOpenChange={(open) => !open && setChanging(null)}
         title={`${deactivating ? "Deactivate" : "Activate"} ${changing?.name ?? ""}?`}
@@ -194,7 +189,8 @@ export function CustomersView() {
             : "They will be able to sign in and place orders again."
         }
         confirmLabel={deactivating ? "Deactivate" : "Activate"}
-        isPending={updateStatus.isPending}
+        confirmVariant={deactivating ? "destructive" : "default"}
+        isLoading={updateStatus.isPending}
         onConfirm={() =>
           changing &&
           updateStatus.mutate({ id: changing.id, payload: { isActive: !changing.isActive } }, { onSuccess: () => setChanging(null) })

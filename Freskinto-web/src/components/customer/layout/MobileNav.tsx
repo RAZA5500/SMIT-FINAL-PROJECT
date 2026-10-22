@@ -33,8 +33,14 @@ export function MobileNav({ open, onOpenChange }: MobileNavProps) {
   const isCustomer = signedIn && user?.role === "CUSTOMER";
 
   const close = () => onOpenChange(false);
-  // Guest ko sirf Shop aur Basket; customer ko poora account
-  const links = CUSTOMER_NAV.filter((item) => isCustomer || item.href === publicRoutes.shop || item.href === customerRoutes.cart);
+  // Guest ko Home, Shop aur Basket; customer ko poora account
+  const links = CUSTOMER_NAV.filter(
+    (item) =>
+      isCustomer ||
+      item.href === publicRoutes.home ||
+      item.href === publicRoutes.shop ||
+      item.href === customerRoutes.cart,
+  );
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>

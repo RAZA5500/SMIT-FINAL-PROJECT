@@ -15,7 +15,7 @@ const COLUMN_TITLE = "text-fs-11 font-bold tracking-widest text-brand-green-vivi
 const FOOTER_LINK =
   "text-sm text-white/70 underline-offset-4 transition-colors outline-none hover:text-white hover:underline focus-visible:text-white focus-visible:underline";
 
-/** Modern footer — deep indigo block; checkout par compact */
+/** Modern footer — deep botanical forest block; checkout par compact */
 export function SiteFooter({ compact = false }: { compact?: boolean }) {
   const { aisles } = useAisles();
 
@@ -31,11 +31,11 @@ export function SiteFooter({ compact = false }: { compact?: boolean }) {
   }
 
   return (
-    <footer className="mt-20 bg-brand-green-forest text-white">
+    <footer className="mt-20 border-t border-brand-green/20 bg-brand-green-forest text-white">
       <div className="page-container grid gap-12 py-14 md:grid-cols-12">
         <div className="flex flex-col gap-5 md:col-span-5">
           <Logo size="lg" inverse />
-          <p className="max-w-sm text-fs-24 leading-snug font-medium text-white/80">{STORE.tagline}</p>
+          <p className="max-w-sm text-fs-24 leading-snug font-serif font-medium text-white/90">{STORE.tagline}</p>
           <a
             href={`mailto:${STORE.supportEmail}`}
             className="inline-flex w-fit items-center gap-2 text-sm text-white/70 transition-colors hover:text-white"

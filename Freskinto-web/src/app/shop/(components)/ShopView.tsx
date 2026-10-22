@@ -8,20 +8,16 @@ import { ProductGridSkeleton } from "@/components/customer/product/ProductCardSk
 import { ProductListing } from "@/components/customer/ProductListing";
 import { findCategory, findParent } from "@/components/customer/shop/category-tree";
 import { aisleIndexOf, useAisles } from "@/components/customer/shop/use-aisles";
-import { AisleTag } from "@/components/shared/AisleTag";
 import { EmptyState } from "@/components/shared/EmptyState";
-import { PageBreadcrumbs, type Crumb } from "@/components/shared/PageBreadcrumbs";
-import { PageHeader } from "@/components/shared/PageHeader";
 import { Pagination } from "@/components/shared/Pagination";
 import { SHOP_PAGE_SIZE } from "@/constants/filters";
 import { useHydrated } from "@/hooks/useHydrated";
-import { publicRoutes, shopUrl } from "@/lib/routes/routes";
 import { pluralize } from "@/lib/utils";
 import { useGetProducts } from "@/services/products/queries";
 import { useShopStore } from "@/stores/shop-store";
 import { CategoryPills } from "./CategoryPills";
 import { ShopFilters } from "./ShopFilters";
-import { ShopHero } from "./ShopHero";
+import { ShopHeader } from "./ShopHeader";
 import { ShopToolbar, SortSelect } from "./ShopToolbar";
 import { ShopViewSkeleton } from "./ShopViewSkeleton";
 import { useShopParams } from "./useShopParams";
@@ -60,16 +56,6 @@ export function ShopView() {
   const parent = findParent(aisles, shop.category);
   const aisleIndex = aisleIndexOf(aisles, shop.category);
 
-  const title = shop.q
-    ? category
-      ? `“${shop.q}” in ${category.name}`
-      : `Results for “${shop.q}”`
-    : (category?.name ?? "All products");
-
-  const crumbs: Crumb[] = [{ label: "Shop", href: shopUrl() }];
-  if (parent) crumbs.push({ label: parent.name, href: shopUrl({ category: parent.id }) });
-  if (category) crumbs.push({ label: category.name });
-
   const goToPage = (page: number) => {
     shop.update({ page });
     resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -86,20 +72,13 @@ export function ShopView() {
 
   return (
     <div className="page-container flex flex-col gap-6 py-6 sm:py-8">
-      {!shop.hasFilters && shop.page === 1 ? (
-        <ShopHero />
-      ) : (
-        <PageHeader
-          breadcrumbs={<PageBreadcrumbs root={{ label: "Home", href: publicRoutes.home }} items={crumbs} />}
-          eyebrow={aisleIndex !== undefined ? <AisleTag index={aisleIndex} label={parent?.name ?? category?.name} /> : "The whole market"}
-          title={title}
-          description={
-            data ? (
-              <span aria-live="polite">{pluralize(data.meta.total, "product")} · Free delivery on every order</span>
-            ) : undefined
-          }
-        />
-      )}
+      <ShopHeader
+        shop={shop}
+        category={category}
+        parent={parent}
+        aisleIndex={aisleIndex}
+        totalCount={data?.meta.total}
+      />
 
       <CategoryPills aisles={aisles} selected={shop.category} onSelect={(next) => shop.update({ category: next })} />
 

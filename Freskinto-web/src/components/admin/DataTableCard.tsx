@@ -1,7 +1,5 @@
 import type { ReactNode } from "react";
-import { Box } from "@/components/ui/box";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
-import { Flex } from "@/components/ui/flex";
 import { cn } from "@/lib/utils";
 
 interface DataTableCardProps {
@@ -24,7 +22,7 @@ export function DataTableCard({ toolbar, children, footer, busy = false, classNa
         <CardHeader className={cn("flex flex-wrap items-center gap-3 border-b py-4")}>{toolbar}</CardHeader>
       )}
       {/* relative: andar ke sr-only labels isi scroll box mein clip hon, page chaura na ho */}
-      <Box className={cn("relative min-w-0 overflow-x-auto", busy && "opacity-60 transition-opacity")}>{children}</Box>
+      <div className={cn("relative min-w-0 overflow-x-auto", busy && "opacity-60 transition-opacity")}>{children}</div>
       {footer && <CardFooter className={cn("block py-3")}>{footer}</CardFooter>}
     </Card>
   );
@@ -33,8 +31,8 @@ export function DataTableCard({ toolbar, children, footer, busy = false, classNa
 /** Toolbar filters ka group — chhoti screen par wrap */
 export function ToolbarFilters({ children }: { children: ReactNode }) {
   return (
-    <Flex wrap align="center" gap="2" className={cn("md:ml-auto")}>
+    <div className={cn("flex flex-wrap items-center gap-2 md:ml-auto")}>
       {children}
-    </Flex>
+    </div>
   );
 }

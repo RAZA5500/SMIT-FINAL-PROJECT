@@ -1,10 +1,7 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
-import { Grid } from "@/components/ui/grid";
-import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 import { PRODUCT_FORM_TABS, type ProductFormTab } from "@/modules/zod/product.model";
 
@@ -25,12 +22,12 @@ export function ProductFormSteps({ current, onSelect }: ProductFormStepsProps) {
   const currentIndex = PRODUCT_FORM_TABS.indexOf(current);
 
   return (
-    <Grid as="ol" cols="3" gap="2" aria-label="Form steps">
+    <ol className="grid grid-cols-3 gap-2" aria-label="Form steps">
       {PRODUCT_FORM_TABS.map((step, index) => {
         const done = index < currentIndex;
         const active = step === current;
         return (
-          <Box as="li" key={step}>
+          <li key={step}>
             <Button
               variant="outline"
               aria-current={active ? "step" : undefined}
@@ -40,23 +37,21 @@ export function ProductFormSteps({ current, onSelect }: ProductFormStepsProps) {
                 active && "border-primary ring-1 ring-primary hover:border-primary",
               )}
             >
-              <Text
-                as="span"
-                variant="code"
+              <span
                 className={cn(
-                  "flex size-6 shrink-0 items-center justify-center rounded-full",
+                  "font-mono text-xs flex size-6 shrink-0 items-center justify-center rounded-full",
                   done || active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground",
                 )}
               >
-                {done ? <Check aria-hidden="true" className={cn("size-3.5")} /> : index + 1}
-              </Text>
-              <Text as="span" weight="semibold" className={cn("truncate")}>
+                {done ? <Check aria-hidden="true" className="size-3.5" /> : index + 1}
+              </span>
+              <span className="font-semibold truncate">
                 {TAB_LABELS[step]}
-              </Text>
+              </span>
             </Button>
-          </Box>
+          </li>
         );
       })}
-    </Grid>
+    </ol>
   );
 }

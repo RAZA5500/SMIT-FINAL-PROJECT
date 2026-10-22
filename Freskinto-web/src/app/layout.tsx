@@ -40,7 +40,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f8f9fc",
+  themeColor: "#faf8f5",
 };
 
 /* Document shell — `<html>`/`<body>` Next.js root layout ki zaroorat hain */

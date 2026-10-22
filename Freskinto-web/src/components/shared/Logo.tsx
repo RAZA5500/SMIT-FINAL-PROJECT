@@ -1,4 +1,4 @@
-import { Hexagon } from "lucide-react";
+import { Leaf } from "lucide-react";
 import { STORE } from "@/constants/store";
 import { cn } from "@/lib/utils";
 
@@ -10,18 +10,18 @@ const SIZES = {
 
 type LogoSize = keyof typeof SIZES;
 
-/** Freskinto geometric mark — indigo tile, light icon */
+/** Freskinto botanical mark — deep forest tile with lush leaf emblem */
 export function LogoMark({ size = "md", className }: { size?: LogoSize; className?: string }) {
   return (
     <span
       aria-hidden="true"
       className={cn(
-        "inline-flex shrink-0 items-center justify-center rounded-xl bg-brand-green-forest text-brand-green-vivid shadow-soft",
+        "inline-flex shrink-0 items-center justify-center rounded-xl bg-brand-green-forest text-brand-green-vivid shadow-soft ring-1 ring-white/10",
         SIZES[size].mark,
         className,
       )}
     >
-      <Hexagon strokeWidth={2.2} />
+      <Leaf strokeWidth={2.2} />
     </span>
   );
 }
@@ -35,21 +35,21 @@ interface LogoProps {
   className?: string;
 }
 
-/** Mark + bold wordmark with an accent dot */
+/** Mark + editorial wordmark with an emerald accent dot */
 export function Logo({ size = "md", markOnly = false, inverse = false, className }: LogoProps) {
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
-      <LogoMark size={size} className={inverse ? "bg-brand-green-vivid text-brand-green-forest" : undefined} />
+      <LogoMark size={size} className={inverse ? "bg-brand-green-vivid text-brand-green-forest ring-0" : undefined} />
       {!markOnly && (
         <span
           className={cn(
-            "font-sans leading-none font-bold tracking-tight",
+            "font-heading leading-none font-bold tracking-tight",
             inverse ? "text-white" : "text-foreground",
             SIZES[size].word,
           )}
         >
           {STORE.name}
-          <span aria-hidden="true" className="text-brand-green-light">
+          <span aria-hidden="true" className="text-brand-green">
             .
           </span>
         </span>

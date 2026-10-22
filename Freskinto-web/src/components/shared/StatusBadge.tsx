@@ -2,6 +2,8 @@ import { Badge } from "@/components/ui/badge";
 import { STATUS_LABELS, STATUS_TONES, type StatusTone } from "@/constants/status";
 import { cn } from "@/lib/utils";
 
+export type { StatusTone };
+
 const TONES: Record<StatusTone, { variant: "success" | "warning" | "destructive" | "info" | "brand" | "neutral"; dot: string }> = {
   success: { variant: "success", dot: "bg-success" },
   warning: { variant: "warning", dot: "bg-warning" },
