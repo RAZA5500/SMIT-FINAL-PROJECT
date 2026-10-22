@@ -2,13 +2,13 @@
 
 import { CircleAlert, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { ProductImage } from "@/components/shared/ProductImage";
 import { Button } from "@/components/ui/button";
 import { useCartItemQuantity } from "@/hooks/useCartItemQuantity";
 import { formatMoney } from "@/lib/format";
 import { publicRoutes } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
 import type { ICartItem } from "@/services/cart/types";
-import { ProductImage } from "@/components/shared/ProductImage";
 import { QuantityStepper } from "../product/QuantityStepper";
 import { cartItemIssue } from "./cart-availability";
 

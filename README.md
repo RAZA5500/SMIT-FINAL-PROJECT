@@ -1,4 +1,4 @@
-# OnlineMart — full-stack grocery store (Freshes UI)
+# OnlineMart — full-stack grocery store (Freskinto UI)
 
 Student implementation of the OnlineMart specification in [`FLOW-MD/`](FLOW-MD/README.md), built by following
 the 20-phase roadmap ([`FLOW-MD/13-student-implementation-roadmap.md`](FLOW-MD/13-student-implementation-roadmap.md))
@@ -71,7 +71,7 @@ created. If your volume is older than that script, create it once with
 | Types | `bun run typecheck` | `bun run typecheck` (runs `next typegen` first) |
 | Build | `bun run build` | `bun run build` |
 
-Latest results are saved in [`notes/evidence/`](notes/evidence): API 185 unit + 95 e2e tests, web 46 tests,
+Latest results are saved in [`notes/evidence/`](notes/evidence): API 185 unit + 95 e2e tests, web 60 tests,
 lint/typecheck/build clean for both apps, the permission and duplicate-request runs (phases 17–18) and the four
 critical browser workflows (phase 19).
 
@@ -83,10 +83,11 @@ payment, order history and detail (cancel, pay again), address book, and admin c
 (create/edit), inventory (opening stock, adjustments, stock history), orders (status workflow, cancel) and
 customers (activate/deactivate).
 
-Kept as **static mock pages** with sample data (not connected to the API): admin dashboard, brands, allergens,
-coupons, promotions, reviews, testimonials, notifications, settings, profile, order listing, inventory
-transactions, `/forgot-password`, the home page promotions/reviews sections and the cart's "Have a promo code?"
-link.
+Kept as **static mock pages** with sample data (not connected to the API): admin dashboard, brands (and the new
+brand form), allergens, coupons, promotions, reviews, testimonials, notifications, settings, order board, stock
+movements, `/forgot-password` and the home page "What shoppers say" section. In the admin these screens carry a
+**Sample data** label and their action buttons show an "isn't connected yet" notice instead of pretending to save.
+The admin profile shows the signed-in admin's real details; editing and password changes aren't connected.
 
 ## Deviations from the documents
 
@@ -113,16 +114,35 @@ link.
   generator with the `@prisma/adapter-pg` driver adapter.
 
 **Web**
-- shadcn/ui is the Base UI flavour (`base-nova`) with its tokens mapped onto the Freshes palette; dark mode is
-  class-based only (`@custom-variant dark`) so the OS theme doesn't restyle the light design.
+- The UI is branded **Freskinto**. shadcn/ui is the Base UI flavour (`base-nova`) with its tokens mapped onto the
+  Freskinto design tokens in `student-web/src/app/globals.css`: **mostly white with fresh green accents** — pure white
+  pages, cards, header and admin sidebar; light grey for quiet panels (hero, footer, tiles, chips); emerald green
+  `#047857` only for actions and accents (buttons, prices, badges, links, active states). No tinted panels or large
+  coloured blocks. Red is kept for errors and low-stock urgency; amber for pending. Bricolage Grotesque headings + Inter text, self-hosted with `next/font/local`. Dark
+  mode is class-based only (`@custom-variant dark`) so the OS theme doesn't restyle the light design. Customer copy
+  uses UK English ("basket").
 - Login: the Google button was removed (no external identity provider in scope); "Remember me" stores the
   session in `localStorage`, otherwise in `sessionStorage`.
 - Removed the unused `AuthModal` and the `/admin/categories/create` page — categories are created and edited in a
   dialog.
-- Products have no images or descriptions in scope: cards show a placeholder icon and the category name. The
-  product form has three tabs (Basic, Price & Limits, Review); stock is managed on the Inventory page.
+- Products have no images or descriptions in scope. The storefront pairs product names with demo packshots by
+  keyword (`student-web/src/lib/merchandising.ts`, photos in `public/images/products`) and shows the category icon
+  when nothing fits, so a photo never misrepresents a product; the admin product form previews which photo will be
+  used. Purely presentational — no data changes. The product form has three tabs (Basic, Price & Limits, Review);
+  stock is managed on the Inventory page.
+- Added a product page `/products/[id]` (not in the student page list) with a related-products rail. Shop filters
+  live in the URL (`/shop?q=&category=&sort=&min=&max=&page=`) so header search suggestions, category links and
+  back/forward all work. The basket opens as a drawer; phones get a bottom tab bar; checkout hides the store
+  navigation (header, footer, tab bar) to stay enclosed.
+- Customers never see category product counts: the API's `productCount` also counts inactive products, so the
+  storefront shows sub-aisle names instead, and aisle shelves use their own product query's total.
+- Components inside Suspense boundaries that render query data (header category bar, shop view) wait for
+  hydration (`hooks/useHydrated.ts`), because data fetched by already-hydrated components would otherwise make the
+  first client render differ from the server HTML.
+- The admin dashboard is a sample-data screen; its single-series charts use the brand red and every chart has a
+  table view.
 - Shop sort options are the API whitelist (`newest`, `price_asc`, `price_desc`, `name_asc`); "Name Z→A" was
-  dropped. Home "Popular Products" shows the newest products (there is no popularity data).
+  dropped. Home "Just landed" shows the newest products (there is no popularity data).
 - Checkout keeps the validated form in `sessionStorage` (`checkout_order_intent`); the payment page creates the
   order, starts the payment and completes it with a mock outcome (approve/decline) instead of a card form. If the
   payment cannot be started, the order is cancelled with reason `OTHER`. After paying, the customer lands on the

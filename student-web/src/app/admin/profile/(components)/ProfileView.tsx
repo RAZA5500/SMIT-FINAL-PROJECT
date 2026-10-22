@@ -9,22 +9,24 @@ import { useLogout } from "@/hooks/useLogout";
 import { formatDate, formatDateTime, initials } from "@/lib/format";
 import { useAuthStore } from "@/stores/auth-store";
 
+const ACCOUNT_CHANGES_NOTE = "Account changes aren't available in this version.";
+
+/** Signed-in admin ki asli details (login response se); editing abhi nahi */
 export function ProfileView() {
   const user = useAuthStore((state) => state.user);
   const logout = useLogout();
 
   return (
     <AdminPage
-      demo
       title="Profile"
       description="Your admin account. Editing your details isn't available yet."
     >
       <section className="overflow-hidden rounded-2xl bg-card shadow-soft ring-1 ring-border">
-        <div className="bg-dots h-28 bg-brand-strong text-white/10 sm:h-36" aria-hidden="true" />
+        <div className="bg-dots h-28 bg-muted text-foreground/5 sm:h-36" aria-hidden="true" />
         <div className="flex flex-col gap-4 px-5 pb-6 sm:flex-row sm:items-end sm:justify-between sm:px-6">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-5">
             <span
-              className="-mt-12 flex size-24 shrink-0 items-center justify-center rounded-full bg-lime font-display text-3xl font-bold text-lime-foreground ring-4 ring-card"
+              className="-mt-12 flex size-24 shrink-0 items-center justify-center rounded-full bg-brand font-display text-3xl font-bold text-white ring-4 ring-card"
               aria-hidden="true"
             >
               {initials(user?.name)}
@@ -60,7 +62,7 @@ export function ProfileView() {
         <section className="flex flex-col gap-5 rounded-2xl bg-card p-5 shadow-soft ring-1 ring-border sm:p-6 lg:col-span-2">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="font-sans text-base font-semibold">Personal details</h2>
-            <Button variant="outline" size="sm" onClick={() => demoAction("Editing your profile")}>
+            <Button variant="outline" size="sm" onClick={() => demoAction("Editing your profile", ACCOUNT_CHANGES_NOTE)}>
               Edit details
             </Button>
           </div>
@@ -77,7 +79,7 @@ export function ProfileView() {
             Use a long, unique password for the admin account and don&apos;t share it.
           </p>
           <div className="flex flex-col gap-2">
-            <Button variant="outline" onClick={() => demoAction("Changing your password")}>
+            <Button variant="outline" onClick={() => demoAction("Changing your password", ACCOUNT_CHANGES_NOTE)}>
               <KeyRound aria-hidden="true" />
               Change password
             </Button>

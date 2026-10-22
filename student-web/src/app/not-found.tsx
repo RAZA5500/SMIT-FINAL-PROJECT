@@ -11,7 +11,7 @@ export default function NotFound() {
         <Logo />
       </Link>
       <div className="flex flex-col items-center gap-3">
-        <p className="font-display text-8xl leading-none font-bold text-outline text-lime">404</p>
+        <p className="font-display text-8xl leading-none font-bold text-outline text-brand-soft">404</p>
         <h1 className="text-3xl font-bold sm:text-4xl">This aisle doesn&apos;t exist</h1>
         <p className="max-w-md text-muted-foreground">
           The page you&apos;re looking for has moved or never existed. Let&apos;s get you back to the fresh stuff.

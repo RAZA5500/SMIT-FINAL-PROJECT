@@ -10,7 +10,7 @@ const MESSAGES = [
 function Message({ icon: Icon, text }: (typeof MESSAGES)[number]) {
   return (
     <span className="inline-flex shrink-0 items-center gap-2">
-      <Icon className="size-3.5 text-lime" aria-hidden="true" />
+      <Icon className="size-3.5 text-brand" aria-hidden="true" />
       {text}
     </span>
   );
@@ -18,7 +18,7 @@ function Message({ icon: Icon, text }: (typeof MESSAGES)[number]) {
 
 export function AnnouncementBar() {
   return (
-    <div className="bg-brand-strong text-xs font-medium text-white">
+    <div className="border-b bg-muted text-xs font-medium text-foreground/80">
       <div className="container-page hidden h-9 items-center justify-center gap-10 md:flex">
         {MESSAGES.map((message) => (
           <Message key={message.text} {...message} />

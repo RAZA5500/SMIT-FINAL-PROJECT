@@ -72,7 +72,7 @@ export function NotificationsView() {
               return (
                 <li
                   key={item.id}
-                  className={cn("group/item flex items-start gap-3.5 p-4 sm:px-5", !item.read && "bg-lime-soft/40")}
+                  className={cn("group/item flex items-start gap-3.5 p-4 sm:px-5", !item.read && "bg-brand-soft/60")}
                 >
                   <span className={cn("flex size-10 shrink-0 items-center justify-center rounded-xl", tile)}>
                     <Icon className="size-4.5" aria-hidden="true" />

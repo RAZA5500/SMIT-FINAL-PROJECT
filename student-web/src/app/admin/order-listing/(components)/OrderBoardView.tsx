@@ -141,7 +141,8 @@ export function OrderBoardView() {
         />
       </div>
 
-      <div className="scrollbar-thin -mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-3 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      {/* relative: sr-only text ka containing block yahi rahe — warna woh scroll clip se bahar page ko chaura kar deta hai */}
+      <div className="scrollbar-thin relative -mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-3 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         {COLUMNS.map((column) => {
           const cards = orders.filter((order) => column.statuses.includes(order.status));
           const headingId = `board-${column.id}`;

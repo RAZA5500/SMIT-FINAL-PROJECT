@@ -77,7 +77,7 @@ export const ADMIN_NAV: AdminNavGroup[] = [
     items: [
       { label: "Notifications", href: adminMockRoutes.notifications, icon: Bell, demo: true },
       { label: "Settings", href: adminMockRoutes.settings, icon: Settings, demo: true },
-      { label: "Profile", href: adminMockRoutes.profile, icon: UserRound, demo: true },
+      { label: "Profile", href: adminMockRoutes.profile, icon: UserRound },
     ],
   },
 ];

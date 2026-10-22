@@ -21,7 +21,8 @@ export function DataTableCard({ toolbar, children, footer, busy = false, classNa
       className={cn("flex min-w-0 flex-col overflow-hidden rounded-2xl bg-card shadow-soft ring-1 ring-border", className)}
     >
       {toolbar && <div className="flex flex-wrap items-center gap-3 border-b p-4">{toolbar}</div>}
-      <div className={cn("min-w-0 overflow-x-auto", busy && "opacity-60 transition-opacity")}>{children}</div>
+      {/* relative: andar ke sr-only labels isi scroll box mein clip hon, page chaura na ho */}
+      <div className={cn("relative min-w-0 overflow-x-auto", busy && "opacity-60 transition-opacity")}>{children}</div>
       {footer && <div className="border-t bg-muted/30 px-4 py-3">{footer}</div>}
     </section>
   );

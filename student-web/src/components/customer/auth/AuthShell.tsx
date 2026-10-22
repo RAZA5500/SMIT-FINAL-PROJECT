@@ -34,12 +34,12 @@ interface AuthShellProps {
 export function AuthShell({ title, subtitle, children }: AuthShellProps) {
   return (
     <div className="grid min-h-dvh flex-1 lg:grid-cols-2">
-      <aside className="relative isolate hidden flex-col justify-between overflow-hidden bg-brand-strong p-12 text-white lg:flex xl:p-16">
-        <div className="bg-dots absolute inset-0 -z-10 text-white/5" aria-hidden="true" />
-        <div className="absolute -right-32 -bottom-32 -z-10 size-96 rounded-full bg-brand blur-3xl" aria-hidden="true" />
+      <aside className="relative isolate hidden flex-col justify-between overflow-hidden bg-muted p-12 text-foreground lg:flex xl:p-16">
+        <div className="bg-dots absolute inset-0 -z-10 text-foreground/5" aria-hidden="true" />
+        <div className="absolute -right-32 -bottom-32 -z-10 size-96 rounded-full bg-white blur-3xl" aria-hidden="true" />
 
         <Link href={publicRoutes.home} aria-label="Freskinto home" className="w-fit rounded-lg">
-          <Logo variant="inverse" size="lg" />
+          <Logo size="lg" />
         </Link>
 
         <div className="flex flex-col gap-10">
@@ -54,12 +54,12 @@ export function AuthShell({ title, subtitle, children }: AuthShellProps) {
           </ul>
           <div className="flex flex-col gap-4">
             <h2 className="font-display text-4xl leading-tight font-bold xl:text-5xl">
-              Your <span className="text-lime">fresh market</span>, delivered.
+              Your <span className="text-brand">fresh market</span>, delivered.
             </h2>
             <ul className="flex flex-col gap-3">
               {PERKS.map(({ icon: Icon, text }) => (
-                <li key={text} className="flex items-center gap-3 text-white/80">
-                  <span className="flex size-9 items-center justify-center rounded-xl bg-white/10 text-lime">
+                <li key={text} className="flex items-center gap-3 text-foreground/80">
+                  <span className="flex size-9 items-center justify-center rounded-xl bg-white text-brand ring-1 ring-border">
                     <Icon className="size-4" aria-hidden="true" />
                   </span>
                   {text}
@@ -69,7 +69,7 @@ export function AuthShell({ title, subtitle, children }: AuthShellProps) {
           </div>
         </div>
 
-        <p className="text-xs text-white/50">© {YEAR} Freskinto · Fresh groceries, delivered free</p>
+        <p className="text-xs text-muted-foreground">© {YEAR} Freskinto · Fresh groceries, delivered free</p>
       </aside>
 
       <main id="content" className="flex flex-col px-5 py-6 sm:px-10">

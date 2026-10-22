@@ -60,22 +60,20 @@ const PRODUCT_PACKSHOTS: { pattern: RegExp; image: string }[] = [
   { pattern: /\b(bread|loaf|sourdough|bloomer)\b/, image: "whole-wheat-bread-loaf" },
 ];
 
-export type Tone = "green" | "red" | "sky" | "amber" | "rose" | "orange" | "cyan" | "yellow" | "teal" | "violet" | "stone";
+const TONES = ["green", "red", "sky", "amber", "rose", "orange", "cyan", "yellow", "teal", "violet", "stone"] as const;
+export type Tone = (typeof TONES)[number];
 
-/** Full class strings so Tailwind can see them */
-export const TONE_CLASSES: Record<Tone, { tile: string; icon: string; chip: string }> = {
-  green: { tile: "bg-lime-soft", icon: "text-brand", chip: "bg-brand-soft text-brand" },
-  red: { tile: "bg-rose-50", icon: "text-rose-600", chip: "bg-rose-50 text-rose-700" },
-  sky: { tile: "bg-sky-50", icon: "text-sky-600", chip: "bg-sky-50 text-sky-700" },
-  amber: { tile: "bg-amber-50", icon: "text-amber-600", chip: "bg-amber-50 text-amber-800" },
-  rose: { tile: "bg-red-50", icon: "text-red-700", chip: "bg-red-50 text-red-800" },
-  orange: { tile: "bg-orange-50", icon: "text-orange-600", chip: "bg-orange-50 text-orange-800" },
-  cyan: { tile: "bg-cyan-50", icon: "text-cyan-600", chip: "bg-cyan-50 text-cyan-800" },
-  yellow: { tile: "bg-yellow-50", icon: "text-yellow-600", chip: "bg-yellow-50 text-yellow-800" },
-  teal: { tile: "bg-teal-50", icon: "text-teal-600", chip: "bg-teal-50 text-teal-800" },
-  violet: { tile: "bg-violet-50", icon: "text-violet-600", chip: "bg-violet-50 text-violet-800" },
-  stone: { tile: "bg-stone-100", icon: "text-stone-600", chip: "bg-stone-100 text-stone-700" },
-};
+interface ToneClasses {
+  tile: string;
+  icon: string;
+  chip: string;
+}
+
+/** Mostly-white palette: har aisle ka ek hi light grey tint — photos aur icons farq batate hain */
+const BRAND_TONE: ToneClasses = { tile: "bg-brand-soft", icon: "text-brand", chip: "bg-brand-soft text-brand" };
+
+/** Tone naam category data mein rehte hain, taake kabhi alag tints wapas chahiye hon to sirf yahan badlein */
+export const TONE_CLASSES = Object.fromEntries(TONES.map((tone) => [tone, BRAND_TONE])) as Record<Tone, ToneClasses>;
 
 export interface CategoryTheme {
   tone: Tone;

@@ -23,12 +23,12 @@ const PROMISES = [
   { icon: RotateCcw, title: "Changed your mind?", text: "Cancel any time before we start packing." },
 ];
 
-const LINK_CLASS = "text-sm text-white/70 transition-colors hover:text-white";
+const LINK_CLASS = "text-sm text-muted-foreground transition-colors hover:text-brand";
 
 function FooterColumn({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="font-sans text-xs font-semibold tracking-widest text-lime uppercase">{title}</h2>
+      <h2 className="font-sans text-xs font-semibold tracking-widest text-foreground uppercase">{title}</h2>
       <ul className="flex flex-col gap-2.5">{children}</ul>
     </div>
   );
@@ -52,17 +52,17 @@ export function SiteFooter() {
   const isCustomer = Boolean(token) && user?.role === "CUSTOMER";
 
   return (
-    <footer className="bg-brand-strong text-white">
-      <div className="border-b border-white/10">
+    <footer className="border-t bg-muted text-foreground">
+      <div className="border-b">
         <ul className="container-page grid gap-6 py-10 sm:grid-cols-2 lg:grid-cols-4">
           {PROMISES.map(({ icon: Icon, title, text }) => (
             <li key={title} className="flex items-start gap-3.5">
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-lime">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-white text-brand ring-1 ring-border">
                 <Icon className="size-5" aria-hidden="true" />
               </span>
               <span className="flex flex-col gap-0.5">
                 <span className="font-heading text-base font-semibold">{title}</span>
-                <span className="text-sm text-white/65">{text}</span>
+                <span className="text-sm text-muted-foreground">{text}</span>
               </span>
             </li>
           ))}
@@ -72,13 +72,13 @@ export function SiteFooter() {
       <div className="container-page grid gap-10 py-12 md:grid-cols-12">
         <div className="flex flex-col gap-4 md:col-span-5">
           <Link href={publicRoutes.home} aria-label="Freskinto home" className="w-fit rounded-lg">
-            <Logo variant="inverse" />
+            <Logo />
           </Link>
-          <p className="max-w-sm text-sm leading-relaxed text-white/70">
+          <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
             Your neighbourhood market, online. Fresh produce, poultry, dairy and everyday essentials — delivered free
             or ready to collect.
           </p>
-          <a href={`mailto:${CONTACT_EMAIL}`} className="inline-flex w-fit items-center gap-2 text-sm font-medium text-white hover:text-lime">
+          <a href={`mailto:${CONTACT_EMAIL}`} className="inline-flex w-fit items-center gap-2 text-sm font-medium text-brand underline-offset-4 hover:underline">
             <Mail className="size-4" aria-hidden="true" />
             {CONTACT_EMAIL}
           </a>
@@ -148,8 +148,8 @@ export function SiteFooter() {
         </nav>
       </div>
 
-      <div className="border-t border-white/10">
-        <div className="container-page flex flex-col gap-2 py-5 text-xs text-white/55 sm:flex-row sm:items-center sm:justify-between">
+      <div className="border-t">
+        <div className="container-page flex flex-col gap-2 py-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>© {YEAR} Freskinto. Prices in GBP.</p>
           <p className="inline-flex items-center gap-1.5">
             <FlaskConical className="size-3.5" aria-hidden="true" />

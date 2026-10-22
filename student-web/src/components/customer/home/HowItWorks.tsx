@@ -33,7 +33,7 @@ export function HowItWorks() {
           {STEPS.map(({ icon: Icon, title, text }, index) => (
             <li key={title} className="relative flex flex-col gap-3">
               <div className="flex items-center gap-3">
-                <span className="flex size-12 items-center justify-center rounded-2xl bg-lime text-lime-foreground">
+                <span className="flex size-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
                   <Icon className="size-6" aria-hidden="true" />
                 </span>
                 <span className="font-display text-5xl leading-none font-bold text-foreground/10" aria-hidden="true">

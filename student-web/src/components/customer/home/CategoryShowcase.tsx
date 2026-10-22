@@ -11,9 +11,18 @@ import { shopUrl } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
 import { useGetCategories } from "@/services/categories/queries";
 import { CATEGORY_LIST_LIMIT } from "../layout/CategoryBar";
-import { buildCategoryTree, totalProducts } from "../shop/category-tree";
+import { buildCategoryTree, type CategoryNode } from "../shop/category-tree";
 
 const MAX_TILES = 8;
+const SUB_AISLES_SHOWN = 2;
+
+/** Tile ki chhoti line — sub-aisles ke naam (product count nahi: us mein hidden products bhi hote hain) */
+function tileCaption(root: CategoryNode): string {
+  if (root.children.length === 0) return "Shop the aisle";
+  const names = root.children.slice(0, SUB_AISLES_SHOWN).map((child) => child.name);
+  const more = root.children.length - SUB_AISLES_SHOWN;
+  return more > 0 ? `${names.join(" · ")} +${more} more` : names.join(" · ");
+}
 
 /** "Shop by aisle" — asli top-level categories, har ek ka tint + packshot */
 export function CategoryShowcase() {
@@ -46,7 +55,6 @@ export function CategoryShowcase() {
                 const theme = categoryTheme(root.name);
                 const tone = TONE_CLASSES[theme.tone];
                 const Icon = theme.icon;
-                const count = totalProducts(root);
                 return (
                   <li key={root.id}>
                     <Link
@@ -60,9 +68,7 @@ export function CategoryShowcase() {
                         <span className="font-heading text-lg leading-tight font-bold text-foreground sm:text-xl">
                           {root.name}
                         </span>
-                        <span className="text-xs font-medium text-foreground/60">
-                          {count} {count === 1 ? "product" : "products"}
-                        </span>
+                        <span className="text-xs font-medium text-foreground/60">{tileCaption(root)}</span>
                       </span>
                       <span className="relative z-10 flex size-9 items-center justify-center rounded-full bg-card text-foreground shadow-sm transition-transform group-hover/tile:rotate-45">
                         <ArrowUpRight className="size-4" aria-hidden="true" />

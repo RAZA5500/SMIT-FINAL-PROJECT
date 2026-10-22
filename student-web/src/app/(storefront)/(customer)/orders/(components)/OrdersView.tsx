@@ -14,7 +14,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ORDER_STATUSES, type OrderStatus } from "@/constants/enums";
 import { DELIVERY_TYPE_LABELS, ORDER_STATUS_LABELS } from "@/constants/labels";
-import { formatDateTime, formatMoney } from "@/lib/format";
+import { formatDateTime, formatMoney, pluralize } from "@/lib/format";
 import { customerRoutes, shopUrl } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
 import { useGetCustomerOrders } from "@/services/orders/queries";
@@ -51,7 +51,7 @@ function OrderCard({ order }: { order: IOrderSummary }) {
             </span>
             <span aria-hidden="true">·</span>
             <span>
-              {order.itemCount} {order.itemCount === 1 ? "item" : "items"}
+              {pluralize(order.itemCount, "item")}
             </span>
           </p>
         </div>

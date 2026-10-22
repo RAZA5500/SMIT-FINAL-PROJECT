@@ -17,6 +17,8 @@ import { SelectField } from "@/components/shared/SelectField";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useHydrated } from "@/hooks/useHydrated";
+import { pluralize } from "@/lib/format";
 import { shopUrl } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
 import { useGetCategories } from "@/services/categories/queries";
@@ -35,6 +37,23 @@ const SORT_OPTIONS: { value: ProductSort; label: string }[] = [
   { value: "name_asc", label: "Name: A to Z" },
 ];
 
+/** Server HTML aur pehla client render — page ke Suspense fallback mein bhi yahi */
+export function ShopViewSkeleton() {
+  return (
+    <div className="container-page flex flex-col gap-6 py-6 sm:py-8">
+      <div className="flex flex-col gap-3">
+        <Skeleton className="h-4 w-28" />
+        <Skeleton className="h-9 w-56" />
+        <Skeleton className="h-4 w-48" />
+      </div>
+      <div className="flex items-start gap-8">
+        <Skeleton className="hidden h-96 w-64 shrink-0 rounded-2xl lg:block" />
+        <ProductGridSkeleton count={8} className={cn("min-w-0 flex-1", GRID_CLASS)} />
+      </div>
+    </div>
+  );
+}
+
 /** Shop: filters URL mein; categories ∥ products parallel load (FLOW-MD 08 §11, 11 §7) */
 export function ShopView() {
   const shop = useShopParams();
@@ -52,6 +71,11 @@ export function ShopView() {
   });
   const { data: categories } = useGetCategories({ limit: CATEGORY_LIST_LIMIT });
   const tree = useMemo(() => buildCategoryTree(categories?.data ?? []), [categories]);
+  const hydrated = useHydrated();
+
+  // Suspense ke andar — hydration tak server wala skeleton (footer ki categories cache mein aa chuki hoti hain)
+  if (!hydrated) return <ShopViewSkeleton />;
+
   const category = findCategory(tree, shop.category);
   const parent = findParent(tree, shop.category);
 
@@ -126,7 +150,7 @@ export function ShopView() {
           <h1 className="text-3xl font-bold sm:text-4xl">{title}</h1>
           {data ? (
             <p className="text-sm text-muted-foreground" aria-live="polite">
-              {data.meta.total} {data.meta.total === 1 ? "product" : "products"} · Free delivery on every order
+              {pluralize(data.meta.total, "product")} · Free delivery on every order
             </p>
           ) : (
             <Skeleton className="h-4 w-48" />
@@ -171,7 +195,7 @@ export function ShopView() {
           </div>
           <SheetFooter className="border-t bg-card px-5 py-4">
             <Button size="lg" className="w-full" onClick={() => setFiltersOpen(false)}>
-              {data ? `Show ${data.meta.total} ${data.meta.total === 1 ? "product" : "products"}` : "Show products"}
+              {data ? `Show ${pluralize(data.meta.total, "product")}` : "Show products"}
             </Button>
           </SheetFooter>
         </SheetContent>

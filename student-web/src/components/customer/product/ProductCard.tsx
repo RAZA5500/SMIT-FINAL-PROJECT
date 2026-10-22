@@ -2,13 +2,13 @@
 
 import { Flame, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { ProductImage } from "@/components/shared/ProductImage";
 import { formatMoney } from "@/lib/format";
 import { isNewProduct } from "@/lib/merchandising";
 import { publicRoutes } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
 import type { IProduct } from "@/services/products/types";
 import { ProductCartControl } from "./ProductCartControl";
-import { ProductImage } from "@/components/shared/ProductImage";
 
 interface ProductCardProps {
   product: IProduct;
@@ -25,7 +25,7 @@ export function ProductCard({ product, eager = false, className }: ProductCardPr
   return (
     <article
       className={cn(
-        "group/card relative flex h-full flex-col rounded-2xl bg-card p-2 shadow-soft ring-1 ring-border transition duration-300 hover:-translate-y-0.5 hover:shadow-lift hover:ring-brand/25",
+        "group/card relative flex h-full flex-col rounded-2xl bg-card p-2 shadow-soft ring-1 ring-border transition duration-300 hover:-translate-y-0.5 hover:shadow-lift hover:ring-brand",
         className,
       )}
     >
@@ -50,7 +50,7 @@ export function ProductCard({ product, eager = false, className }: ProductCardPr
             </span>
           ) : null}
           {isNew && !outOfStock && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-lime px-2.5 py-1 text-xs font-semibold text-lime-foreground shadow-sm">
+            <span className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-brand shadow-sm ring-1 ring-border">
               <Sparkles className="size-3.5" aria-hidden="true" />
               New
             </span>
@@ -70,7 +70,7 @@ export function ProductCard({ product, eager = false, className }: ProductCardPr
           </Link>
         </h3>
         <div className="mt-2 flex items-end justify-between gap-2">
-          <p className="numeric font-heading text-lg leading-none font-bold text-foreground">
+          <p className="numeric font-heading text-lg leading-none font-bold text-brand">
             {formatMoney(product.price)}
           </p>
           {product.minimumOrderQuantity > 1 && (

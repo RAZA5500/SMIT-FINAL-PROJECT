@@ -7,20 +7,18 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useGetCategories } from "@/services/categories/queries";
 import { CATEGORY_LIST_LIMIT } from "../layout/CategoryBar";
-import { buildCategoryTree, totalProducts, type CategoryNode } from "./category-tree";
+import { buildCategoryTree, type CategoryNode } from "./category-tree";
 
 const ROW_CLASS =
   "flex w-full items-center justify-between gap-2 rounded-lg px-2.5 py-2 text-left text-sm transition-colors";
 
 function CategoryRow({
   label,
-  count,
   active,
   depth = 0,
   onSelect,
 }: {
   label: string;
-  count: number;
   active: boolean;
   depth?: 0 | 1;
   onSelect: () => void;
@@ -37,7 +35,6 @@ function CategoryRow({
       )}
     >
       <span className="truncate">{label}</span>
-      <span className={cn("numeric text-xs", active ? "text-brand" : "text-muted-foreground")}>{count}</span>
     </button>
   );
 }
@@ -56,12 +53,7 @@ function RootCategory({
 
   if (node.children.length === 0) {
     return (
-      <CategoryRow
-        label={node.name}
-        count={totalProducts(node)}
-        active={selected === node.id}
-        onSelect={() => onSelect(node.id)}
-      />
+      <CategoryRow label={node.name} active={selected === node.id} onSelect={() => onSelect(node.id)} />
     );
   }
 
@@ -71,7 +63,6 @@ function RootCategory({
         <div className="min-w-0 flex-1">
           <CategoryRow
             label={node.name}
-            count={totalProducts(node)}
             active={selected === node.id}
             onSelect={() => {
               onSelect(node.id);
@@ -92,7 +83,6 @@ function RootCategory({
             key={child.id}
             depth={1}
             label={child.name}
-            count={totalProducts(child)}
             active={selected === child.id}
             onSelect={() => onSelect(child.id)}
           />
@@ -102,11 +92,13 @@ function RootCategory({
   );
 }
 
-/** Category tree — parent ka count = children ka jor (products sirf leaf mein) */
+/**
+ * Category tree. Counts nahi dikhate — backend `productCount` mein hidden (inactive) products
+ * bhi gine jate hain, jo grid ke "N products" se match nahi karte.
+ */
 export function CategoryFilter({ selected, onSelect }: { selected: string | null; onSelect: (id: string | null) => void }) {
   const { data, isLoading, isError, refetch } = useGetCategories({ limit: CATEGORY_LIST_LIMIT });
   const tree = useMemo(() => buildCategoryTree(data?.data ?? []), [data]);
-  const allCount = tree.reduce((sum, node) => sum + totalProducts(node), 0);
 
   if (isLoading) {
     return (
@@ -130,7 +122,7 @@ export function CategoryFilter({ selected, onSelect }: { selected: string | null
 
   return (
     <div className="flex flex-col gap-0.5">
-      <CategoryRow label="All products" count={allCount} active={selected === null} onSelect={() => onSelect(null)} />
+      <CategoryRow label="All products" active={selected === null} onSelect={() => onSelect(null)} />
       {tree.map((node) => (
         // key mein selected — doosri category select hone par expand state naye sire se
         <RootCategory key={`${node.id}-${selected ?? ""}`} node={node} selected={selected} onSelect={onSelect} />

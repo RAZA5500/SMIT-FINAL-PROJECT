@@ -1,9 +1,9 @@
 import { Lock, Truck } from "lucide-react";
 import type { ReactNode } from "react";
-import { formatMoney } from "@/lib/format";
+import { ProductImage } from "@/components/shared/ProductImage";
+import { formatMoney, pluralize } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { ICart } from "@/services/cart/types";
-import { ProductImage } from "@/components/shared/ProductImage";
 
 interface CartSummaryProps {
   cart: ICart;
@@ -47,7 +47,7 @@ export function CartSummary({ cart, title = "Order summary", showItems = false, 
       <dl className={cn("flex flex-col gap-2.5 text-sm", showItems && "border-t border-dashed pt-4")}>
         <div className="flex items-center justify-between">
           <dt className="text-muted-foreground">
-            Subtotal ({cart.itemCount} {cart.itemCount === 1 ? "item" : "items"})
+            Subtotal ({pluralize(cart.itemCount, "item")})
           </dt>
           <dd className="numeric font-medium">{formatMoney(cart.subtotal)}</dd>
         </div>
@@ -56,7 +56,7 @@ export function CartSummary({ cart, title = "Order summary", showItems = false, 
             <Truck className="size-4" aria-hidden="true" />
             Delivery
           </dt>
-          <dd className="rounded-full bg-lime-soft px-2 py-0.5 text-xs font-semibold text-brand">Free</dd>
+          <dd className="rounded-full bg-brand-soft px-2 py-0.5 text-xs font-semibold text-brand">Free</dd>
         </div>
         <div className="mt-1 flex items-center justify-between border-t pt-3.5">
           <dt className="font-semibold">Total</dt>

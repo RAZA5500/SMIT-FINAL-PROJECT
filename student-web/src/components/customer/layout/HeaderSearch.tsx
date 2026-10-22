@@ -4,6 +4,7 @@ import { Autocomplete } from "@base-ui/react/autocomplete";
 import { ArrowRight, LoaderCircle, Search } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useRef, useState } from "react";
+import { ProductImage } from "@/components/shared/ProductImage";
 import { Button } from "@/components/ui/button";
 import { InputGroup, InputGroupAddon } from "@/components/ui/input-group";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -12,7 +13,6 @@ import { publicRoutes, shopUrl } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
 import { useGetProducts } from "@/services/products/queries";
 import type { IProduct } from "@/services/products/types";
-import { ProductImage } from "@/components/shared/ProductImage";
 
 const MIN_QUERY = 2;
 const SUGGESTION_LIMIT = 6;
@@ -134,7 +134,7 @@ function HeaderSearchForm({ initialQuery, className }: { initialQuery: string; c
                       <span className="truncate text-sm font-medium">{product.name}</span>
                       <span className="truncate text-xs text-muted-foreground">{product.category.name}</span>
                     </span>
-                    <span className="numeric text-sm font-semibold">{formatMoney(product.price)}</span>
+                    <span className="numeric text-sm font-semibold text-brand">{formatMoney(product.price)}</span>
                   </Autocomplete.Item>
                 )}
               </Autocomplete.List>

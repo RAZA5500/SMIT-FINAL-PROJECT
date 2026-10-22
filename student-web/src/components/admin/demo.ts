@@ -3,10 +3,8 @@ import type { StatusTone } from "@/components/shared/StatusBadge";
 import type { CampaignStatus } from "@/data/admin";
 
 /** Static mock screens par action buttons — sach batao ke yeh preview hai */
-export function demoAction(action = "This action"): void {
-  toast.info(`${action} isn't connected yet`, {
-    description: "This screen is a design preview with sample data.",
-  });
+export function demoAction(action = "This action", description = "This screen is a design preview with sample data."): void {
+  toast.info(`${action} isn't connected yet`, { description });
 }
 
 /** Coupons aur promotions dono ka status rang */

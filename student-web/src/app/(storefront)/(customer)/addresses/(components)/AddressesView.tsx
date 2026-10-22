@@ -47,7 +47,7 @@ function AddressCard({
           {address.isDefault ? <Home className="size-5" aria-hidden="true" /> : <MapPin className="size-5" aria-hidden="true" />}
         </span>
         {address.isDefault && (
-          <span className="rounded-full bg-lime px-2.5 py-1 text-xs font-semibold text-lime-foreground">Default</span>
+          <span className="rounded-full bg-primary px-2.5 py-1 text-xs font-semibold text-primary-foreground">Default</span>
         )}
       </div>
       <address className="flex flex-1 flex-col text-sm not-italic">

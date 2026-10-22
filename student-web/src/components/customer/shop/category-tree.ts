@@ -3,7 +3,10 @@ import type { ICategory } from "@/services/categories/types";
 export interface CategoryNode {
   id: string;
   name: string;
-  /** Sirf is category ke apne products (backend `productCount`) */
+  /**
+   * Sirf is category ke apne products (backend `productCount`) — hidden products bhi shamil,
+   * is liye customers ko count ke taur par mat dikhao; sirf ordering jaise andazon ke liye
+   */
   productCount: number;
   children: CategoryNode[];
 }

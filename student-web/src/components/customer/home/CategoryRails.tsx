@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { pluralize } from "@/lib/format";
 import { categoryTheme, TONE_CLASSES } from "@/lib/merchandising";
 import { shopUrl } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
@@ -13,7 +14,7 @@ import { buildCategoryTree, totalProducts, type CategoryNode } from "../shop/cat
 const FEATURED_AISLES = 2;
 const RAIL_LIMIT = 10;
 
-/** Sab se bari do aisles ki shelves — asli product counts se */
+/** Sab se bari do aisles ki shelves (backend productCount se andaza; khali shelf chhupti hai) */
 export function CategoryRails() {
   const { data } = useGetCategories({ limit: CATEGORY_LIST_LIMIT });
   const featured = useMemo(
@@ -34,6 +35,10 @@ function CategoryRail({ category }: { category: CategoryNode }) {
   const theme = categoryTheme(category.name);
   const Icon = theme.icon;
 
+  // Sirf hidden products wali aisle — khali shelf mat dikhao
+  if (data && data.meta.total === 0) return null;
+  const total = data?.meta.total;
+
   return (
     <div className="container-page">
       <ProductRail
@@ -49,7 +54,7 @@ function CategoryRail({ category }: { category: CategoryNode }) {
             Shop the aisle
           </span>
         }
-        description={`${totalProducts(category)} products in this aisle`}
+        description={total === undefined ? undefined : `${pluralize(total, "product")} in this aisle`}
         href={shopUrl({ category: category.id })}
         products={data?.data}
         isLoading={isLoading}

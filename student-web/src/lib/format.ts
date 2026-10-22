@@ -38,3 +38,8 @@ export function initials(name: string | null | undefined): string {
     .slice(0, 2)
     .toUpperCase();
 }
+
+/** "1 item" / "3 items" — count ke saath sahi singular/plural */
+export function pluralize(count: number, singular: string, plural = `${singular}s`): string {
+  return `${count} ${count === 1 ? singular : plural}`;
+}

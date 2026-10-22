@@ -13,7 +13,7 @@ import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatMoney } from "@/lib/format";
+import { formatMoney, pluralize } from "@/lib/format";
 import { customerRoutes, shopUrl } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
 import { useClearCart } from "@/services/cart/mutations";
@@ -57,7 +57,7 @@ export function CartView() {
     <CustomerPage
       title="Your basket"
       breadcrumbs={[{ label: "Basket" }]}
-      description={items.length > 0 ? `${cart?.itemCount} items ready for checkout.` : undefined}
+      description={items.length > 0 ? `${pluralize(cart?.itemCount ?? 0, "item")} ready for checkout.` : undefined}
     >
       {content}
       <SuggestedProducts excludeIds={items.map((item) => item.productId)} />
@@ -96,7 +96,7 @@ function FilledBasket({ cart, onClear }: { cart: ICart; onClear: () => void }) {
         <section aria-label="Basket items" className="rounded-3xl bg-card shadow-soft ring-1 ring-border lg:col-span-2">
           <div className="flex items-center justify-between gap-3 border-b px-5 py-4 sm:px-6">
             <h2 className="font-sans text-sm font-semibold">
-              {cart.items.length} {cart.items.length === 1 ? "product" : "products"}
+              {pluralize(cart.items.length, "product")}
             </h2>
             <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-destructive" onClick={onClear}>
               <Trash2 aria-hidden="true" />

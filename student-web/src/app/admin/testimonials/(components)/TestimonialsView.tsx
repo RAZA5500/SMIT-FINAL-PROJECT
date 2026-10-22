@@ -91,7 +91,7 @@ export function TestimonialsView() {
                         alt=""
                         width={44}
                         height={44}
-                        className="size-11 rounded-full object-cover ring-2 ring-lime-soft"
+                        className="size-11 rounded-full object-cover ring-2 ring-brand-soft"
                       />
                       <div className="flex flex-col gap-1">
                         <p className="font-semibold">{testimonial.customer}</p>

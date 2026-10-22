@@ -10,16 +10,16 @@ import { cn } from "@/lib/utils";
 export function PromoBand() {
   return (
     <section className="container-page grid gap-4 lg:grid-cols-5">
-      <div className="relative isolate overflow-hidden rounded-3xl bg-lime p-7 text-lime-foreground sm:p-10 lg:col-span-3">
+      <div className="relative isolate overflow-hidden rounded-3xl bg-brand-soft p-7 text-foreground sm:p-10 lg:col-span-3">
         <div className="relative z-10 flex max-w-md flex-col gap-4">
-          <span className="inline-flex w-fit items-center gap-2 rounded-full bg-lime-foreground px-3 py-1 text-xs font-semibold text-lime">
+          <span className="inline-flex w-fit items-center gap-2 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">
             <Truck className="size-3.5" aria-hidden="true" />
             Delivery is on us
           </span>
           <h2 className="font-display text-3xl leading-tight font-bold sm:text-4xl">
             Free delivery on every single order.
           </h2>
-          <p className="text-base text-lime-foreground/75">
+          <p className="text-base text-foreground/70">
             No minimum spend and no surprise fees — the total in your basket is the total you pay.
           </p>
           <Link href={shopUrl()} className={cn(buttonVariants({ size: "xl" }), "w-fit")}>
@@ -38,18 +38,18 @@ export function PromoBand() {
         </div>
       </div>
 
-      <div className="relative isolate flex flex-col justify-between gap-6 overflow-hidden rounded-3xl bg-brand p-7 text-white sm:p-10 lg:col-span-2">
-        <div className="bg-dots absolute inset-0 -z-10 text-white/5" aria-hidden="true" />
-        <span className="flex size-12 items-center justify-center rounded-2xl bg-white/10 text-lime">
+      <div className="relative isolate flex flex-col justify-between gap-6 overflow-hidden rounded-3xl bg-card p-7 text-foreground ring-1 ring-border sm:p-10 lg:col-span-2">
+        <div className="bg-dots absolute inset-0 -z-10 text-foreground/5" aria-hidden="true" />
+        <span className="flex size-12 items-center justify-center rounded-2xl bg-brand-soft text-brand">
           <Store className="size-6" aria-hidden="true" />
         </span>
         <div className="flex flex-col gap-2">
           <h2 className="text-2xl font-bold sm:text-3xl">Rather pick it up?</h2>
-          <p className="text-white/75">
+          <p className="text-muted-foreground">
             Choose click &amp; collect at checkout and pick a time that suits you — we&apos;ll have it ready.
           </p>
         </div>
-        <p className="inline-flex items-center gap-2 text-sm font-semibold text-lime">
+        <p className="inline-flex items-center gap-2 text-sm font-semibold text-brand">
           <CalendarClock className="size-4" aria-hidden="true" />
           You choose the collection time
         </p>

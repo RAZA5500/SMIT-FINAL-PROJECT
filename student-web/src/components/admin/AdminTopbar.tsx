@@ -101,11 +101,6 @@ export function AdminTopbar() {
           })}
         </BreadcrumbList>
       </Breadcrumb>
-      {item?.demo && (
-        <span className="hidden rounded-full bg-foreground px-2.5 py-1 text-xs font-semibold text-background md:inline">
-          Demo screen · sample data
-        </span>
-      )}
       <Link href={publicRoutes.home} className={cn(buttonVariants({ variant: "outline", size: "sm" }), "hidden sm:inline-flex")}>
         <ExternalLink aria-hidden="true" />
         View store

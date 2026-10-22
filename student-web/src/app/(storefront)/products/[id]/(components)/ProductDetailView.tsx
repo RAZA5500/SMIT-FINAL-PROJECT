@@ -115,7 +115,7 @@ function ProductOverview({ product }: { product: IProduct }) {
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <p className="numeric font-heading text-4xl font-bold">{formatMoney(product.price)}</p>
+            <p className="numeric font-heading text-4xl font-bold text-brand">{formatMoney(product.price)}</p>
             <StatusBadge status={product.stockStatus} className="text-sm" />
           </div>
 

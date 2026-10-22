@@ -23,7 +23,7 @@ export function ReviewsSection() {
             >
               <div className="flex items-center justify-between">
                 <StarRating rating={review.rating} />
-                <Quote className="size-6 fill-lime text-lime" aria-hidden="true" />
+                <Quote className="size-6 fill-brand text-brand" aria-hidden="true" />
               </div>
               <blockquote className="flex-1 text-sm leading-relaxed text-foreground/85">“{review.text}”</blockquote>
               <div className="flex items-center gap-3">
@@ -32,7 +32,7 @@ export function ReviewsSection() {
                   alt=""
                   width={40}
                   height={40}
-                  className="size-10 rounded-full object-cover ring-2 ring-lime-soft"
+                  className="size-10 rounded-full object-cover ring-2 ring-brand-soft"
                 />
                 <span className="text-sm font-semibold">{review.customer}</span>
               </div>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useHydrated } from "@/hooks/useHydrated";
 import { categoryTheme } from "@/lib/merchandising";
 import { publicRoutes, shopUrl } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
@@ -44,6 +45,8 @@ export function CategoryBar() {
   const pathname = usePathname();
   const params = useSearchParams();
   const { data, isLoading } = useGetCategories({ limit: CATEGORY_LIST_LIMIT });
+  // Suspense ke andar — hydration tak server wala skeleton hi (useHydrated dekho)
+  const hydrated = useHydrated();
   const roots = useMemo(() => buildCategoryTree(data?.data ?? []), [data]);
 
   const onShop = pathname === publicRoutes.shop;
@@ -56,7 +59,7 @@ export function CategoryBar() {
       <CategoryPill href={shopUrl()} active={onShop && !activeId} icon={LayoutGrid}>
         All products
       </CategoryPill>
-      {isLoading
+      {!hydrated || isLoading
         ? Array.from({ length: 6 }, (_, i) => <Skeleton key={i} className="h-9 w-28 shrink-0 rounded-full" />)
         : roots.map((root) => (
             <CategoryPill

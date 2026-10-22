@@ -51,7 +51,7 @@ export function UploadDropzone({
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
         className={cn(
-          "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-input bg-cream px-4 py-8 text-center transition-colors hover:border-brand/40 hover:bg-brand-soft/40",
+          "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-input bg-cream px-4 py-8 text-center transition-colors hover:border-brand hover:bg-brand-soft/40",
           "focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/25",
           dragging && "border-brand bg-brand-soft/60",
         )}

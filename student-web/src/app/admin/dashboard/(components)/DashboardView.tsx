@@ -92,24 +92,24 @@ export function DashboardView() {
           </ol>
         </section>
 
-        <section className="flex flex-col gap-3 rounded-2xl bg-brand-strong p-5 text-white shadow-soft sm:p-6">
+        <section className="flex flex-col gap-3 rounded-2xl bg-card p-5 shadow-soft ring-1 ring-border sm:p-6">
           <h2 className="font-sans text-base font-semibold">Quick actions</h2>
           <ul className="flex flex-col gap-2">
             {QUICK_ACTIONS.map(({ label, text, href, icon: Icon }) => (
               <li key={href}>
                 <Link
                   href={href}
-                  className="group/action flex items-center gap-3 rounded-xl bg-white/5 p-3 transition-colors hover:bg-white/10"
+                  className="group/action flex items-center gap-3 rounded-xl bg-muted/60 p-3 transition-colors hover:bg-muted"
                 >
-                  <span className="flex size-9 items-center justify-center rounded-lg bg-lime text-lime-foreground">
+                  <span className="flex size-9 items-center justify-center rounded-lg bg-brand text-white">
                     <Icon className="size-4" aria-hidden="true" />
                   </span>
                   <span className="flex min-w-0 flex-1 flex-col">
                     <span className="text-sm font-semibold">{label}</span>
-                    <span className="text-xs text-white/60">{text}</span>
+                    <span className="text-xs text-muted-foreground">{text}</span>
                   </span>
                   <ArrowUpRight
-                    className="size-4 text-white/50 transition-transform group-hover/action:translate-x-0.5 group-hover/action:-translate-y-0.5"
+                    className="size-4 text-muted-foreground transition-transform group-hover/action:translate-x-0.5 group-hover/action:-translate-y-0.5"
                     aria-hidden="true"
                   />
                 </Link>

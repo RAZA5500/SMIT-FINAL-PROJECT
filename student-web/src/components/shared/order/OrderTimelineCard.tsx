@@ -33,7 +33,7 @@ export function OrderTimelineCard({ order }: { order: IOrder }) {
                 className={cn(
                   "relative z-10 flex size-10 shrink-0 items-center justify-center rounded-full",
                   done && "bg-primary text-primary-foreground",
-                  isNext && "bg-lime text-lime-foreground ring-4 ring-lime/30",
+                  isNext && "bg-primary text-primary-foreground ring-4 ring-muted",
                   !done && !isNext && "bg-muted text-muted-foreground",
                 )}
               >

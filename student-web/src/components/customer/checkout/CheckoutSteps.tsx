@@ -24,7 +24,7 @@ export function CheckoutSteps({ current }: { current: 1 | 2 }) {
                 className={cn(
                   "flex size-7 items-center justify-center rounded-full text-xs font-bold",
                   done && "bg-primary text-primary-foreground",
-                  active && "bg-lime text-lime-foreground ring-4 ring-lime/30",
+                  active && "bg-primary text-primary-foreground ring-4 ring-muted",
                   !done && !active && "bg-muted text-muted-foreground",
                 )}
               >

@@ -6,91 +6,89 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ---------------------------------------------------------------------------
-   Freskinto design tokens
-   - Basil green (primary) for actions, deep evergreen for brand surfaces,
-     lime as the signature accent, tomato for urgency, saffron for warnings.
-   - Warm oat background so white product cards and packshots pop.
+   Freskinto design tokens — mostly white, fresh green accents
+   - Pure white pages, cards, header and admin sidebar; light grey for quiet panels (hero,
+     footer, tiles, chips). No tinted panels and no large coloured blocks.
+   - Freskinto green (emerald #047857) only for actions and accents: buttons, prices, badges,
+     links, active states. Red stays for errors and low-stock urgency.
+   - Status colours (success / warning / info) stay semantic; saffron is for ratings.
 --------------------------------------------------------------------------- */
 :root {
   --radius: 0.75rem;
 
-  --background: #f6f4ee;
-  --foreground: #102419;
+  --background: #ffffff;
+  --foreground: #171717;
   --card: #ffffff;
-  --card-foreground: #102419;
+  --card-foreground: #171717;
   --popover: #ffffff;
-  --popover-foreground: #102419;
-  --primary: #0e5a34;
+  --popover-foreground: #171717;
+  --primary: #047857;
   --primary-foreground: #ffffff;
-  --secondary: #e9efe4;
-  --secondary-foreground: #102419;
-  --muted: #efece4;
-  --muted-foreground: #5b675f;
-  --accent: #e7efe2;
-  --accent-foreground: #102419;
-  --destructive: #c33a22;
-  --border: #e2ded3;
-  --input: #d8d3c6;
-  --ring: #2f8a57;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #171717;
+  --muted: #f5f5f5;
+  --muted-foreground: #6b6b6b;
+  --accent: #f4f4f5;
+  --accent-foreground: #171717;
+  --destructive: #b42318;
+  --border: #ebebeb;
+  --input: #dadada;
+  --ring: #047857;
 
-  --brand: #0e5a34;
-  --brand-strong: #0a3f25;
-  --brand-soft: #e3efdf;
-  --lime: #c9ee5f;
-  --lime-foreground: #102419;
-  --lime-soft: #f1f9da;
-  --tomato: #e4572e;
-  --tomato-soft: #fde9e3;
+  --brand: #047857;
+  --brand-strong: #065f46;
+  --brand-soft: #f4f4f5;
+  --tomato: #c81e1e;
+  --tomato-soft: #fdecea;
   --saffron: #f2b53a;
   --saffron-soft: #fdf3dc;
-  --cream: #fbf9f4;
+  --cream: #fafafa;
   --success: #1d8a4d;
   --warning: #b26b00;
   --info: #2463c9;
 
-  /* Categorical chart slots — dataviz validator: band, chroma, CVD (adjacent) and contrast
-     pass on #ffffff cards; slot 5 (yellow) is <3:1 so it always ships with labels/table */
-  --chart-1: #2f8a57;
+  /* Categorical chart slots. Charts only use slot 1 (single series) = brand green; slots 2–5 are
+     the earlier CVD-checked set, kept for multi-series charts */
+  --chart-1: #047857;
   --chart-2: #2a78d6;
   --chart-3: #eb6834;
   --chart-4: #6250d6;
   --chart-5: #eda100;
 
-  --sidebar: #0b2b1c;
-  --sidebar-foreground: #dce8e0;
-  --sidebar-primary: #c9ee5f;
-  --sidebar-primary-foreground: #0b2b1c;
-  --sidebar-accent: #164a31;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #1c4430;
-  --sidebar-ring: #c9ee5f;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #171717;
+  --sidebar-primary: #047857;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f4f4f5;
+  --sidebar-accent-foreground: #171717;
+  --sidebar-border: #ebebeb;
+  --sidebar-ring: #047857;
 }
 
 .dark {
-  --background: #0c1611;
-  --foreground: #eef3ef;
-  --card: #132019;
-  --card-foreground: #eef3ef;
-  --popover: #132019;
-  --popover-foreground: #eef3ef;
-  --primary: #c9ee5f;
-  --primary-foreground: #102419;
-  --secondary: #1b2b22;
-  --secondary-foreground: #eef3ef;
-  --muted: #1b2b22;
-  --muted-foreground: #9fb0a5;
-  --accent: #1f3328;
-  --accent-foreground: #eef3ef;
+  --background: #120d0d;
+  --foreground: #f5f5f5;
+  --card: #1b1414;
+  --card-foreground: #f5f5f5;
+  --popover: #1b1414;
+  --popover-foreground: #f5f5f5;
+  --primary: #34d399;
+  --primary-foreground: #022c22;
+  --secondary: #2a1a1a;
+  --secondary-foreground: #f5f5f5;
+  --muted: #241a1a;
+  --muted-foreground: #b3a6a6;
+  --accent: #2c1b1b;
+  --accent-foreground: #f5f5f5;
   --destructive: #ff7b63;
   --border: #ffffff1a;
   --input: #ffffff26;
-  --ring: #7dba3c;
-  --brand-soft: #1b2b22;
-  --lime-soft: #26331a;
-  --tomato-soft: #3a1d16;
+  --ring: #34d399;
+  --brand-soft: #262626;
+  --tomato-soft: #3a1616;
   --saffron-soft: #3a2d12;
-  --cream: #101b15;
-  --chart-1: #3fa36b;
+  --cream: #171111;
+  --chart-1: #34d399;
   --chart-2: #3987e5;
   --chart-3: #d95926;
   --chart-4: #9085e9;
@@ -124,9 +122,6 @@
   --color-brand: var(--brand);
   --color-brand-strong: var(--brand-strong);
   --color-brand-soft: var(--brand-soft);
-  --color-lime: var(--lime);
-  --color-lime-foreground: var(--lime-foreground);
-  --color-lime-soft: var(--lime-soft);
   --color-tomato: var(--tomato);
   --color-tomato-soft: var(--tomato-soft);
   --color-saffron: var(--saffron);
@@ -164,9 +159,9 @@
   --container-page: 84rem;
   --breakpoint-xs: 26rem;
 
-  --shadow-soft: 0 1px 2px rgb(16 36 25 / 0.04), 0 8px 24px -12px rgb(16 36 25 / 0.14);
-  --shadow-lift: 0 2px 4px rgb(16 36 25 / 0.04), 0 22px 44px -20px rgb(16 36 25 / 0.32);
-  --shadow-glow: 0 10px 30px -10px rgb(14 90 52 / 0.45);
+  --shadow-soft: 0 1px 2px rgb(23 23 23 / 0.04), 0 8px 24px -12px rgb(23 23 23 / 0.14);
+  --shadow-lift: 0 2px 4px rgb(23 23 23 / 0.04), 0 22px 44px -20px rgb(23 23 23 / 0.3);
+  --shadow-glow: 0 10px 30px -10px rgb(4 120 87 / 0.45);
 
   --animate-marquee: marquee 38s linear infinite;
   --animate-float: float 7s ease-in-out infinite;
@@ -246,8 +241,8 @@
   }
 
   ::selection {
-    background-color: var(--lime);
-    color: var(--lime-foreground);
+    background-color: var(--brand);
+    color: var(--primary-foreground);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -285,6 +280,7 @@
   }
 }
 
+/* Thin, token-coloured scrollbars for horizontal rails (admin order board) */
 @utility scrollbar-thin {
   scrollbar-width: thin;
   scrollbar-color: var(--input) transparent;
@@ -308,5 +304,5 @@
 
 /* Outlined display numerals (404) */
 @utility text-outline {
-  -webkit-text-stroke: 2px var(--brand-strong);
+  -webkit-text-stroke: 2px var(--brand);
 }

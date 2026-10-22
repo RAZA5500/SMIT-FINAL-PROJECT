@@ -103,7 +103,7 @@ export function CheckoutForm({ addresses }: { addresses: IAddress[] }) {
                   title={option.title}
                   description={option.description}
                   aside={
-                    <span className="rounded-full bg-lime-soft px-2 py-0.5 text-xs font-semibold text-brand">Free</span>
+                    <span className="rounded-full bg-brand-soft px-2 py-0.5 text-xs font-semibold text-brand">Free</span>
                   }
                 />
               ))}

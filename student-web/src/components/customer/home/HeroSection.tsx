@@ -22,51 +22,51 @@ const PACKSHOTS = [
 export function HeroSection() {
   return (
     <section className="container-page pt-4 sm:pt-6">
-      <div className="relative isolate overflow-hidden rounded-3xl bg-brand-strong text-white sm:rounded-4xl">
-        <div className="bg-dots absolute inset-0 -z-10 text-white/5" aria-hidden="true" />
-        <div className="absolute -top-24 -right-24 -z-10 size-96 rounded-full bg-brand blur-3xl" aria-hidden="true" />
+      <div className="relative isolate overflow-hidden rounded-3xl bg-muted text-foreground sm:rounded-4xl">
+        <div className="bg-dots absolute inset-0 -z-10 text-foreground/5" aria-hidden="true" />
+        <div className="absolute -top-24 -right-24 -z-10 size-96 rounded-full bg-white blur-3xl" aria-hidden="true" />
 
         <div className="grid items-center gap-6 lg:grid-cols-2">
           <div className="flex flex-col gap-6 px-6 pt-10 pb-2 sm:px-10 sm:pt-14 lg:py-20 lg:pr-0 lg:pl-14">
-            <span className="inline-flex w-fit items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold text-lime ring-1 ring-white/15">
-              <span className="size-1.5 rounded-full bg-lime" aria-hidden="true" />
+            <span className="inline-flex w-fit items-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-brand ring-1 ring-border">
+              <span className="size-1.5 rounded-full bg-brand" aria-hidden="true" />
               Fresh groceries, delivered free
             </span>
             <h1 className="font-display text-4xl leading-none font-bold sm:text-5xl xl:text-6xl">
-              Your <span className="text-lime">fresh market</span>, delivered to your door.
+              Your <span className="text-brand">fresh market</span>, delivered to your door.
             </h1>
-            <p className="max-w-lg text-base text-white/75 sm:text-lg">
+            <p className="max-w-lg text-base text-muted-foreground sm:text-lg">
               Fruit &amp; veg, poultry, dairy and everyday essentials. Free delivery on every order — or click &amp;
               collect when it suits you.
             </p>
 
             <div className="flex flex-wrap items-center gap-3">
-              <Link href={shopUrl()} className={cn(buttonVariants({ variant: "lime", size: "xl" }), "shadow-glow")}>
+              <Link href={shopUrl()} className={cn(buttonVariants({ size: "xl" }), "shadow-glow")}>
                 Start shopping
                 <ArrowRight aria-hidden="true" />
               </Link>
-              <Link href="#how-it-works" className={buttonVariants({ variant: "glass", size: "xl" })}>
+              <Link href="#how-it-works" className={buttonVariants({ variant: "outline", size: "xl" })}>
                 How it works
               </Link>
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-medium text-white/60">Popular:</span>
+              <span className="text-xs font-medium text-muted-foreground">Popular:</span>
               {POPULAR_SEARCHES.map((term) => (
                 <Link
                   key={term}
                   href={shopUrl({ q: term })}
-                  className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white ring-1 ring-white/10 transition-colors hover:bg-white/20"
+                  className="rounded-full bg-white px-3 py-1 text-xs font-medium text-foreground ring-1 ring-border transition-colors hover:text-brand hover:ring-brand"
                 >
                   {term}
                 </Link>
               ))}
             </div>
 
-            <ul className="flex flex-wrap gap-x-5 gap-y-2 border-t border-white/10 pt-5">
+            <ul className="flex flex-wrap gap-x-5 gap-y-2 border-t border-foreground/10 pt-5">
               {TRUST.map((item) => (
-                <li key={item} className="inline-flex items-center gap-2 text-sm text-white/80">
-                  <span className="flex size-5 items-center justify-center rounded-full bg-lime text-lime-foreground">
+                <li key={item} className="inline-flex items-center gap-2 text-sm text-foreground/80">
+                  <span className="flex size-5 items-center justify-center rounded-full bg-brand text-white">
                     <Check className="size-3" strokeWidth={3} aria-hidden="true" />
                   </span>
                   {item}
@@ -85,8 +85,8 @@ export function HeroSection() {
 function HeroVisual() {
   return (
     <div className="relative mx-auto aspect-square w-full max-w-md lg:max-w-none" aria-hidden="true">
-      <div className="absolute inset-1/8 rounded-full bg-lime" />
-      <div className="absolute inset-2/9 rounded-full border-2 border-dashed border-brand-strong/25" />
+      <div className="absolute inset-1/8 rounded-full bg-white" />
+      <div className="absolute inset-2/9 rounded-full border-2 border-dashed border-foreground/10" />
       {PACKSHOTS.map((shot) => (
         <div
           key={shot.image}

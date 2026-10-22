@@ -72,10 +72,10 @@ export function EditorialCollections() {
                   sizes={index === 0 ? "(min-width: 1024px) 50vw, 100vw" : "(min-width: 1024px) 25vw, 50vw"}
                   className="-z-20 object-cover transition-transform duration-700 group-hover/collection:scale-105"
                 />
-                <span className="absolute inset-0 -z-10 bg-linear-to-t from-brand-strong via-brand-strong/45 to-transparent" />
+                <span className="absolute inset-0 -z-10 bg-linear-to-t from-black/75 via-black/30 to-transparent" />
                 <span className="font-display text-2xl leading-tight font-bold sm:text-3xl">{collection.title}</span>
                 <span className="mt-1 max-w-sm text-sm text-white/80">{collection.text}</span>
-                <span className="mt-4 inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-semibold text-brand-strong transition group-hover/collection:bg-lime">
+                <span className="mt-4 inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-semibold text-brand transition group-hover/collection:bg-brand-soft">
                   Shop now
                   <ArrowRight className="size-4" aria-hidden="true" />
                 </span>

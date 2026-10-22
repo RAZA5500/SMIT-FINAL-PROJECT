@@ -9,8 +9,6 @@ const buttonVariants = cva(
       variant: {
         default:
           "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
-        // Signature accent — dark ink on lime, for hero/promo CTAs
-        lime: "bg-lime text-lime-foreground shadow-sm hover:bg-lime/85",
         outline:
           "border-border bg-card hover:border-foreground/20 hover:bg-muted aria-expanded:bg-muted dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
         secondary:
@@ -22,8 +20,8 @@ const buttonVariants = cva(
         // Final confirm of irreversible actions (delete, cancel order)
         danger:
           "bg-destructive text-white shadow-sm hover:bg-destructive/90 focus-visible:ring-destructive/30",
-        // White button on brand surfaces (evergreen hero, footer)
-        inverse: "bg-white text-brand-strong shadow-sm hover:bg-white/90",
+        // White / translucent buttons for photos or dark surfaces
+        inverse: "bg-white text-brand shadow-sm hover:bg-white/90",
         glass:
           "border-white/15 bg-white/10 text-white backdrop-blur hover:bg-white/15",
         link: "rounded-md px-0 text-primary underline-offset-4 hover:underline",

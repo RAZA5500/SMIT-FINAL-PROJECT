@@ -24,7 +24,7 @@ export function ProductPreview({ name, categoryName, price, minimumOrderQuantity
     <div className="flex flex-col gap-3 rounded-2xl bg-card p-5 shadow-soft ring-1 ring-border">
       <div className="flex items-center justify-between">
         <h2 className="font-sans text-sm font-semibold">Shop preview</h2>
-        <span className="inline-flex items-center gap-1 rounded-full bg-lime-soft px-2 py-0.5 text-xs font-semibold text-brand">
+        <span className="inline-flex items-center gap-1 rounded-full bg-brand-soft px-2 py-0.5 text-xs font-semibold text-brand">
           <Sparkles className="size-3" aria-hidden="true" />
           Live
         </span>

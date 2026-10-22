@@ -3,10 +3,12 @@
 import { House, LayoutGrid, Package, ShoppingBasket, UserRound, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { pluralize } from "@/lib/format";
 import { customerRoutes, publicRoutes } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
 import { useGetCart } from "@/services/cart/queries";
 import { useUiStore } from "@/stores/ui-store";
+import { isCheckoutPath } from "./SiteHeader";
 
 const ITEM_CLASS =
   "relative flex flex-1 flex-col items-center justify-center gap-1 py-2 text-xs font-medium transition-colors";
@@ -32,8 +34,11 @@ export function MobileTabBar() {
   const { data: cart } = useGetCart();
   const count = cart?.itemCount ?? 0;
 
+  // Checkout band rehta hai (header/footer bhi checkout mode mein) — bahar jaane ke raste nahi
+  if (isCheckoutPath(pathname)) return null;
+
   return (
-    // pb-[env(...)]: iPhone home indicator ke neeche content na chhupe — koi token nahi
+    // Safe-area bottom padding (arbitrary env() value): iPhone home indicator ke neeche content na chhupe — koi token nahi
     <nav
       aria-label="Quick navigation"
       className="fixed inset-x-0 bottom-0 z-40 border-t bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
@@ -44,7 +49,7 @@ export function MobileTabBar() {
         <button
           type="button"
           onClick={() => setCartOpen(true)}
-          aria-label={`Basket, ${count} ${count === 1 ? "item" : "items"}`}
+          aria-label={`Basket, ${pluralize(count, "item")}`}
           className={cn(ITEM_CLASS, "text-muted-foreground")}
         >
           <span className="relative">

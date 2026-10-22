@@ -25,7 +25,7 @@ const STATUS_OPTIONS = [
   ...CAMPAIGN_STATUSES.map((status) => ({ value: status, label: status })),
 ];
 
-/** Redemptions vs limit — text value leads, bar is the same hue on a lighter track */
+/** Redemptions vs limit — text value leads; green bar on a neutral grey track */
 function UsageMeter({ coupon }: { coupon: AdminCoupon }) {
   const width = Math.min(100, Math.round((coupon.used / coupon.limit) * 100));
   return (
@@ -34,7 +34,7 @@ function UsageMeter({ coupon }: { coupon: AdminCoupon }) {
         <span className="font-semibold">{coupon.used}</span>
         <span className="text-muted-foreground"> / {coupon.limit}</span>
       </span>
-      <span className="h-1.5 w-24 overflow-hidden rounded-full bg-brand/15" aria-hidden="true">
+      <span className="h-1.5 w-24 overflow-hidden rounded-full bg-foreground/10" aria-hidden="true">
         <span className="block h-full rounded-full bg-brand" style={{ width: `${width}%` }} />
       </span>
     </div>
@@ -129,7 +129,7 @@ export function CouponsView() {
               {pageRows.map((coupon) => (
                 <TableRow key={coupon.code}>
                   <TableCell>
-                    <span className="rounded-md border border-dashed border-brand/40 bg-brand-soft px-2 py-1 font-mono text-sm font-semibold text-brand">
+                    <span className="rounded-md border border-dashed border-brand bg-brand-soft px-2 py-1 font-mono text-sm font-semibold text-brand">
                       {coupon.code}
                     </span>
                   </TableCell>

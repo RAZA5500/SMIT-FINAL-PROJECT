@@ -8,7 +8,7 @@ type Tone = "warning" | "success" | "info" | "danger" | "neutral";
 
 const TONES: Record<Tone, string> = {
   warning: "bg-saffron-soft text-warning ring-saffron/40",
-  success: "bg-lime-soft text-brand ring-lime/60",
+  success: "bg-emerald-50 text-emerald-800 ring-emerald-600/15",
   info: "bg-sky-50 text-sky-800 ring-sky-200",
   danger: "bg-tomato-soft text-destructive ring-tomato/30",
   neutral: "bg-muted text-muted-foreground ring-border",

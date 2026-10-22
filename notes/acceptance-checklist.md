@@ -76,13 +76,13 @@ tests to `student-api/src/**/*.spec.ts` ([`api-unit-tests.txt`](evidence/api-uni
 | Correct query invalidation after mutations | ✅ | invalidation per 08 §9 in `services/*/mutations.ts`; `ProductCard.test.tsx` add → `["cart"]` refetch |
 | AuthGuard: customer can't see admin pages; 401 → logout | ✅ | `AuthGuard.test.tsx`, `request.test.ts`; browser: customer → `/admin/categories` → `/shop` |
 | shadcn/ui primitives + shared components; no duplicate UI patterns | ✅ | `components/ui` (Base UI shadcn) + `components/shared` (Pagination, ConfirmDialog, StatusBadge, …) |
-| Tailwind: no arbitrary spacing | ✅ | `grep` for `p-[…]`, `m-[…]`, `gap-[…]` etc. in `student-web/src` → none |
+| Tailwind: no arbitrary spacing | ✅ | `grep` for `p-[…]`, `m-[…]`, `gap-[…]` etc. in `student-web/src` → app code has only the commented safe-area exception (`pb-[env(safe-area-inset-bottom)]` in `MobileTabBar.tsx`); the rest are inside vendored shadcn/ui primitives (`components/ui/input-group.tsx`, `sidebar.tsx`, `toggle-group.tsx`) |
 
 ## G. Code quality
 
 | Item | Status | Evidence |
 |---|---|---|
-| No source file over 1000 lines | ✅ | largest: `admin/dashboard/page.tsx` 466, `AdminSidebar.tsx` 451, `orders.e2e-spec.ts` 408 |
+| No source file over 1000 lines | ✅ | largest: `components/ui/sidebar.tsx` 724 (vendored shadcn/ui), `orders.e2e-spec.ts` 408, `components/ui/chart.tsx` 372, `ProductForm.tsx` 336 |
 | `lint` and `typecheck` clean | ✅ | [`api-lint-typecheck-build.txt`](evidence/api-lint-typecheck-build.txt), [`web-tests-lint-typecheck.txt`](evidence/web-tests-lint-typecheck.txt) |
 
 ## H. Tests and build
@@ -93,7 +93,7 @@ tests to `student-api/src/**/*.spec.ts` ([`api-unit-tests.txt`](evidence/api-uni
 | `student-api`: `bun run test:e2e` (real Postgres) | ✅ | [`api-e2e-tests.txt`](evidence/api-e2e-tests.txt) — 8 suites, 95 tests |
 | `student-api`: `bun run build` | ✅ | [`api-lint-typecheck-build.txt`](evidence/api-lint-typecheck-build.txt) |
 | `student-web`: `bun run build` | ✅ | [`web-build.txt`](evidence/web-build.txt) |
-| `student-web`: `bun run test` | ✅ | [`web-tests-lint-typecheck.txt`](evidence/web-tests-lint-typecheck.txt) — 9 files, 46 tests |
+| `student-web`: `bun run test` | ✅ | [`web-tests-lint-typecheck.txt`](evidence/web-tests-lint-typecheck.txt) — 13 files, 60 tests |
 | 4 critical E2E flows | ✅ | [`phase19-critical-flows.md`](evidence/phase19-critical-flows.md) + `critical-flows.e2e-spec.ts` |
 
 ## I. Documentation

@@ -101,7 +101,7 @@ function InBasket({ item }: { item: ICartItem }) {
   const { quantity, atMinimum, canIncrease, increase, decrease, isRemoving } = useCartItemQuantity(item);
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl bg-lime-soft p-4 ring-1 ring-lime/60">
+    <div className="flex flex-col gap-3 rounded-2xl bg-brand-soft p-4 ring-1 ring-border">
       <p className="text-sm font-semibold text-brand">
         In your basket · <span className="numeric">{formatMoney(item.lineTotal)}</span>
       </p>

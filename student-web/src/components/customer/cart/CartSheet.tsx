@@ -9,7 +9,7 @@ import { ErrorState } from "@/components/shared/ErrorState";
 import { buttonVariants } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatMoney } from "@/lib/format";
+import { formatMoney, pluralize } from "@/lib/format";
 import { customerRoutes, loginUrl, publicRoutes } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
 import { useGetCart } from "@/services/cart/queries";
@@ -98,12 +98,12 @@ function CartSheetBody({ onClose }: { onClose: () => void }) {
       <SheetHeader className="border-b bg-card px-5 py-4">
         <SheetTitle>Your basket</SheetTitle>
         <SheetDescription>
-          {items.length > 0 ? `${cart?.itemCount ?? 0} items · ${formatMoney(cart?.subtotal ?? 0)}` : "Delivery is always free"}
+          {items.length > 0 ? `${pluralize(cart?.itemCount ?? 0, "item")} · ${formatMoney(cart?.subtotal ?? 0)}` : "Delivery is always free"}
         </SheetDescription>
       </SheetHeader>
 
       {items.length > 0 && (
-        <p className="flex items-center gap-2 bg-lime-soft px-5 py-2.5 text-xs font-medium text-brand">
+        <p className="flex items-center gap-2 bg-brand-soft px-5 py-2.5 text-xs font-medium text-brand">
           <PartyPopper className="size-4 shrink-0" aria-hidden="true" />
           Free delivery is included with this order
         </p>

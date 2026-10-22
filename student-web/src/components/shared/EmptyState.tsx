@@ -17,7 +17,7 @@ export function EmptyState({ title = "Nothing here yet", message, icon, action, 
     <Empty className={cn("py-14", className)}>
       <EmptyHeader>
         <EmptyMedia className="relative mb-3">
-          <span className="absolute -inset-3 rounded-full bg-lime-soft" aria-hidden="true" />
+          <span className="absolute -inset-3 rounded-full bg-brand-soft" aria-hidden="true" />
           <span className="relative flex size-14 items-center justify-center rounded-full bg-card text-brand shadow-soft ring-1 ring-border [&_svg]:size-6">
             {icon ?? <Inbox aria-hidden="true" />}
           </span>

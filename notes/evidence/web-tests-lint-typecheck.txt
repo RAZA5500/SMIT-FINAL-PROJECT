@@ -4,10 +4,10 @@ $ vitest run
  RUN  v5.0.5 D:/SMIT_FINAL-PROJECT/student-web
 
 
- Test Files  9 passed (9)
-      Tests  46 passed (46)
-   Start at  23:49:53
-   Duration  6.20s (environment 52%, tests 18%, setup 16%, import 11%, transform 2%)
+ Test Files  13 passed (13)
+      Tests  60 passed (60)
+   Start at  21:23:47
+   Duration  10.09s (environment 43%, tests 20%, setup 17%, import 17%, transform 2%)
 
 
 $ bun run lint

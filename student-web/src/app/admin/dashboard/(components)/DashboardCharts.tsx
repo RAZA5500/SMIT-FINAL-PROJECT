@@ -109,7 +109,7 @@ export function CategorySalesChart({ className }: { className?: string }) {
         <ChartContainer config={revenueConfig} className="aspect-auto h-64 w-full">
           <BarChart data={CATEGORY_SALES} layout="vertical" margin={{ top: 0, right: 52, left: 0, bottom: 0 }} accessibilityLayer>
             <XAxis type="number" hide />
-            <YAxis type="category" dataKey="category" tickLine={false} axisLine={false} width={108} />
+            <YAxis type="category" dataKey="category" tickLine={false} axisLine={false} width={124} />
             <ChartTooltip
               cursor={{ fill: "var(--muted)" }}
               content={

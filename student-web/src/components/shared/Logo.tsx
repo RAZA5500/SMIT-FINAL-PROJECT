@@ -3,9 +3,9 @@ import { cn } from "@/lib/utils";
 type LogoVariant = "default" | "inverse";
 
 const MARK_COLORS: Record<LogoVariant, { tile: string; leaf: string; vein: string; spark: string }> = {
-  default: { tile: "fill-brand", leaf: "fill-lime", vein: "stroke-brand", spark: "fill-white" },
-  // Evergreen surfaces (footer, admin sidebar, auth panel): lime tile so the mark still pops
-  inverse: { tile: "fill-lime", leaf: "fill-brand-strong", vein: "stroke-lime", spark: "fill-brand-strong" },
+  default: { tile: "fill-brand", leaf: "fill-white", vein: "stroke-brand", spark: "fill-white" },
+  // Dark or coloured surfaces: white tile so the mark still pops
+  inverse: { tile: "fill-white", leaf: "fill-brand", vein: "stroke-white", spark: "fill-brand" },
 };
 
 const SIZES = {
