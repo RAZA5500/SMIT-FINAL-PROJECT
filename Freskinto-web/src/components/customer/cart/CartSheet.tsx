@@ -109,9 +109,9 @@ function CartSheetBody({ onClose }: { onClose: () => void }) {
       </SheetHeader>
 
       {items.length > 0 && (
-        <Flex align="center" gap="2" className={cn("border-b px-5 py-2.5")}>
-          <Truck aria-hidden="true" className={cn("size-4 shrink-0 text-brand")} />
-          <Text as="span" variant="code" tone="muted" className={cn("uppercase")}>
+        <Flex align="center" gap="2" className={cn("border-b px-5 py-2.5 bg-icon-green/50")}>
+          <Truck aria-hidden="true" className={cn("size-4 shrink-0 text-brand-green")} />
+          <Text as="span" variant="small" tone="muted" className={cn("text-xs font-semibold tracking-wider text-foreground/80 uppercase")}>
             Free delivery is included with this order
           </Text>
         </Flex>
@@ -122,13 +122,13 @@ function CartSheetBody({ onClose }: { onClose: () => void }) {
       </ScrollArea>
 
       {items.length > 0 && (
-        <SheetFooter className={cn("gap-3 border-t px-5 py-4")}>
+        <SheetFooter className={cn("gap-3 border-t border-border bg-modal-footer px-5 py-4")}>
           <Flex align="baseline" justify="between">
             <Text tone="muted">Total</Text>
             <Price amount={cart?.grandTotal ?? 0} size="lg" tone="default" className={cn("font-heading")} />
           </Flex>
           {canCheckout ? (
-            <ButtonLink href={customerRoutes.checkout} onClick={onClose} size="lg" className={cn("w-full")}>
+            <ButtonLink href={customerRoutes.checkout} onClick={onClose} size="lg" variant="brand" className={cn("w-full shadow-md shadow-brand-green/20")}>
               Checkout
               <ArrowRight data-icon="inline-end" aria-hidden="true" />
             </ButtonLink>

@@ -48,7 +48,7 @@ function NavRow({
 }) {
   return (
     <Item size="sm" render={<Link href={href} onClick={onNavigate} />} className={cn("rounded-xl")}>
-      <ItemMedia className={cn("size-9 rounded-lg border bg-background text-brand [&_svg]:size-4")}>{icon}</ItemMedia>
+      <ItemMedia className={cn("size-9 rounded-lg border border-primary/20 bg-icon-green text-brand-green [&_svg]:size-4")}>{icon}</ItemMedia>
       <ItemContent>
         <ItemTitle className={cn("font-medium")}>{label}</ItemTitle>
       </ItemContent>
@@ -97,7 +97,7 @@ function MobileNavBody({ onNavigate }: { onNavigate: () => void }) {
                       icon={<Icon aria-hidden="true" />}
                       label={
                         <>
-                          <Text as="span" variant="code" tone="muted">
+                          <Text as="span" variant="small" tone="muted" className={cn("mr-1.5 font-medium")}>
                             {aisleNumber(index)}
                           </Text>
                           {aisle.name}

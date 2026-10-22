@@ -37,7 +37,7 @@ export function SectionHeading({
             {eyebrow}
           </Text>
         )}
-        <Heading id={id} size="2">
+        <Heading id={id} size="2" family="serif">
           {title}
         </Heading>
         {description && (

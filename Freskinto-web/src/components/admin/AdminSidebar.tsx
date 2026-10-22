@@ -58,10 +58,10 @@ export function AdminSidebar() {
             >
               <Logo size="sm" markOnly />
               <Stack gap="0.5" className={cn("min-w-0")}>
-                <Text as="span" family="serif" weight="semibold" className={cn("serif-soft text-lg leading-none")}>
+                <Text as="span" weight="bold" className={cn("text-lg font-bold font-serif leading-none tracking-tight text-sidebar-foreground")}>
                   Freskinto
                 </Text>
-                <Text as="span" variant="code" tone="muted" className={cn("uppercase")}>
+                <Text as="span" variant="small" className={cn("text-xs font-medium text-sidebar-foreground/70 uppercase tracking-wider")}>
                   Back office
                 </Text>
               </Stack>
@@ -73,7 +73,7 @@ export function AdminSidebar() {
       <SidebarContent className={cn("scrollbar-thin")}>
         {ADMIN_NAV.map((group) => (
           <SidebarGroup key={group.label} className={cn("py-1")}>
-            <SidebarGroupLabel className={cn("font-mono text-xs tracking-widest uppercase")}>{group.label}</SidebarGroupLabel>
+            <SidebarGroupLabel className={cn("text-xs font-semibold tracking-wider text-sidebar-foreground/60 uppercase")}>{group.label}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu className={cn("gap-0.5")}>
                 {group.items.map((item) => {
@@ -82,24 +82,23 @@ export function AdminSidebar() {
                   return (
                     <SidebarMenuItem key={item.href}>
                       <SidebarMenuButton
-                        isActive={isActive}
-                        tooltip={item.label}
-                        render={<Link href={item.href} onClick={closeOnMobile} />}
-                        // Active: emerald pill + white text (hover par bhi wahi rahe)
-                        className={cn(
-                          "h-9 rounded-lg text-sidebar-foreground/80 data-active:bg-primary data-active:text-primary-foreground data-active:hover:bg-primary data-active:hover:text-primary-foreground",
-                        )}
-                      >
-                        <Icon className={cn(isActive ? "text-primary-foreground" : "text-muted-foreground")} />
-                        <Text as="span">{item.label}</Text>
-                      </SidebarMenuButton>
-                      {item.demo && (
-                        <SidebarMenuBadge
-                          className={cn(
-                            "top-2 rounded-md font-mono text-xs uppercase",
-                            isActive ? "text-primary-foreground/80" : "text-muted-foreground",
-                          )}
-                        >
+                         isActive={isActive}
+                         tooltip={item.label}
+                         render={<Link href={item.href} onClick={closeOnMobile} />}
+                         className={cn(
+                           "h-9 rounded-lg font-medium text-sidebar-foreground/80 transition-colors data-active:bg-sidebar-primary data-active:text-sidebar-primary-foreground data-active:font-semibold data-active:hover:bg-sidebar-primary data-active:hover:text-sidebar-primary-foreground",
+                         )}
+                       >
+                         <Icon className={cn(isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/60")} />
+                         <Text as="span">{item.label}</Text>
+                       </SidebarMenuButton>
+                       {item.demo && (
+                         <SidebarMenuBadge
+                           className={cn(
+                             "top-2 rounded-md px-1.5 py-0.5 text-xs font-medium uppercase",
+                             isActive ? "text-sidebar-primary-foreground/90 bg-sidebar-primary-foreground/15" : "text-sidebar-foreground/60 bg-white/10",
+                           )}
+                         >
                           Demo
                         </SidebarMenuBadge>
                       )}
@@ -133,24 +132,24 @@ function AdminUserMenu() {
             render={
               <SidebarMenuButton
                 size="lg"
-                className={cn("rounded-xl bg-background ring-1 ring-sidebar-border hover:bg-background data-popup-open:bg-background")}
+                className={cn("rounded-xl bg-sidebar-accent text-sidebar-foreground ring-1 ring-sidebar-border hover:bg-sidebar-accent/80 data-popup-open:bg-sidebar-accent")}
               />
             }
           >
             <Avatar className={cn("size-8 rounded-lg after:rounded-lg")}>
-              <AvatarFallback className={cn("rounded-lg bg-primary text-xs font-bold text-primary-foreground")}>
+              <AvatarFallback className={cn("rounded-lg bg-sidebar-primary text-xs font-bold text-sidebar-primary-foreground")}>
                 {initials(user?.name)}
               </AvatarFallback>
             </Avatar>
             <Stack gap="0.5" className={cn("min-w-0 flex-1 text-left")}>
-              <Text as="span" weight="semibold" className={cn("truncate leading-tight")}>
+              <Text as="span" weight="semibold" className={cn("truncate leading-tight text-sidebar-foreground")}>
                 {user?.name ?? "Admin"}
               </Text>
-              <Text as="span" variant="small" tone="muted" className={cn("truncate")}>
+              <Text as="span" variant="small" className={cn("truncate text-sidebar-foreground/60")}>
                 {user?.email}
               </Text>
             </Stack>
-            <ChevronsUpDown className={cn("ml-auto size-4 text-muted-foreground")} />
+            <ChevronsUpDown className={cn("ml-auto size-4 text-sidebar-foreground/60")} />
           </DropdownMenuTrigger>
           <DropdownMenuContent side="top" align="start" sideOffset={8} className={cn("w-60")}>
             <DropdownMenuGroup>
@@ -159,7 +158,7 @@ function AdminUserMenu() {
                   <Text as="span" weight="semibold" tone="default">
                     {user?.name ?? "Admin"}
                   </Text>
-                  <Badge variant="tag" className={cn("w-fit")}>
+                  <Badge variant="brand" className={cn("w-fit text-xs")}>
                     Store administrator
                   </Badge>
                 </Stack>

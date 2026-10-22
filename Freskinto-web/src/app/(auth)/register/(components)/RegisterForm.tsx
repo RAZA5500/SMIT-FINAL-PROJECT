@@ -3,8 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, Mail, UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { FieldGroup } from "@/components/ui/field";
+import { Flex, Stack } from "@/components/ui/flex";
 import { Form } from "@/components/ui/form";
 import { Grid } from "@/components/ui/grid";
 import { Text } from "@/components/ui/typography";
@@ -23,6 +24,19 @@ import { useRegister } from "@/services/auth/mutations";
 
 const FORM_ID = "register-form";
 
+function getPasswordStrength(pass: string): { score: number; label: string; tone: string } {
+  if (!pass) return { score: 0, label: "", tone: "" };
+  let score = 0;
+  if (pass.length >= 8) score++;
+  if (/[A-Z]/.test(pass) && /[a-z]/.test(pass)) score++;
+  if (/\d/.test(pass)) score++;
+  if (/[^A-Za-z0-9]/.test(pass)) score++;
+  if (score <= 1) return { score: 1, label: "Weak", tone: "bg-tomato" };
+  if (score === 2) return { score: 2, label: "Fair", tone: "bg-saffron" };
+  if (score === 3) return { score: 3, label: "Good", tone: "bg-brand-green" };
+  return { score: 4, label: "Strong", tone: "bg-brand-green" };
+}
+
 export function RegisterForm() {
   const router = useRouter();
   const registerUser = useRegister();
@@ -38,6 +52,9 @@ export function RegisterForm() {
     mode: "onChange",
     defaultValues: { fullName: "", email: "", password: "", confirmPassword: "", terms: false },
   });
+
+  const passwordValue = useWatch({ control, name: "password" }) ?? "";
+  const strength = getPasswordStrength(passwordValue);
 
   const onSubmit = (data: RegisterFormData) => {
     // Form `fullName`, API `name` — mapping submit handler mein (FLOW-MD 08 §10)
@@ -84,15 +101,40 @@ export function RegisterForm() {
           {...register("email")}
         />
         <Grid gap="5" className={cn("sm:grid-cols-2")}>
-          <PasswordField
-            id="password"
-            label="Password"
-            required
-            placeholder="8+ characters"
-            autoComplete="new-password"
-            error={errors.password?.message}
-            {...register("password")}
-          />
+          <Stack gap="2">
+            <PasswordField
+              id="password"
+              label="Password"
+              required
+              placeholder="8+ characters"
+              autoComplete="new-password"
+              error={errors.password?.message}
+              {...register("password")}
+            />
+            {passwordValue && (
+              <Stack gap="1.5" className={cn("pt-1")}>
+                <Flex gap="1.5">
+                  {[1, 2, 3, 4].map((step) => (
+                    <div
+                      key={step}
+                      className={cn(
+                        "h-1 flex-1 rounded-full transition-colors duration-200",
+                        strength.score >= step ? strength.tone : "bg-muted",
+                      )}
+                    />
+                  ))}
+                </Flex>
+                <Flex justify="between" align="center">
+                  <Text variant="small" tone="muted" className={cn("text-xs")}>
+                    Strength: <span className="font-medium text-foreground">{strength.label}</span>
+                  </Text>
+                  <Text variant="small" tone="muted" className={cn("text-xs")}>
+                    8+ characters
+                  </Text>
+                </Flex>
+              </Stack>
+            )}
+          </Stack>
           <PasswordField
             id="confirmPassword"
             label="Confirm password"
@@ -121,9 +163,10 @@ export function RegisterForm() {
       <LoadingButton
         type="submit"
         size="xl"
+        variant="signin"
         isLoading={registerUser.isPending}
         loadingText="Creating account…"
-        className={cn("w-full")}
+        className={cn("w-full shadow-md shadow-brand-green/20")}
       >
         Create account
         <ArrowRight data-icon="inline-end" aria-hidden="true" />

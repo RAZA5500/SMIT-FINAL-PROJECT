@@ -125,7 +125,7 @@ export function AdminOrderDetailView({ id }: { id: string }) {
     <AdminPage
       eyebrow={`Placed ${formatDateTime(order.createdAt)}`}
       title={
-        <Text as="span" family="mono" className={cn("tracking-tight")}>
+        <Text as="span" className={cn("font-bold tracking-tight")}>
           {order.orderNumber}
         </Text>
       }
@@ -143,7 +143,7 @@ export function AdminOrderDetailView({ id }: { id: string }) {
             <Flex
               align="center"
               justify="center"
-              className={cn("size-12 shrink-0 rounded-2xl border bg-muted text-brand [&_svg]:size-6")}
+              className={cn("size-12 shrink-0 rounded-2xl border border-primary/20 bg-icon-green text-brand-green [&_svg]:size-6")}
             >
               <StepIcon aria-hidden="true" />
             </Flex>
@@ -163,6 +163,7 @@ export function AdminOrderDetailView({ id }: { id: string }) {
               {transitions.map((status) => (
                 <LoadingButton
                   key={status}
+                  variant="brand"
                   isLoading={updateStatus.isPending && updateStatus.variables?.payload.status === status}
                   disabled={busy}
                   onClick={() => updateStatus.mutate({ id: order.id, payload: { status } })}

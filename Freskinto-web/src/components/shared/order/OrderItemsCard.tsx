@@ -17,7 +17,7 @@ export function OrderItemsCard({ order }: { order: IOrder }) {
       <CardHeader>
         <CardTitle>Items</CardTitle>
         <CardAction>
-          <Badge variant="tag">{pluralize(order.items.length, "line")}</Badge>
+          <Badge variant="brand">{pluralize(order.items.length, "line")}</Badge>
         </CardAction>
       </CardHeader>
       <CardContent>
@@ -55,7 +55,7 @@ export function OrderItemsCard({ order }: { order: IOrder }) {
             label={order.deliveryType === "PICKUP" ? "Collection" : "Delivery"}
             value={
               freeShipping ? (
-                <Text as="span" tone="brand" weight="semibold">
+                <Text as="span" weight="semibold" className={cn("text-brand-green")}>
                   Free
                 </Text>
               ) : (

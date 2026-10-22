@@ -86,7 +86,7 @@ export function OrderDetailView({ id }: { id: string }) {
     <CustomerPage
       eyebrow={`Placed ${formatDateTime(order.createdAt)}`}
       title={
-        <Text as="span" family="mono" className={cn("tracking-tight")}>
+        <Text as="span" className={cn("font-bold tracking-tight")}>
           {order.orderNumber}
         </Text>
       }

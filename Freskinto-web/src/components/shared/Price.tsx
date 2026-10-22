@@ -47,12 +47,12 @@ export function ShelfLabel({ amount, caption = "each", size = "md", className }:
   return (
     <Flex
       align="stretch"
-      className={cn("w-fit overflow-hidden rounded-lg border border-border bg-background shadow-xs", className)}
+      className={cn("w-fit overflow-hidden rounded-lg border border-border/80 bg-background shadow-xs", className)}
     >
-      <Box aria-hidden="true" className={cn("w-1.5 shrink-0 bg-primary")} />
+      <Box aria-hidden="true" className={cn("w-1.5 shrink-0 bg-brand-green")} />
       <Stack gap="1" className={cn(size === "lg" ? "px-4 py-2.5" : "px-3 py-1.5")}>
-        <Price amount={amount} size={size === "lg" ? "xl" : "lg"} tone="default" className={cn("font-heading")} />
-        <Text variant="code" tone="muted" className={cn("uppercase")}>
+        <Price amount={amount} size={size === "lg" ? "xl" : "lg"} tone="brand" className={cn("font-bold text-brand-green")} />
+        <Text as="span" variant="small" tone="muted" className={cn("text-xs font-medium leading-none")}>
           {caption}
         </Text>
       </Stack>

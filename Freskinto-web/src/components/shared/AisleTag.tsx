@@ -18,8 +18,8 @@ interface AisleTagProps {
 /** Supermarket hanging-sign style label: "● AISLE 03 · DAIRY" */
 export function AisleTag({ index, label, className }: AisleTagProps) {
   return (
-    <Badge variant="tag" className={cn(className)}>
-      <Box as="span" aria-hidden="true" className={cn("size-1.5 rounded-full bg-primary")} />
+    <Badge variant="brand" className={cn("font-medium", className)}>
+      <Box as="span" aria-hidden="true" className={cn("size-1.5 rounded-full bg-brand-green")} />
       {index === undefined ? "Aisle" : `Aisle ${aisleNumber(index)}`}
       {label && ` · ${label}`}
     </Badge>

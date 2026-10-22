@@ -7,11 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Flex, Stack } from "@/components/ui/flex";
 import { Grid } from "@/components/ui/grid";
-import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Text } from "@/components/ui/typography";
 import { CustomerPage } from "@/components/customer/CustomerPage";
-import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
+import { DeleteDialog } from "@/components/shared/DeleteDialog";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { Pagination } from "@/components/shared/Pagination";
@@ -127,7 +125,7 @@ export function AddressesView() {
       {content}
 
       <AddressFormDialog open={formOpen} onOpenChange={setFormOpen} address={editing} />
-      <ConfirmDialog
+      <DeleteDialog
         open={deleting !== null}
         onOpenChange={(open) => !open && setDeleting(null)}
         title="Delete this address?"
@@ -137,26 +135,9 @@ export function AddressesView() {
             : "It will be removed from your address book."
         }
         confirmLabel="Delete address"
-        destructive
-        isPending={deleteAddress.isPending}
+        isLoading={deleteAddress.isPending}
         onConfirm={() => deleting && deleteAddress.mutate(deleting.id, { onSuccess: () => setDeleting(null) })}
-      >
-        {deleting && (
-          <Item variant="muted" className={cn("rounded-xl")}>
-            <ItemMedia className={cn("text-muted-foreground [&_svg]:size-4")}>
-              <MapPin aria-hidden="true" />
-            </ItemMedia>
-            <ItemContent>
-              <ItemTitle>{deleting.addressLine}</ItemTitle>
-              <ItemDescription>
-                <Text as="span" tone="muted">
-                  {deleting.city}, {deleting.postcode}
-                </Text>
-              </ItemDescription>
-            </ItemContent>
-          </Item>
-        )}
-      </ConfirmDialog>
+      />
     </CustomerPage>
   );
 }

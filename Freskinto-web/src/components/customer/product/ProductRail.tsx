@@ -19,7 +19,7 @@ import { ProductCardSkeleton } from "./ProductCardSkeleton";
 
 const ITEM_CLASS = "basis-1/2 pl-3 sm:basis-1/3 sm:pl-4 lg:basis-1/4 xl:basis-1/5";
 
-interface ProductRailProps {
+export interface ProductRailProps {
   title: string;
   description?: string;
   /** "View all" link */

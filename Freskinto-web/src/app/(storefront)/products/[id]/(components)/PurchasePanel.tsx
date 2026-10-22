@@ -104,9 +104,9 @@ function InBasket({ item }: { item: ICartItem }) {
   const { quantity, atMinimum, canIncrease, increase, decrease, isRemoving } = useCartItemQuantity(item);
 
   return (
-    <Card size="sm" className={cn("bg-muted ring-0")}>
+    <Card size="sm" className={cn("bg-sea-green-bg/50 border border-brand-green/20 ring-0")}>
       <CardContent className={cn("flex flex-col gap-3")}>
-        <Text weight="semibold" tone="brand">
+        <Text weight="semibold" className={cn("text-brand-green-forest")}>
           In your basket ·{" "}
           <Text as="span" numeric>
             {formatMoney(item.lineTotal)}

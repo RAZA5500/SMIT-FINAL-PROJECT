@@ -20,7 +20,7 @@ export function CheckoutSteps({ current }: { current: 1 | 2 }) {
               <Box
                 as="li"
                 aria-hidden="true"
-                className={cn("h-px flex-1 border-t-2", done || active ? "border-primary" : "border-dashed border-input")}
+                className={cn("h-0.5 flex-1", done ? "bg-primary" : "bg-muted")}
               />
             )}
             <Flex as="li" align="center" gap="2" aria-current={active ? "step" : undefined} className={cn("shrink-0")}>
@@ -29,10 +29,10 @@ export function CheckoutSteps({ current }: { current: 1 | 2 }) {
                 align="center"
                 justify="center"
                 className={cn(
-                  "size-8 rounded-full font-mono text-xs font-bold",
+                  "size-8 rounded-full text-xs font-bold transition-colors",
                   done && "bg-primary text-primary-foreground",
-                  active && "border-2 border-primary bg-background text-brand",
-                  !done && !active && "border border-dashed border-input text-muted-foreground",
+                  active && "border-2 border-primary bg-primary/10 text-brand-green",
+                  !done && !active && "border border-border bg-muted/50 text-muted-foreground",
                 )}
               >
                 {done ? <Check aria-hidden="true" strokeWidth={3} className={cn("size-4")} /> : index + 1}

@@ -23,7 +23,7 @@ function TabLink({ href, icon: Icon, label, active }: { href: string; icon: Luci
       href={href}
       variant="ghost"
       aria-current={active ? "page" : undefined}
-      className={cn(TAB_CLASS, active ? "text-brand hover:text-brand" : "text-muted-foreground")}
+      className={cn(TAB_CLASS, active ? "text-brand-green hover:text-brand-green font-semibold" : "text-muted-foreground")}
     >
       <Icon aria-hidden="true" strokeWidth={active ? 2.4 : 2} className={cn("size-5")} />
       {label}

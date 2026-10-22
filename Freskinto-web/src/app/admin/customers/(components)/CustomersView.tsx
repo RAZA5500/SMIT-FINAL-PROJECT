@@ -90,7 +90,7 @@ export function CustomersView() {
                     <AvatarFallback
                       className={cn(
                         "text-xs font-semibold",
-                        customer.isActive ? "bg-ink text-background" : "bg-muted text-muted-foreground",
+                        customer.isActive ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground",
                       )}
                     >
                       {initials(customer.name)}

@@ -42,11 +42,11 @@ export function HowItWorks() {
                     <Flex
                       align="center"
                       justify="center"
-                      className={cn("size-12 rounded-2xl bg-primary text-primary-foreground [&_svg]:size-6")}
+                      className={cn("size-12 rounded-2xl bg-brand-green text-white shadow-xs [&_svg]:size-6")}
                     >
                       <Icon aria-hidden="true" />
                     </Flex>
-                    <Text as="span" variant="code" tone="muted" className={cn("text-3xl tracking-tighter")}>
+                    <Text as="span" weight="bold" className={cn("text-3xl font-bold tracking-tight text-brand-green/30")}>
                       0{index + 1}
                     </Text>
                   </Flex>

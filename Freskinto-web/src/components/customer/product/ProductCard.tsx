@@ -32,15 +32,15 @@ export function ProductBadges({ product, className }: { product: IProduct; class
   return (
     <Stack align="start" gap="1" className={cn("pointer-events-none", className)}>
       {outOfStock ? (
-        <Badge variant="ink">Sold out</Badge>
+        <Badge variant="destructive">Sold out</Badge>
       ) : lowStock ? (
-        <Badge variant="danger">
+        <Badge variant="warning">
           <Flame aria-hidden="true" />
           Low stock
         </Badge>
       ) : null}
       {isNew && !outOfStock && (
-        <Badge variant="outline" className={cn("text-brand")}>
+        <Badge variant="brand" className={cn("text-xs font-semibold")}>
           <Sparkles aria-hidden="true" />
           New in
         </Badge>
@@ -54,7 +54,7 @@ export function ProductCard({ product, eager = false, className }: ProductCardPr
   return (
     <Card
       className={cn(
-        "group/product relative h-full gap-0 py-0 transition duration-300 hover:-translate-y-0.5 hover:shadow-lift hover:ring-foreground/20",
+        "group/product relative h-full gap-0 py-0 rounded-2xl border-border/80 bg-white transition duration-300 hover:-translate-y-1 hover:shadow-lift hover:border-brand-green/40",
         className,
       )}
     >

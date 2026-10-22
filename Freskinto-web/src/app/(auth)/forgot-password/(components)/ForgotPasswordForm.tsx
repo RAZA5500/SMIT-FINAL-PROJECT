@@ -14,8 +14,11 @@ import { ButtonLink } from "@/components/shared/ButtonLink";
 import { InputField } from "@/components/shared/InputField";
 import { TextLink } from "@/components/shared/TextLink";
 import { STORE } from "@/constants/store";
+import { scrollToFirstError } from "@/lib/forms";
 import { publicRoutes } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
+
+const FORM_ID = "forgot-password-form";
 
 const forgotPasswordSchema = z.object({
   email: z.string().trim().min(1, "Email is required").email("Invalid email address"),
@@ -65,7 +68,7 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <Form onSubmit={handleSubmit(({ email }) => setSubmittedEmail(email))}>
+    <Form id={FORM_ID} onSubmit={handleSubmit(({ email }) => setSubmittedEmail(email), () => scrollToFirstError(FORM_ID))}>
       <InputField
         id="email"
         type="email"
@@ -76,7 +79,7 @@ export function ForgotPasswordForm() {
         error={errors.email?.message}
         {...register("email")}
       />
-      <Button type="submit" size="xl" className={cn("w-full")}>
+      <Button type="submit" size="xl" variant="brand" className={cn("w-full shadow-md shadow-brand-green/20")}>
         Continue
         <ArrowRight data-icon="inline-end" aria-hidden="true" />
       </Button>

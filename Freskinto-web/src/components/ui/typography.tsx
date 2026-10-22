@@ -4,28 +4,28 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 /* ---------------------------------------------------------------------------
-   Heading — Fraunces display serif (sans for compact UI titles)
+   Heading — Clean modern sans-serif display for commerce
 --------------------------------------------------------------------------- */
 
 const headingVariants = cva("text-balance text-foreground", {
   variants: {
     size: {
       display:
-        "text-4xl leading-none font-semibold tracking-tight sm:text-5xl lg:text-6xl",
-      "1": "text-3xl leading-tight font-semibold tracking-tight sm:text-4xl",
-      "2": "text-2xl leading-tight font-semibold tracking-tight sm:text-3xl",
+        "text-4xl leading-none font-bold tracking-tight sm:text-5xl lg:text-6xl",
+      "1": "text-3xl leading-tight font-bold tracking-tight sm:text-4xl",
+      "2": "text-2xl leading-tight font-bold tracking-tight sm:text-3xl",
       "3": "text-xl leading-snug font-semibold tracking-tight",
       "4": "text-lg leading-snug font-semibold",
       "5": "text-base leading-snug font-semibold",
     },
     family: {
-      serif: "font-heading",
+      serif: "font-serif tracking-tight",
       sans: "font-sans tracking-normal",
     },
   },
   defaultVariants: {
     size: "2",
-    family: "serif",
+    family: "sans",
   },
 })
 
@@ -78,7 +78,7 @@ const textVariants = cva("", {
       small: "text-xs leading-normal",
       label: "text-sm leading-none font-medium",
       eyebrow:
-        "font-mono text-xs leading-none font-medium tracking-widest text-brand uppercase",
+        "text-xs leading-none font-semibold tracking-wider text-brand uppercase",
       code: "font-mono text-xs tracking-tight",
     },
     size: {

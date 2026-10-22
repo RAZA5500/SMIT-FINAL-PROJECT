@@ -55,10 +55,10 @@ export function TestimonialsView() {
             <Card key={item.id} className={cn("transition-shadow", isFeatured && "ring-primary/40")}>
               <CardContent className={cn("flex flex-1 flex-col gap-4")}>
                 <Flex align="center" justify="between" gap="3">
-                  <Quote aria-hidden="true" className={cn("size-6 fill-brand-soft text-brand")} />
+                  <Quote aria-hidden="true" className={cn("size-6 fill-primary/10 text-brand-green")} />
                   <StarRating rating={item.rating} size="sm" />
                 </Flex>
-                <Text as="blockquote" family="serif" size="lg" className={cn("serif-soft leading-snug")}>
+                <Text as="blockquote" size="lg" className={cn("text-base font-normal leading-relaxed text-foreground")}>
                   {item.text}
                 </Text>
                 <Flex align="center" gap="3" className={cn("mt-auto")}>

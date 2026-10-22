@@ -14,10 +14,10 @@ function Receipt({
   return (
     <section
       data-slot="receipt"
-      className={cn("drop-shadow-sm", className)}
+      className={cn("rounded-2xl border border-border/80 bg-card p-6 shadow-soft", className)}
       {...props}
     >
-      <div className="receipt-edge flex flex-col gap-4 bg-card px-5 py-7 text-sm sm:px-6">
+      <div className="flex flex-col gap-4 text-sm">
         {children}
       </div>
     </section>
@@ -39,7 +39,7 @@ function ReceiptTitle({ className, ...props }: React.ComponentProps<"h2">) {
     <h2
       data-slot="receipt-title"
       className={cn(
-        "font-heading text-xl leading-tight font-semibold tracking-tight",
+        "font-heading text-xl leading-tight font-bold tracking-tight text-foreground",
         className
       )}
       {...props}
@@ -52,7 +52,7 @@ function ReceiptMeta({ className, ...props }: React.ComponentProps<"p">) {
     <p
       data-slot="receipt-meta"
       className={cn(
-        "font-mono text-xs tracking-wider text-muted-foreground uppercase",
+        "text-xs font-medium text-muted-foreground",
         className
       )}
       {...props}
@@ -145,9 +145,29 @@ function ReceiptBarcode({ className, ...props }: React.ComponentProps<"div">) {
     <div
       aria-hidden="true"
       data-slot="receipt-barcode"
-      className={cn("barcode h-9 w-44 text-foreground/80", className)}
+      className={cn("flex h-6 items-center justify-center gap-0.5 opacity-40", className)}
       {...props}
-    />
+    >
+      {/* Visual decorative supermarket barcode stripes */}
+      <span className="h-full w-0.5 bg-foreground" />
+      <span className="h-full w-px bg-foreground" />
+      <span className="h-full w-0.5 bg-foreground" />
+      <span className="h-full w-px bg-foreground" />
+      <span className="h-full w-0.5 bg-foreground" />
+      <span className="h-full w-1 bg-foreground" />
+      <span className="h-full w-px bg-foreground" />
+      <span className="h-full w-0.5 bg-foreground" />
+      <span className="h-full w-px bg-foreground" />
+      <span className="h-full w-0.5 bg-foreground" />
+      <span className="h-full w-0.5 bg-foreground" />
+      <span className="h-full w-px bg-foreground" />
+      <span className="h-full w-0.5 bg-foreground" />
+      <span className="h-full w-0.5 bg-foreground" />
+      <span className="h-full w-px bg-foreground" />
+      <span className="h-full w-1 bg-foreground" />
+      <span className="h-full w-0.5 bg-foreground" />
+      <span className="h-full w-px bg-foreground" />
+    </div>
   )
 }
 

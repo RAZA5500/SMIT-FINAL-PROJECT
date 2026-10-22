@@ -36,12 +36,12 @@ function AisleRow({
         ROW_CLASS,
         child && "pl-3",
         active
-          ? "bg-primary font-semibold text-primary-foreground hover:bg-brand-strong hover:text-primary-foreground"
-          : "text-foreground/80",
+          ? "bg-brand-green font-semibold text-white hover:bg-brand-green-dark hover:text-white"
+          : "text-foreground/80 hover:bg-muted/70",
       )}
     >
       {number && (
-        <Text as="span" variant="code" className={cn(active ? "text-primary-foreground/70" : "text-muted-foreground")}>
+        <Text as="span" variant="small" weight="bold" className={cn(active ? "text-white/80" : "text-brand-green/75")}>
           {number}
         </Text>
       )}
@@ -97,7 +97,7 @@ function AisleGroup({
         </CollapsibleTrigger>
       </Flex>
       <CollapsibleContent>
-        <Stack gap="0.5" className={cn("my-1 ml-5 border-l border-dashed border-input pl-2")}>
+        <Stack gap="0.5" className={cn("my-1 ml-5 border-l border-border pl-2")}>
           {aisle.children.map((child) => (
             <AisleRow key={child.id} child label={child.name} active={selected === child.id} onSelect={() => onSelect(child.id)} />
           ))}

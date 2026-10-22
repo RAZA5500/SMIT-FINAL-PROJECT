@@ -15,7 +15,7 @@ export function OrderPaymentsCard({ order }: { order: IOrder }) {
       <CardHeader>
         <CardTitle>
           <Flex as="span" align="center" gap="2">
-            <CreditCard aria-hidden="true" className={cn("size-5 text-brand")} />
+            <CreditCard aria-hidden="true" className={cn("size-5 text-brand-green")} />
             Payments
           </Flex>
         </CardTitle>

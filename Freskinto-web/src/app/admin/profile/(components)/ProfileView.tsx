@@ -67,7 +67,7 @@ export function ProfileView() {
 
         <Stack gap="6" className={cn("lg:col-span-2")}>
           <Card>
-            <CardHeader className={cn("grid-cols-[1fr_auto]")}>
+            <CardHeader className={cn("flex flex-row items-start justify-between")}>
               <CardTitle className={cn("font-sans text-base")}>Account details</CardTitle>
               <CardDescription>The name and contact details on your account.</CardDescription>
               <Button

@@ -80,7 +80,7 @@ export function SiteFooter() {
           {PROMISES.map(({ icon: Icon, title, text }) => (
             <Box as="li" key={title}>
               <Item className={cn("px-0")}>
-                <ItemMedia className={cn("size-11 rounded-xl border bg-background text-brand [&_svg]:size-5")}>
+                <ItemMedia className={cn("size-11 rounded-xl border border-primary/20 bg-icon-green text-brand-green [&_svg]:size-5")}>
                   <Icon aria-hidden="true" />
                 </ItemMedia>
                 <ItemContent>
@@ -142,10 +142,9 @@ export function SiteFooter() {
         <Text
           as="div"
           aria-hidden="true"
-          family="serif"
-          weight="semibold"
+          weight="bold"
           className={cn(
-            "serif-soft overflow-hidden pb-2 text-center text-7xl leading-none tracking-tighter text-foreground/5 select-none sm:text-9xl",
+            "font-heading overflow-hidden pb-2 text-center text-7xl font-black leading-none tracking-tighter text-foreground/5 select-none sm:text-9xl",
           )}
         >
           {STORE.name}

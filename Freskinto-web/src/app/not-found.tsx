@@ -23,13 +23,11 @@ export default function NotFound() {
         <Logo />
       </TextLink>
       <Stack align="center" gap="4">
-        <Badge variant="tag">Aisle 404</Badge>
+        <Badge variant="brand">Aisle 404</Badge>
         <Text
           as="div"
           aria-hidden="true"
-          family="serif"
-          weight="semibold"
-          className={cn("serif-soft text-8xl leading-none text-brand sm:text-9xl")}
+          className={cn("font-heading font-black text-8xl leading-none text-brand-green sm:text-9xl")}
         >
           404
         </Text>
@@ -39,7 +37,7 @@ export default function NotFound() {
         </Text>
       </Stack>
       <Flex wrap justify="center" gap="3">
-        <ButtonLink href={shopUrl()} size="lg">
+        <ButtonLink href={shopUrl()} size="lg" variant="brand">
           Browse the shop
           <ArrowRight data-icon="inline-end" aria-hidden="true" />
         </ButtonLink>

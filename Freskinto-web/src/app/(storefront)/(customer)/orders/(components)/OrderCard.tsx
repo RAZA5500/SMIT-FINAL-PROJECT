@@ -25,7 +25,7 @@ export function OrderCard({ order }: { order: IOrderSummary }) {
           <TextLink
             href={customerRoutes.orderDetail(order.id)}
             tone="default"
-            className={cn("font-mono text-base tracking-tight hover:no-underline after:absolute after:inset-0 after:rounded-2xl")}
+            className={cn("font-semibold text-base tracking-tight hover:no-underline after:absolute after:inset-0 after:rounded-2xl")}
           >
             {order.orderNumber}
           </TextLink>
@@ -55,7 +55,7 @@ export function OrderCard({ order }: { order: IOrderSummary }) {
       <CardContent>
         <OrderProgress status={order.status} />
       </CardContent>
-      <CardFooter className={cn("flex-wrap justify-between gap-3 border-dashed bg-transparent")}>
+      <CardFooter className={cn("flex-wrap justify-between gap-3 border-t border-border/60 bg-muted/20")}>
         <Flex wrap align="center" gap="2">
           <StatusBadge status={order.status} />
           <StatusBadge status={order.paymentStatus} />

@@ -86,7 +86,7 @@ export function CartReceipt({ cart, title = "Order summary", showItems = false, 
 
       <ReceiptFooter>
         <ReceiptBarcode />
-        <Text as="span" variant="code" tone="muted" className={cn("uppercase")}>
+        <Text as="span" variant="small" tone="muted" className={cn("text-xs font-medium tracking-wide")}>
           No delivery charges · No hidden fees
         </Text>
       </ReceiptFooter>

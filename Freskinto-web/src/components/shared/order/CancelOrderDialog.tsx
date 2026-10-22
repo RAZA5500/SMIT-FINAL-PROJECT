@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import type * as z from "zod";
 import { Form } from "@/components/ui/form";
+import { scrollToFirstError } from "@/lib/forms";
 import { cn } from "@/lib/utils";
 import { cancelOrderSchema } from "@/modules/zod/cancel-order.model";
 import { ConfirmDialog } from "../ConfirmDialog";
@@ -87,7 +88,7 @@ function CancelOrderForm({
   const isOther = useWatch({ control, name: "reason" }) === "OTHER";
 
   return (
-    <Form id={FORM_ID} className={cn("gap-4")} onSubmit={handleSubmit(onSubmit)}>
+    <Form id={FORM_ID} className={cn("gap-4")} onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))}>
       <Controller
         control={control}
         name="reason"

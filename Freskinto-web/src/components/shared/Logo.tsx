@@ -13,19 +13,19 @@ const SIZES = {
 
 type LogoSize = keyof typeof SIZES;
 
-/** Freskinto leaf mark — same artwork idea as app/icon.svg */
+/** Freskinto leaf mark — brand green leaf */
 export function LogoMark({ size = "md", className }: { size?: LogoSize; className?: string }) {
   return (
     <Box
       as="span"
       aria-hidden="true"
       className={cn(
-        "inline-flex shrink-0 -rotate-6 items-center justify-center bg-primary text-primary-foreground shadow-xs",
+        "inline-flex shrink-0 -rotate-6 items-center justify-center bg-brand-green text-white shadow-xs",
         SIZES[size].mark,
         className,
       )}
     >
-      <Leaf strokeWidth={2.2} />
+      <Leaf strokeWidth={2.4} />
     </Box>
   );
 }
@@ -37,17 +37,16 @@ interface LogoProps {
   className?: string;
 }
 
-/** Mark + Fraunces wordmark */
+/** Mark + clean modern wordmark */
 export function Logo({ size = "md", markOnly = false, className }: LogoProps) {
   return (
-    <Flex as="span" inline align="center" gap="2" className={cn(className)}>
+    <Flex as="span" inline align="center" gap="2.5" className={cn(className)}>
       <LogoMark size={size} />
       {!markOnly && (
         <Text
           as="span"
-          family="serif"
-          weight="semibold"
-          className={cn("serif-soft leading-none tracking-tight text-foreground", SIZES[size].word)}
+          weight="bold"
+          className={cn("font-bold leading-none tracking-tight text-foreground font-serif", SIZES[size].word)}
         >
           {STORE.name}
         </Text>

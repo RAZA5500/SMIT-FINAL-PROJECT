@@ -24,6 +24,7 @@ import { STORE } from "@/constants/store";
 import { notifyPaymentResult, PaymentStartError, usePayOrder } from "@/hooks/usePayOrder";
 import { clearOrderIntent, readOrderIntent } from "@/lib/checkout-intent";
 import { formatMoney } from "@/lib/format";
+import { scrollToFirstError } from "@/lib/forms";
 import { ApiError } from "@/lib/networking/request";
 import { customerRoutes, publicRoutes } from "@/lib/routes/routes";
 import { toastError } from "@/lib/toast";
@@ -54,6 +55,7 @@ export function CheckoutPaymentView() {
 
   const { control, handleSubmit } = useForm<MockPaymentFormValues>({
     resolver: zodResolver(mockPaymentSchema),
+    mode: "onChange",
     defaultValues: { outcome: "succeeded" },
   });
 
@@ -174,7 +176,7 @@ export function CheckoutPaymentView() {
             </CardHeader>
             <CardContent className={cn("flex flex-col gap-5")}>
               {/* handleSubmit event ke waqt — onPay ka ref guard render mein nahi padha jata */}
-              <Form id={PAYMENT_FORM_ID} onSubmit={(event) => void handleSubmit(onPay)(event)}>
+              <Form id={PAYMENT_FORM_ID} onSubmit={(event) => void handleSubmit(onPay, () => scrollToFirstError(PAYMENT_FORM_ID))(event)}>
                 <MockOutcomeField control={control} disabled={isBusy} />
               </Form>
               <Text variant="small" tone="muted" className={cn("flex items-start gap-2")}>

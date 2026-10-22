@@ -37,7 +37,7 @@ export function OrderTimelineCard({ order }: { order: IOrder }) {
                     aria-hidden="true"
                     className={cn(
                       "absolute top-10 bottom-0 left-5 w-px -translate-x-1/2 border-l-2",
-                      done ? "border-primary" : "border-dashed border-input",
+                      done ? "border-primary" : "border-muted",
                     )}
                   />
                 )}
@@ -48,8 +48,8 @@ export function OrderTimelineCard({ order }: { order: IOrder }) {
                   className={cn(
                     "relative z-10 size-10 shrink-0 rounded-full [&_svg]:size-5",
                     done && "bg-primary text-primary-foreground",
-                    isNext && "border-2 border-primary bg-background text-brand",
-                    !done && !isNext && "border border-dashed border-input bg-background text-muted-foreground",
+                    isNext && "border-2 border-primary bg-primary/10 text-brand-green",
+                    !done && !isNext && "border border-border bg-background text-muted-foreground",
                   )}
                 >
                   <Icon aria-hidden="true" />

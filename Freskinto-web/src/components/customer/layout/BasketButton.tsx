@@ -18,10 +18,10 @@ export function BasketButton({ className }: { className?: string }) {
 
   return (
     <Button
-      variant="ink"
+      variant="default"
       onClick={() => setCartOpen(true)}
       aria-label={`Open basket, ${pluralize(count, "item")}`}
-      className={cn("h-11 gap-2.5 pr-4 pl-3", className)}
+      className={cn("h-10 gap-2.5 pr-4 pl-3.5 shadow-sm font-semibold", className)}
     >
       <Box as="span" className={cn("relative inline-flex")}>
         <ShoppingBasket aria-hidden="true" className={cn("size-5")} />
@@ -30,7 +30,7 @@ export function BasketButton({ className }: { className?: string }) {
           <Badge
             key={count}
             className={cn(
-              "absolute -top-2.5 -right-3 h-5 min-w-5 animate-bump px-1 tabular-nums ring-2 ring-ink",
+              "absolute -top-2.5 -right-3 h-5 min-w-5 animate-bump px-1 text-xs font-bold tabular-nums ring-2 ring-white bg-brand-orange text-white",
             )}
           >
             {count}

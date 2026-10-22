@@ -55,7 +55,7 @@ export function AccountMenu() {
         render={<Button variant="ghost" aria-label="Account menu" className={cn("gap-2 pr-3 pl-1.5")} />}
       >
         <Avatar className={cn("size-8")}>
-          <AvatarFallback className={cn("bg-ink text-xs font-semibold text-background")}>
+          <AvatarFallback className={cn("bg-primary text-xs font-semibold text-primary-foreground")}>
             {initials(user.name)}
           </AvatarFallback>
         </Avatar>

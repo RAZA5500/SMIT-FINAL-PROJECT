@@ -117,7 +117,14 @@ export function LoginForm() {
         />
       </FieldGroup>
 
-      <LoadingButton type="submit" size="xl" isLoading={login.isPending} loadingText="Signing in…" className={cn("w-full")}>
+      <LoadingButton
+        type="submit"
+        size="xl"
+        variant="signin"
+        isLoading={login.isPending}
+        loadingText="Signing in…"
+        className={cn("w-full shadow-md shadow-brand-green/20")}
+      >
         Sign in
         <ArrowRight data-icon="inline-end" aria-hidden="true" />
       </LoadingButton>

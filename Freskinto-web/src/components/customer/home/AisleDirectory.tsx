@@ -70,7 +70,7 @@ export function AisleDirectory() {
                           className={cn("group/aisle h-full gap-4 rounded-none border-0 p-4 sm:p-5")}
                         >
                           <ItemMedia>
-                            <Text as="span" variant="code" tone="muted" className={cn("text-2xl leading-none tracking-tighter")}>
+                            <Text as="span" weight="bold" className={cn("text-2xl font-bold leading-none tracking-tight text-brand-green/80")}>
                               {aisleNumber(index)}
                             </Text>
                           </ItemMedia>
@@ -82,7 +82,7 @@ export function AisleDirectory() {
                             <Flex
                               align="center"
                               justify="center"
-                              className={cn("relative size-14 shrink-0 overflow-hidden rounded-xl bg-muted text-brand")}
+                              className={cn("relative size-14 shrink-0 overflow-hidden rounded-xl bg-icon-green text-brand-green")}
                             >
                               {theme.image ? (
                                 <Image
@@ -98,7 +98,7 @@ export function AisleDirectory() {
                             </Flex>
                             <ArrowUpRight
                               aria-hidden="true"
-                              className={cn("size-4 text-muted-foreground transition-transform group-hover/aisle:rotate-45 group-hover/aisle:text-brand")}
+                              className={cn("size-4 text-muted-foreground transition-transform group-hover/aisle:rotate-45 group-hover/aisle:text-brand-green")}
                             />
                           </ItemActions>
                         </Item>

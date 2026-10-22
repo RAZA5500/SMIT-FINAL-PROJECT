@@ -22,30 +22,30 @@ export function NeighbourNotes() {
       <Stack gap="8">
         <SectionHeading id="notes-heading" eyebrow="Kind words" title="Notes from the neighbourhood" />
         <Grid as="ul" gap="4" className={cn("md:grid-cols-3")}>
-          {FEATURED.map((note, index) => (
+          {FEATURED.map((note) => (
             <Box as="li" key={note.id}>
-              <Card className={cn("h-full bg-paper", index === 1 ? "md:-rotate-1" : "md:rotate-1")}>
+              <Card className={cn("h-full rounded-2xl border-border/80 bg-white shadow-soft transition-all duration-300 hover:shadow-lift hover:-translate-y-1")}>
                 <CardHeader>
                   <Flex align="center" justify="between">
                     <StarRating rating={note.rating} />
-                    <Quote aria-hidden="true" className={cn("size-6 fill-primary text-primary")} />
+                    <Quote aria-hidden="true" className={cn("size-5 text-brand-green/30 fill-brand-green/20")} />
                   </Flex>
                 </CardHeader>
                 <CardContent className={cn("flex-1")}>
-                  <Text as="blockquote" family="serif" className={cn("text-lg leading-relaxed italic")}>
+                  <Text as="blockquote" className={cn("text-base leading-relaxed text-foreground/90 font-normal")}>
                     “{note.text}”
                   </Text>
                 </CardContent>
-                <CardFooter className={cn("gap-3 border-dashed bg-transparent")}>
+                <CardFooter className={cn("gap-3 border-t border-border/60 bg-muted/20")}>
                   <Avatar>
                     <AvatarImage src={note.photo} alt="" />
-                    <AvatarFallback>{initials(note.customer)}</AvatarFallback>
+                    <AvatarFallback className={cn("bg-brand-soft text-brand-strong font-semibold")}>{initials(note.customer)}</AvatarFallback>
                   </Avatar>
                   <Stack gap="0.5">
-                    <Text as="span" weight="semibold">
+                    <Text as="span" weight="semibold" className={cn("text-sm font-semibold text-foreground")}>
                       {note.customer}
                     </Text>
-                    <Text as="span" variant="code" tone="muted">
+                    <Text as="span" variant="small" tone="muted" className={cn("text-xs text-muted-foreground")}>
                       {note.date}
                     </Text>
                   </Stack>

@@ -87,10 +87,10 @@ export function DashboardView() {
                     {index < ACTIVITY.length - 1 && (
                       <Box
                         aria-hidden="true"
-                        className={cn("absolute top-12 bottom-0 left-4.5 border-l border-dashed border-input")}
+                        className={cn("absolute top-12 bottom-0 left-4.5 border-l border-border")}
                       />
                     )}
-                    <ItemMedia className={cn("size-9 rounded-full border bg-background text-brand [&_svg]:size-4")}>
+                    <ItemMedia className={cn("size-9 rounded-full border border-primary/20 bg-icon-green text-brand-green [&_svg]:size-4")}>
                       <Icon aria-hidden="true" />
                     </ItemMedia>
                     <ItemContent className={cn("min-w-0")}>
@@ -98,7 +98,7 @@ export function DashboardView() {
                       <ItemDescription>{event.detail}</ItemDescription>
                     </ItemContent>
                     <ItemActions>
-                      <Text as="span" variant="code" tone="muted">
+                      <Text as="span" variant="small" tone="muted" className={cn("text-xs font-medium")}>
                         {event.time}
                       </Text>
                     </ItemActions>

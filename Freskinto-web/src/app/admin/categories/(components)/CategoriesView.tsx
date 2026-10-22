@@ -9,7 +9,7 @@ import { Text } from "@/components/ui/typography";
 import { AdminPage } from "@/components/admin/AdminPage";
 import { DataTableCard, ToolbarFilters } from "@/components/admin/DataTableCard";
 import { RowActionsMenu } from "@/components/admin/RowActionsMenu";
-import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
+import { StandardDestructiveModal } from "@/components/shared/DeleteDialog";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { Pagination } from "@/components/shared/Pagination";
@@ -229,15 +229,31 @@ export function CategoriesView() {
       </DataTableCard>
 
       <CategoryFormDialog open={formOpen} onOpenChange={setFormOpen} category={editing} topLevelCategories={topLevel} />
-      <ConfirmDialog
+      <StandardDestructiveModal
         open={deleting !== null}
         onOpenChange={(open) => !open && setDeleting(null)}
         title={`Delete "${deleting?.name ?? ""}"?`}
-        description="Categories with sub-categories or products can't be deleted — deactivate them instead."
+        description="Categories with sub-categories or products cannot be deleted. Deactivate them instead if they have existing items."
         confirmLabel="Delete category"
-        destructive
         isPending={deleteCategory.isPending}
         onConfirm={() => deleting && deleteCategory.mutate(deleting.id, { onSuccess: () => setDeleting(null) })}
+        entitySummary={
+          deleting && (
+            <Stack gap="1.5">
+              <Text weight="semibold" className="text-sm font-semibold text-foreground">
+                {deleting.name}
+              </Text>
+              <Text variant="code" tone="muted">
+                /{deleting.slug}
+              </Text>
+              <Flex gap="3" className="pt-1 text-xs text-muted-foreground">
+                <span>Sub-categories: {deleting.childCount ?? 0}</span>
+                <span>•</span>
+                <span>Products: {deleting.productCount ?? 0}</span>
+              </Flex>
+            </Stack>
+          )
+        }
       />
     </AdminPage>
   );

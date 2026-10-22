@@ -16,6 +16,7 @@ import { Form } from "@/components/ui/form";
 import { MockOutcomeField } from "@/components/customer/checkout/MockOutcomeField";
 import { LoadingButton } from "@/components/shared/LoadingButton";
 import { notifyPaymentResult, PaymentStartError, usePayOrder } from "@/hooks/usePayOrder";
+import { scrollToFirstError } from "@/lib/forms";
 import { formatDateTime, formatMoney } from "@/lib/format";
 import { toastError } from "@/lib/toast";
 import { cn } from "@/lib/utils";
@@ -46,6 +47,7 @@ function PayNowForm({ order, onDone }: { order: IOrder; onDone: () => void }) {
   const { pay, isPending } = usePayOrder();
   const { control, handleSubmit } = useForm<MockPaymentFormValues>({
     resolver: zodResolver(mockPaymentSchema),
+    mode: "onChange",
     defaultValues: { outcome: "succeeded" },
   });
 
@@ -70,7 +72,7 @@ function PayNowForm({ order, onDone }: { order: IOrder; onDone: () => void }) {
           automatically.
         </DialogDescription>
       </DialogHeader>
-      <Form id={FORM_ID} onSubmit={handleSubmit(onSubmit)}>
+      <Form id={FORM_ID} onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))}>
         <MockOutcomeField control={control} disabled={isPending} />
       </Form>
       <DialogFooter>

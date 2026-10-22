@@ -31,11 +31,13 @@ export function shopUrl(params: ShopUrlParams = {}): string {
 
 export const customerRoutes = {
   cart: "/cart",
+  cartSummary: "/cart-summary",
   checkout: "/checkout",
   checkoutPayment: "/checkout/payment",
   orders: "/orders",
   orderDetail: (id: string) => `/orders/${id}`,
   addresses: "/addresses",
+  profile: "/profile",
 } as const;
 
 export const adminRoutes = {

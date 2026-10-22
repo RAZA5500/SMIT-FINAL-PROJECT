@@ -105,7 +105,7 @@ export function FulfilmentTabs() {
             ))}
             <Card size="sm" className={cn("absolute -bottom-5 left-4 w-60 gap-1.5 shadow-lift sm:left-6")}>
               <Flex align="center" gap="2" className={cn("px-4")}>
-                <CalendarClock aria-hidden="true" className={cn("size-4 text-brand")} />
+                <CalendarClock aria-hidden="true" className={cn("size-4 text-brand-green")} />
                 <Text as="span" weight="semibold">
                   Pay within {STORE.paymentWindowMinutes} minutes
                 </Text>
@@ -114,7 +114,7 @@ export function FulfilmentTabs() {
                 Your order is confirmed the moment you pay.
               </Text>
               <Box className={cn("px-4")}>
-                <Badge variant="tag">Then we start packing</Badge>
+                <Badge variant="brand">Then we start packing</Badge>
               </Box>
             </Card>
           </Box>

@@ -29,8 +29,8 @@ export function AislesMenu({ className }: { className?: string }) {
     <NavigationMenu className={cn(className)}>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuTrigger className={cn("h-10 rounded-full px-4 font-semibold")}>
-            <LayoutGrid aria-hidden="true" className={cn("mr-1.5 size-4 text-brand")} />
+          <NavigationMenuTrigger className={cn("h-10 rounded-xl px-4 font-semibold text-foreground hover:text-brand-green hover:bg-brand-soft transition-colors")}>
+            <LayoutGrid aria-hidden="true" className={cn("mr-1.5 size-4 text-brand-green")} />
             Aisles
           </NavigationMenuTrigger>
           <NavigationMenuContent className={cn("w-screen max-w-2xl p-3")}>
@@ -40,7 +40,7 @@ export function AislesMenu({ className }: { className?: string }) {
                 <NavigationMenuLink
                   closeOnClick
                   render={<Link href={shopUrl()} />}
-                  className={cn("gap-1.5 px-2 py-1 font-semibold text-brand")}
+                  className={cn("gap-1.5 px-2 py-1 font-semibold text-brand-green hover:text-brand-green-dark")}
                 >
                   All products
                   <ArrowRight aria-hidden="true" />
@@ -71,13 +71,13 @@ export function AislesMenu({ className }: { className?: string }) {
                             as="span"
                             align="center"
                             justify="center"
-                            className={cn("size-10 shrink-0 rounded-lg border bg-background text-brand [&_svg]:size-5")}
+                            className={cn("size-10 shrink-0 rounded-lg border border-primary/20 bg-icon-green text-brand-green [&_svg]:size-5")}
                           >
                             <Icon aria-hidden="true" />
                           </Flex>
                           <Stack as="span" gap="1" className={cn("min-w-0")}>
                             <Flex as="span" align="baseline" gap="2">
-                              <Text as="span" variant="code" tone="muted">
+                              <Text as="span" variant="small" tone="muted" className={cn("font-medium")}>
                                 {aisleNumber(index)}
                               </Text>
                               <Text as="span" weight="semibold" className={cn("truncate")}>

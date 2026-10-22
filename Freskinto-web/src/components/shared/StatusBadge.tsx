@@ -11,7 +11,7 @@ const TONES: Record<StatusTone, { variant: VariantProps<typeof badgeVariants>["v
   warning: { variant: "warning", dot: "bg-warning" },
   danger: { variant: "destructive", dot: "bg-destructive" },
   info: { variant: "info", dot: "bg-info" },
-  brand: { variant: "outline", dot: "bg-primary" },
+  brand: { variant: "brand", dot: "bg-brand-green" },
   neutral: { variant: "outline", dot: "bg-muted-foreground/50" },
 };
 
@@ -59,7 +59,7 @@ export function StatusBadge({ status, label, tone: toneOverride, className }: St
   return (
     <Badge
       variant={tone.variant}
-      className={cn("font-mono text-xs tracking-wide uppercase", className)}
+      className={cn("text-xs font-medium tracking-wide", className)}
     >
       <Box as="span" aria-hidden="true" className={cn("size-1.5 shrink-0 rounded-full", tone.dot)} />
       {label ?? STATUS_LABELS[status] ?? status}

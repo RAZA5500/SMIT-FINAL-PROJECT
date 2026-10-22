@@ -14,7 +14,7 @@ function DetailRow({ icon, label, children }: { icon: ReactNode; label: string; 
     <Item size="sm" className={cn("items-start px-0")}>
       <ItemMedia
         variant="icon"
-        className={cn("size-9 rounded-xl bg-muted text-muted-foreground")}
+        className={cn("size-9 rounded-xl border border-primary/20 bg-icon-green text-brand-green")}
       >
         {icon}
       </ItemMedia>
@@ -36,7 +36,7 @@ export function OrderDetailsCard({ order, showCustomer = false }: { order: IOrde
       <CardHeader>
         <CardTitle>
           <Flex as="span" align="center" gap="2">
-            <TypeIcon aria-hidden="true" className={cn("size-5 text-brand")} />
+            <TypeIcon aria-hidden="true" className={cn("size-5 text-brand-green")} />
             {DELIVERY_TYPE_LABELS[order.deliveryType]}
           </Flex>
         </CardTitle>

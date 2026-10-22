@@ -113,7 +113,7 @@ export function AdminOrdersView() {
                     <TextLink
                       href={adminRoutes.orderDetail(order.id)}
                       tone="default"
-                      className={cn("font-mono font-semibold tracking-tight")}
+                      className={cn("font-semibold tracking-tight hover:text-brand-green")}
                     >
                       {order.orderNumber}
                     </TextLink>
@@ -125,7 +125,7 @@ export function AdminOrdersView() {
                 <TableCell className={cn("max-w-56")}>
                   <Flex align="center" gap="2.5">
                     <Avatar size="sm" className={cn("size-8")}>
-                      <AvatarFallback className={cn("bg-muted text-xs font-semibold text-brand")}>
+                      <AvatarFallback className={cn("bg-icon-green text-xs font-semibold text-brand-green")}>
                         {initials(order.customer.name)}
                       </AvatarFallback>
                     </Avatar>
@@ -159,7 +159,7 @@ export function AdminOrdersView() {
                     variant="ghost"
                     size="sm"
                     aria-label={`View order ${order.orderNumber}`}
-                    className={cn("text-brand")}
+                    className={cn("text-brand-green hover:text-brand-green-dark")}
                   >
                     View
                     <ArrowRight data-icon="inline-end" aria-hidden="true" />

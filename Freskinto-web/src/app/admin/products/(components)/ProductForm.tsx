@@ -9,16 +9,14 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Grid } from "@/components/ui/grid";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
-import { Item, ItemContent, ItemDescription, ItemGroup, ItemTitle } from "@/components/ui/item";
 import { AdminFormPage } from "@/components/admin/AdminFormPage";
 import { describedBy, FieldMessage } from "@/components/shared/FieldMessage";
 import { InputField } from "@/components/shared/InputField";
 import { LoadingButton } from "@/components/shared/LoadingButton";
 import { RequiredMark } from "@/components/shared/RequiredMark";
 import { SelectField } from "@/components/shared/SelectField";
-import { StatusBadge } from "@/components/shared/StatusBadge";
 import { SwitchField } from "@/components/shared/SwitchField";
-import { formatMoney } from "@/lib/format";
+import { scrollToFirstError } from "@/lib/forms";
 import { ApiError } from "@/lib/networking/request";
 import { adminRoutes } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
@@ -35,23 +33,13 @@ import { useCreateProduct, useUpdateProduct } from "@/services/products/mutation
 import type { IAdminProduct } from "@/services/products/types";
 import { ProductFormSteps } from "./ProductFormSteps";
 import { ProductPreview } from "./ProductPreview";
+import { ProductReviewTab } from "./ProductReviewTab";
 
 const FORM_ID = "product-form";
 const ALL_CATEGORIES_LIMIT = 100;
 
 function firstTabWithErrors(errors: FieldErrors<ProductFormInput>): ProductFormTab | undefined {
   return PRODUCT_FORM_TABS.find((tab) => TAB_FIELDS[tab].some((field) => errors[field]));
-}
-
-function ReviewItem({ label, value }: { label: string; value?: React.ReactNode }) {
-  return (
-    <Item variant="muted" size="sm" className={cn("rounded-xl")}>
-      <ItemContent className={cn("gap-0.5")}>
-        <ItemDescription className={cn("text-xs")}>{label}</ItemDescription>
-        <ItemTitle className={cn("font-semibold")}>{value || "—"}</ItemTitle>
-      </ItemContent>
-    </Item>
-  );
 }
 
 /** Create aur edit dono — multi-step: `TAB_FIELDS` + `trigger()` (FLOW-MD 07 §6) */
@@ -147,6 +135,7 @@ export function ProductForm({ product }: { product?: IAdminProduct }) {
       onSubmit={handleSubmit(onSubmit, (formErrors) => {
         const errorTab = firstTabWithErrors(formErrors);
         if (errorTab) setTab(errorTab);
+        scrollToFirstError(FORM_ID);
       })}
       aside={
         <ProductPreview
@@ -281,24 +270,7 @@ export function ProductForm({ product }: { product?: IAdminProduct }) {
       )}
 
       {tab === "review" && (
-        <FieldGroup>
-          <ItemGroup className={cn("grid gap-3 sm:grid-cols-2")}>
-            <ReviewItem label="Product name" value={values.name} />
-            <ReviewItem label="Category" value={category?.label} />
-            <ReviewItem label="Price" value={values.price ? formatMoney(String(values.price)) : undefined} />
-            <ReviewItem
-              label="Order quantity"
-              value={`${String(values.minimumOrderQuantity ?? "")} – ${String(values.maximumOrderQuantity ?? "")}`}
-            />
-            {product && <ReviewItem label="SKU" value={product.sku} />}
-            <ReviewItem label="Status" value={<StatusBadge status={values.isActive ? "ACTIVE" : "INACTIVE"} />} />
-          </ItemGroup>
-          {!product && (
-            <FieldDescription>
-              The SKU and URL slug are generated automatically. Add stock from Stock levels after creating the product.
-            </FieldDescription>
-          )}
-        </FieldGroup>
+        <ProductReviewTab values={values} categoryLabel={category?.label} product={product} />
       )}
     </AdminFormPage>
   );

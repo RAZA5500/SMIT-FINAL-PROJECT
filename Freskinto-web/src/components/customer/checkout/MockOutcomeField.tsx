@@ -23,18 +23,18 @@ function TestCardFace() {
   return (
     <Card className={cn("relative w-full max-w-xs gap-6 p-5 shadow-soft")} aria-hidden="true">
       <Flex align="center" justify="between">
-        <Text as="span" family="serif" weight="semibold" className={cn("serif-soft text-lg")}>
+        <Text as="span" weight="bold" className={cn("font-heading text-lg font-bold text-foreground")}>
           {STORE.name}
         </Text>
         <Nfc className={cn("size-5 text-muted-foreground")} />
       </Flex>
-      <Box className={cn("h-7 w-10 rounded-md border border-saffron/60 bg-saffron/30")} />
+      <Box className={cn("h-7 w-10 rounded-md border border-amber-400/60 bg-amber-200/50")} />
       <Stack gap="1">
         <Text as="span" variant="code" className={cn("text-sm tracking-widest")}>
           4242 4242 4242 4242
         </Text>
         <Flex justify="between">
-          <Text as="span" variant="code" tone="brand" className={cn("uppercase")}>
+          <Text as="span" variant="small" className={cn("font-semibold text-brand-green uppercase")}>
             Test card
           </Text>
           <Text as="span" variant="code" tone="muted">

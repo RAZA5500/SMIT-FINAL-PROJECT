@@ -96,12 +96,12 @@ function CheckoutHeader() {
       <Container className={cn("flex h-16 items-center justify-between gap-4")}>
         <HomeLink />
         <Flex align="center" gap="2" className={cn("hidden sm:flex")}>
-          <Lock aria-hidden="true" className={cn("size-4 text-brand")} />
-          <Text as="span" variant="code" tone="muted" className={cn("uppercase")}>
+          <Lock aria-hidden="true" className={cn("size-4 text-brand-green")} />
+          <Text as="span" variant="small" tone="muted" className={cn("text-xs font-semibold tracking-wider uppercase")}>
             Secure checkout
           </Text>
         </Flex>
-        <ButtonLink href={customerRoutes.cart} variant="ghost" size="sm" className={cn("text-brand")}>
+        <ButtonLink href={customerRoutes.cart} variant="ghost" size="sm" className={cn("text-brand-green hover:text-brand-green-dark")}>
           <ArrowLeft data-icon="inline-start" aria-hidden="true" />
           Back to basket
         </ButtonLink>

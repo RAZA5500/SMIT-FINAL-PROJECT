@@ -50,16 +50,16 @@ export function StatCard({ kpi }: { kpi: Kpi }) {
   return (
     <Card>
       <CardHeader>
-        <CardDescription className={cn("font-mono text-xs tracking-widest uppercase")}>{kpi.label}</CardDescription>
+        <CardDescription className={cn("text-xs font-semibold tracking-wider text-muted-foreground uppercase")}>{kpi.label}</CardDescription>
       </CardHeader>
       <CardContent>
         <Flex align="end" justify="between" gap="3">
           {/* Stat value: UI sans, proportional figures (dataviz figure rules) */}
-          <CardTitle className={cn("font-sans text-3xl leading-none font-semibold")}>{kpi.value}</CardTitle>
+          <CardTitle className={cn("font-sans text-3xl leading-none font-semibold text-foreground")}>{kpi.value}</CardTitle>
           <Sparkline points={kpi.trend} label={kpi.label} />
         </Flex>
       </CardContent>
-      <CardFooter className={cn("gap-1.5 border-dashed bg-transparent pt-3")}>
+      <CardFooter className={cn("gap-1.5 border-t border-border/60 bg-muted/20 pt-3")}>
         <Text
           as="span"
           variant="small"

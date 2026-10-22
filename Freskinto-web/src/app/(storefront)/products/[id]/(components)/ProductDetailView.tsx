@@ -112,10 +112,10 @@ function ProductOverview({ product }: { product: IProduct }) {
             <TextLink href={shopUrl({ category: product.category.id })} className={cn("w-fit hover:no-underline")}>
               <AisleTag index={aisleIndex} label={product.category.name} className={cn("hover:border-primary")} />
             </TextLink>
-            <Heading size="1" className={cn("serif-soft lg:text-5xl")}>
+            <Heading size="1" className={cn("font-heading font-extrabold tracking-tight text-foreground lg:text-5xl")}>
               {product.name}
             </Heading>
-            <Text variant="code" tone="muted">
+            <Text variant="small" tone="muted" className={cn("font-medium")}>
               SKU {product.sku}
             </Text>
           </Stack>
@@ -136,7 +136,7 @@ function ProductOverview({ product }: { product: IProduct }) {
                 <ItemGroup className={cn("gap-1")}>
                   {PERKS.map(({ icon: Icon, title, text }) => (
                     <Item key={title} size="sm" className={cn("px-0")}>
-                      <ItemMedia className={cn("size-9 rounded-xl border bg-background text-brand [&_svg]:size-4")}>
+                      <ItemMedia className={cn("size-9 rounded-xl border border-primary/20 bg-primary/10 text-brand-green [&_svg]:size-4")}>
                         <Icon aria-hidden="true" />
                       </ItemMedia>
                       <ItemContent>
