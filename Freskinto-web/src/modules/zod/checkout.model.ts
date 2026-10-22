@@ -54,3 +54,13 @@ export const checkoutSchema = z
 
 export type CheckoutFormInput = z.input<typeof checkoutSchema>;
 export type CheckoutFormValues = z.infer<typeof checkoutSchema>;
+
+/** Multi-step checkout: har tab ke fields — aage jane se pehle `trigger(TAB_FIELDS[tab])` (FLOW-MD 07 §6) */
+export const CHECKOUT_TABS = ["delivery", "notes", "review"] as const;
+export type CheckoutTab = (typeof CHECKOUT_TABS)[number];
+
+export const TAB_FIELDS: Record<CheckoutTab, (keyof CheckoutFormValues)[]> = {
+  delivery: ["deliveryType", "addressId", "shippingAddress", "pickupScheduledAt"],
+  notes: ["customerNotes"],
+  review: [],
+};

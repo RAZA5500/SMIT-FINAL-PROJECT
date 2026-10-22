@@ -16,7 +16,7 @@ export function EmptyState({ title = "Nothing here yet", message, icon, action, 
   return (
     <div
       className={cn(
-        "flex w-full flex-col items-center justify-center gap-5 rounded-15 border border-dashed border-input bg-card/60 px-6 py-14 text-center",
+        "flex w-full flex-col items-center justify-center gap-5 rounded-xl border border-dashed border-input bg-card/60 px-6 py-14 text-center",
         className,
       )}
     >

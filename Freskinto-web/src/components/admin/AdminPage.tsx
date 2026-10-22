@@ -1,7 +1,4 @@
-import { FlaskConical } from "lucide-react";
 import type { ReactNode } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Stack } from "@/components/ui/flex";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { cn } from "@/lib/utils";
 
@@ -9,39 +6,30 @@ interface AdminPageProps {
   title: ReactNode;
   description?: ReactNode;
   eyebrow?: ReactNode;
-  meta?: ReactNode;
+  /** Header ke right par primary actions */
   actions?: ReactNode;
-  /** Static mock screen — "Sample data" label (user decision: backend se connected nahi) */
-  demo?: boolean;
+  /** Title ke neeche badges (status, payment) */
+  meta?: ReactNode;
+  /** Back link / breadcrumbs (detail pages) */
+  breadcrumbs?: ReactNode;
   children: ReactNode;
   className?: string;
 }
 
-/** Har admin screen ka frame — heading, actions, content */
-export function AdminPage({ title, description, eyebrow, meta, actions, demo = false, children, className }: AdminPageProps) {
+/** Admin screen ka frame: compact header + content, workspace padding */
+export function AdminPage({ title, description, eyebrow, actions, meta, breadcrumbs, children, className }: AdminPageProps) {
   return (
-    <Stack gap="6" className={cn("flex-1 p-4 sm:p-6 lg:p-8", className)}>
+    <div className={cn("flex flex-col gap-6 p-4 sm:p-6 lg:p-8", className)}>
       <PageHeader
-        size="2"
+        size="compact"
         eyebrow={eyebrow}
         title={title}
         description={description}
         actions={actions}
-        meta={
-          demo || meta ? (
-            <>
-              {demo && (
-                <Badge variant="warning">
-                  <FlaskConical aria-hidden="true" />
-                  Sample data
-                </Badge>
-              )}
-              {meta}
-            </>
-          ) : undefined
-        }
+        meta={meta}
+        breadcrumbs={breadcrumbs}
       />
       {children}
-    </Stack>
+    </div>
   );
 }

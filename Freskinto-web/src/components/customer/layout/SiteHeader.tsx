@@ -46,7 +46,7 @@ function NavLink({ href, label, active }: { href: string; label: string; active:
       href={href}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "rounded-full px-4 py-2 text-sm font-medium transition-colors outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/40",
+        "rounded-lg px-4 py-2 text-sm font-medium transition-colors outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/40",
         active ? "bg-brand-soft text-brand-green-dark" : "text-foreground/80",
       )}
     >
@@ -78,7 +78,7 @@ function MarketHeader() {
       )}
     >
       <SkipLink />
-      <div className="glass mx-auto flex h-14 max-w-page items-center gap-2 rounded-full border border-border/70 px-2 shadow-float sm:h-16 sm:gap-3 sm:px-3 lg:gap-5 lg:px-4">
+      <div className="glass mx-auto flex h-14 max-w-page items-center gap-2 rounded-2xl border border-border/60 px-2 shadow-float sm:h-16 sm:gap-3 sm:px-3 lg:gap-5 lg:px-4">
         <Button
           variant="ghost"
           size="icon"
@@ -123,7 +123,7 @@ function CheckoutHeader() {
   return (
     <header className="px-3 pt-3 sm:px-4 lg:px-6">
       <SkipLink />
-      <div className="glass mx-auto flex h-14 max-w-page items-center justify-between gap-4 rounded-full border border-border/70 px-3 shadow-float sm:h-16 sm:px-4">
+      <div className="glass mx-auto flex h-14 max-w-page items-center justify-between gap-4 rounded-2xl border border-border/60 px-3 shadow-float sm:h-16 sm:px-4">
         <HomeLink />
         <p className="hidden items-center gap-2 text-fs-12 font-semibold tracking-wider text-muted-foreground uppercase sm:flex">
           <Lock aria-hidden="true" className="size-4 text-brand-green" />

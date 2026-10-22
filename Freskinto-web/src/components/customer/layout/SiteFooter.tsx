@@ -8,12 +8,14 @@ import { customerRoutes, publicRoutes, shopUrl } from "@/lib/routes/routes";
 import { useAisles } from "../shop/use-aisles";
 
 const FOOTER_AISLE_LIMIT = 6;
+/** Module load par ek dafa — render ke dauran current date nahi padhte */
+const COPYRIGHT_YEAR = new Date().getFullYear();
 
-const COLUMN_TITLE = "text-fs-11 font-semibold tracking-widest text-brand-green-vivid uppercase";
+const COLUMN_TITLE = "text-fs-11 font-bold tracking-widest text-brand-green-vivid uppercase";
 const FOOTER_LINK =
-  "text-sm text-white/75 underline-offset-4 transition-colors outline-none hover:text-white hover:underline focus-visible:text-white focus-visible:underline";
+  "text-sm text-white/70 underline-offset-4 transition-colors outline-none hover:text-white hover:underline focus-visible:text-white focus-visible:underline";
 
-/** Editorial footer — deep forest block, serif tagline; checkout par compact */
+/** Modern footer — deep indigo block; checkout par compact */
 export function SiteFooter({ compact = false }: { compact?: boolean }) {
   const { aisles } = useAisles();
 
@@ -33,10 +35,10 @@ export function SiteFooter({ compact = false }: { compact?: boolean }) {
       <div className="page-container grid gap-12 py-14 md:grid-cols-12">
         <div className="flex flex-col gap-5 md:col-span-5">
           <Logo size="lg" inverse />
-          <p className="max-w-sm font-display text-fs-24 leading-snug text-white/85 italic">{STORE.tagline}</p>
+          <p className="max-w-sm text-fs-24 leading-snug font-medium text-white/80">{STORE.tagline}</p>
           <a
             href={`mailto:${STORE.supportEmail}`}
-            className="inline-flex w-fit items-center gap-2 text-sm text-white/75 transition-colors hover:text-white"
+            className="inline-flex w-fit items-center gap-2 text-sm text-white/70 transition-colors hover:text-white"
           >
             <Mail aria-hidden="true" className="size-4" />
             {STORE.supportEmail}
@@ -89,7 +91,7 @@ export function SiteFooter({ compact = false }: { compact?: boolean }) {
 
         <div className="flex flex-col gap-4 md:col-span-2">
           <h2 className={COLUMN_TITLE}>Good to know</h2>
-          <ul className="flex flex-col gap-2.5 text-sm text-white/75">
+          <ul className="flex flex-col gap-2.5 text-sm text-white/70">
             <li>Free delivery on every order</li>
             <li>Click &amp; collect in 1 hour</li>
             <li>Pay within {STORE.paymentWindowMinutes} minutes</li>
@@ -98,9 +100,9 @@ export function SiteFooter({ compact = false }: { compact?: boolean }) {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="page-container flex flex-col items-start justify-between gap-2 py-5 text-fs-12 text-white/60 sm:flex-row sm:items-center">
+        <div className="page-container flex flex-col items-start justify-between gap-2 py-5 text-fs-12 text-white/50 sm:flex-row sm:items-center">
           <p>
-            © {new Date().getFullYear()} {STORE.name}. All rights reserved.
+            © {COPYRIGHT_YEAR} {STORE.name}. All rights reserved.
           </p>
           <p>Demo store — payments are simulated, no real card is charged.</p>
         </div>

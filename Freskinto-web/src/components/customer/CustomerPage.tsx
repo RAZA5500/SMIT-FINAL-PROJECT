@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { Container } from "@/components/ui/container";
 import { PageBreadcrumbs, type Crumb } from "@/components/shared/PageBreadcrumbs";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { publicRoutes } from "@/lib/routes/routes";
@@ -7,40 +6,41 @@ import { cn } from "@/lib/utils";
 
 interface CustomerPageProps {
   title: ReactNode;
-  description?: ReactNode;
   eyebrow?: ReactNode;
+  description?: ReactNode;
   meta?: ReactNode;
-  /** "Home" pehle khud lagta hai */
-  breadcrumbs?: Crumb[];
   actions?: ReactNode;
+  breadcrumbs?: Crumb[];
   children: ReactNode;
   className?: string;
 }
 
-/** Customer pages ka frame — breadcrumbs + heading + content */
+/** Account pages ka common frame: page container, breadcrumbs → header → content */
 export function CustomerPage({
   title,
-  description,
   eyebrow,
+  description,
   meta,
-  breadcrumbs,
   actions,
+  breadcrumbs,
   children,
   className,
 }: CustomerPageProps) {
   return (
-    <Container className={cn("flex flex-col gap-8 py-8 sm:py-10", className)}>
+    <div className={cn("page-container flex flex-col gap-8 py-8 sm:py-10", className)}>
       <PageHeader
+        breadcrumbs={
+          breadcrumbs && (
+            <PageBreadcrumbs root={{ label: "Shop", href: publicRoutes.shop }} items={breadcrumbs} />
+          )
+        }
+        eyebrow={eyebrow}
         title={title}
         description={description}
-        eyebrow={eyebrow}
         meta={meta}
         actions={actions}
-        breadcrumbs={
-          breadcrumbs && <PageBreadcrumbs root={{ label: "Home", href: publicRoutes.home }} items={breadcrumbs} />
-        }
       />
       {children}
-    </Container>
+    </div>
   );
 }

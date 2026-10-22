@@ -26,6 +26,7 @@ export const ALL_VALUE = "all";
 
 /** Pagination — storefront grid aur admin tables ka page size */
 export const SHOP_PAGE_SIZE = 12;
+export const ACCOUNT_PAGE_SIZE = 10;
 export const ADMIN_PAGE_SIZE = 10;
 /** Dropdowns jo poori list chahte hain (backend max limit) */
 export const LOOKUP_LIMIT = 100;

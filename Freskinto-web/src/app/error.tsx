@@ -1,0 +1,35 @@
+"use client";
+
+import { useEffect } from "react";
+import { ButtonLink } from "@/components/shared/ButtonLink";
+import { ErrorState } from "@/components/shared/ErrorState";
+import { Logo } from "@/components/shared/Logo";
+import { publicRoutes } from "@/lib/routes/routes";
+
+/** Route-level error boundary (Next 16: `unstable_retry` segment dobara fetch + render karta hai) */
+export default function RootError({
+  error,
+  unstable_retry,
+}: {
+  error: Error & { digest?: string };
+  unstable_retry: () => void;
+}) {
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
+
+  return (
+    <main id="content" className="flex min-h-dvh flex-1 flex-col items-center justify-center gap-8 px-6 py-16">
+      <Logo size="md" />
+      <ErrorState
+        title="Something went wrong"
+        message="An unexpected error stopped this page from loading. Try again, or head back to the shop."
+        onRetry={unstable_retry}
+        className="max-w-xl"
+      />
+      <ButtonLink href={publicRoutes.shop} variant="outline" className="rounded-full">
+        Back to the shop
+      </ButtonLink>
+    </main>
+  );
+}

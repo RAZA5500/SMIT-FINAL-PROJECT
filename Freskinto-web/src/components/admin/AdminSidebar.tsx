@@ -58,7 +58,7 @@ export function AdminSidebar() {
             >
               <Logo size="sm" markOnly />
               <Stack gap="0.5" className={cn("min-w-0")}>
-                <Text as="span" weight="bold" className={cn("text-lg font-bold font-serif leading-none tracking-tight text-sidebar-foreground")}>
+                <Text as="span" weight="bold" className={cn("text-lg font-bold font-sans leading-none tracking-tight text-sidebar-foreground")}>
                   Freskinto
                 </Text>
                 <Text as="span" variant="small" className={cn("text-xs font-medium text-sidebar-foreground/70 uppercase tracking-wider")}>

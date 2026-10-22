@@ -1,20 +1,20 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import { AuthShell } from "@/components/customer/auth/AuthShell";
-import { LoginForm } from "./(components)/LoginForm";
+import { AuthHeading } from "@/components/customer/auth/AuthHeading";
+import { LoginForm } from "./components/LoginForm";
 
-export const metadata: Metadata = {
-  title: "Sign in",
-  description: "Sign in to your Freskinto account to shop fresh groceries with free delivery.",
-};
+export const metadata: Metadata = { title: "Sign in" };
 
-export default function LoginPage() {
+export default async function LoginPage({ searchParams }: PageProps<"/login">) {
+  const { redirect } = await searchParams;
+
   return (
-    <AuthShell eyebrow="Welcome back" title="Sign in to your basket" subtitle="Pick up your shop exactly where you left it.">
-      {/* useSearchParams (redirect param) ko Suspense boundary chahiye */}
-      <Suspense>
-        <LoginForm />
-      </Suspense>
-    </AuthShell>
+    <>
+      <AuthHeading
+        eyebrow="Welcome back"
+        title="Sign in to your basket"
+        subtitle="Pick up where you left off — your basket and orders are waiting."
+      />
+      <LoginForm redirectTo={typeof redirect === "string" ? redirect : null} />
+    </>
   );
 }

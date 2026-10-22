@@ -45,12 +45,12 @@ export function ProductBadges({ product, className }: { product: IProduct; class
   );
 }
 
-/** Shop shelf card — tactile lift on hover, packshot on a warm aisle tile, stretched name link, basket control */
+/** Shop shelf card — clean lift on hover, packshot on a soft tile, stretched name link, basket control */
 export function ProductCard({ product, eager = false, className }: ProductCardProps) {
   return (
     <article
       className={cn(
-        "group/product relative flex h-full flex-col overflow-hidden rounded-15 border border-border bg-card shadow-soft transition duration-300 hover:-translate-y-1 hover:border-brand-green/30 hover:shadow-lift",
+        "group/product relative flex h-full flex-col overflow-hidden rounded-15 border border-border bg-card shadow-soft transition duration-200 hover:-translate-y-0.5 hover:border-brand-green/25 hover:shadow-lift",
         className,
       )}
     >
@@ -60,14 +60,14 @@ export function ProductCard({ product, eager = false, className }: ProductCardPr
           categoryName={product.category.name}
           eager={eager}
           muted={product.stockStatus === "OUT_OF_STOCK"}
-          imageClassName="transition-transform duration-500 group-hover/product:scale-105"
+          imageClassName="transition-transform duration-300 group-hover/product:scale-[1.03]"
         />
         <ProductBadges product={product} className="absolute top-3 left-3" />
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-3.5 sm:p-4">
         <div className="flex flex-col gap-1">
-          <p className="truncate text-fs-11 font-semibold tracking-wider text-muted-foreground uppercase">
+          <p className="truncate text-fs-11 font-bold tracking-wider text-muted-foreground uppercase">
             {product.category.name}
           </p>
           <h3 className="line-clamp-2 min-h-11 font-heading text-fs-16 leading-snug font-semibold">

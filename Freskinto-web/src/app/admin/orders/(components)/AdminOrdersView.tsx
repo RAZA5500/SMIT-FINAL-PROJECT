@@ -1,48 +1,109 @@
 "use client";
 
 import { ArrowRight, ReceiptText, Store, Truck } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Flex, Stack } from "@/components/ui/flex";
 import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Text } from "@/components/ui/typography";
+import { AdminDataTable, AdminEmptyState, type AdminColumn } from "@/components/admin/AdminDataTable";
+import { AdminFilterDropdown } from "@/components/admin/AdminFilterDropdown";
 import { AdminPage } from "@/components/admin/AdminPage";
-import { DataTableCard, ToolbarFilters } from "@/components/admin/DataTableCard";
 import { ButtonLink } from "@/components/shared/ButtonLink";
-import { EmptyState } from "@/components/shared/EmptyState";
-import { ErrorState } from "@/components/shared/ErrorState";
 import { Pagination } from "@/components/shared/Pagination";
 import { SearchInput } from "@/components/shared/SearchInput";
-import { SelectField } from "@/components/shared/SelectField";
 import { StatusBadge } from "@/components/shared/StatusBadge";
-import { TableSkeleton } from "@/components/shared/TableSkeleton";
 import { TextLink } from "@/components/shared/TextLink";
-import { ORDER_STATUSES, PAYMENT_STATUSES, type OrderStatus, type PaymentStatus } from "@/constants/enums";
-import { DELIVERY_TYPE_LABELS, ORDER_STATUS_LABELS, PAYMENT_STATUS_LABELS } from "@/constants/labels";
-import { useDebounce } from "@/hooks/useDebounce";
-import { formatDateTime, formatMoney, initials } from "@/lib/format";
+import type { OrderStatus, PaymentStatus } from "@/constants/enums";
+import { ADMIN_PAGE_SIZE, ORDER_STATUS_OPTIONS, PAYMENT_STATUS_OPTIONS } from "@/constants/filters";
+import { DELIVERY_TYPE_LABELS } from "@/constants/labels";
 import { adminRoutes } from "@/lib/routes/routes";
-import { cn } from "@/lib/utils";
+import { formatDateTime, formatMoney, initials } from "@/lib/utils";
 import { useGetAdminOrders } from "@/services/orders/queries";
-
-const PAGE_SIZE = 10;
-const ALL = "ALL";
-
-const STATUS_OPTIONS = [
-  { value: ALL, label: "All statuses" },
-  ...ORDER_STATUSES.map((status) => ({ value: status, label: ORDER_STATUS_LABELS[status] })),
-];
-const PAYMENT_OPTIONS = [
-  { value: ALL, label: "All payments" },
-  ...PAYMENT_STATUSES.map((status) => ({ value: status, label: PAYMENT_STATUS_LABELS[status] })),
-];
+import type { IOrderSummary } from "@/services/orders/types";
+import { OrderTableSkeleton } from "./OrderTableSkeleton";
 
 /** Date input (local din) → poore din ki range ISO mein; backend `gte/lte createdAt` */
 function dayBoundary(date: string, end: boolean): string | undefined {
   if (!date) return undefined;
   return new Date(`${date}T${end ? "23:59:59.999" : "00:00:00"}`).toISOString();
 }
+
+const COLUMNS: AdminColumn<IOrderSummary>[] = [
+  {
+    key: "order",
+    header: "Order",
+    cell: (order) => (
+      <div className="flex flex-col gap-0.5">
+        <TextLink
+          href={adminRoutes.orderDetail(order.id)}
+          tone="default"
+          className="numeric font-semibold tracking-tight hover:text-brand-green"
+        >
+          {order.orderNumber}
+        </TextLink>
+        <span className="numeric text-fs-12 text-muted-foreground">{formatDateTime(order.createdAt)}</span>
+      </div>
+    ),
+  },
+  {
+    key: "customer",
+    header: "Customer",
+    hideBelow: "md",
+    className: "max-w-56",
+    cell: (order) => (
+      <div className="flex items-center gap-2.5">
+        <Avatar size="sm" className="size-8">
+          <AvatarFallback>{initials(order.customer.name)}</AvatarFallback>
+        </Avatar>
+        <div className="flex min-w-0 flex-col gap-0.5">
+          <p className="truncate font-medium">{order.customer.name}</p>
+          <p className="truncate text-fs-12 text-muted-foreground">{order.customer.email}</p>
+        </div>
+      </div>
+    ),
+  },
+  {
+    key: "fulfilment",
+    header: "Fulfilment",
+    hideBelow: "lg",
+    cell: (order) => {
+      const DeliveryIcon = order.deliveryType === "PICKUP" ? Store : Truck;
+      return (
+        <span className="flex items-center gap-1.5 text-muted-foreground">
+          <DeliveryIcon aria-hidden="true" className="size-4" />
+          {DELIVERY_TYPE_LABELS[order.deliveryType]}
+        </span>
+      );
+    },
+  },
+  { key: "items", header: "Items", align: "right", hideBelow: "lg", className: "numeric", cell: (order) => order.itemCount },
+  {
+    key: "total",
+    header: "Total",
+    align: "right",
+    className: "numeric font-semibold",
+    cell: (order) => formatMoney(order.total),
+  },
+  { key: "payment", header: "Payment", hideBelow: "sm", cell: (order) => <StatusBadge status={order.paymentStatus} /> },
+  { key: "status", header: "Status", cell: (order) => <StatusBadge status={order.status} /> },
+  {
+    key: "actions",
+    header: "Actions",
+    srOnlyHeader: true,
+    align: "right",
+    cell: (order) => (
+      <ButtonLink
+        href={adminRoutes.orderDetail(order.id)}
+        variant="ghost"
+        size="sm"
+        aria-label={`View order ${order.orderNumber}`}
+        className="text-brand-green hover:text-brand-green-dark"
+      >
+        View
+        <ArrowRight aria-hidden="true" />
+      </ButtonLink>
+    ),
+  },
+];
 
 export function AdminOrdersView() {
   const [search, setSearch] = useState("");
@@ -52,180 +113,91 @@ export function AdminOrdersView() {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
 
-  const debouncedSearch = useDebounce(search.trim());
   const { data, isLoading, isFetching, isError, error, refetch } = useGetAdminOrders({
     page,
-    limit: PAGE_SIZE,
-    search: debouncedSearch || undefined,
+    limit: ADMIN_PAGE_SIZE,
+    search: search.trim() || undefined,
     status: status ?? undefined,
     paymentStatus: paymentStatus ?? undefined,
     dateFrom: dayBoundary(dateFrom, false),
     dateTo: dayBoundary(dateTo, true),
   });
 
+  // Har filter badalne par page 1
   const onFilter =
     <T,>(setter: (value: T) => void) =>
     (value: T) => {
       setter(value);
       setPage(1);
     };
-  const hasFilters = Boolean(debouncedSearch || status || paymentStatus || dateFrom || dateTo);
-
-  let content: ReactNode;
-  if (isLoading) {
-    content = <TableSkeleton columns={7} />;
-  } else if (isError) {
-    content = <ErrorState title="Couldn't load orders" message={error.message} onRetry={() => void refetch()} />;
-  } else if (!data?.data.length) {
-    content = (
-      <EmptyState
-        icon={<ReceiptText aria-hidden="true" />}
-        title={hasFilters ? "No orders match" : "No orders yet"}
-        message={hasFilters ? "Try different filters." : "Orders appear here as soon as customers check out."}
-      />
-    );
-  } else {
-    content = (
-      <Table className={cn("min-w-240")}>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Order</TableHead>
-            <TableHead>Customer</TableHead>
-            <TableHead>Fulfilment</TableHead>
-            <TableHead className={cn("text-right")}>Items</TableHead>
-            <TableHead className={cn("text-right")}>Total</TableHead>
-            <TableHead>Payment</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className={cn("w-24")}>
-              <Text as="span" className={cn("sr-only")}>
-                Actions
-              </Text>
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.data.map((order) => {
-            const DeliveryIcon = order.deliveryType === "PICKUP" ? Store : Truck;
-            return (
-              <TableRow key={order.id}>
-                <TableCell>
-                  <Stack gap="0.5">
-                    <TextLink
-                      href={adminRoutes.orderDetail(order.id)}
-                      tone="default"
-                      className={cn("font-semibold tracking-tight hover:text-brand-green")}
-                    >
-                      {order.orderNumber}
-                    </TextLink>
-                    <Text variant="small" tone="muted" numeric>
-                      {formatDateTime(order.createdAt)}
-                    </Text>
-                  </Stack>
-                </TableCell>
-                <TableCell className={cn("max-w-56")}>
-                  <Flex align="center" gap="2.5">
-                    <Avatar size="sm" className={cn("size-8")}>
-                      <AvatarFallback className={cn("bg-icon-green text-xs font-semibold text-brand-green")}>
-                        {initials(order.customer.name)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <Stack gap="0.5" className={cn("min-w-0")}>
-                      <Text weight="medium" className={cn("truncate")}>
-                        {order.customer.name}
-                      </Text>
-                      <Text variant="small" tone="muted" className={cn("truncate")}>
-                        {order.customer.email}
-                      </Text>
-                    </Stack>
-                  </Flex>
-                </TableCell>
-                <TableCell>
-                  <Flex align="center" gap="1.5" className={cn("text-muted-foreground")}>
-                    <DeliveryIcon aria-hidden="true" className={cn("size-4")} />
-                    {DELIVERY_TYPE_LABELS[order.deliveryType]}
-                  </Flex>
-                </TableCell>
-                <TableCell className={cn("text-right tabular-nums")}>{order.itemCount}</TableCell>
-                <TableCell className={cn("text-right font-semibold tabular-nums")}>{formatMoney(order.total)}</TableCell>
-                <TableCell>
-                  <StatusBadge status={order.paymentStatus} />
-                </TableCell>
-                <TableCell>
-                  <StatusBadge status={order.status} />
-                </TableCell>
-                <TableCell className={cn("text-right")}>
-                  <ButtonLink
-                    href={adminRoutes.orderDetail(order.id)}
-                    variant="ghost"
-                    size="sm"
-                    aria-label={`View order ${order.orderNumber}`}
-                    className={cn("text-brand-green hover:text-brand-green-dark")}
-                  >
-                    View
-                    <ArrowRight data-icon="inline-end" aria-hidden="true" />
-                  </ButtonLink>
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    );
-  }
+  const hasFilters = Boolean(search.trim() || status || paymentStatus || dateFrom || dateTo);
 
   return (
-    <AdminPage eyebrow="Sales" title="Orders" description="Move paid orders through preparation to delivery or collection.">
-      <DataTableCard
-        busy={isFetching && !isLoading}
+    <AdminPage eyebrow="Operations" title="Orders" description="Move paid orders through preparation to delivery or collection.">
+      <AdminDataTable
+        caption="Orders"
+        columns={COLUMNS}
+        rows={data?.data}
+        getRowId={(order) => order.id}
+        isLoading={isLoading}
+        isFetching={isFetching}
+        isError={isError}
+        errorTitle="Couldn't load orders"
+        errorMessage={error?.message}
+        onRetry={() => void refetch()}
+        skeleton={<OrderTableSkeleton />}
+        emptyState={
+          <AdminEmptyState
+            icon={<ReceiptText aria-hidden="true" />}
+            title={hasFilters ? "No orders match" : "No orders yet"}
+            message={hasFilters ? "Try different filters." : "Orders appear here as soon as customers check out."}
+          />
+        }
         toolbar={
           <>
             <SearchInput
               value={search}
               onValueChange={onFilter(setSearch)}
               placeholder="Order number or customer…"
-              className={cn("w-full md:max-w-xs")}
+              className="w-full md:max-w-xs"
             />
-            <ToolbarFilters>
-              <SelectField
+            <div className="flex flex-wrap items-center gap-2">
+              <AdminFilterDropdown
                 id="admin-order-status-filter"
-                aria-label="Filter by order status"
-                size="sm"
-                options={STATUS_OPTIONS}
-                value={status ?? ALL}
-                onValueChange={(value) => onFilter(setStatus)(!value || value === ALL ? null : (value as OrderStatus))}
-                containerClassName={cn("w-44")}
+                label="Filter by order status"
+                allLabel="All statuses"
+                options={ORDER_STATUS_OPTIONS as { value: OrderStatus; label: string }[]}
+                value={status}
+                onValueChange={onFilter(setStatus)}
               />
-              <SelectField
+              <AdminFilterDropdown
                 id="admin-order-payment-filter"
-                aria-label="Filter by payment status"
-                size="sm"
-                options={PAYMENT_OPTIONS}
-                value={paymentStatus ?? ALL}
-                onValueChange={(value) => onFilter(setPaymentStatus)(!value || value === ALL ? null : (value as PaymentStatus))}
-                containerClassName={cn("w-40")}
+                label="Filter by payment status"
+                allLabel="All payments"
+                options={PAYMENT_STATUS_OPTIONS as { value: PaymentStatus; label: string }[]}
+                value={paymentStatus}
+                onValueChange={onFilter(setPaymentStatus)}
               />
-              <Flex align="center" gap="1.5">
+              <div className="flex items-center gap-1.5">
                 <Input
                   type="date"
                   aria-label="Placed from"
                   value={dateFrom}
                   max={dateTo || undefined}
                   onChange={(event) => onFilter(setDateFrom)(event.target.value)}
-                  className={cn("h-8 w-38 rounded-lg text-sm")}
+                  className="h-9 w-40 rounded-lg text-sm"
                 />
-                <Text as="span" variant="small" tone="muted">
-                  to
-                </Text>
+                <span className="text-fs-13 text-muted-foreground">to</span>
                 <Input
                   type="date"
                   aria-label="Placed to"
                   value={dateTo}
                   min={dateFrom || undefined}
                   onChange={(event) => onFilter(setDateTo)(event.target.value)}
-                  className={cn("h-8 w-38 rounded-lg text-sm")}
+                  className="h-9 w-40 rounded-lg text-sm"
                 />
-              </Flex>
-            </ToolbarFilters>
+              </div>
+            </div>
           </>
         }
         footer={
@@ -240,9 +212,7 @@ export function AdminOrdersView() {
             />
           ) : undefined
         }
-      >
-        {content}
-      </DataTableCard>
+      />
     </AdminPage>
   );
 }

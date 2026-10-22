@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   },
 };
 
+/** Admin workspace: sidebar + navbar, sirf ADMIN role */
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return <AdminShell>{children}</AdminShell>;
 }

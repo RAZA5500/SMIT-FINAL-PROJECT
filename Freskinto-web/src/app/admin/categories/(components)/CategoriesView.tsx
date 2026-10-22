@@ -1,57 +1,42 @@
 "use client";
 
 import { FolderTree, Pencil, Plus, Trash2 } from "lucide-react";
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Flex, Stack } from "@/components/ui/flex";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Text } from "@/components/ui/typography";
+import { Switch } from "@/components/ui/switch";
+import { AdminDataTable, AdminEmptyState, type AdminColumn } from "@/components/admin/AdminDataTable";
+import { AdminFilterDropdown } from "@/components/admin/AdminFilterDropdown";
 import { AdminPage } from "@/components/admin/AdminPage";
-import { DataTableCard, ToolbarFilters } from "@/components/admin/DataTableCard";
 import { RowActionsMenu } from "@/components/admin/RowActionsMenu";
-import { StandardDestructiveModal } from "@/components/shared/DeleteDialog";
-import { EmptyState } from "@/components/shared/EmptyState";
-import { ErrorState } from "@/components/shared/ErrorState";
 import { Pagination } from "@/components/shared/Pagination";
 import { SearchInput } from "@/components/shared/SearchInput";
-import { SelectField } from "@/components/shared/SelectField";
-import { StatusBadge } from "@/components/shared/StatusBadge";
-import { TableSkeleton } from "@/components/shared/TableSkeleton";
-import { useDebounce } from "@/hooks/useDebounce";
-import { categoryTheme } from "@/lib/merchandising";
+import { StandardDestructiveModal } from "@/components/shared/StandardDestructiveModal";
+import { ACTIVE_STATUS_OPTIONS, ADMIN_PAGE_SIZE, LOOKUP_LIMIT } from "@/constants/filters";
+import { categoryTheme, TONE_CLASSES } from "@/lib/merchandising";
 import { cn } from "@/lib/utils";
-import { useDeleteCategory } from "@/services/categories/mutations";
+import { useDeleteCategory, useUpdateCategory } from "@/services/categories/mutations";
 import { useGetAdminCategories } from "@/services/categories/queries";
 import type { ICategory } from "@/services/categories/types";
 import { CategoryFormDialog } from "./CategoryFormDialog";
-
-const PAGE_SIZE = 10;
-/** Parent dropdown/filter ke liye saari categories (backend max limit) */
-const ALL_CATEGORIES_LIMIT = 100;
-const ALL = "ALL";
-
-const STATUS_OPTIONS = [
-  { value: ALL, label: "All statuses" },
-  { value: "true", label: "Active" },
-  { value: "false", label: "Inactive" },
-];
+import { CategoryTableSkeleton } from "./CategoryTableSkeleton";
 
 function CategoryName({ category }: { category: ICategory }) {
-  const Icon = categoryTheme(category.name).icon;
+  const theme = categoryTheme(category.name);
+  const tone = TONE_CLASSES[theme.tone];
+  const Icon = theme.icon;
   return (
-    <Flex align="center" gap="3">
-      <Flex align="center" justify="center" className={cn("size-10 shrink-0 rounded-xl border bg-muted text-brand [&_svg]:size-5")}>
-        <Icon aria-hidden="true" />
-      </Flex>
-      <Stack gap="0.5" className={cn("min-w-0")}>
-        <Text weight="semibold" className={cn("truncate")}>
-          {category.name}
-        </Text>
-        <Text variant="code" tone="muted" className={cn("truncate")}>
-          /{category.slug}
-        </Text>
-      </Stack>
-    </Flex>
+    <div className="flex items-center gap-3">
+      <span
+        aria-hidden="true"
+        className={cn("flex size-10 shrink-0 items-center justify-center rounded-xl [&_svg]:size-5", tone.tile, tone.icon)}
+      >
+        <Icon />
+      </span>
+      <div className="flex min-w-0 flex-col gap-0.5">
+        <p className="truncate font-semibold text-foreground">{category.name}</p>
+        <p className="truncate font-mono text-fs-12 text-muted-foreground">/{category.slug}</p>
+      </div>
+    </div>
   );
 }
 
@@ -59,20 +44,21 @@ export function CategoriesView() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [parentId, setParentId] = useState<string | null>(null);
-  const [isActive, setIsActive] = useState<boolean | null>(null);
+  const [isActive, setIsActive] = useState<"true" | "false" | null>(null);
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<ICategory | null>(null);
   const [deleting, setDeleting] = useState<ICategory | null>(null);
 
-  const debouncedSearch = useDebounce(search.trim());
   const { data, isLoading, isFetching, isError, error, refetch } = useGetAdminCategories({
     page,
-    limit: PAGE_SIZE,
-    search: debouncedSearch || undefined,
+    limit: ADMIN_PAGE_SIZE,
+    search: search.trim() || undefined,
     parentId: parentId ?? undefined,
-    isActive: isActive ?? undefined,
+    isActive: isActive === null ? undefined : isActive === "true",
   });
-  const { data: allCategories } = useGetAdminCategories({ limit: ALL_CATEGORIES_LIMIT });
+  // Parent dropdown/filter ke liye saari categories
+  const { data: allCategories } = useGetAdminCategories({ limit: LOOKUP_LIMIT });
+  const updateCategory = useUpdateCategory();
   const deleteCategory = useDeleteCategory();
 
   const topLevel = useMemo(() => (allCategories?.data ?? []).filter((category) => category.depth === 0), [allCategories]);
@@ -81,89 +67,67 @@ export function CategoriesView() {
     [allCategories],
   );
 
-  const resetPage =
-    <T,>(setter: (value: T) => void) =>
-    (value: T) => {
-      setter(value);
-      setPage(1);
-    };
-
   const openForm = (category: ICategory | null) => {
     setEditing(category);
     setFormOpen(true);
   };
 
-  const hasFilters = Boolean(debouncedSearch || parentId || isActive !== null);
+  const hasFilters = Boolean(search.trim() || parentId || isActive !== null);
 
-  let content: ReactNode;
-  if (isLoading) {
-    content = <TableSkeleton columns={6} />;
-  } else if (isError) {
-    content = <ErrorState title="Couldn't load categories" message={error.message} onRetry={() => void refetch()} />;
-  } else if (!data?.data.length) {
-    content = (
-      <EmptyState
-        icon={<FolderTree aria-hidden="true" />}
-        title={hasFilters ? "No categories match" : "No categories yet"}
-        message={hasFilters ? "Try a different search or filter." : "Create your first aisle to start adding products."}
-        action={
-          !hasFilters && (
-            <Button onClick={() => openForm(null)}>
-              <Plus data-icon="inline-start" aria-hidden="true" />
-              New category
-            </Button>
-          )
-        }
-      />
-    );
-  } else {
-    content = (
-      <Table className={cn("min-w-200")}>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Category</TableHead>
-            <TableHead>Parent</TableHead>
-            <TableHead>Description</TableHead>
-            <TableHead className={cn("text-right")}>Sub-categories</TableHead>
-            <TableHead className={cn("text-right")}>Products</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className={cn("w-12")}>
-              <Text as="span" className={cn("sr-only")}>
-                Actions
-              </Text>
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.data.map((category) => (
-            <TableRow key={category.id}>
-              <TableCell className={cn("max-w-64")}>
-                <CategoryName category={category} />
-              </TableCell>
-              <TableCell className={cn("text-muted-foreground")}>
-                {category.parentId ? (nameById.get(category.parentId) ?? "—") : "Top-level aisle"}
-              </TableCell>
-              <TableCell className={cn("max-w-64 truncate text-muted-foreground")}>{category.description || "—"}</TableCell>
-              <TableCell className={cn("text-right tabular-nums")}>{category.childCount}</TableCell>
-              <TableCell className={cn("text-right font-medium tabular-nums")}>{category.productCount}</TableCell>
-              <TableCell>
-                <StatusBadge status={category.isActive ? "ACTIVE" : "INACTIVE"} />
-              </TableCell>
-              <TableCell>
-                <RowActionsMenu
-                  label={category.name}
-                  actions={[
-                    { label: "Edit", icon: Pencil, onSelect: () => openForm(category) },
-                    { label: "Delete", icon: Trash2, destructive: true, onSelect: () => setDeleting(category) },
-                  ]}
-                />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    );
-  }
+  const columns: AdminColumn<ICategory>[] = [
+    { key: "name", header: "Category", cell: (category) => <CategoryName category={category} />, className: "max-w-64" },
+    {
+      key: "parent",
+      header: "Parent",
+      hideBelow: "md",
+      className: "text-muted-foreground",
+      cell: (category) => (category.parentId ? (nameById.get(category.parentId) ?? "—") : "Top-level aisle"),
+    },
+    {
+      key: "description",
+      header: "Description",
+      hideBelow: "lg",
+      className: "max-w-64 truncate text-muted-foreground",
+      cell: (category) => category.description || "—",
+    },
+    {
+      key: "children",
+      header: "Sub-categories",
+      align: "right",
+      hideBelow: "md",
+      className: "numeric",
+      cell: (category) => category.childCount,
+    },
+    { key: "products", header: "Products", align: "right", className: "numeric font-medium", cell: (category) => category.productCount },
+    {
+      key: "status",
+      header: "Active",
+      cell: (category) => (
+        <Switch
+          size="sm"
+          checked={category.isActive}
+          aria-label={`${category.name} is ${category.isActive ? "active" : "inactive"}`}
+          disabled={updateCategory.isPending && updateCategory.variables?.id === category.id}
+          onCheckedChange={(checked) => updateCategory.mutate({ id: category.id, payload: { isActive: checked } })}
+        />
+      ),
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      srOnlyHeader: true,
+      align: "right",
+      cell: (category) => (
+        <RowActionsMenu
+          label={category.name}
+          actions={[
+            { label: "Edit", icon: Pencil, onSelect: () => openForm(category) },
+            { label: "Delete", icon: Trash2, destructive: true, onSelect: () => setDeleting(category) },
+          ]}
+        />
+      ),
+    },
+  ];
 
   return (
     <AdminPage
@@ -172,44 +136,73 @@ export function CategoriesView() {
       description="Organise the shop into aisles. Products can only be added to active categories without sub-categories."
       actions={
         <Button onClick={() => openForm(null)}>
-          <Plus data-icon="inline-start" aria-hidden="true" />
+          <Plus aria-hidden="true" />
           New category
         </Button>
       }
     >
-      <DataTableCard
-        busy={isFetching && !isLoading}
+      <AdminDataTable
+        caption="Categories"
+        columns={columns}
+        rows={data?.data}
+        getRowId={(category) => category.id}
+        isLoading={isLoading}
+        isFetching={isFetching}
+        isError={isError}
+        errorTitle="Couldn't load categories"
+        errorMessage={error?.message}
+        onRetry={() => void refetch()}
+        skeleton={<CategoryTableSkeleton />}
+        emptyState={
+          <AdminEmptyState
+            icon={<FolderTree aria-hidden="true" />}
+            title={hasFilters ? "No categories match" : "No categories yet"}
+            message={hasFilters ? "Try a different search or filter." : "Create your first aisle to start adding products."}
+            action={
+              !hasFilters && (
+                <Button onClick={() => openForm(null)}>
+                  <Plus aria-hidden="true" />
+                  New category
+                </Button>
+              )
+            }
+          />
+        }
         toolbar={
           <>
             <SearchInput
               value={search}
-              onValueChange={resetPage(setSearch)}
+              onValueChange={(value) => {
+                setSearch(value);
+                setPage(1);
+              }}
               placeholder="Search categories…"
-              className={cn("w-full md:max-w-xs")}
+              className="w-full md:max-w-xs"
             />
-            <ToolbarFilters>
-              <SelectField
+            <div className="flex flex-wrap items-center gap-2">
+              <AdminFilterDropdown
                 id="category-parent-filter"
-                aria-label="Filter by parent"
-                size="sm"
-                options={[
-                  { value: ALL, label: "All levels" },
-                  ...topLevel.map((category) => ({ value: category.id, label: `In ${category.name}` })),
-                ]}
-                value={parentId ?? ALL}
-                onValueChange={(value) => resetPage(setParentId)(!value || value === ALL ? null : value)}
-                containerClassName={cn("w-44")}
+                label="Filter by parent"
+                allLabel="All levels"
+                options={topLevel.map((category) => ({ value: category.id, label: `In ${category.name}` }))}
+                value={parentId}
+                onValueChange={(value) => {
+                  setParentId(value);
+                  setPage(1);
+                }}
               />
-              <SelectField
+              <AdminFilterDropdown
                 id="category-status-filter"
-                aria-label="Filter by status"
-                size="sm"
-                options={STATUS_OPTIONS}
-                value={isActive === null ? ALL : String(isActive)}
-                onValueChange={(value) => resetPage(setIsActive)(!value || value === ALL ? null : value === "true")}
-                containerClassName={cn("w-36")}
+                label="Filter by status"
+                allLabel="All statuses"
+                options={ACTIVE_STATUS_OPTIONS as { value: "true" | "false"; label: string }[]}
+                value={isActive}
+                onValueChange={(value) => {
+                  setIsActive(value);
+                  setPage(1);
+                }}
               />
-            </ToolbarFilters>
+            </div>
           </>
         }
         footer={
@@ -224,9 +217,7 @@ export function CategoriesView() {
             />
           ) : undefined
         }
-      >
-        {content}
-      </DataTableCard>
+      />
 
       <CategoryFormDialog open={formOpen} onOpenChange={setFormOpen} category={editing} topLevelCategories={topLevel} />
       <StandardDestructiveModal
@@ -235,23 +226,19 @@ export function CategoriesView() {
         title={`Delete "${deleting?.name ?? ""}"?`}
         description="Categories with sub-categories or products cannot be deleted. Deactivate them instead if they have existing items."
         confirmLabel="Delete category"
-        isPending={deleteCategory.isPending}
+        isLoading={deleteCategory.isPending}
         onConfirm={() => deleting && deleteCategory.mutate(deleting.id, { onSuccess: () => setDeleting(null) })}
         entitySummary={
           deleting && (
-            <Stack gap="1.5">
-              <Text weight="semibold" className="text-sm font-semibold text-foreground">
-                {deleting.name}
-              </Text>
-              <Text variant="code" tone="muted">
-                /{deleting.slug}
-              </Text>
-              <Flex gap="3" className="pt-1 text-xs text-muted-foreground">
+            <div className="flex flex-col gap-1.5">
+              <p className="text-sm font-semibold text-foreground">{deleting.name}</p>
+              <p className="font-mono text-fs-12 text-muted-foreground">/{deleting.slug}</p>
+              <p className="flex gap-3 pt-1 text-xs text-muted-foreground">
                 <span>Sub-categories: {deleting.childCount ?? 0}</span>
-                <span>•</span>
+                <span aria-hidden="true">•</span>
                 <span>Products: {deleting.productCount ?? 0}</span>
-              </Flex>
-            </Stack>
+              </p>
+            </div>
           )
         }
       />

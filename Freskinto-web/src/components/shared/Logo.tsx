@@ -1,4 +1,4 @@
-import { Leaf } from "lucide-react";
+import { Hexagon } from "lucide-react";
 import { STORE } from "@/constants/store";
 import { cn } from "@/lib/utils";
 
@@ -10,18 +10,18 @@ const SIZES = {
 
 type LogoSize = keyof typeof SIZES;
 
-/** Freskinto leaf mark — deep forest tile, mint leaf */
+/** Freskinto geometric mark — indigo tile, light icon */
 export function LogoMark({ size = "md", className }: { size?: LogoSize; className?: string }) {
   return (
     <span
       aria-hidden="true"
       className={cn(
-        "inline-flex shrink-0 -rotate-6 items-center justify-center bg-brand-green-forest text-brand-green-vivid shadow-soft",
+        "inline-flex shrink-0 items-center justify-center rounded-xl bg-brand-green-forest text-brand-green-vivid shadow-soft",
         SIZES[size].mark,
         className,
       )}
     >
-      <Leaf strokeWidth={2.2} />
+      <Hexagon strokeWidth={2.2} />
     </span>
   );
 }
@@ -35,7 +35,7 @@ interface LogoProps {
   className?: string;
 }
 
-/** Mark + serif wordmark with a marigold full stop */
+/** Mark + bold wordmark with an accent dot */
 export function Logo({ size = "md", markOnly = false, inverse = false, className }: LogoProps) {
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
@@ -43,13 +43,13 @@ export function Logo({ size = "md", markOnly = false, inverse = false, className
       {!markOnly && (
         <span
           className={cn(
-            "font-display leading-none font-semibold tracking-tight",
+            "font-sans leading-none font-bold tracking-tight",
             inverse ? "text-white" : "text-foreground",
             SIZES[size].word,
           )}
         >
           {STORE.name}
-          <span aria-hidden="true" className="text-marigold">
+          <span aria-hidden="true" className="text-brand-green-light">
             .
           </span>
         </span>

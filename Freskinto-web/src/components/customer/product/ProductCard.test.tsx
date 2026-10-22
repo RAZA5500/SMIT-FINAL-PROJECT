@@ -3,7 +3,6 @@ import userEvent from "@testing-library/user-event";
 import { delay } from "msw";
 import { http, HttpResponse } from "msw/http";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { Text } from "@/components/ui/typography";
 import { useGetCart } from "@/services/cart/queries";
 import type { IProduct } from "@/services/products/types";
 import { useAuthStore } from "@/stores/auth-store";
@@ -59,7 +58,7 @@ function cart(quantity: number) {
 /** Header jaisa consumer — `["cart"]` query */
 function CartCount() {
   const { data } = useGetCart();
-  return <Text>Lines in cart: {data?.items.length ?? "…"}</Text>;
+  return <p>Lines in cart: {data?.items.length ?? "…"}</p>;
 }
 
 function signInAsCustomer() {

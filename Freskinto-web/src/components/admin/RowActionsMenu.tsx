@@ -1,6 +1,7 @@
 "use client";
 
-import { EllipsisVertical, type LucideIcon } from "lucide-react";
+import { MoreHorizontal, type LucideIcon } from "lucide-react";
+import { Fragment } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,50 +10,35 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Flex } from "@/components/ui/flex";
-import { cn } from "@/lib/utils";
 
 export interface RowAction {
   label: string;
-  icon?: LucideIcon;
+  icon: LucideIcon;
   onSelect: () => void;
   destructive?: boolean;
   disabled?: boolean;
 }
 
-/** Admin table row ka "⋮" menu — destructive actions alag separator ke baad */
+/** Table row ka "⋯" menu — icon-only trigger par explicit aria-label */
 export function RowActionsMenu({ label, actions }: { label: string; actions: RowAction[] }) {
-  const safe = actions.filter((action) => !action.destructive);
-  const destructive = actions.filter((action) => action.destructive);
-
-  const renderItem = ({ label: actionLabel, icon: Icon, onSelect, destructive: isDestructive, disabled }: RowAction) => (
-    <DropdownMenuItem
-      key={actionLabel}
-      variant={isDestructive ? "destructive" : "default"}
-      disabled={disabled}
-      onClick={onSelect}
-    >
-      {Icon && <Icon aria-hidden="true" />}
-      {actionLabel}
-    </DropdownMenuItem>
-  );
-
   return (
-    <Flex justify="end">
-      <DropdownMenu>
-        <DropdownMenuTrigger
-          render={
-            <Button variant="ghost" size="icon-sm" aria-label={`Actions for ${label}`} className={cn("text-muted-foreground")} />
-          }
-        >
-          <EllipsisVertical aria-hidden="true" />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className={cn("w-48")}>
-          {safe.map(renderItem)}
-          {safe.length > 0 && destructive.length > 0 && <DropdownMenuSeparator />}
-          {destructive.map(renderItem)}
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </Flex>
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={<Button variant="ghost" size="icon-sm" aria-label={`Actions for ${label}`} className="text-muted-foreground" />}
+      >
+        <MoreHorizontal aria-hidden="true" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-48">
+        {actions.map(({ label: actionLabel, icon: Icon, onSelect, destructive, disabled }, index) => (
+          <Fragment key={actionLabel}>
+            {destructive && index > 0 && <DropdownMenuSeparator />}
+            <DropdownMenuItem variant={destructive ? "destructive" : "default"} disabled={disabled} onClick={onSelect}>
+              <Icon aria-hidden="true" />
+              {actionLabel}
+            </DropdownMenuItem>
+          </Fragment>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
