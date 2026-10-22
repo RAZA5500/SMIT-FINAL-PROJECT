@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Container } from "@/components/ui/container";
 import { PageBreadcrumbs, type Crumb } from "@/components/shared/PageBreadcrumbs";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { publicRoutes } from "@/lib/routes/routes";
@@ -27,12 +28,10 @@ export function CustomerPage({
   className,
 }: CustomerPageProps) {
   return (
-    <div className={cn("page-container flex flex-col gap-8 py-8 sm:py-10", className)}>
+    <Container className={cn("flex flex-col gap-8 py-8 sm:py-10", className)}>
       <PageHeader
         breadcrumbs={
-          breadcrumbs && (
-            <PageBreadcrumbs root={{ label: "Shop", href: publicRoutes.shop }} items={breadcrumbs} />
-          )
+          breadcrumbs && <PageBreadcrumbs root={{ label: "Shop", href: publicRoutes.shop }} items={breadcrumbs} />
         }
         eyebrow={eyebrow}
         title={title}
@@ -41,6 +40,6 @@ export function CustomerPage({
         actions={actions}
       />
       {children}
-    </div>
+    </Container>
   );
 }

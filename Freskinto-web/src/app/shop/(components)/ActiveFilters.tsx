@@ -1,6 +1,9 @@
 "use client";
 
 import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Flex } from "@/components/ui/flex";
+import { Text } from "@/components/ui/typography";
 import { formatMoney } from "@/lib/utils";
 import type { ShopParamsApi } from "./useShopParams";
 
@@ -24,26 +27,26 @@ export function ActiveFilters({ shop, categoryName }: { shop: ShopParamsApi; cat
   if (chips.length === 0) return null;
 
   return (
-    <div aria-label="Active filters" role="group" className="flex flex-wrap items-center gap-2">
+    <Flex wrap align="center" gap="2" role="group" aria-label="Active filters">
       {chips.map((chip) => (
-        <button
+        <Button
           key={chip.key}
           type="button"
+          variant="secondary"
+          size="sm"
           onClick={chip.remove}
-          className="inline-flex h-8 items-center gap-1.5 rounded-full border border-border bg-card pr-2 pl-3 text-fs-13 font-medium transition-colors outline-none hover:border-foreground/30 focus-visible:ring-3 focus-visible:ring-ring/35"
+          className="group/chip animate-pop rounded-full bg-plum-soft pr-2 pl-3 text-accent-foreground hover:bg-destructive-soft hover:text-destructive-ink"
         >
           {chip.label}
-          <span className="sr-only">— remove filter</span>
-          <X aria-hidden="true" className="size-3.5 text-muted-foreground" />
-        </button>
+          <Text as="span" className="sr-only">
+            — remove filter
+          </Text>
+          <X aria-hidden="true" className="size-3.5 transition-transform group-hover/chip:rotate-90" />
+        </Button>
       ))}
-      <button
-        type="button"
-        onClick={shop.clear}
-        className="rounded-md px-1.5 text-fs-13 font-medium text-brand-green underline-offset-4 outline-none hover:underline focus-visible:ring-3 focus-visible:ring-ring/35"
-      >
+      <Button type="button" variant="link" size="sm" onClick={shop.clear} className="px-1.5">
         Clear all
-      </button>
-    </div>
+      </Button>
+    </Flex>
   );
 }

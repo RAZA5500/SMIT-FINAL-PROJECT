@@ -1,3 +1,5 @@
+import { Item, ItemContent, ItemDescription, ItemGroup, ItemHeader } from "@/components/ui/item";
+import { Text } from "@/components/ui/typography";
 import { formatDateTime, formatMoney } from "@/lib/utils";
 import { StatusBadge } from "../StatusBadge";
 
@@ -15,28 +17,38 @@ export interface PaymentAttempt {
 /** Har payment attempt (retry par naya attempt) — status, amount, gateway ref */
 export function PaymentAttempts({ payments }: { payments: PaymentAttempt[] }) {
   if (payments.length === 0) {
-    return <p className="text-sm text-muted-foreground">No payment attempts yet.</p>;
+    return <Text tone="muted">No payment attempts yet.</Text>;
   }
 
   return (
-    <ul className="flex flex-col gap-2.5">
+    <ItemGroup className="gap-2.5">
       {payments.map((payment) => (
-        <li key={payment.id} className="flex flex-col gap-2 rounded-xl border border-border bg-muted/40 p-3.5">
-          <div className="flex items-center justify-between gap-3">
+        <Item key={payment.id} role="listitem" variant="muted" className="flex-col items-stretch gap-2 rounded-xl p-3.5">
+          <ItemHeader>
             <StatusBadge status={payment.status} />
-            <span className="numeric text-sm font-semibold text-foreground">{formatMoney(payment.amount)}</span>
-          </div>
-          <p className="text-fs-13 text-muted-foreground">
-            {payment.refundedAt
-              ? `Refunded ${formatDateTime(payment.refundedAt)}`
-              : payment.paidAt
-                ? `Paid ${formatDateTime(payment.paidAt)}`
-                : `Started ${formatDateTime(payment.createdAt)}`}
-          </p>
-          <p className="truncate font-mono text-fs-12 text-muted-foreground">Ref {payment.gatewayRef}</p>
-          {payment.failureReason && <p className="text-fs-13 font-medium text-destructive">{payment.failureReason}</p>}
-        </li>
+            <Text as="span" weight="bold" numeric>
+              {formatMoney(payment.amount)}
+            </Text>
+          </ItemHeader>
+          <ItemContent className="gap-1">
+            <ItemDescription className="text-fs-13">
+              {payment.refundedAt
+                ? `Refunded ${formatDateTime(payment.refundedAt)}`
+                : payment.paidAt
+                  ? `Paid ${formatDateTime(payment.paidAt)}`
+                  : `Started ${formatDateTime(payment.createdAt)}`}
+            </ItemDescription>
+            <Text tone="muted" family="mono" className="truncate text-fs-12">
+              Ref {payment.gatewayRef}
+            </Text>
+            {payment.failureReason && (
+              <Text tone="destructive" weight="medium" className="text-fs-13">
+                {payment.failureReason}
+              </Text>
+            )}
+          </ItemContent>
+        </Item>
       ))}
-    </ul>
+    </ItemGroup>
   );
 }

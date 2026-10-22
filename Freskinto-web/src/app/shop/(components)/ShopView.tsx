@@ -2,7 +2,12 @@
 
 import { SearchX } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
+import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Container } from "@/components/ui/container";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Text } from "@/components/ui/typography";
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { ProductGridSkeleton } from "@/components/customer/product/ProductCardSkeleton";
 import { ProductListing } from "@/components/customer/ProductListing";
@@ -29,7 +34,7 @@ export function ShopView() {
   const layout = useShopStore((state) => state.productLayout);
   const setLayout = useShopStore((state) => state.setProductLayout);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const resultsRef = useRef<HTMLElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const { data, isLoading, isFetching, isError, error, refetch } = useGetProducts({
     page: shop.page,
@@ -66,12 +71,16 @@ export function ShopView() {
       icon={<SearchX aria-hidden="true" />}
       title="No products match your filters"
       message="Try a different search, widen the price range or browse another aisle."
-      action={<Button onClick={shop.clear}>Clear all filters</Button>}
+      action={
+        <Button variant="cta" onClick={shop.clear}>
+          Clear all filters
+        </Button>
+      }
     />
   ) : undefined;
 
   return (
-    <div className="page-container flex flex-col gap-6 py-6 sm:py-8">
+    <Container className="flex flex-col gap-6 py-6 sm:py-8">
       <ShopHeader
         shop={shop}
         category={category}
@@ -82,17 +91,22 @@ export function ShopView() {
 
       <CategoryPills aisles={aisles} selected={shop.category} onSelect={(next) => shop.update({ category: next })} />
 
-      <div className="flex items-start gap-8">
-        <aside aria-label="Filters" className="hidden w-72 shrink-0 rounded-15 border border-border bg-card p-5 shadow-soft lg:block">
+      <Flex align="start" gap="8">
+        <Card
+          render={<Box as="aside" aria-label="Filters" />}
+          className="sticky top-32 hidden max-h-[calc(100dvh-9rem)] w-72 shrink-0 overflow-y-auto rounded-3xl border-2 px-5 py-1 shadow-none scrollbar-thin lg:flex"
+        >
           <ShopFilters shop={shop} />
-        </aside>
+        </Card>
 
-        <section
+        <Stack
+          as="section"
           id="products"
           ref={resultsRef}
           aria-label="Products"
           aria-busy={isFetching || undefined}
-          className="flex min-w-0 flex-1 scroll-mt-header flex-col gap-5"
+          gap="5"
+          className="min-w-0 flex-1 scroll-mt-header"
         >
           <ShopToolbar
             shop={shop}
@@ -103,9 +117,9 @@ export function ShopView() {
           />
 
           {shop.inStock && hiddenCount > 0 && (
-            <p className="text-fs-13 text-muted-foreground">
+            <Text tone="muted" className="text-fs-13">
               Hiding {pluralize(hiddenCount, "sold-out item")} on this page.
-            </p>
+            </Text>
           )}
 
           <ProductListing
@@ -128,31 +142,33 @@ export function ShopView() {
               limit={data.meta.limit}
               onPageChange={goToPage}
               itemLabel="products"
-              className="border-t border-dashed border-input pt-6"
+              className="border-t-2 border-dashed border-input pt-6"
             />
           )}
-        </section>
-      </div>
+        </Stack>
+      </Flex>
 
       <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
         <SheetContent side="bottom" className="gap-0 p-0">
           <SheetHeader className="border-b border-border">
             <SheetTitle>Filter &amp; sort</SheetTitle>
           </SheetHeader>
-          <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-5 py-5">
-            <div className="flex flex-col gap-3">
-              <h3 className="text-fs-11 font-semibold tracking-widest text-foreground uppercase">Sort by</h3>
+          <Stack gap="5" className="min-h-0 flex-1 overflow-y-auto px-5 py-5">
+            <Stack gap="3">
+              <Text as="div" variant="eyebrow">
+                Sort by
+              </Text>
               <SortSelect id="shop-sort-mobile" shop={shop} />
-            </div>
+            </Stack>
             <ShopFilters shop={shop} />
-          </div>
+          </Stack>
           <SheetFooter>
-            <Button size="lg" variant="cta" className="w-full" onClick={() => setFiltersOpen(false)}>
+            <Button size="xl" variant="cta" className="w-full" onClick={() => setFiltersOpen(false)}>
               {data ? `Show ${pluralize(data.meta.total, "product")}` : "Show products"}
             </Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
-    </div>
+    </Container>
   );
 }

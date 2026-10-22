@@ -3,7 +3,11 @@
 import type { ReactNode } from "react";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Box } from "@/components/ui/box";
+import { Card } from "@/components/ui/card";
+import { Flex } from "@/components/ui/flex";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 
 const HIDE_BELOW = {
@@ -76,11 +80,11 @@ export function AdminDataTable<T>({
   } else if (isError) {
     body = <ErrorState title={errorTitle} message={errorMessage} onRetry={onRetry} className="border-0" />;
   } else if (!rows?.length) {
-    body = <div className="p-4">{emptyState}</div>;
+    body = <Box className="p-4">{emptyState}</Box>;
   } else {
     body = (
       <Table className="min-w-160">
-        <caption className="sr-only">{caption}</caption>
+        <TableCaption className="sr-only">{caption}</TableCaption>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
             {columns.map((column) => (
@@ -92,7 +96,13 @@ export function AdminDataTable<T>({
                   column.className,
                 )}
               >
-                {column.srOnlyHeader ? <span className="sr-only">{column.header}</span> : column.header}
+                {column.srOnlyHeader ? (
+                  <Text as="span" className="sr-only">
+                    {column.header}
+                  </Text>
+                ) : (
+                  column.header
+                )}
               </TableHead>
             ))}
           </TableRow>
@@ -120,29 +130,34 @@ export function AdminDataTable<T>({
   }
 
   return (
-    <section
+    <Card
+      render={<Box as="section" />}
       aria-busy={isFetching || undefined}
-      className={cn("relative overflow-hidden rounded-15 border border-border bg-card shadow-soft", className)}
+      className={cn("relative gap-0 rounded-3xl py-0", className)}
     >
       {/* Subtle isFetching indicator */}
-      <div
+      <Box
         aria-hidden="true"
         className={cn(
           "absolute inset-x-0 top-0 z-10 h-0.5 overflow-hidden bg-transparent transition-opacity",
           isFetching && !isLoading ? "opacity-100" : "opacity-0",
         )}
       >
-        <div className="h-full w-1/3 animate-pulse bg-brand-green" />
-      </div>
+        <Box className="h-full w-1/3 animate-pulse bg-tangerine" />
+      </Box>
 
       {toolbar && (
-        <div className="flex flex-col gap-3 border-b border-border p-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:p-4">
+        <Flex
+          direction="col"
+          gap="3"
+          className="border-b border-border p-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:p-4"
+        >
           {toolbar}
-        </div>
+        </Flex>
       )}
-      <div className={cn(isFetching && !isLoading && "opacity-70 transition-opacity")}>{body}</div>
-      {footer && <div className="border-t border-border p-3 sm:p-4">{footer}</div>}
-    </section>
+      <Box className={cn(isFetching && !isLoading && "opacity-70 transition-opacity")}>{body}</Box>
+      {footer && <Box className="border-t border-border p-3 sm:p-4">{footer}</Box>}
+    </Card>
   );
 }
 

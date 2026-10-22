@@ -1,14 +1,15 @@
 "use client";
 
 import { Boxes, PackageX, TriangleAlert, type LucideIcon } from "lucide-react";
+import { Grid } from "@/components/ui/grid";
 import { StatTile } from "@/components/admin/StatTile";
 import type { StockStatus } from "@/constants/enums";
 import { useGetInventory } from "@/services/inventory/queries";
 
 const TILES: { status: StockStatus | null; label: string; hint: string; icon: LucideIcon; tone: string }[] = [
-  { status: null, label: "Tracked products", hint: "All inventory rows", icon: Boxes, tone: "text-brand-green" },
-  { status: "LOW_STOCK", label: "Low stock", hint: "At or below threshold", icon: TriangleAlert, tone: "text-warning" },
-  { status: "OUT_OF_STOCK", label: "Out of stock", hint: "Can't be ordered", icon: PackageX, tone: "text-destructive" },
+  { status: null, label: "Tracked products", hint: "All inventory rows", icon: Boxes, tone: "bg-plum-soft text-primary" },
+  { status: "LOW_STOCK", label: "Low stock", hint: "At or below threshold", icon: TriangleAlert, tone: "bg-warning-soft text-warning-ink" },
+  { status: "OUT_OF_STOCK", label: "Out of stock", hint: "Can't be ordered", icon: PackageX, tone: "bg-destructive-soft text-destructive" },
 ];
 
 /** Har tile ka count `meta.total` se (limit 1 — sirf ginti chahiye); tile click = filter */
@@ -31,10 +32,10 @@ function SummaryTile({ tile, active, onSelect }: { tile: (typeof TILES)[number];
 
 export function StockSummary({ active, onSelect }: { active: StockStatus | null; onSelect: (status: StockStatus | null) => void }) {
   return (
-    <div className="grid gap-4 sm:grid-cols-3">
+    <Grid gap="4" className="sm:grid-cols-3">
       {TILES.map((tile) => (
         <SummaryTile key={tile.label} tile={tile} active={active === tile.status} onSelect={() => onSelect(tile.status)} />
       ))}
-    </div>
+    </Grid>
   );
 }

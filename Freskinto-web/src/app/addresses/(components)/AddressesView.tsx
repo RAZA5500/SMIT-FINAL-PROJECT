@@ -2,8 +2,12 @@
 
 import { MapPin, Plus } from "lucide-react";
 import { useState, type ReactNode } from "react";
+import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Grid } from "@/components/ui/grid";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Text } from "@/components/ui/typography";
 import { CustomerPage } from "@/components/customer/CustomerPage";
 import { DeleteDialog } from "@/components/shared/DeleteDialog";
 import { EmptyState } from "@/components/shared/EmptyState";
@@ -35,11 +39,11 @@ export function AddressesView() {
   let content: ReactNode;
   if (isLoading) {
     content = (
-      <div aria-label="Loading" aria-busy="true" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <Grid aria-label="Loading" aria-busy="true" gap="4" className="sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 3 }, (_, i) => (
-          <Skeleton key={i} className="h-60 w-full rounded-15" />
+          <Skeleton key={i} className="h-60 w-full rounded-3xl" />
         ))}
-      </div>
+      </Grid>
     );
   } else if (isError) {
     content = <ErrorState title="Couldn't load your addresses" message={error.message} onRetry={() => void refetch()} />;
@@ -59,10 +63,10 @@ export function AddressesView() {
     );
   } else {
     content = (
-      <div className="flex flex-col gap-6">
-        <ul className={cn("grid gap-4 sm:grid-cols-2 lg:grid-cols-3", isFetching && "opacity-60 transition-opacity")}>
+      <Stack gap="6">
+        <Grid as="ul" gap="4" className={cn("sm:grid-cols-2 lg:grid-cols-3", isFetching && "opacity-60 transition-opacity")}>
           {data.data.map((address) => (
-            <li key={address.id}>
+            <Box as="li" key={address.id}>
               <AddressCard
                 address={address}
                 settingDefault={setDefault.isPending}
@@ -73,21 +77,29 @@ export function AddressesView() {
                 onSetDefault={() => setDefault.mutate(address.id)}
                 onDelete={() => setDeleting(address)}
               />
-            </li>
+            </Box>
           ))}
-          <li>
-            <button
+          <Box as="li">
+            <Button
               type="button"
+              variant="outline"
               onClick={openCreate}
-              className="flex size-full min-h-60 flex-col items-center justify-center gap-3 rounded-15 border-2 border-dashed border-input bg-card/60 text-muted-foreground transition-colors outline-none hover:border-primary hover:text-brand-green focus-visible:ring-3 focus-visible:ring-ring/35"
+              className="group/add size-full min-h-60 flex-col gap-3 rounded-3xl border-2 border-dashed bg-card/60 text-muted-foreground shadow-none hover:border-primary hover:bg-plum-soft hover:text-primary"
             >
-              <span className="flex size-12 items-center justify-center rounded-2xl bg-muted [&_svg]:size-5">
+              <Flex
+                as="span"
+                align="center"
+                justify="center"
+                className="size-12 rounded-2xl bg-muted transition-transform group-hover/add:rotate-90 group-hover/add:bg-lime group-hover/add:text-lime-foreground [&_svg]:size-5"
+              >
                 <Plus aria-hidden="true" />
-              </span>
-              <span className="font-medium">Add a new address</span>
-            </button>
-          </li>
-        </ul>
+              </Flex>
+              <Text as="span" tone="inherit" weight="semibold">
+                Add a new address
+              </Text>
+            </Button>
+          </Box>
+        </Grid>
         <Pagination
           currentPage={data.meta.currentPage}
           totalPages={data.meta.pages}
@@ -96,7 +108,7 @@ export function AddressesView() {
           onPageChange={setPage}
           itemLabel="addresses"
         />
-      </div>
+      </Stack>
     );
   }
 
@@ -107,7 +119,7 @@ export function AddressesView() {
       description="Manage where we deliver. Your default address is pre-selected at checkout."
       breadcrumbs={[{ label: "Addresses" }]}
       actions={
-        <Button variant="cta" onClick={openCreate}>
+        <Button variant="cta" size="lg" onClick={openCreate}>
           <Plus aria-hidden="true" />
           Add address
         </Button>

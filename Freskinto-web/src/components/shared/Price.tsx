@@ -1,10 +1,11 @@
+import { Text } from "@/components/ui/typography";
 import { cn, formatMoney } from "@/lib/utils";
 
 const PRICE_SIZES = {
-  sm: "text-fs-14",
-  md: "text-fs-18",
-  lg: "text-fs-24",
-  xl: "text-fs-32",
+  sm: "text-sm",
+  md: "text-lg",
+  lg: "text-2xl",
+  xl: "text-4xl",
 } as const;
 
 interface PriceProps {
@@ -15,18 +16,18 @@ interface PriceProps {
   className?: string;
 }
 
-/** Inline price — tabular figures so updating totals don't jiggle */
+/** Inline price — chunky display figures, tabular so updating totals don't jiggle */
 export function Price({ amount, size = "md", tone = "default", className }: PriceProps) {
   return (
-    <span
-      className={cn(
-        "numeric leading-none font-semibold tracking-tight",
-        tone === "brand" ? "text-brand-green" : "text-foreground",
-        PRICE_SIZES[size],
-        className,
-      )}
+    <Text
+      as="span"
+      family="heading"
+      weight="extrabold"
+      numeric
+      tone={tone === "brand" ? "primary" : "default"}
+      className={cn("leading-none tracking-tight", PRICE_SIZES[size], className)}
     >
       {formatMoney(amount)}
-    </span>
+    </Text>
   );
 }

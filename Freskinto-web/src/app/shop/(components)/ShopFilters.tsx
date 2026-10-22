@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { CheckboxField } from "@/components/shared/CheckboxField";
 import { SHOP_AVAILABILITY_OPTIONS } from "@/constants/filters";
 import { useGetProducts } from "@/services/products/queries";
@@ -17,43 +17,47 @@ export function usePriceCeiling(): number {
   return top > 0 ? Math.max(10, Math.ceil(top / 5) * 5) : FALLBACK_CEILING;
 }
 
-function FilterSection({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <section className="flex flex-col gap-3 border-b border-border py-5 first:pt-0 last:border-b-0 last:pb-0">
-      <h3 className="text-fs-11 font-semibold tracking-widest text-foreground uppercase">{title}</h3>
-      {children}
-    </section>
-  );
-}
+const SECTIONS = ["aisles", "price", "availability"];
 
-/** Filter sidebar (desktop) / drawer body (phone): aisles, price, availability */
+/** Filter sidebar (desktop) / drawer body (phone): aisles, price, availability — har ek accordion */
 export function ShopFilters({ shop }: { shop: ShopParamsApi }) {
   const ceiling = usePriceCeiling();
 
   return (
-    <div className="flex flex-col">
-      <FilterSection title="Aisles">
-        <AisleFilter selected={shop.category} onSelect={(category) => shop.update({ category })} />
-      </FilterSection>
-      <FilterSection title="Price">
-        {/* key — URL ya ceiling badle to slider naye sire se */}
-        <PriceFilter
-          key={`${shop.min}-${shop.max}-${ceiling}`}
-          min={shop.min}
-          max={shop.max}
-          ceiling={ceiling}
-          onCommit={(min, max) => shop.update({ min, max }, { replace: true })}
-        />
-      </FilterSection>
-      <FilterSection title="Availability">
-        <CheckboxField
-          id="filter-in-stock"
-          label={SHOP_AVAILABILITY_OPTIONS[1].label}
-          description="Hide sold-out items on this page"
-          checked={shop.inStock}
-          onCheckedChange={(inStock) => shop.update({ inStock }, { replace: true })}
-        />
-      </FilterSection>
-    </div>
+    <Accordion multiple defaultValue={SECTIONS}>
+      <AccordionItem value="aisles">
+        <AccordionTrigger className="py-4 text-fs-11 font-bold tracking-widest uppercase hover:no-underline">Aisles</AccordionTrigger>
+        <AccordionContent className="pb-4">
+          <AisleFilter selected={shop.category} onSelect={(category) => shop.update({ category })} />
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="price">
+        <AccordionTrigger className="py-4 text-fs-11 font-bold tracking-widest uppercase hover:no-underline">Price</AccordionTrigger>
+        <AccordionContent className="pb-4">
+          {/* key — URL ya ceiling badle to slider naye sire se */}
+          <PriceFilter
+            key={`${shop.min}-${shop.max}-${ceiling}`}
+            min={shop.min}
+            max={shop.max}
+            ceiling={ceiling}
+            onCommit={(min, max) => shop.update({ min, max }, { replace: true })}
+          />
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="availability">
+        <AccordionTrigger className="py-4 text-fs-11 font-bold tracking-widest uppercase hover:no-underline">
+          Availability
+        </AccordionTrigger>
+        <AccordionContent className="pb-4">
+          <CheckboxField
+            id="filter-in-stock"
+            label={SHOP_AVAILABILITY_OPTIONS[1].label}
+            description="Hide sold-out items on this page"
+            checked={shop.inStock}
+            onCheckedChange={(inStock) => shop.update({ inStock }, { replace: true })}
+          />
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }

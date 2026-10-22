@@ -1,8 +1,11 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { Box } from "@/components/ui/box";
+import { Stack } from "@/components/ui/flex";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Text } from "@/components/ui/typography";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { Pagination } from "@/components/shared/Pagination";
@@ -46,7 +49,7 @@ function StockLedger({ inventory }: { inventory: IInventory }) {
     content = <EmptyState title="No stock movements yet" />;
   } else {
     content = (
-      <div className="flex flex-col gap-4">
+      <Stack gap="4">
         <Table className={cn(isFetching && "opacity-60 transition-opacity")}>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -64,7 +67,7 @@ function StockLedger({ inventory }: { inventory: IInventory }) {
                 <TableRow key={transaction.id}>
                   <TableCell className="numeric text-muted-foreground">{formatDateTime(transaction.createdAt)}</TableCell>
                   <TableCell>{TRANSACTION_TYPE_LABELS[transaction.type]}</TableCell>
-                  <TableCell className={cn("numeric text-right font-semibold", decrease ? "text-destructive" : "text-success")}>
+                  <TableCell className={cn("numeric text-right font-semibold", decrease ? "text-destructive" : "text-success-ink")}>
                     {decrease ? "−" : "+"}
                     {transaction.quantity}
                   </TableCell>
@@ -85,7 +88,7 @@ function StockLedger({ inventory }: { inventory: IInventory }) {
           onPageChange={setPage}
           itemLabel="movements"
         />
-      </div>
+      </Stack>
     );
   }
 
@@ -94,11 +97,15 @@ function StockLedger({ inventory }: { inventory: IInventory }) {
       <SheetHeader className="border-b border-border px-6 py-5">
         <SheetTitle>Stock history</SheetTitle>
         <SheetDescription>
-          {inventory.product.name} · <span className="font-mono text-fs-12">{inventory.product.sku}</span> ·{" "}
+          {inventory.product.name} ·{" "}
+          <Text as="span" tone="inherit" family="mono" className="text-fs-12">
+            {inventory.product.sku}
+          </Text>{" "}
+          ·{" "}
           {inventory.qtyOnHand} in stock
         </SheetDescription>
       </SheetHeader>
-      <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">{content}</div>
+      <Box className="min-h-0 flex-1 overflow-y-auto px-6 py-5">{content}</Box>
     </>
   );
 }

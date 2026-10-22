@@ -2,7 +2,9 @@
 
 import { EllipsisVertical, Home, MapPin, Pencil, Star, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,6 +12,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 import type { IAddress } from "@/services/addresses/types";
 
@@ -21,27 +25,30 @@ interface AddressCardProps {
   onDelete: () => void;
 }
 
-/** Address book entry — default ko forest ring + badge */
+/** Address book entry — default ko aubergine ring, lime house tile aur sticker badge */
 export function AddressCard({ address, settingDefault, onEdit, onSetDefault, onDelete }: AddressCardProps) {
   const Icon = address.isDefault ? Home : MapPin;
 
   return (
-    <article
+    <Card
+      render={<Box as="article" />}
       className={cn(
-        "flex h-full flex-col rounded-15 border bg-card shadow-soft transition-shadow hover:shadow-lift",
-        address.isDefault ? "border-primary ring-1 ring-primary" : "border-border",
+        "pop-hover h-full gap-3 rounded-3xl border-2 shadow-none has-data-[slot=card-footer]:pb-0",
+        address.isDefault && "border-primary",
       )}
     >
-      <div className="flex items-start justify-between gap-3 p-5 pb-3">
-        <span
+      <CardHeader className="flex-row items-start justify-between gap-3">
+        <Flex
+          align="center"
+          justify="center"
           aria-hidden="true"
           className={cn(
-            "flex size-11 items-center justify-center rounded-2xl [&_svg]:size-5",
-            address.isDefault ? "bg-brand-green-forest text-white" : "bg-brand-soft text-brand-green",
+            "size-12 rounded-2xl [&_svg]:size-5",
+            address.isDefault ? "-rotate-6 bg-lime text-lime-foreground" : "bg-plum-soft text-primary",
           )}
         >
           <Icon />
-        </span>
+        </Flex>
         <DropdownMenu>
           <DropdownMenuTrigger
             render={
@@ -49,7 +56,7 @@ export function AddressCard({ address, settingDefault, onEdit, onSetDefault, onD
                 variant="ghost"
                 size="icon-sm"
                 aria-label={`Actions for ${address.addressLine}`}
-                className="text-muted-foreground"
+                className="rounded-full text-muted-foreground"
               />
             }
           >
@@ -73,30 +80,36 @@ export function AddressCard({ address, settingDefault, onEdit, onSetDefault, onD
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
+      </CardHeader>
 
-      <address className="flex flex-1 flex-col gap-0.5 px-5 pb-5 not-italic">
-        <p className="font-semibold text-foreground">{address.addressLine}</p>
-        <p className="text-muted-foreground">
-          {address.city}, {address.county}
-        </p>
-        <p className="font-mono text-sm tracking-wide text-muted-foreground uppercase">{address.postcode}</p>
-      </address>
+      <CardContent className="flex-1">
+        <Stack as="address" gap="0.5" className="not-italic">
+          <Text weight="bold" className="text-base">
+            {address.addressLine}
+          </Text>
+          <Text tone="muted">
+            {address.city}, {address.county}
+          </Text>
+          <Text tone="muted" family="mono" className="tracking-wide uppercase">
+            {address.postcode}
+          </Text>
+        </Stack>
+      </CardContent>
 
-      <div className="flex items-center justify-between gap-2 border-t border-dashed border-input px-5 py-3">
+      <CardFooter className="justify-between gap-2 border-t-2 border-dashed border-input py-3">
         {address.isDefault ? (
-          <Badge variant="brand">Default address</Badge>
+          <Badge variant="sticker">Default address</Badge>
         ) : (
-          <Button variant="outline" size="sm" disabled={settingDefault} onClick={onSetDefault}>
+          <Button variant="outline" size="sm" className="rounded-full" disabled={settingDefault} onClick={onSetDefault}>
             <Star aria-hidden="true" />
             Set as default
           </Button>
         )}
-        <Button variant="ghost" size="sm" onClick={onEdit}>
+        <Button variant="ghost" size="sm" className="rounded-full" onClick={onEdit}>
           <Pencil aria-hidden="true" />
           Edit
         </Button>
-      </div>
-    </article>
+      </CardFooter>
+    </Card>
   );
 }

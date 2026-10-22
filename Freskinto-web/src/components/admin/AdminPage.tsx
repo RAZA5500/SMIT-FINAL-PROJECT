@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Stack } from "@/components/ui/flex";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { cn } from "@/lib/utils";
 
@@ -19,7 +20,7 @@ interface AdminPageProps {
 /** Admin screen ka frame: compact header + content, workspace padding */
 export function AdminPage({ title, description, eyebrow, actions, meta, breadcrumbs, children, className }: AdminPageProps) {
   return (
-    <div className={cn("flex flex-col gap-6 p-4 sm:p-6 lg:p-8", className)}>
+    <Stack gap="6" className={cn("flex-1 p-4 sm:p-6 lg:p-8", className)}>
       <PageHeader
         size="compact"
         eyebrow={eyebrow}
@@ -30,6 +31,6 @@ export function AdminPage({ title, description, eyebrow, actions, meta, breadcru
         breadcrumbs={breadcrumbs}
       />
       {children}
-    </div>
+    </Stack>
   );
 }

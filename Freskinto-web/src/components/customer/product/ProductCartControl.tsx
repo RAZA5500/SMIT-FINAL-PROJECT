@@ -3,6 +3,7 @@
 import { Plus } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/typography";
 import { LoadingButton } from "@/components/shared/LoadingButton";
 import { useCartItemQuantity } from "@/hooks/useCartItemQuantity";
 import { loginUrl } from "@/lib/routes/routes";
@@ -18,9 +19,9 @@ import { QuantityStepper } from "./QuantityStepper";
 type ControlSize = "sm" | "md" | "lg";
 
 /** Button aur stepper ki height barabar — basket mein jaate waqt layout na hile */
-const BUTTON_SIZE: Record<ControlSize, { size: "default" | "xl"; className: string }> = {
-  sm: { size: "default", className: "h-9" },
-  md: { size: "default", className: "" },
+const BUTTON_SIZE: Record<ControlSize, { size: "default" | "lg" | "xl"; className: string }> = {
+  sm: { size: "default", className: "h-10" },
+  md: { size: "lg", className: "" },
   lg: { size: "xl", className: "" },
 };
 
@@ -66,7 +67,7 @@ export function ProductCartControl({ product, size = "sm", className }: ProductC
 
   if (product.stockStatus === "OUT_OF_STOCK") {
     return (
-      <Button variant="secondary" size={button.size} disabled className={cn("w-full", button.className, className)}>
+      <Button variant="secondary" size={button.size} disabled className={cn("w-full rounded-full", button.className, className)}>
         Out of stock
       </Button>
     );
@@ -74,20 +75,22 @@ export function ProductCartControl({ product, size = "sm", className }: ProductC
 
   return (
     <LoadingButton
-      variant="soft"
+      variant="outline"
       size={button.size}
       isLoading={addItem.isPending}
       loadingText="Adding…"
       onClick={handleAdd}
       className={cn(
-        "w-full rounded-full hover:bg-brand-green hover:text-white",
+        "group/add w-full rounded-full border-2 border-foreground/80 font-bold shadow-none hover:border-pop hover:bg-lime hover:text-lime-foreground",
         button.className,
         className,
       )}
     >
-      <Plus aria-hidden="true" />
+      <Plus aria-hidden="true" className="transition-transform duration-300 group-hover/add:rotate-90" />
       Add to basket
-      <span className="sr-only">: {product.name}</span>
+      <Text as="span" className="sr-only">
+        : {product.name}
+      </Text>
     </LoadingButton>
   );
 }

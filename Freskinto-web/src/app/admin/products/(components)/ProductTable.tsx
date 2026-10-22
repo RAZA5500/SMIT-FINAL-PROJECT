@@ -1,6 +1,9 @@
 import { ExternalLink, Eye, EyeOff, Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Text } from "@/components/ui/typography";
 import { RowActionsMenu } from "@/components/admin/RowActionsMenu";
 import { ProductImage } from "@/components/shared/ProductImage";
 import { StatusBadge } from "@/components/shared/StatusBadge";
@@ -34,7 +37,9 @@ export function ProductTable({
           <TableHead>Stock</TableHead>
           <TableHead>Status</TableHead>
           <TableHead className={cn("w-12")}>
-            <span className="sr-only">Actions</span>
+            <Text as="span" className="sr-only">
+              Actions
+            </Text>
           </TableHead>
         </TableRow>
       </TableHeader>
@@ -42,23 +47,28 @@ export function ProductTable({
         {products.map((product) => (
           <TableRow key={product.id} className={cn(!product.isActive && "text-muted-foreground")}>
             <TableCell className={cn("max-w-72")}>
-              <div className="flex items-center gap-3">
-                <div className="size-10 shrink-0 overflow-hidden rounded-xl border bg-muted">
-                  <ProductImage name={product.name} categoryName={product.category.name} />
-                </div>
-                <div className="flex flex-col gap-0.5 min-w-0">
-                  <button
+              <Flex align="center" gap="3">
+                <ProductImage
+                  name={product.name}
+                  categoryName={product.category.name}
+                  sizes="40px"
+                  className="size-10 shrink-0 rounded-xl border"
+                  imageClassName="p-1"
+                />
+                <Stack gap="0.5" className="min-w-0">
+                  <Button
                     type="button"
+                    variant="link"
                     onClick={() => onViewProduct(product)}
-                    className="text-left font-semibold truncate hover:underline hover:text-brand-green transition-colors cursor-pointer"
+                    className="h-auto justify-start truncate p-0 font-semibold text-foreground hover:text-primary"
                   >
                     {product.name}
-                  </button>
-                  <span className="font-mono text-fs-12 text-muted-foreground truncate">
+                  </Button>
+                  <Text as="span" tone="muted" family="mono" className="truncate text-fs-12">
                     {product.sku}
-                  </span>
-                </div>
-              </div>
+                  </Text>
+                </Stack>
+              </Flex>
             </TableCell>
             <TableCell>{product.category.name}</TableCell>
             <TableCell className={cn("text-right font-semibold tabular-nums")}>
@@ -69,16 +79,16 @@ export function ProductTable({
             </TableCell>
             <TableCell>
               {product.inventoryId ? (
-                <div className="flex items-center gap-2">
-                  <span className="w-8 font-semibold tabular-nums">
+                <Flex align="center" gap="2">
+                  <Text as="span" weight="semibold" numeric className="w-8">
                     {product.qtyOnHand}
-                  </span>
+                  </Text>
                   <StatusBadge status={product.stockStatus} />
-                </div>
+                </Flex>
               ) : (
-                <span className="text-fs-12 text-muted-foreground">
+                <Text as="span" tone="muted" className="text-fs-12">
                   No inventory yet
-                </span>
+                </Text>
               )}
             </TableCell>
             <TableCell>

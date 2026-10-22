@@ -1,3 +1,5 @@
+import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from "@/components/ui/item";
+import { Text } from "@/components/ui/typography";
 import { cn, formatMoney } from "@/lib/utils";
 import { ProductImage } from "../ProductImage";
 
@@ -11,30 +13,38 @@ export interface OrderLine {
   subtotal: string;
 }
 
-/** Receipt-style item list — order ke waqt ka name/price snapshot */
+/** Order ke waqt ka name/price snapshot — shadcn `Item` list */
 export function OrderLines({ lines, className }: { lines: OrderLine[]; className?: string }) {
   return (
-    <ul className={cn("flex flex-col divide-y divide-dashed divide-border", className)}>
+    <ItemGroup className={cn("gap-0 divide-y divide-dashed divide-border", className)}>
       {lines.map((line) => (
-        <li key={line.id} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-          <ProductImage name={line.name} sizes="56px" className="size-14 shrink-0 rounded-xl" imageClassName="p-1.5" />
-          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-            <p className="line-clamp-1 text-sm font-semibold text-foreground">{line.name}</p>
-            <p className="text-fs-13 text-muted-foreground">
-              <span className="numeric">
+        <Item key={line.id} role="listitem" className="gap-3 rounded-none px-0 py-3 first:pt-0 last:pb-0">
+          <ItemMedia className="overflow-hidden rounded-xl">
+            <ProductImage name={line.name} sizes="56px" className="size-14" imageClassName="p-1.5" />
+          </ItemMedia>
+          <ItemContent className="min-w-0 gap-0.5">
+            <ItemTitle className="font-semibold">{line.name}</ItemTitle>
+            <ItemDescription className="text-fs-13">
+              <Text as="span" tone="inherit" numeric className="text-fs-13">
                 {line.quantity} × {formatMoney(line.price)}
-              </span>
+              </Text>
               {line.sku && (
                 <>
                   {" · "}
-                  <span className="font-mono text-fs-12">{line.sku}</span>
+                  <Text as="span" tone="inherit" family="mono" className="text-fs-12">
+                    {line.sku}
+                  </Text>
                 </>
               )}
-            </p>
-          </div>
-          <p className="numeric shrink-0 text-sm font-semibold text-foreground">{formatMoney(line.subtotal)}</p>
-        </li>
+            </ItemDescription>
+          </ItemContent>
+          <ItemActions>
+            <Text as="span" weight="bold" numeric>
+              {formatMoney(line.subtotal)}
+            </Text>
+          </ItemActions>
+        </Item>
       ))}
-    </ul>
+    </ItemGroup>
   );
 }

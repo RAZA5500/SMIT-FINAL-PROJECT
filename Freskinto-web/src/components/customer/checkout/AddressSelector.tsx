@@ -3,6 +3,8 @@
 import { Home, MapPin, Plus } from "lucide-react";
 import { Controller, type Control, type FieldErrors, type UseFormRegister } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
+import { Stack } from "@/components/ui/flex";
+import { Grid } from "@/components/ui/grid";
 import { ChoiceCards } from "@/components/shared/ChoiceCards";
 import { FieldMessage } from "@/components/shared/FieldMessage";
 import { InputField } from "@/components/shared/InputField";
@@ -27,7 +29,7 @@ interface AddressSelectorProps {
  */
 export function AddressSelector({ addresses, mode, onModeChange, control, register, errors }: AddressSelectorProps) {
   return (
-    <div className="flex flex-col gap-4">
+    <Stack gap="4">
       {addresses.length > 0 && (
         <Controller
           control={control}
@@ -70,7 +72,7 @@ export function AddressSelector({ addresses, mode, onModeChange, control, regist
       {mode === "saved" && <FieldMessage id="addressId" error={errors.addressId?.message} />}
 
       {mode === "new" && (
-        <div className="grid gap-4 rounded-2xl bg-muted/70 p-4 sm:grid-cols-2 sm:p-5">
+        <Grid gap="4" className="animate-fade-up rounded-2xl border-2 border-dashed border-input bg-muted/50 p-4 sm:grid-cols-2 sm:p-5">
           <InputField
             id="shippingAddress.addressLine"
             label="Address"
@@ -106,8 +108,8 @@ export function AddressSelector({ addresses, mode, onModeChange, control, regist
             error={errors.shippingAddress?.postcode?.message}
             {...register("shippingAddress.postcode")}
           />
-        </div>
+        </Grid>
       )}
-    </div>
+    </Stack>
   );
 }

@@ -4,9 +4,15 @@ import { Clock, Info, LogOut, Mail, MapPin, Package, Phone, ShoppingBasket, User
 import { Alert, AlertBody, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Grid } from "@/components/ui/grid";
+import { Heading, Text } from "@/components/ui/typography";
 import { CustomerPage } from "@/components/customer/CustomerPage";
 import { ButtonLink } from "@/components/shared/ButtonLink";
+import { TextLink } from "@/components/shared/TextLink";
 import { InfoRow } from "@/components/shared/InfoRow";
 import { SectionCard } from "@/components/shared/SectionCard";
 import { StatusBadge } from "@/components/shared/StatusBadge";
@@ -38,44 +44,62 @@ export function ProfileView() {
       description="Your Freskinto account details and shortcuts."
       breadcrumbs={[{ label: "Profile" }]}
     >
-      <div className="grid items-start gap-6 lg:grid-cols-12">
-        <section
-          aria-label="Account summary"
-          className="flex flex-col items-center gap-5 rounded-15 border border-border bg-card p-6 text-center shadow-soft lg:col-span-5"
+      <Grid align="start" gap="6" className="lg:grid-cols-12">
+        <Card
+          render={<Box as="section" aria-label="Account summary" />}
+          className="items-center gap-5 overflow-hidden rounded-3xl border-2 pt-0 text-center shadow-none lg:col-span-5"
         >
-          <Avatar size="xl" className="size-24">
-            <AvatarFallback className="bg-brand-green-forest text-fs-32 text-white">{initials(user?.name)}</AvatarFallback>
+          <Box className="relative h-28 w-full overflow-hidden bg-night">
+            <Box aria-hidden="true" className="texture-dots absolute inset-0 text-night-foreground/10" />
+            <Box aria-hidden="true" className="absolute -top-10 -right-6 size-40 rounded-full bg-primary/50 blur-2xl" />
+          </Box>
+          <Avatar size="xl" className="-mt-20 size-28 border-4 border-card">
+            <AvatarFallback className="bg-lime font-heading text-4xl font-extrabold text-lime-foreground">
+              {initials(user?.name)}
+            </AvatarFallback>
           </Avatar>
-          <div className="flex flex-col items-center gap-1">
-            <h2 className="font-heading text-fs-28 font-semibold">{user?.name ?? "Customer"}</h2>
-            <p className="text-sm text-muted-foreground">{user?.email ?? "—"}</p>
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <Badge variant="brand">Customer</Badge>
-            {user && <StatusBadge status={user.isActive ? "ACTIVE" : "INACTIVE"} />}
-          </div>
+          <CardContent className="flex w-full flex-col items-center gap-5">
+            <Stack align="center" gap="1">
+              <Heading as="h2" size="2">
+                {user?.name ?? "Customer"}
+              </Heading>
+              <Text tone="muted">{user?.email ?? "—"}</Text>
+            </Stack>
+            <Flex wrap align="center" justify="center" gap="2">
+              <Badge variant="brand">Customer</Badge>
+              {user && <StatusBadge status={user.isActive ? "ACTIVE" : "INACTIVE"} />}
+            </Flex>
 
-          <dl className="grid w-full grid-cols-2 divide-x divide-border rounded-xl border border-border bg-muted/40">
-            <div className="flex flex-col gap-0.5 px-4 py-3">
-              <dt className="text-fs-12 text-muted-foreground">Orders</dt>
-              <dd className="numeric font-heading text-fs-24 font-semibold">{user?.totalOrders ?? 0}</dd>
-            </div>
-            <div className="flex flex-col gap-0.5 px-4 py-3">
-              <dt className="text-fs-12 text-muted-foreground">Total spent</dt>
-              <dd className="numeric font-heading text-fs-24 font-semibold">{formatMoney(user?.totalSpent ?? 0)}</dd>
-            </div>
-          </dl>
+            <Grid as="dl" cols="2" className="w-full divide-x-2 divide-border rounded-2xl border-2 border-border bg-muted/40">
+              <Stack gap="0.5" className="px-4 py-3">
+                <Text as="dt" tone="muted" className="text-fs-12">
+                  Orders
+                </Text>
+                <Text as="dd" family="heading" weight="extrabold" numeric className="text-3xl">
+                  {user?.totalOrders ?? 0}
+                </Text>
+              </Stack>
+              <Stack gap="0.5" className="px-4 py-3">
+                <Text as="dt" tone="muted" className="text-fs-12">
+                  Total spent
+                </Text>
+                <Text as="dd" family="heading" weight="extrabold" numeric className="text-3xl">
+                  {formatMoney(user?.totalSpent ?? 0)}
+                </Text>
+              </Stack>
+            </Grid>
 
-          <Button variant="destructive-outline" className="w-full" onClick={logout}>
-            <LogOut aria-hidden="true" />
-            Sign out
-          </Button>
-        </section>
+            <Button variant="destructive-outline" className="w-full rounded-full" onClick={logout}>
+              <LogOut aria-hidden="true" />
+              Sign out
+            </Button>
+          </CardContent>
+        </Card>
 
-        <div className="flex flex-col gap-6 lg:col-span-7">
+        <Stack gap="6" className="lg:col-span-7">
           <SectionCard title="Account details" icon={<UserRound />}>
-            <div className="flex flex-col gap-5">
-              <div className="grid gap-5 sm:grid-cols-2">
+            <Stack gap="5">
+              <Grid gap="5" className="sm:grid-cols-2">
                 <InfoRow icon={<UserRound aria-hidden="true" />} label="Full name">
                   {user?.name ?? "—"}
                 </InfoRow>
@@ -96,44 +120,53 @@ export function ProfileView() {
                 <InfoRow icon={<Clock aria-hidden="true" />} label="Last sign-in" className="sm:col-span-2">
                   {formatDateTime(user?.lastLoginAt)}
                 </InfoRow>
-              </div>
+              </Grid>
               <Alert variant="info">
                 <Info aria-hidden="true" />
                 <AlertBody>
                   <AlertTitle>Need to change your details?</AlertTitle>
                   <AlertDescription>
                     Profile editing isn&apos;t available yet — email{" "}
-                    <a className="font-medium text-brand-green" href={`mailto:${STORE.supportEmail}`}>
+                    <TextLink href={`mailto:${STORE.supportEmail}`} underline>
                       {STORE.supportEmail}
-                    </a>{" "}
+                    </TextLink>{" "}
                     and we&apos;ll update it for you.
                   </AlertDescription>
                 </AlertBody>
               </Alert>
-            </div>
+            </Stack>
           </SectionCard>
 
           <SectionCard title="Shortcuts">
-            <ul className="grid gap-3 sm:grid-cols-3">
+            <Grid as="ul" gap="3" className="sm:grid-cols-3">
               {SHORTCUTS.map(({ href, icon: Icon, title, text }) => (
-                <li key={href}>
+                <Box as="li" key={href}>
                   <ButtonLink
                     href={href}
                     variant="outline"
-                    className="h-auto w-full flex-col items-start gap-2 rounded-2xl p-4 text-left whitespace-normal"
+                    className="group/short h-auto w-full flex-col items-start gap-2 rounded-2xl border-2 p-4 text-left whitespace-normal hover:border-primary hover:bg-plum-soft"
                   >
-                    <span className="flex size-9 items-center justify-center rounded-xl bg-brand-soft text-brand-green">
+                    <Flex
+                      as="span"
+                      align="center"
+                      justify="center"
+                      className="size-10 rounded-xl bg-plum-soft text-primary transition-transform group-hover/short:-rotate-6 group-hover/short:bg-lime group-hover/short:text-lime-foreground"
+                    >
                       <Icon aria-hidden="true" className="size-4" />
-                    </span>
-                    <span className="text-sm font-semibold">{title}</span>
-                    <span className="text-fs-12 font-normal text-muted-foreground">{text}</span>
+                    </Flex>
+                    <Text as="span" weight="bold">
+                      {title}
+                    </Text>
+                    <Text as="span" tone="muted" weight="normal" className="text-fs-12">
+                      {text}
+                    </Text>
                   </ButtonLink>
-                </li>
+                </Box>
               ))}
-            </ul>
+            </Grid>
           </SectionCard>
-        </div>
-      </div>
+        </Stack>
+      </Grid>
     </CustomerPage>
   );
 }

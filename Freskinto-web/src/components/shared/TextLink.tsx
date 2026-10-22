@@ -3,8 +3,8 @@ import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
 const TONES = {
-  brand: "text-brand-green hover:text-brand-green-dark",
-  default: "text-foreground hover:text-brand-green",
+  brand: "text-primary hover:text-primary/80",
+  default: "text-foreground hover:text-primary",
   muted: "text-muted-foreground hover:text-foreground",
 } as const;
 

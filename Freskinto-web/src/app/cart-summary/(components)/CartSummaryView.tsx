@@ -1,6 +1,9 @@
 "use client";
 
 import { ArrowRight, ShoppingBasket } from "lucide-react";
+import { Box } from "@/components/ui/box";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Grid } from "@/components/ui/grid";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CartSummaryCard } from "@/components/customer/cart/CartSummaryCard";
 import { CustomerPage } from "@/components/customer/CustomerPage";
@@ -21,10 +24,10 @@ export function CartSummaryView() {
   let content;
   if (isLoading) {
     content = (
-      <div aria-label="Loading" aria-busy="true" className="grid items-start gap-6 lg:grid-cols-12 lg:gap-8">
-        <Skeleton className="h-96 rounded-15 lg:col-span-7" />
-        <Skeleton className="h-96 rounded-15 lg:col-span-5" />
-      </div>
+      <Grid aria-label="Loading" aria-busy="true" align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
+        <Skeleton className="h-96 rounded-3xl lg:col-span-7" />
+        <Skeleton className="h-96 rounded-3xl lg:col-span-5" />
+      </Grid>
     );
   } else if (isError) {
     content = (
@@ -46,10 +49,15 @@ export function CartSummaryView() {
   } else {
     const hasIssues = cartHasIssues(items);
     content = (
-      <div className="grid items-start gap-6 lg:grid-cols-12 lg:gap-8">
-        <section aria-label="Items" className="rounded-15 border border-border bg-card p-5 shadow-soft sm:p-6 lg:col-span-7">
-          <h2 className="mb-5 font-heading text-fs-18 font-semibold">{pluralize(items.length, "product")}</h2>
-          <OrderLines
+      <Grid align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
+        <Card render={<Box as="section" aria-label="Items" />} size="lg" className="rounded-3xl border-2 lg:col-span-7">
+          <CardHeader>
+            <CardTitle render={<Box as="span" />} className="text-xl font-bold">
+              {pluralize(items.length, "product")}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <OrderLines
             lines={items.map((item) => ({
               id: item.id,
               name: item.name,
@@ -57,11 +65,12 @@ export function CartSummaryView() {
               quantity: item.quantity,
               price: item.price,
               subtotal: item.lineTotal,
-            }))}
-          />
-        </section>
+              }))}
+            />
+          </CardContent>
+        </Card>
 
-        <CartSummaryCard cart={cart} className="lg:sticky lg:top-header lg:col-span-5">
+        <CartSummaryCard cart={cart} className="lg:sticky lg:top-28 lg:col-span-5">
           {hasIssues ? (
             <ButtonLink href={customerRoutes.cart} variant="cta" size="xl" className="w-full">
               Fix items in basket
@@ -72,11 +81,11 @@ export function CartSummaryView() {
               <ArrowRight aria-hidden="true" />
             </ButtonLink>
           )}
-          <ButtonLink href={customerRoutes.cart} variant="outline" className="w-full rounded-full">
+          <ButtonLink href={customerRoutes.cart} variant="outline" className="w-full rounded-full border-2">
             Edit items in basket
           </ButtonLink>
         </CartSummaryCard>
-      </div>
+      </Grid>
     );
   }
 

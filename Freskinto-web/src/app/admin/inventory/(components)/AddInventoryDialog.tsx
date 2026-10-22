@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
 import { AppModal } from "@/components/shared/AppModal";
 import { InputField } from "@/components/shared/InputField";
 import { LoadingButton } from "@/components/shared/LoadingButton";
@@ -68,9 +69,8 @@ function AddInventoryForm({ onSubmit }: { onSubmit: (values: InventoryFormValues
   });
 
   return (
-    <form
+    <Form
       id={FORM_ID}
-      noValidate
       className="grid gap-4 sm:grid-cols-2"
       onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))}
     >
@@ -114,6 +114,6 @@ function AddInventoryForm({ onSubmit }: { onSubmit: (values: InventoryFormValues
         error={errors.lowStockThreshold?.message}
         {...register("lowStockThreshold")}
       />
-    </form>
+    </Form>
   );
 }

@@ -1,4 +1,7 @@
 import type { ReactNode } from "react";
+import { Box } from "@/components/ui/box";
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Flex } from "@/components/ui/flex";
 import { cn } from "@/lib/utils";
 
 interface SectionCardProps {
@@ -12,25 +15,31 @@ interface SectionCardProps {
   bodyClassName?: string;
 }
 
-/** Page ke andar ek titled panel — orders, profile, forms; header hairline se alag */
+/** Page ke andar ek titled panel (shadcn Card) — orders, profile, forms; header hairline se alag */
 export function SectionCard({ title, description, icon, action, children, className, bodyClassName }: SectionCardProps) {
   return (
-    <section className={cn("overflow-hidden rounded-15 border border-border bg-card shadow-soft", className)}>
-      <header className="flex items-start justify-between gap-3 border-b border-border px-5 py-4">
-        <div className="flex min-w-0 flex-col gap-0.5">
-          <h2 className="flex items-center gap-2 font-heading text-fs-18 font-semibold">
+    <Card render={<Box as="section" />} className={cn("gap-0 py-0", className)}>
+      <CardHeader className="border-b border-border py-4">
+        <CardTitle render={<Box as="span" />}>
+          <Flex as="span" align="center" gap="2" className="font-heading text-lg font-bold">
             {icon && (
-              <span aria-hidden="true" className="text-brand-green [&_svg]:size-5">
+              <Flex
+                as="span"
+                align="center"
+                justify="center"
+                aria-hidden="true"
+                className="size-7 rounded-lg bg-plum-soft text-primary [&_svg]:size-4"
+              >
                 {icon}
-              </span>
+              </Flex>
             )}
             {title}
-          </h2>
-          {description && <p className="text-fs-13 text-muted-foreground">{description}</p>}
-        </div>
-        {action && <div className="shrink-0">{action}</div>}
-      </header>
-      <div className={cn("p-5", bodyClassName)}>{children}</div>
-    </section>
+          </Flex>
+        </CardTitle>
+        {description && <CardDescription className="text-fs-13">{description}</CardDescription>}
+        {action && <CardAction className="top-3.5">{action}</CardAction>}
+      </CardHeader>
+      <CardContent className={cn("p-5", bodyClassName)}>{children}</CardContent>
+    </Card>
   );
 }

@@ -2,6 +2,10 @@
 
 import { CircleAlert, ShoppingBasket } from "lucide-react";
 import { Alert, AlertBody, AlertDescription } from "@/components/ui/alert";
+import { Box } from "@/components/ui/box";
+import { Container } from "@/components/ui/container";
+import { Stack } from "@/components/ui/flex";
+import { Grid } from "@/components/ui/grid";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cartHasIssues } from "@/components/customer/cart/cart-availability";
 import { CartSummaryCard } from "@/components/customer/cart/CartSummaryCard";
@@ -27,13 +31,13 @@ export function CheckoutView() {
   let content;
   if (cartQuery.isLoading || addressesQuery.isLoading) {
     content = (
-      <div aria-label="Loading" aria-busy="true" className="grid items-start gap-6 lg:grid-cols-12 lg:gap-8">
-        <div className="flex flex-col gap-5 lg:col-span-7">
-          <Skeleton className="h-20 w-full rounded-xl" />
-          <Skeleton className="h-80 w-full rounded-15" />
-        </div>
-        <Skeleton className="h-96 w-full rounded-15 lg:col-span-5" />
-      </div>
+      <Grid aria-label="Loading" aria-busy="true" align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
+        <Stack gap="5" className="lg:col-span-7">
+          <Skeleton className="h-20 w-full rounded-2xl" />
+          <Skeleton className="h-80 w-full rounded-3xl" />
+        </Stack>
+        <Skeleton className="h-96 w-full rounded-3xl lg:col-span-5" />
+      </Grid>
     );
   } else if (failed) {
     content = (
@@ -55,10 +59,10 @@ export function CheckoutView() {
   } else {
     const hasIssues = cartHasIssues(cart.items);
     content = (
-      <div className="grid items-start gap-6 lg:grid-cols-12 lg:gap-8">
-        <div className="lg:col-span-7">
+      <Grid align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
+        <Box className="lg:col-span-7">
           <CheckoutForm addresses={addressesQuery.data?.data ?? []} blocked={hasIssues} />
-        </div>
+        </Box>
         <CartSummaryCard cart={cart} showItems className="lg:sticky lg:top-6 lg:col-span-5">
           {hasIssues && (
             <Alert variant="destructive">
@@ -74,21 +78,21 @@ export function CheckoutView() {
             </Alert>
           )}
         </CartSummaryCard>
-      </div>
+      </Grid>
     );
   }
 
   return (
-    <div className="page-container flex flex-col gap-8 py-8 sm:py-10">
-      <div className="flex flex-col gap-6">
+    <Container className="flex flex-col gap-8 py-8 sm:py-10">
+      <Stack gap="6">
         <CheckoutSteps current={1} />
         <PageHeader
           eyebrow="Step 2 of 3"
           title="Delivery details"
           description="Choose home delivery or click & collect — both are free."
         />
-      </div>
+      </Stack>
       {content}
-    </div>
+    </Container>
   );
 }

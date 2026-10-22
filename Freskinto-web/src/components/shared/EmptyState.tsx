@@ -1,5 +1,6 @@
 import { Inbox } from "lucide-react";
 import type { ReactNode } from "react";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { cn } from "@/lib/utils";
 
 interface EmptyStateProps {
@@ -11,26 +12,18 @@ interface EmptyStateProps {
   className?: string;
 }
 
-/** Khali list — hamesha agla qadam batao (FLOW-MD 07 §7) */
+/** Khali list — hamesha agla qadam batao (FLOW-MD 07 §7). shadcn `Empty` par bana. */
 export function EmptyState({ title = "Nothing here yet", message, icon, action, className }: EmptyStateProps) {
   return (
-    <div
-      className={cn(
-        "flex w-full flex-col items-center justify-center gap-5 rounded-xl border border-dashed border-input bg-card/60 px-6 py-14 text-center",
-        className,
-      )}
-    >
-      <span
-        aria-hidden="true"
-        className="flex size-16 items-center justify-center rounded-full bg-brand-soft text-brand-green [&_svg]:size-7"
-      >
-        {icon ?? <Inbox />}
-      </span>
-      <div className="flex max-w-sm flex-col gap-1.5">
-        <h3 className="font-heading text-fs-20 font-semibold text-foreground">{title}</h3>
-        {message && <p className="text-sm text-muted-foreground">{message}</p>}
-      </div>
-      {action && <div className="flex flex-wrap items-center justify-center gap-3">{action}</div>}
-    </div>
+    <Empty className={cn("gap-5 border-2 border-dashed border-input bg-card/60 px-6 py-14", className)}>
+      <EmptyHeader className="gap-3">
+        <EmptyMedia className="mb-1 size-16 -rotate-6 rounded-2xl border-2 border-pop bg-lime text-lime-foreground shadow-pop-sm [&_svg]:size-7">
+          {icon ?? <Inbox aria-hidden="true" />}
+        </EmptyMedia>
+        <EmptyTitle className="font-heading text-xl font-bold">{title}</EmptyTitle>
+        {message && <EmptyDescription>{message}</EmptyDescription>}
+      </EmptyHeader>
+      {action && <EmptyContent className="flex-row flex-wrap justify-center gap-3">{action}</EmptyContent>}
+    </Empty>
   );
 }

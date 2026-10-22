@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { Stack } from "@/components/ui/flex";
 import { ButtonLink } from "@/components/shared/ButtonLink";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { Logo } from "@/components/shared/Logo";
@@ -19,7 +20,7 @@ export default function RootError({
   }, [error]);
 
   return (
-    <main id="content" className="flex min-h-dvh flex-1 flex-col items-center justify-center gap-8 px-6 py-16">
+    <Stack as="main" id="content" align="center" justify="center" gap="8" className="min-h-dvh flex-1 px-6 py-16">
       <Logo size="md" />
       <ErrorState
         title="Something went wrong"
@@ -30,6 +31,6 @@ export default function RootError({
       <ButtonLink href={publicRoutes.shop} variant="outline" className="rounded-full">
         Back to the shop
       </ButtonLink>
-    </main>
+    </Stack>
   );
 }

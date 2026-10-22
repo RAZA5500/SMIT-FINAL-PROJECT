@@ -1,28 +1,34 @@
-import { Leaf } from "lucide-react";
+import { Citrus } from "lucide-react";
+import { Flex } from "@/components/ui/flex";
+import { Text } from "@/components/ui/typography";
 import { STORE } from "@/constants/store";
 import { cn } from "@/lib/utils";
 
 const SIZES = {
-  sm: { mark: "size-7 rounded-lg [&_svg]:size-4", word: "text-fs-20" },
-  md: { mark: "size-9 rounded-xl [&_svg]:size-5", word: "text-fs-24" },
-  lg: { mark: "size-12 rounded-2xl [&_svg]:size-6", word: "text-fs-32" },
+  sm: { mark: "size-8 rounded-lg [&_svg]:size-4", word: "text-xl" },
+  md: { mark: "size-10 rounded-xl [&_svg]:size-5", word: "text-2xl" },
+  lg: { mark: "size-14 rounded-2xl [&_svg]:size-7", word: "text-4xl" },
 } as const;
 
 type LogoSize = keyof typeof SIZES;
 
-/** Freskinto botanical mark — deep forest tile with lush leaf emblem */
+/** Freskinto mark — tilted lime tile with a citrus slice, ink edge (sticker look) */
 export function LogoMark({ size = "md", className }: { size?: LogoSize; className?: string }) {
   return (
-    <span
+    <Flex
+      as="span"
+      inline
+      align="center"
+      justify="center"
       aria-hidden="true"
       className={cn(
-        "inline-flex shrink-0 items-center justify-center rounded-xl bg-brand-green-forest text-brand-green-vivid shadow-soft ring-1 ring-white/10",
+        "shrink-0 -rotate-6 border-2 border-pop bg-lime text-lime-foreground shadow-pop-sm transition-transform group-hover/logo:rotate-6",
         SIZES[size].mark,
         className,
       )}
     >
-      <Leaf strokeWidth={2.2} />
-    </span>
+      <Citrus strokeWidth={2.4} />
+    </Flex>
   );
 }
 
@@ -30,30 +36,33 @@ interface LogoProps {
   size?: LogoSize;
   /** Sirf mark (collapsed sidebar, chhoti jagah) */
   markOnly?: boolean;
-  /** Dark background par wordmark safed */
+  /** Night (dark) background par wordmark roshan */
   inverse?: boolean;
   className?: string;
 }
 
-/** Mark + editorial wordmark with an emerald accent dot */
+/** Mark + chunky Bricolage wordmark with a tangerine dot */
 export function Logo({ size = "md", markOnly = false, inverse = false, className }: LogoProps) {
   return (
-    <span className={cn("inline-flex items-center gap-2.5", className)}>
-      <LogoMark size={size} className={inverse ? "bg-brand-green-vivid text-brand-green-forest ring-0" : undefined} />
+    <Flex as="span" inline align="center" gap="2.5" className={cn("group/logo", className)}>
+      <LogoMark size={size} />
       {!markOnly && (
-        <span
+        <Text
+          as="span"
+          family="heading"
+          weight="extrabold"
           className={cn(
-            "font-heading leading-none font-bold tracking-tight",
-            inverse ? "text-white" : "text-foreground",
+            "leading-none tracking-tighter",
+            inverse ? "text-night-foreground" : "text-foreground",
             SIZES[size].word,
           )}
         >
-          {STORE.name}
-          <span aria-hidden="true" className="text-brand-green">
+          {STORE.name.toLowerCase()}
+          <Text as="span" tone="inherit" aria-hidden="true" className="text-tangerine">
             .
-          </span>
-        </span>
+          </Text>
+        </Text>
       )}
-    </span>
+    </Flex>
   );
 }

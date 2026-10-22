@@ -1,7 +1,10 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { Stack } from "@/components/ui/flex";
+import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 
 interface SwitchFieldProps {
@@ -17,19 +20,25 @@ interface SwitchFieldProps {
 /** On/off setting row — poori row label hai, switch right par */
 export function SwitchField({ id, label, description, checked, onCheckedChange, disabled, className }: SwitchFieldProps) {
   return (
-    <label
+    <Label
       htmlFor={id}
       className={cn(
-        "flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-border bg-card p-4 transition-colors hover:border-foreground/25",
+        "cursor-pointer justify-between gap-4 rounded-xl border border-border bg-card p-4 font-normal transition-colors hover:border-foreground/25",
         disabled && "cursor-not-allowed opacity-60",
         className,
       )}
     >
-      <span className="flex min-w-0 flex-col gap-0.5">
-        <span className="text-sm font-medium">{label}</span>
-        {description && <span className="text-fs-13 text-muted-foreground">{description}</span>}
-      </span>
+      <Stack as="span" gap="0.5" className="min-w-0">
+        <Text as="span" weight="medium">
+          {label}
+        </Text>
+        {description && (
+          <Text as="span" tone="muted" className="text-fs-13 leading-snug">
+            {description}
+          </Text>
+        )}
+      </Stack>
       <Switch id={id} checked={checked} onCheckedChange={onCheckedChange} disabled={disabled} />
-    </label>
+    </Label>
   );
 }

@@ -3,6 +3,8 @@
 import { UserCheck, UserX, Users } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Text } from "@/components/ui/typography";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AdminPage } from "@/components/admin/AdminPage";
 import { DataTableCard, ToolbarFilters } from "@/components/admin/DataTableCard";
@@ -72,7 +74,9 @@ export function CustomersView() {
             <TableHead>Joined</TableHead>
             <TableHead>Status</TableHead>
             <TableHead className={cn("w-12")}>
-              <span className="sr-only">Actions</span>
+              <Text as="span" className="sr-only">
+                Actions
+              </Text>
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -80,26 +84,26 @@ export function CustomersView() {
           {data.data.map((customer) => (
             <TableRow key={customer.id} className={cn(!customer.isActive && "text-muted-foreground")}>
               <TableCell className={cn("max-w-64")}>
-                <div className="flex items-center gap-3">
+                <Flex align="center" gap="3">
                   <Avatar className={cn("size-9")}>
                     <AvatarFallback
                       className={cn(
                         "text-xs font-semibold",
-                        customer.isActive ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground",
+                        customer.isActive ? "bg-lime font-bold text-lime-foreground" : "bg-muted text-muted-foreground",
                       )}
                     >
                       {initials(customer.name)}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex flex-col gap-0.5 min-w-0">
-                    <p className="font-semibold truncate text-foreground">
+                  <Stack gap="0.5" className="min-w-0">
+                    <Text weight="semibold" className="truncate">
                       {customer.name}
-                    </p>
-                    <p className="text-fs-12 text-muted-foreground truncate">
+                    </Text>
+                    <Text tone="muted" className="truncate text-fs-12">
                       {customer.email}
-                    </p>
-                  </div>
-                </div>
+                    </Text>
+                  </Stack>
+                </Flex>
               </TableCell>
               <TableCell className={cn("text-muted-foreground")}>{customer.phone ?? "—"}</TableCell>
               <TableCell className={cn("text-right tabular-nums")}>{customer.totalOrders}</TableCell>

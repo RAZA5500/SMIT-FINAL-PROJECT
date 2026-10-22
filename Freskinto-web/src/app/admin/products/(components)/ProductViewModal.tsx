@@ -3,6 +3,10 @@
 import { ExternalLink, Package, Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Grid } from "@/components/ui/grid";
+import { Separator } from "@/components/ui/separator";
+import { Text } from "@/components/ui/typography";
 import { AppModal } from "@/components/shared/AppModal";
 import { ButtonLink } from "@/components/shared/ButtonLink";
 import { ProductImage } from "@/components/shared/ProductImage";
@@ -10,6 +14,7 @@ import { StatusBadge } from "@/components/shared/StatusBadge";
 import { adminRoutes, publicRoutes } from "@/lib/routes/routes";
 import { formatDateTime, formatMoney } from "@/lib/utils";
 import type { IAdminProduct } from "@/services/products/types";
+import { ReviewItem } from "./ProductReviewTab";
 
 export interface ProductViewModalProps {
   product: IAdminProduct | null;
@@ -28,23 +33,24 @@ export function ProductViewModal({ product, open, onOpenChange }: ProductViewMod
       onOpenChange={onOpenChange}
       size="lg"
       title={
-        <div className="flex items-center gap-2.5">
-          <Package className="size-5 text-brand-green" aria-hidden="true" />
-          <span>Product details</span>
-        </div>
+        <Flex as="span" align="center" gap="2.5">
+          <Package className="size-5 text-primary" aria-hidden="true" />
+          Product details
+        </Flex>
       }
       description={`SKU: ${product.sku} · ${product.category.name}`}
       footer={
-        <div className="flex w-full items-center justify-between">
+        <Flex align="center" justify="between" className="w-full">
           <Button variant="ghost" onClick={() => onOpenChange(false)}>
             Close
           </Button>
-          <div className="flex items-center gap-2">
+          <Flex align="center" gap="2">
             {product.isActive && (
               <ButtonLink
                 href={publicRoutes.product(product.id)}
                 variant="outline"
                 size="sm"
+                className="rounded-full"
                 onClick={() => onOpenChange(false)}
               >
                 <ExternalLink data-icon="inline-start" aria-hidden="true" />
@@ -52,8 +58,8 @@ export function ProductViewModal({ product, open, onOpenChange }: ProductViewMod
               </ButtonLink>
             )}
             <Button
-              variant="default"
               size="sm"
+              className="rounded-full"
               onClick={() => {
                 onOpenChange(false);
                 router.push(adminRoutes.productEdit(product.id));
@@ -62,68 +68,63 @@ export function ProductViewModal({ product, open, onOpenChange }: ProductViewMod
               <Pencil data-icon="inline-start" aria-hidden="true" />
               Edit product
             </Button>
-          </div>
-        </div>
+          </Flex>
+        </Flex>
       }
     >
-      <div className="flex flex-col gap-5 py-1">
-        <div className="flex items-start gap-4">
-          <div className="size-24 shrink-0 overflow-hidden rounded-2xl border border-border bg-muted">
-            <ProductImage name={product.name} categoryName={product.category.name} />
-          </div>
-          <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-            <div className="flex flex-wrap items-center gap-2">
+      <Stack gap="5" className="py-1">
+        <Flex align="start" gap="4">
+          <ProductImage
+            name={product.name}
+            categoryName={product.category.name}
+            sizes="96px"
+            className="size-24 shrink-0 rounded-2xl border border-border"
+            imageClassName="p-2"
+          />
+          <Stack gap="1.5" className="min-w-0 flex-1">
+            <Flex wrap align="center" gap="2">
               <StatusBadge status={product.isActive ? "ACTIVE" : "INACTIVE"} />
               {product.inventoryId ? (
                 <StatusBadge status={product.stockStatus} />
               ) : (
-                <span className="text-fs-12 text-muted-foreground">
+                <Text as="span" tone="muted" className="text-fs-12">
                   No inventory tracked
-                </span>
+                </Text>
               )}
-            </div>
-            <p className="truncate font-semibold text-foreground text-lg">
+            </Flex>
+            <Text weight="bold" className="truncate text-lg">
               {product.name}
-            </p>
-            <p className="font-mono text-fs-12 text-muted-foreground">
+            </Text>
+            <Text tone="muted" family="mono" className="text-fs-12">
               /{product.slug}
-            </p>
-          </div>
-        </div>
+            </Text>
+          </Stack>
+        </Flex>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-xl border border-border bg-muted/60 p-3">
-            <p className="text-xs text-muted-foreground">Selling price</p>
-            <p className="font-semibold tabular-nums text-brand-green">
-              {formatMoney(product.price)}
-            </p>
-          </div>
+        <Grid cols="2" gap="3">
+          <ReviewItem
+            label="Selling price"
+            value={
+              <Text as="span" tone="primary" numeric>
+                {formatMoney(product.price)}
+              </Text>
+            }
+          />
+          <ReviewItem label="Category" value={product.category.name} />
+          <ReviewItem label="Order limits (Min / Max)" value={`${product.minimumOrderQuantity} / ${product.maximumOrderQuantity}`} />
+          <ReviewItem label="Quantity on hand" value={`${product.qtyOnHand ?? 0} units`} />
+        </Grid>
 
-          <div className="rounded-xl border border-border bg-muted/60 p-3">
-            <p className="text-xs text-muted-foreground">Category</p>
-            <p className="truncate font-semibold text-foreground">{product.category.name}</p>
-          </div>
-
-          <div className="rounded-xl border border-border bg-muted/60 p-3">
-            <p className="text-xs text-muted-foreground">Order limits (Min / Max)</p>
-            <p className="font-semibold tabular-nums text-foreground">
-              {product.minimumOrderQuantity} / {product.maximumOrderQuantity}
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-border bg-muted/60 p-3">
-            <p className="text-xs text-muted-foreground">Quantity on hand</p>
-            <p className="font-semibold tabular-nums text-foreground">
-              {product.qtyOnHand ?? 0} units
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between border-t border-border/80 pt-3 text-xs text-muted-foreground">
-          <span>Created: {formatDateTime(product.createdAt)}</span>
-          <span>Updated: {formatDateTime(product.updatedAt)}</span>
-        </div>
-      </div>
+        <Separator />
+        <Flex align="center" justify="between" className="text-xs text-muted-foreground">
+          <Text as="span" tone="inherit">
+            Created: {formatDateTime(product.createdAt)}
+          </Text>
+          <Text as="span" tone="inherit">
+            Updated: {formatDateTime(product.updatedAt)}
+          </Text>
+        </Flex>
+      </Stack>
     </AppModal>
   );
 }

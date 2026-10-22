@@ -5,6 +5,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Alert, AlertBody, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Text } from "@/components/ui/typography";
 import { QuantityStepper } from "@/components/customer/product/QuantityStepper";
 import { LoadingButton } from "@/components/shared/LoadingButton";
 import { useCartItemQuantity } from "@/hooks/useCartItemQuantity";
@@ -67,8 +69,8 @@ function AddToBasket({ product }: { product: IProduct }) {
   };
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex flex-col gap-3 sm:flex-row">
+    <Stack gap="3">
+      <Flex direction="col" gap="3" className="sm:flex-row">
         <QuantityStepper
           size="lg"
           label={product.name}
@@ -83,11 +85,11 @@ function AddToBasket({ product }: { product: IProduct }) {
           <ShoppingBasket aria-hidden="true" />
           Add to basket
         </LoadingButton>
-      </div>
-      <p className="text-fs-13 text-muted-foreground">
+      </Flex>
+      <Text tone="muted" className="text-fs-13">
         Order between {product.minimumOrderQuantity} and {product.maximumOrderQuantity} per order.
-      </p>
-    </div>
+      </Text>
+    </Stack>
   );
 }
 
@@ -96,11 +98,14 @@ function InBasket({ item }: { item: ICartItem }) {
   const { quantity, atMinimum, canIncrease, increase, decrease, isRemoving } = useCartItemQuantity(item);
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border border-brand-green/20 bg-brand-soft p-4">
-      <p className="text-sm font-semibold text-brand-green-forest">
-        In your basket · <span className="numeric">{formatMoney(item.lineTotal)}</span>
-      </p>
-      <div className="flex flex-col gap-3 sm:flex-row">
+    <Stack gap="3" className="animate-pop rounded-3xl border-2 border-primary/30 bg-plum-soft p-4">
+      <Text weight="semibold" className="text-accent-foreground">
+        In your basket ·{" "}
+        <Text as="span" tone="inherit" numeric>
+          {formatMoney(item.lineTotal)}
+        </Text>
+      </Text>
+      <Flex direction="col" gap="3" className="sm:flex-row">
         <QuantityStepper
           size="lg"
           variant="solid"
@@ -114,10 +119,10 @@ function InBasket({ item }: { item: ICartItem }) {
           onIncrease={increase}
           className="w-full sm:w-44"
         />
-        <Button size="xl" variant="outline" className="flex-1 rounded-full" onClick={() => setCartOpen(true)}>
+        <Button size="xl" variant="outline" className="flex-1 rounded-full border-2" onClick={() => setCartOpen(true)}>
           View basket
         </Button>
-      </div>
-    </div>
+      </Flex>
+    </Stack>
   );
 }

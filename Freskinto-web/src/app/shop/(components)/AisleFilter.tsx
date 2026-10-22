@@ -2,8 +2,12 @@
 
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Flex, Stack } from "@/components/ui/flex";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Text } from "@/components/ui/typography";
 import { aisleNumber } from "@/components/shared/AisleTag";
 import type { CategoryNode } from "@/components/customer/shop/category-tree";
 import { useAisles } from "@/components/customer/shop/use-aisles";
@@ -23,25 +27,26 @@ function AisleRow({
   onSelect: () => void;
 }) {
   return (
-    <button
+    <Button
       type="button"
+      variant="ghost"
       aria-pressed={active}
       onClick={onSelect}
       className={cn(
-        "flex w-full min-w-0 items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring/35",
+        "h-9 w-full min-w-0 justify-start gap-2.5 rounded-xl px-2.5 font-normal",
         child && "pl-3",
-        active
-          ? "bg-brand-green-forest font-semibold text-white"
-          : "text-foreground/80 hover:bg-muted",
+        active && "bg-primary font-semibold text-primary-foreground hover:bg-primary/90",
       )}
     >
       {number && (
-        <span className={cn("font-mono text-fs-11 font-semibold", active ? "text-brand-green-vivid" : "text-brand-green")}>
+        <Text as="span" tone="inherit" family="mono" weight="semibold" className={cn("text-fs-11", active ? "text-lime" : "text-primary")}>
           {number}
-        </span>
+        </Text>
       )}
-      <span className="truncate">{label}</span>
-    </button>
+      <Text as="span" tone="inherit" className="truncate">
+        {label}
+      </Text>
+    </Button>
   );
 }
 
@@ -65,8 +70,8 @@ function AisleGroup({
   }
 
   return (
-    <div>
-      <div className="flex items-center gap-1">
+    <Collapsible open={open} onOpenChange={setOpen}>
+      <Flex align="center" gap="1">
         <AisleRow
           number={number}
           label={aisle.name}
@@ -76,26 +81,28 @@ function AisleGroup({
             setOpen(true);
           }}
         />
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          aria-expanded={open}
-          aria-label={open ? `Collapse ${aisle.name}` : `Expand ${aisle.name}`}
-          className="shrink-0 text-muted-foreground"
-          onClick={() => setOpen((value) => !value)}
+        <CollapsibleTrigger
+          render={
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              aria-label={open ? `Collapse ${aisle.name}` : `Expand ${aisle.name}`}
+              className="shrink-0 rounded-full text-muted-foreground"
+            />
+          }
         >
-          <ChevronDown aria-hidden="true" className={cn("transition-transform", open && "rotate-180")} />
-        </Button>
-      </div>
-      {open && (
-        <div className="my-1 ml-5 flex flex-col gap-0.5 border-l border-border pl-2">
+          <ChevronDown aria-hidden="true" className={cn("transition-transform duration-200", open && "rotate-180")} />
+        </CollapsibleTrigger>
+      </Flex>
+      <CollapsibleContent>
+        <Stack gap="0.5" className="my-1 ml-5 border-l-2 border-border pl-2">
           {aisle.children.map((child) => (
             <AisleRow key={child.id} child label={child.name} active={selected === child.id} onSelect={() => onSelect(child.id)} />
           ))}
-        </div>
-      )}
-    </div>
+        </Stack>
+      </CollapsibleContent>
+    </Collapsible>
   );
 }
 
@@ -108,31 +115,33 @@ export function AisleFilter({ selected, onSelect }: { selected: string | null; o
 
   if (isLoading) {
     return (
-      <div aria-label="Loading categories" aria-busy="true" className="flex flex-col gap-2.5">
+      <Stack aria-label="Loading categories" aria-busy="true" gap="2.5">
         {Array.from({ length: 6 }, (_, i) => (
           <Skeleton key={i} className="h-5 w-4/5" />
         ))}
-      </div>
+      </Stack>
     );
   }
   if (isError) {
     return (
-      <div role="alert" className="flex flex-col items-start gap-1 text-sm text-muted-foreground">
-        Couldn&apos;t load aisles.
+      <Stack role="alert" align="start" gap="1">
+        <Text tone="muted">Couldn&apos;t load aisles.</Text>
         <Button variant="link" size="sm" onClick={() => void refetch()}>
           Try again
         </Button>
-      </div>
+      </Stack>
     );
   }
 
   return (
-    <div className="flex flex-col gap-0.5">
+    <Stack gap="0.5">
       <AisleRow label="All products" active={selected === null} onSelect={() => onSelect(null)} />
       {aisles.map((aisle, index) => (
         // key mein selected — doosri category select hone par expand state naye sire se
-        <AisleGroup key={`${aisle.id}-${selected ?? ""}`} aisle={aisle} index={index} selected={selected} onSelect={onSelect} />
+        <Box key={`${aisle.id}-${selected ?? ""}`}>
+          <AisleGroup aisle={aisle} index={index} selected={selected} onSelect={onSelect} />
+        </Box>
       ))}
-    </div>
+    </Stack>
   );
 }

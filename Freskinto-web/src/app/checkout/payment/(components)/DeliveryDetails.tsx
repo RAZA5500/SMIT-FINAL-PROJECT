@@ -1,6 +1,8 @@
 "use client";
 
 import { CalendarClock, MapPin, NotebookPen, Store, Truck } from "lucide-react";
+import { Box } from "@/components/ui/box";
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ButtonLink } from "@/components/shared/ButtonLink";
 import { InfoRow } from "@/components/shared/InfoRow";
 import { LOOKUP_LIMIT } from "@/constants/filters";
@@ -19,29 +21,26 @@ export function DeliveryDetails({ intent }: { intent: ICreateOrderPayload }) {
   const TypeIcon = pickup ? Store : Truck;
 
   return (
-    <section
-      aria-label="Delivery details"
-      className="flex flex-col gap-4 rounded-15 border border-border bg-card p-5 shadow-soft sm:p-6"
-    >
-      <header className="flex items-center justify-between gap-3">
-        <h2 className="flex items-center gap-2 font-heading text-fs-18 font-semibold">
-          <TypeIcon aria-hidden="true" className="size-5 text-brand-green" />
+    <Card render={<Box as="section" aria-label="Delivery details" />} size="lg" className="rounded-3xl border-2">
+      <CardHeader>
+        <CardTitle render={<Box as="span" />} className="flex items-center gap-2 text-xl font-bold">
+          <TypeIcon aria-hidden="true" className="size-5 text-primary" />
           {DELIVERY_TYPE_LABELS[intent.deliveryType]}
-        </h2>
-        <ButtonLink href={customerRoutes.checkout} variant="ghost" size="sm" className="text-brand-green">
-          Change
-        </ButtonLink>
-      </header>
-      <div className="flex flex-col gap-4">
+        </CardTitle>
+        <CardAction>
+          <ButtonLink href={customerRoutes.checkout} variant="ghost" size="sm" className="rounded-full text-primary">
+            Change
+          </ButtonLink>
+        </CardAction>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
         {pickup ? (
           <InfoRow icon={<CalendarClock aria-hidden="true" />} label="Collect on">
             {formatDateTime(intent.pickupScheduledAt)}
           </InfoRow>
         ) : (
           <InfoRow icon={<MapPin aria-hidden="true" />} label="Deliver to">
-            {address
-              ? `${address.addressLine}, ${address.city}, ${address.county}, ${address.postcode}`
-              : "Saved address"}
+            {address ? `${address.addressLine}, ${address.city}, ${address.county}, ${address.postcode}` : "Saved address"}
           </InfoRow>
         )}
         {intent.customerNotes && (
@@ -49,7 +48,7 @@ export function DeliveryDetails({ intent }: { intent: ICreateOrderPayload }) {
             {intent.customerNotes}
           </InfoRow>
         )}
-      </div>
-    </section>
+      </CardContent>
+    </Card>
   );
 }

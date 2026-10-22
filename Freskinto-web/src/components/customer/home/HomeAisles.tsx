@@ -1,136 +1,132 @@
 "use client";
 
-import { ArrowUpRight, Sparkles } from "lucide-react";
+import { ArrowUpRight, LayoutGrid } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useAisles } from "@/components/customer/shop/use-aisles";
+import { Box } from "@/components/ui/box";
+import { Card } from "@/components/ui/card";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Grid } from "@/components/ui/grid";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Heading, Text } from "@/components/ui/typography";
+import { aisleNumber } from "@/components/shared/AisleTag";
+import { SectionHeading } from "@/components/shared/SectionHeading";
+import { categoryTheme, TONE_CLASSES } from "@/lib/merchandising";
 import { shopUrl } from "@/lib/routes/routes";
+import { cn } from "@/lib/utils";
+import { useAisles } from "../shop/use-aisles";
 
-interface CuratedAisle {
-  title: string;
-  tagline: string;
-  image: string;
-  categoryMatcher: RegExp;
-}
-
-const CURATED_AISLES: CuratedAisle[] = [
-  {
-    title: "Fresh Vegetables",
-    tagline: "Farm picked greens, carrots & bell peppers",
-    image: "/images/editorial/produce-market.webp",
-    categoryMatcher: /veg|produce|salad|green/i,
-  },
-  {
-    title: "Orchard Harvest",
-    tagline: "Crisp Gala apples, sweet bananas & berries",
-    image: "/images/editorial/fruit-crates.webp",
-    categoryMatcher: /fruit|citrus|orchard|appl/i,
-  },
-  {
-    title: "Artisan Bakery",
-    tagline: "Warm sourdough, wholemeal & morning pastries",
-    image: "/images/editorial/artisan-bread.webp",
-    categoryMatcher: /bak|bread|pastr|loaf/i,
-  },
-  {
-    title: "Dairy & Cheeses",
-    tagline: "Whole milk, cream, mozzarella & mature cheddar",
-    image: "/images/editorial/cheese-board.webp",
-    categoryMatcher: /dairy|milk|chees|egg|butter/i,
-  },
-  {
-    title: "Butcher's Counter",
-    tagline: "Lean beef steaks, mince & poultry fillets",
-    image: "/images/editorial/chicken-packs.webp",
-    categoryMatcher: /meat|poultry|chicken|beef|steak/i,
-  },
-  {
-    title: "Pantry & Groceries",
-    tagline: "Crisps, staples, olive oil & pantry reserves",
-    image: "/images/editorial/produce-aisle.webp",
-    categoryMatcher: /pantry|snack|cereal|chip/i,
-  },
+/** Editorial photos jo aisle ke naam se milti hain — na milein to tinted icon tile */
+const EDITORIAL: { pattern: RegExp; image: string }[] = [
+  { pattern: /veg|produce|salad|green/i, image: "/images/editorial/produce-market.webp" },
+  { pattern: /fruit|citrus|orchard/i, image: "/images/editorial/fruit-crates.webp" },
+  { pattern: /bak|bread|pastr|loaf/i, image: "/images/editorial/artisan-bread.webp" },
+  { pattern: /chees/i, image: "/images/editorial/cheese-board.webp" },
+  { pattern: /dairy|milk|egg/i, image: "/images/editorial/milk-bottle.webp" },
+  { pattern: /poultry|chicken/i, image: "/images/editorial/chicken-packs.webp" },
+  { pattern: /meat|beef|butcher|steak/i, image: "/images/editorial/butcher-mince.webp" },
 ];
 
+const BENTO_LIMIT = 7;
+/** Pehla tile bara (2×2), baqi chhote — bento rhythm */
+const SPANS = ["sm:col-span-2 sm:row-span-2", "", "", "sm:col-span-2", "", "", ""];
+
+/** Home "aisles" bento — asli categories, hover par photo zoom aur sticker tilt */
 export function HomeAisles() {
-  const { aisles } = useAisles();
+  const { aisles, isLoading } = useAisles();
+  const tiles = aisles.slice(0, BENTO_LIMIT);
 
   return (
-    <section aria-labelledby="aisles-heading" className="flex flex-col gap-6">
-      <div className="flex flex-col gap-1.5 sm:flex-row sm:items-end sm:justify-between">
-        <div className="flex flex-col gap-1">
-          <span className="text-fs-12 font-bold tracking-wider text-brand-green uppercase">
-            Aisles of Freshness
-          </span>
-          <h2 id="aisles-heading" className="font-heading text-fs-28 font-bold tracking-tight text-foreground sm:text-fs-36">
-            Explore Market Stalls
-          </h2>
-          <p className="text-fs-14 text-muted-foreground">
-            Hand-selected stalls offering produce picked this morning.
-          </p>
-        </div>
-        <Link
-          href={shopUrl()}
-          className="group inline-flex items-center gap-1.5 text-sm font-semibold text-brand-green hover:text-brand-green-dark"
-        >
-          View all 12+ categories
-          <ArrowUpRight aria-hidden="true" className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-        </Link>
-      </div>
+    <Stack as="section" aria-labelledby="aisles-heading" gap="6">
+      <SectionHeading
+        id="aisles-heading"
+        eyebrow="Walk the aisles"
+        title="Explore Market Stalls"
+        description="Every aisle in the market — tap one to see what's on the shelves today."
+        href={shopUrl()}
+        hrefLabel="All aisles"
+      />
 
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {CURATED_AISLES.map((item) => {
-          const matchedCategory = aisles.find((a) => item.categoryMatcher.test(a.name));
-          const targetHref = matchedCategory ? shopUrl({ category: matchedCategory.id }) : shopUrl();
-          const productCount = matchedCategory?.productCount ?? 12;
+      {/* Fixed row height se bento ke tiles barabar rehte hain (span 2 = do rows) */}
+      <Grid className="auto-rows-[11rem] grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+        {isLoading &&
+          Array.from({ length: 5 }, (_, index) => (
+            <Skeleton key={index} className={cn("rounded-3xl", SPANS[index])} />
+          ))}
 
+        {tiles.map((aisle, index) => {
+          const visual = categoryTheme(aisle.name);
+          const Icon = visual.icon;
+          const photo = EDITORIAL.find((item) => item.pattern.test(aisle.name))?.image;
+          const big = index === 0;
           return (
-            <Link
-              key={item.title}
-              href={targetHref}
-              className="group relative flex h-64 flex-col justify-end overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-brand-green/40 hover:shadow-lift"
+            <Card
+              key={aisle.id}
+              render={<Link href={shopUrl({ category: aisle.id })} />}
+              className={cn(
+                "group/aisle pop-hover relative isolate justify-end gap-1 rounded-3xl border-2 p-4 shadow-none sm:p-5",
+                photo ? "text-night-foreground" : cn("text-ink", TONE_CLASSES[visual.tone].tile),
+                SPANS[index],
+              )}
             >
-              {/* Background Image with subtle zoom */}
-              <Image
-                src={item.image}
-                alt={item.title}
-                fill
-                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
-              />
+              {photo ? (
+                <>
+                  <Image
+                    src={photo}
+                    alt=""
+                    fill
+                    sizes={big ? "(min-width: 640px) 50vw, 100vw" : "(min-width: 640px) 25vw, 50vw"}
+                    className="-z-20 object-cover transition-transform duration-700 group-hover/aisle:scale-110"
+                  />
+                  <Box aria-hidden="true" className="absolute inset-0 -z-10 bg-linear-to-t from-night/90 via-night/40 to-transparent" />
+                </>
+              ) : (
+                <Icon
+                  aria-hidden="true"
+                  strokeWidth={1.4}
+                  className={cn(
+                    "absolute -top-4 -right-4 -z-10 size-32 opacity-40 transition-transform duration-500 group-hover/aisle:-rotate-12",
+                    TONE_CLASSES[visual.tone].icon,
+                  )}
+                />
+              )}
 
-              {/* Gradient Scrim for high contrast */}
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-black/10 transition-opacity duration-300 group-hover:from-black/95"
-              />
+              <Flex
+                as="span"
+                align="center"
+                justify="center"
+                className="absolute top-4 right-4 size-9 rounded-full border-2 border-pop bg-lime text-lime-foreground transition-transform group-hover/aisle:rotate-45"
+              >
+                <ArrowUpRight aria-hidden="true" className="size-4" />
+              </Flex>
 
-              <div className="relative z-10 flex flex-col gap-1 text-white">
-                <div className="flex items-center justify-between">
-                  <span className="text-fs-11 font-bold tracking-widest text-emerald-300 uppercase">
-                    Market Stall
-                  </span>
-                  <span className="flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-0.5 text-fs-10 font-bold backdrop-blur-sm">
-                    <Sparkles className="size-3 text-amber-300" />
-                    {productCount}+ fresh items
-                  </span>
-                </div>
-
-                <h3 className="font-heading text-fs-22 font-bold leading-tight drop-shadow-sm">
-                  {item.title}
-                </h3>
-                <p className="text-fs-13 text-white/80 line-clamp-1">
-                  {item.tagline}
-                </p>
-                <div className="mt-2 inline-flex items-center gap-1.5 text-fs-12 font-bold text-white group-hover:text-emerald-300">
-                  <span>Shop stall</span>
-                  <ArrowUpRight aria-hidden="true" className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </div>
-              </div>
-            </Link>
+              <Text as="span" variant="eyebrow" tone="inherit" family="mono" className="opacity-80">
+                Aisle {aisleNumber(index)}
+              </Text>
+              <Heading as="h3" size={big ? "2" : "4"} tone="inherit" className="leading-tight">
+                {aisle.name}
+              </Heading>
+              {big && aisle.children.length > 0 && (
+                <Text tone="inherit" className="line-clamp-1 opacity-80">
+                  {aisle.children.map((child) => child.name).join(" · ")}
+                </Text>
+              )}
+            </Card>
           );
         })}
-      </div>
-    </section>
+
+        {!isLoading && (
+          <Card
+            render={<Link href={shopUrl()} />}
+            className="group/aisle pop-hover justify-between rounded-3xl border-2 border-dashed bg-card p-4 shadow-none sm:p-5"
+          >
+            <LayoutGrid aria-hidden="true" className="size-8 text-primary transition-transform group-hover/aisle:rotate-90" />
+            <Heading as="h3" size="4">
+              Browse everything
+            </Heading>
+          </Card>
+        )}
+      </Grid>
+    </Stack>
   );
 }

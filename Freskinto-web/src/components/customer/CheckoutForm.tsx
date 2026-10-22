@@ -6,7 +6,13 @@ import { useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { Controller, useForm, useWatch, type FieldErrors } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
+import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Form } from "@/components/ui/form";
+import { Grid } from "@/components/ui/grid";
+import { Heading, Text } from "@/components/ui/typography";
 import { ChoiceCards } from "@/components/shared/ChoiceCards";
 import { LoadingButton } from "@/components/shared/LoadingButton";
 import { TextAreaField } from "@/components/shared/TextAreaField";
@@ -40,7 +46,7 @@ const TAB_META: Record<CheckoutTab, { label: string; icon: LucideIcon }> = {
 const DELIVERY_OPTIONS = [
   { value: "DELIVERY" as const, title: "Home delivery", description: "Delivered to your door", icon: <Truck aria-hidden="true" /> },
   { value: "PICKUP" as const, title: "Click & collect", description: "Pick a time that suits you", icon: <Store aria-hidden="true" /> },
-].map((option) => ({ ...option, aside: <Badge variant="brand">Free</Badge> }));
+].map((option) => ({ ...option, aside: <Badge variant="lime">Free</Badge> }));
 
 /** Form values → API payload: sirf delivery type ke mutabiq fields (FLOW-MD 08 §10) */
 function toOrderPayload(values: CheckoutFormValues): ICreateOrderPayload {
@@ -55,14 +61,18 @@ function toOrderPayload(values: CheckoutFormValues): ICreateOrderPayload {
 
 function Panel({ hidden, title, children }: { hidden: boolean; title: string; children: ReactNode }) {
   return (
-    <section
-      hidden={hidden}
-      aria-label={title}
-      className="flex flex-col gap-5 rounded-15 border border-border bg-card p-5 shadow-soft sm:p-6"
+    <Card
+      render={<Box as="section" aria-label={title} hidden={hidden} />}
+      size="lg"
+      className="animate-fade-up rounded-3xl border-2"
     >
-      <h2 className="font-heading text-fs-20 font-semibold">{title}</h2>
-      {children}
-    </section>
+      <CardHeader>
+        <CardTitle render={<Heading as="h2" size="3" />} className="text-2xl font-bold">
+          {title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-5">{children}</CardContent>
+    </Card>
   );
 }
 
@@ -132,10 +142,8 @@ export function CheckoutForm({ addresses, blocked = false }: CheckoutFormProps) 
   const submit = handleSubmit(onValid, onInvalid);
 
   return (
-    <form
+    <Form
       id={CHECKOUT_FORM_ID}
-      noValidate
-      className="flex flex-col gap-6"
       onSubmit={(event) => {
         // Beech ke tab par Enter/implicit submit payment par nahi, agle tab par le jaye
         if (!wizard.isLast) {
@@ -146,44 +154,56 @@ export function CheckoutForm({ addresses, blocked = false }: CheckoutFormProps) 
         void submit(event);
       }}
     >
-      <nav aria-label="Checkout steps">
-        <ol className="grid grid-cols-3 gap-2 sm:gap-3">
+      <Box as="nav" aria-label="Checkout steps">
+        <Grid as="ol" cols="3" gap="2" className="sm:gap-3">
           {CHECKOUT_TABS.map((key, index) => {
             const { label, icon: Icon } = TAB_META[key];
             const active = wizard.tab === key;
             const done = index < wizard.index;
             return (
-              <li key={key}>
-                <button
+              <Box as="li" key={key}>
+                <Button
                   type="button"
+                  variant="outline"
                   onClick={() => void wizard.goTo(key)}
                   aria-current={active ? "step" : undefined}
                   className={cn(
-                    "flex w-full items-center gap-2.5 rounded-xl border bg-card p-3 text-left transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring/35",
-                    active ? "border-primary bg-brand-soft/60 ring-1 ring-primary" : "border-border hover:border-foreground/30",
+                    "h-auto w-full justify-start gap-2.5 rounded-2xl border-2 p-3 text-left",
+                    active && "border-primary bg-plum-soft hover:bg-plum-soft",
                   )}
                 >
-                  <span
+                  <Flex
+                    as="span"
+                    align="center"
+                    justify="center"
                     className={cn(
-                      "flex size-8 shrink-0 items-center justify-center rounded-full text-fs-12 font-semibold [&_svg]:size-4",
-                      active || done ? "bg-brand-green text-white" : "bg-muted text-muted-foreground",
+                      "size-9 shrink-0 rounded-full [&_svg]:size-4",
+                      active
+                        ? "border-2 border-pop bg-tangerine text-tangerine-foreground"
+                        : done
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-muted-foreground",
                     )}
                   >
                     <Icon aria-hidden="true" />
-                  </span>
-                  <span className="hidden min-w-0 flex-col sm:flex">
-                    <span className="text-fs-11 font-semibold tracking-wider text-muted-foreground uppercase">
+                  </Flex>
+                  <Stack as="span" className="hidden min-w-0 sm:flex">
+                    <Text as="span" variant="eyebrow" tone="muted">
                       Step {index + 1}
-                    </span>
-                    <span className="text-sm font-semibold text-foreground">{label}</span>
-                  </span>
-                  <span className="text-sm font-semibold sm:hidden">{label}</span>
-                </button>
-              </li>
+                    </Text>
+                    <Text as="span" weight="bold">
+                      {label}
+                    </Text>
+                  </Stack>
+                  <Text as="span" weight="bold" className="sm:hidden">
+                    {label}
+                  </Text>
+                </Button>
+              </Box>
             );
           })}
-        </ol>
-      </nav>
+        </Grid>
+      </Box>
 
       <Panel hidden={wizard.tab !== "delivery"} title="How would you like your order?">
         <Controller
@@ -245,11 +265,11 @@ export function CheckoutForm({ addresses, blocked = false }: CheckoutFormProps) 
         />
       </Panel>
 
-      <div className="flex items-center justify-between gap-3">
+      <Flex align="center" justify="between" gap="3">
         {wizard.isFirst ? (
-          <span />
+          <Box />
         ) : (
-          <Button type="button" variant="outline" size="lg" onClick={() => void wizard.previous()}>
+          <Button type="button" variant="outline" size="lg" className="rounded-full" onClick={() => void wizard.previous()}>
             <ArrowLeft aria-hidden="true" />
             Back
           </Button>
@@ -265,7 +285,7 @@ export function CheckoutForm({ addresses, blocked = false }: CheckoutFormProps) 
             <ArrowRight aria-hidden="true" />
           </Button>
         )}
-      </div>
-    </form>
+      </Flex>
+    </Form>
   );
 }

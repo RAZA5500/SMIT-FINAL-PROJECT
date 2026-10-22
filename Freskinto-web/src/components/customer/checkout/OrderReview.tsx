@@ -1,6 +1,9 @@
 import { CalendarClock, MapPin, NotebookPen, Pencil, Store, Truck } from "lucide-react";
 import type { ReactNode } from "react";
+import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Heading, Text } from "@/components/ui/typography";
 import { InfoRow } from "@/components/shared/InfoRow";
 import { DELIVERY_TYPE_LABELS } from "@/constants/labels";
 import type { DeliveryType } from "@/constants/enums";
@@ -29,17 +32,22 @@ function ReviewSection({
   children: ReactNode;
 }) {
   return (
-    <section className="flex flex-col gap-3 rounded-2xl border border-border bg-muted/40 p-4">
-      <div className="flex items-center justify-between gap-3">
-        <h3 className="font-heading text-fs-16 font-semibold">{title}</h3>
-        <Button type="button" variant="ghost" size="sm" onClick={() => onEdit(tab)}>
+    <Stack as="section" gap="3" className="rounded-2xl border border-border bg-muted/40 p-4">
+      <Flex align="center" justify="between" gap="3">
+        <Heading as="h3" size="5">
+          {title}
+        </Heading>
+        <Button type="button" variant="ghost" size="sm" className="rounded-full" onClick={() => onEdit(tab)}>
           <Pencil aria-hidden="true" />
           Edit
-          <span className="sr-only"> {title.toLowerCase()}</span>
+          <Text as="span" className="sr-only">
+            {" "}
+            {title.toLowerCase()}
+          </Text>
         </Button>
-      </div>
-      <div className="flex flex-col gap-3">{children}</div>
-    </section>
+      </Flex>
+      <Stack gap="3">{children}</Stack>
+    </Stack>
   );
 }
 
@@ -49,7 +57,7 @@ export function OrderReview({ deliveryType, addressText, pickupAt, notes, onEdit
   const TypeIcon = pickup ? Store : Truck;
 
   return (
-    <div className="flex flex-col gap-4">
+    <Stack gap="4">
       <ReviewSection title="Delivery method" tab="delivery" onEdit={onEdit}>
         <InfoRow icon={<TypeIcon aria-hidden="true" />} label="Method">
           {deliveryType ? DELIVERY_TYPE_LABELS[deliveryType] : "—"} · Free
@@ -67,13 +75,19 @@ export function OrderReview({ deliveryType, addressText, pickupAt, notes, onEdit
 
       <ReviewSection title="Notes" tab="notes" onEdit={onEdit}>
         <InfoRow icon={<NotebookPen aria-hidden="true" />} label="Order notes">
-          {notes ? notes : <span className="text-muted-foreground">No notes added</span>}
+          {notes ? notes : (
+            <Text as="span" tone="muted">
+              No notes added
+            </Text>
+          )}
         </InfoRow>
       </ReviewSection>
 
-      <p className="text-fs-13 text-muted-foreground">
-        Your order is placed when you pay on the next step — the totals on the right are the final ones.
-      </p>
-    </div>
+      <Box>
+        <Text tone="muted" className="text-fs-13">
+          Your order is placed when you pay on the next step — the totals on the right are the final ones.
+        </Text>
+      </Box>
+    </Stack>
   );
 }

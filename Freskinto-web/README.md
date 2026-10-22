@@ -15,10 +15,12 @@ schemas in `src/modules/zod/`, shared UI in `src/components/{ui,shared}`.
 
 UI rules:
 
-- **No raw HTML elements outside `src/components/ui`.** Pages and feature components compose shadcn/ui components
-  plus the layout and type primitives in `components/ui` — `Box`, `Flex`/`Stack`, `Grid`, `Container`, `Heading`,
-  `Text`, `Form`, `Receipt`. Only the root layout renders `<html>` and `<body>`.
+- **No raw HTML elements outside `src/components/ui`** — `bun run lint` fails on them (`no-restricted-syntax` in
+  `eslint.config.mjs`). Pages and feature components compose shadcn/ui components plus the layout and type
+  primitives in `components/ui` — `Box`, `Flex`/`Stack`, `Grid`, `Container`, `Heading`, `Text`, `Form`. Only the
+  root layout renders `<html>` and `<body>`.
 - **Every `className` goes through `cn()`** from `@/lib/utils` (tailwind-merge, aware of the custom shadow and
   animation tokens).
-- Design tokens (white + emerald `#047857`, stone greys, Fraunces / Inter / JetBrains Mono) live in
-  `src/app/globals.css`; brand name and support email in `src/constants/store.ts`.
+- Design tokens ("Produce Pop": aubergine `#5b2a86`, tangerine `#ff7a3d`, lime `#c6f36b` on lilac paper, with a
+  `.dark` set; Bricolage Grotesque / Inter / JetBrains Mono) live in `src/app/globals.css`; brand name and support
+  email in `src/constants/store.ts`. The theme toggle (`hooks/useTheme.ts`) puts `.dark` on `<html>`.

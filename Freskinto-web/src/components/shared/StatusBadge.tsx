@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { Box } from "@/components/ui/box";
 import { STATUS_LABELS, STATUS_TONES, type StatusTone } from "@/constants/status";
 import { cn } from "@/lib/utils";
 
@@ -9,7 +10,7 @@ const TONES: Record<StatusTone, { variant: "success" | "warning" | "destructive"
   warning: { variant: "warning", dot: "bg-warning" },
   danger: { variant: "destructive", dot: "bg-destructive" },
   info: { variant: "info", dot: "bg-info" },
-  brand: { variant: "brand", dot: "bg-brand-green" },
+  brand: { variant: "brand", dot: "bg-primary" },
   neutral: { variant: "neutral", dot: "bg-muted-foreground/60" },
 };
 
@@ -27,7 +28,7 @@ export function StatusBadge({ status, label, tone: toneOverride, className }: St
   const tone = TONES[toneOverride ?? STATUS_TONES[status] ?? "neutral"];
   return (
     <Badge variant={tone.variant} className={cn("gap-1.5 pr-3 pl-2.5", className)}>
-      <span aria-hidden="true" className={cn("size-1.5 shrink-0 rounded-full", tone.dot)} />
+      <Box as="span" aria-hidden="true" className={cn("size-1.5 shrink-0 rounded-full", tone.dot)} />
       {label ?? STATUS_LABELS[status] ?? status}
     </Badge>
   );

@@ -1,7 +1,9 @@
-import { redirect } from "next/navigation";
-import { adminRoutes } from "@/lib/routes/routes";
+import type { Metadata } from "next";
+import { AdminOverviewView } from "./(components)/AdminOverviewView";
 
-/** Admin ka front door: orders (operations queue) */
+export const metadata: Metadata = { title: "Overview" };
+
+/** Admin ka front door: aaj ki queue, order status chart, stock alerts — sab asli API counts */
 export default function AdminHomePage() {
-  redirect(adminRoutes.orders);
+  return <AdminOverviewView />;
 }

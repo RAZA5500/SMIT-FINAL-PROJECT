@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowLeft } from "lucide-react";
+import { Grid } from "@/components/ui/grid";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AdminPage } from "@/components/admin/AdminPage";
 import { ButtonLink } from "@/components/shared/ButtonLink";
@@ -17,10 +18,10 @@ export function EditProductView({ id }: { id: string }) {
   if (isLoading) {
     return (
       <AdminPage title="Edit product">
-        <div aria-label="Loading" aria-busy="true" className={cn("grid gap-6 xl:grid-cols-3")}>
-          <Skeleton className={cn("h-96 w-full rounded-2xl xl:col-span-2")} />
-          <Skeleton className={cn("h-96 w-full rounded-2xl")} />
-        </div>
+        <Grid aria-label="Loading" aria-busy="true" gap="6" className="xl:grid-cols-3">
+          <Skeleton className={cn("h-96 w-full rounded-3xl xl:col-span-2")} />
+          <Skeleton className={cn("h-96 w-full rounded-3xl")} />
+        </Grid>
       </AdminPage>
     );
   }
@@ -31,7 +32,7 @@ export function EditProductView({ id }: { id: string }) {
       <AdminPage
         title="Edit product"
         actions={
-          <ButtonLink href={adminRoutes.products} variant="outline">
+          <ButtonLink href={adminRoutes.products} variant="outline" className="rounded-full">
             <ArrowLeft data-icon="inline-start" aria-hidden="true" />
             All products
           </ButtonLink>

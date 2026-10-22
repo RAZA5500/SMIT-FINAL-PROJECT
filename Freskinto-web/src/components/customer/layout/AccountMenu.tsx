@@ -3,6 +3,7 @@
 import { ChevronDown, LayoutDashboard, LogOut, UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,6 +14,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Stack } from "@/components/ui/flex";
+import { Text } from "@/components/ui/typography";
 import { ButtonLink } from "@/components/shared/ButtonLink";
 import { CUSTOMER_ACCOUNT_LINKS, type NavItem } from "@/constants/navigation";
 import { useLogout } from "@/hooks/useLogout";
@@ -31,14 +34,18 @@ export function AccountMenu() {
   const user = useAuthStore((state) => state.user);
 
   // Hydration se pehle khali jagah — "Sign in" flash na ho
-  if (!hasHydrated) return <span aria-hidden="true" className="inline-block size-10" />;
+  if (!hasHydrated) return <Box as="span" aria-hidden="true" className="inline-block size-10" />;
 
   if (!token || !user) {
     return (
       <ButtonLink href={publicRoutes.login} variant="ghost" className="rounded-full px-3">
         <UserRound aria-hidden="true" />
-        <span className="hidden font-semibold lg:inline">Sign in</span>
-        <span className="sr-only lg:hidden">Sign in</span>
+        <Text as="span" tone="inherit" weight="semibold" className="hidden lg:inline">
+          Sign in
+        </Text>
+        <Text as="span" className="sr-only lg:hidden">
+          Sign in
+        </Text>
       </ButtonLink>
     );
   }
@@ -51,18 +58,24 @@ export function AccountMenu() {
         render={<Button variant="ghost" aria-label="Account menu" className="gap-2 rounded-full pr-3 pl-1.5" />}
       >
         <Avatar size="sm" className="size-8">
-          <AvatarFallback className="bg-brand-green-forest text-white">{initials(user.name)}</AvatarFallback>
+          <AvatarFallback className="bg-primary font-bold text-primary-foreground">{initials(user.name)}</AvatarFallback>
         </Avatar>
-        <span className="hidden max-w-28 truncate font-semibold lg:inline">{user.name.split(" ")[0]}</span>
+        <Text as="span" tone="inherit" weight="semibold" className="hidden max-w-28 truncate lg:inline">
+          {user.name.split(" ")[0]}
+        </Text>
         <ChevronDown aria-hidden="true" className="hidden text-muted-foreground lg:inline" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-64">
         <DropdownMenuGroup>
           <DropdownMenuLabel>
-            <span className="flex flex-col gap-0.5">
-              <span className="truncate text-sm font-semibold text-foreground">{user.name}</span>
-              <span className="truncate text-fs-12 font-normal text-muted-foreground">{user.email}</span>
-            </span>
+            <Stack as="span" gap="0.5">
+              <Text as="span" weight="semibold" className="truncate">
+                {user.name}
+              </Text>
+              <Text as="span" tone="muted" weight="normal" className="truncate text-fs-12">
+                {user.email}
+              </Text>
+            </Stack>
           </DropdownMenuLabel>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

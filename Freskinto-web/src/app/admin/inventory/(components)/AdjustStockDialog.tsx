@@ -3,6 +3,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Form } from "@/components/ui/form";
+import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
+import { Text } from "@/components/ui/typography";
 import { AppModal } from "@/components/shared/AppModal";
 import { InputField } from "@/components/shared/InputField";
 import { LoadingButton } from "@/components/shared/LoadingButton";
@@ -78,27 +82,27 @@ function AdjustStockForm({
   });
 
   return (
-    <div className="flex flex-col gap-5">
-      <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/50 p-3">
-        <ProductImage
-          name={inventory.product.name}
-          sizes="44px"
-          className="size-11 shrink-0 overflow-hidden rounded-lg"
-          imageClassName="p-1"
-        />
-        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-          <p className="truncate font-semibold">{inventory.product.name}</p>
-          <p className="font-mono text-fs-12 text-muted-foreground">{inventory.product.sku}</p>
-        </div>
-        <div className="flex flex-col items-end gap-1">
-          <p className="numeric text-sm font-semibold">{inventory.qtyOnHand} in stock</p>
-          <StatusBadge status={inventory.stockStatus} />
-        </div>
-      </div>
+    <Stack gap="5">
+      <Item variant="outline" className="flex-nowrap rounded-2xl bg-muted/50 p-3">
+        <ItemMedia className="overflow-hidden rounded-lg">
+          <ProductImage name={inventory.product.name} sizes="44px" className="size-11" imageClassName="p-1" />
+        </ItemMedia>
+        <ItemContent className="min-w-0 gap-0.5">
+          <ItemTitle className="font-semibold">{inventory.product.name}</ItemTitle>
+          <ItemDescription className="font-mono text-fs-12">{inventory.product.sku}</ItemDescription>
+        </ItemContent>
+        <ItemActions>
+          <Flex direction="col" align="end" gap="1">
+            <Text weight="semibold" numeric>
+              {inventory.qtyOnHand} in stock
+            </Text>
+            <StatusBadge status={inventory.stockStatus} />
+          </Flex>
+        </ItemActions>
+      </Item>
 
-      <form
+      <Form
         id={FORM_ID}
-        noValidate
         className="grid gap-4 sm:grid-cols-2"
         onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))}
       >
@@ -136,7 +140,7 @@ function AdjustStockForm({
           error={errors.note?.message}
           {...register("note")}
         />
-      </form>
-    </div>
+      </Form>
+    </Stack>
   );
 }

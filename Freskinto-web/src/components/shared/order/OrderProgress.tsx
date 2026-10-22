@@ -1,3 +1,5 @@
+import { Box } from "@/components/ui/box";
+import { Flex } from "@/components/ui/flex";
 import type { OrderStatus } from "@/constants/enums";
 import { cn } from "@/lib/utils";
 
@@ -21,16 +23,23 @@ export function OrderProgress({ status, className }: { status: OrderStatus; clas
   const stopped = current < 0;
 
   return (
-    <div aria-hidden="true" className={cn("flex gap-1", className)}>
+    <Flex aria-hidden="true" gap="1" className={cn(className)}>
       {Array.from({ length: STEPS }, (_, index) => (
-        <span
+        <Box
+          as="span"
           key={index}
           className={cn(
-            "h-1.5 flex-1 rounded-full",
-            stopped ? "bg-destructive/25" : index <= current ? "bg-brand-green" : "bg-muted",
+            "h-1.5 flex-1 rounded-full transition-colors",
+            stopped
+              ? "bg-destructive/25"
+              : index < current
+                ? "bg-primary"
+                : index === current
+                  ? "bg-tangerine"
+                  : "bg-muted",
           )}
         />
       ))}
-    </div>
+    </Flex>
   );
 }

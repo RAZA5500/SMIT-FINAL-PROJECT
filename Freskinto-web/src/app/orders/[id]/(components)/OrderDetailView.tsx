@@ -3,7 +3,10 @@
 import { ArrowLeft, CreditCard, ReceiptText, Route, XCircle } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Grid } from "@/components/ui/grid";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Text } from "@/components/ui/typography";
 import { CustomerPage } from "@/components/customer/CustomerPage";
 import { ButtonLink } from "@/components/shared/ButtonLink";
 import { ErrorState } from "@/components/shared/ErrorState";
@@ -49,7 +52,7 @@ export function OrderDetailView({ id }: { id: string }) {
   const [payOpen, setPayOpen] = useState(false);
 
   const backLink = (
-    <ButtonLink href={customerRoutes.orders} variant="outline">
+    <ButtonLink href={customerRoutes.orders} variant="outline" className="rounded-full border-2">
       <ArrowLeft aria-hidden="true" />
       All orders
     </ButtonLink>
@@ -58,10 +61,10 @@ export function OrderDetailView({ id }: { id: string }) {
   if (isLoading) {
     return (
       <CustomerPage title="Order details" breadcrumbs={[BREADCRUMB_ORDERS, { label: "Order" }]}>
-        <div aria-label="Loading" aria-busy="true" className="grid items-start gap-6 lg:grid-cols-12">
-          <Skeleton className="h-80 w-full rounded-15 lg:col-span-8" />
-          <Skeleton className="h-80 w-full rounded-15 lg:col-span-4" />
-        </div>
+        <Grid aria-label="Loading" aria-busy="true" align="start" gap="6" className="lg:grid-cols-12">
+          <Skeleton className="h-80 w-full rounded-3xl lg:col-span-8" />
+          <Skeleton className="h-80 w-full rounded-3xl lg:col-span-4" />
+        </Grid>
       </CustomerPage>
     );
   }
@@ -86,7 +89,11 @@ export function OrderDetailView({ id }: { id: string }) {
   return (
     <CustomerPage
       eyebrow={`Placed ${formatDateTime(order.createdAt)}`}
-      title={<span className="numeric tracking-tight">{order.orderNumber}</span>}
+      title={
+        <Text as="span" tone="inherit" family="mono" numeric className="tracking-tight">
+          {order.orderNumber}
+        </Text>
+      }
       meta={
         <>
           <StatusBadge status={order.status} />
@@ -96,7 +103,7 @@ export function OrderDetailView({ id }: { id: string }) {
       breadcrumbs={[BREADCRUMB_ORDERS, { label: order.orderNumber }]}
       actions={
         canCancel && (
-          <Button variant="destructive-outline" onClick={() => setCancelOpen(true)}>
+          <Button variant="destructive-outline" className="rounded-full" onClick={() => setCancelOpen(true)}>
             <XCircle aria-hidden="true" />
             Cancel order
           </Button>
@@ -105,10 +112,18 @@ export function OrderDetailView({ id }: { id: string }) {
     >
       <OrderStatusBanner order={order} now={now} canPay={canPay} onPay={() => setPayOpen(true)} />
 
-      <div className="grid items-start gap-6 lg:grid-cols-12">
-        <div className="flex flex-col gap-6 lg:col-span-8">
-          <SectionCard title="Items" icon={<ReceiptText />} action={<span className="text-fs-13 text-muted-foreground">{pluralize(order.items.length, "line")}</span>}>
-            <div className="flex flex-col gap-5">
+      <Grid align="start" gap="6" className="lg:grid-cols-12">
+        <Stack gap="6" className="lg:col-span-8">
+          <SectionCard
+            title="Items"
+            icon={<ReceiptText />}
+            action={
+              <Text as="span" tone="muted" className="text-fs-13">
+                {pluralize(order.items.length, "line")}
+              </Text>
+            }
+          >
+            <Stack gap="5">
               <OrderLines
                 lines={order.items.map((item) => ({
                   id: item.id,
@@ -126,14 +141,14 @@ export function OrderDetailView({ id }: { id: string }) {
                 shippingLabel={pickup ? "Collection" : "Delivery"}
                 className="ml-auto w-full max-w-xs"
               />
-            </div>
+            </Stack>
           </SectionCard>
           <SectionCard title="Payments" icon={<CreditCard />}>
             <PaymentAttempts payments={order.payments} />
           </SectionCard>
-        </div>
+        </Stack>
 
-        <div className="flex flex-col gap-6 lg:col-span-4">
+        <Stack gap="6" className="lg:col-span-4">
           <SectionCard title="Order tracking" icon={<Route />}>
             <OrderTimeline steps={orderSteps(order)} cancelledAt={order.cancelledAt} />
           </SectionCard>
@@ -157,8 +172,8 @@ export function OrderDetailView({ id }: { id: string }) {
               }
             />
           </SectionCard>
-        </div>
-      </div>
+        </Stack>
+      </Grid>
 
       <CancelOrderDialog
         open={cancelOpen}
@@ -170,15 +185,17 @@ export function OrderDetailView({ id }: { id: string }) {
             : "You haven't been charged for this order."
         }
         entitySummary={
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex min-w-0 flex-col gap-0.5">
-              <p className="numeric font-semibold">{order.orderNumber}</p>
-              <p className="text-fs-13 text-muted-foreground">
+          <Flex align="center" justify="between" gap="3">
+            <Stack gap="0.5" className="min-w-0">
+              <Text weight="semibold" family="mono" numeric>
+                {order.orderNumber}
+              </Text>
+              <Text tone="muted" className="text-fs-13">
                 {pluralize(order.items.length, "line")} · {formatDateTime(order.createdAt)}
-              </p>
-            </div>
+              </Text>
+            </Stack>
             <Price amount={order.total} size="md" />
-          </div>
+          </Flex>
         }
         reasons={CUSTOMER_CANCEL_REASONS}
         labels={CUSTOMER_CANCEL_REASON_LABELS}

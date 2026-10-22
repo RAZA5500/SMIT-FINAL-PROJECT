@@ -1,13 +1,16 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, LoaderCircle, Mail, UserRound } from "lucide-react";
+import { ArrowRight, Mail, UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Controller, useForm, useWatch } from "react-hook-form";
-import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
+import { Stack } from "@/components/ui/flex";
+import { Form } from "@/components/ui/form";
+import { Text } from "@/components/ui/typography";
 import { CheckboxField } from "@/components/shared/CheckboxField";
 import { InputField } from "@/components/shared/InputField";
+import { LoadingButton } from "@/components/shared/LoadingButton";
 import { PasswordField } from "@/components/shared/PasswordField";
 import { PasswordStrength } from "@/components/shared/PasswordStrength";
 import { TextLink } from "@/components/shared/TextLink";
@@ -54,12 +57,7 @@ export function RegisterForm() {
   };
 
   return (
-    <form
-      id={FORM_ID}
-      noValidate
-      className="flex flex-col gap-6"
-      onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))}
-    >
+    <Form id={FORM_ID} onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))}>
       <FieldGroup>
         <InputField
           id="fullName"
@@ -82,7 +80,7 @@ export function RegisterForm() {
           error={errors.email?.message}
           {...register("email")}
         />
-        <div className="flex flex-col gap-3">
+        <Stack gap="3">
           <PasswordField
             id="password"
             label="Password"
@@ -93,7 +91,7 @@ export function RegisterForm() {
             {...register("password")}
           />
           <PasswordStrength password={passwordValue} />
-        </div>
+        </Stack>
         <PasswordField
           id="confirmPassword"
           label="Confirm password"
@@ -118,15 +116,14 @@ export function RegisterForm() {
         />
       </FieldGroup>
 
-      <Button type="submit" variant="signin" size="xl" disabled={isSubmitting} className="w-full">
-        {isSubmitting && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />}
+      <LoadingButton type="submit" variant="cta" size="xl" isLoading={isSubmitting} className="w-full">
         Create account
         {!isSubmitting && <ArrowRight aria-hidden="true" />}
-      </Button>
+      </LoadingButton>
 
-      <p className="text-center text-sm text-muted-foreground">
+      <Text tone="muted" className="text-center">
         Already have an account? <TextLink href={publicRoutes.login}>Sign in</TextLink>
-      </p>
-    </form>
+      </Text>
+    </Form>
   );
 }

@@ -5,7 +5,14 @@ import { ArrowLeft, Clock, CreditCard, Lock, ShoppingBasket } from "lucide-react
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { Box } from "@/components/ui/box";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Container } from "@/components/ui/container";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Form } from "@/components/ui/form";
+import { Grid } from "@/components/ui/grid";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Text } from "@/components/ui/typography";
 import { CartSummaryCard } from "@/components/customer/cart/CartSummaryCard";
 import { CheckoutSteps } from "@/components/customer/checkout/CheckoutSteps";
 import { MockOutcomeField } from "@/components/customer/checkout/MockOutcomeField";
@@ -123,13 +130,13 @@ export function CheckoutPaymentView() {
     );
   } else if (isLoading) {
     content = (
-      <div aria-label="Loading" aria-busy="true" className="grid items-start gap-6 lg:grid-cols-12 lg:gap-8">
-        <div className="flex flex-col gap-5 lg:col-span-7">
-          <Skeleton className="h-36 w-full rounded-15" />
-          <Skeleton className="h-72 w-full rounded-15" />
-        </div>
-        <Skeleton className="h-96 w-full rounded-15 lg:col-span-5" />
-      </div>
+      <Grid aria-label="Loading" aria-busy="true" align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
+        <Stack gap="5" className="lg:col-span-7">
+          <Skeleton className="h-36 w-full rounded-3xl" />
+          <Skeleton className="h-72 w-full rounded-3xl" />
+        </Stack>
+        <Skeleton className="h-96 w-full rounded-3xl lg:col-span-5" />
+      </Grid>
     );
   } else if (isError) {
     content = <ErrorState title="Couldn't load your basket" message={error.message} onRetry={() => void refetch()} />;
@@ -153,35 +160,35 @@ export function CheckoutPaymentView() {
     );
   } else {
     content = (
-      <div className="grid items-start gap-6 lg:grid-cols-12 lg:gap-8">
-        <div className="flex flex-col gap-5 lg:col-span-7">
+      <Grid align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
+        <Stack gap="5" className="lg:col-span-7">
           <DeliveryDetails intent={intent} />
-          <section
-            aria-label="Payment"
-            className="flex flex-col gap-5 rounded-15 border border-border bg-card p-5 shadow-soft sm:p-6"
-          >
-            <header className="flex flex-col gap-1">
-              <h2 className="flex items-center gap-2 font-heading text-fs-18 font-semibold">
-                <CreditCard aria-hidden="true" className="size-5 text-brand-green" />
+          <Card render={<Box as="section" aria-label="Payment" />} size="lg" className="rounded-3xl border-2">
+            <CardHeader>
+              <CardTitle render={<Box as="span" />} className="flex items-center gap-2 text-xl font-bold">
+                <CreditCard aria-hidden="true" className="size-5 text-primary" />
                 Payment
-              </h2>
-              <p className="text-sm text-muted-foreground">Your order is placed when you pay.</p>
-            </header>
-            {/* handleSubmit event ke waqt — onPay ka ref guard render mein nahi padha jata */}
-            <form
-              id={PAYMENT_FORM_ID}
-              noValidate
-              onSubmit={(event) => void handleSubmit(onPay, () => scrollToFirstError(PAYMENT_FORM_ID))(event)}
-            >
-              <MockOutcomeField control={control} disabled={isBusy} />
-            </form>
-            <p className="flex items-start gap-2 text-fs-13 text-muted-foreground">
-              <Clock aria-hidden="true" className="mt-px size-3.5 shrink-0" />
-              If a payment doesn&apos;t go through, you can retry from the order page within {STORE.paymentWindowMinutes}{" "}
-              minutes.
-            </p>
-          </section>
-        </div>
+              </CardTitle>
+              <CardDescription>Your order is placed when you pay.</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-5">
+              {/* handleSubmit event ke waqt — onPay ka ref guard render mein nahi padha jata */}
+              <Form
+                id={PAYMENT_FORM_ID}
+                onSubmit={(event) => void handleSubmit(onPay, () => scrollToFirstError(PAYMENT_FORM_ID))(event)}
+              >
+                <MockOutcomeField control={control} disabled={isBusy} />
+              </Form>
+              <Flex align="start" gap="2" className="text-fs-13 text-muted-foreground">
+                <Clock aria-hidden="true" className="mt-px size-3.5 shrink-0" />
+                <Text as="span" tone="inherit" className="text-fs-13">
+                  If a payment doesn&apos;t go through, you can retry from the order page within{" "}
+                  {STORE.paymentWindowMinutes} minutes.
+                </Text>
+              </Flex>
+            </CardContent>
+          </Card>
+        </Stack>
 
         <CartSummaryCard cart={cart} showItems className="lg:sticky lg:top-6 lg:col-span-5">
           <LoadingButton
@@ -200,23 +207,23 @@ export function CheckoutPaymentView() {
             href={customerRoutes.checkout}
             variant="ghost"
             aria-disabled={isBusy || undefined}
-            className={cn("w-full", isBusy && "pointer-events-none opacity-50")}
+            className={cn("w-full rounded-full", isBusy && "pointer-events-none opacity-50")}
           >
             <ArrowLeft aria-hidden="true" />
             Back to delivery details
           </ButtonLink>
         </CartSummaryCard>
-      </div>
+      </Grid>
     );
   }
 
   return (
-    <div className="page-container flex flex-col gap-8 py-8 sm:py-10">
-      <div className="flex flex-col gap-6">
+    <Container className="flex flex-col gap-8 py-8 sm:py-10">
+      <Stack gap="6">
         <CheckoutSteps current={2} />
         <PageHeader eyebrow="Step 3 of 3" title="Payment" description="Check your order and pay to confirm it." />
-      </div>
+      </Stack>
       {content}
-    </div>
+    </Container>
   );
 }

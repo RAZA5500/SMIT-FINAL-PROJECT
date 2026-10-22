@@ -1,6 +1,10 @@
 import { ArrowLeft } from "lucide-react";
 import type { FormEventHandler, ReactNode } from "react";
+import { Box } from "@/components/ui/box";
 import { Card, CardContent } from "@/components/ui/card";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Form } from "@/components/ui/form";
+import { Grid } from "@/components/ui/grid";
 import { ButtonLink } from "@/components/shared/ButtonLink";
 import { cn } from "@/lib/utils";
 import { AdminPage } from "./AdminPage";
@@ -38,32 +42,32 @@ export function AdminFormPage({
       title={title}
       description={description}
       actions={
-        <ButtonLink href={backHref} variant="outline">
+        <ButtonLink href={backHref} variant="outline" className="rounded-full">
           <ArrowLeft data-icon="inline-start" aria-hidden="true" />
           {backLabel}
         </ButtonLink>
       }
       className={cn("pb-0 sm:pb-0 lg:pb-0")}
     >
-      <div className={cn("grid items-start gap-6", aside && "xl:grid-cols-3")}>
-        <Card className={cn(aside && "xl:col-span-2")}>
+      <Grid align="start" gap="6" className={cn(aside && "xl:grid-cols-3")}>
+        <Card className={cn("rounded-3xl", aside && "xl:col-span-2")}>
           <CardContent>
-            <form id={formId} onSubmit={onSubmit ?? ((event) => event.preventDefault())}>
+            <Form id={formId} onSubmit={onSubmit ?? ((event) => event.preventDefault())}>
               {children}
-            </form>
+            </Form>
           </CardContent>
         </Card>
         {aside && (
-          <aside className={cn("flex flex-col gap-4 xl:sticky xl:top-24")}>
+          <Stack as="aside" gap="4" className="xl:sticky xl:top-24">
             {aside}
-          </aside>
+          </Stack>
         )}
-      </div>
-      <div className={cn("sticky bottom-0 z-20 -mx-4 mt-auto border-t bg-background/90 px-4 py-4 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8")}>
-        <div className="flex flex-wrap items-center justify-end gap-2.5">
+      </Grid>
+      <Box className="glass sticky bottom-0 z-20 -mx-4 mt-auto border-t px-4 py-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <Flex wrap align="center" justify="end" gap="2.5">
           {footer}
-        </div>
-      </div>
+        </Flex>
+      </Box>
     </AdminPage>
   );
 }

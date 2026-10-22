@@ -1,12 +1,15 @@
 "use client";
 
-import { ArrowRight, ShoppingBasket, Truck } from "lucide-react";
+import { ArrowRight, PartyPopper, ShoppingBasket } from "lucide-react";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { Alert, AlertBody } from "@/components/ui/alert";
+import { Box } from "@/components/ui/box";
+import { Flex, Stack } from "@/components/ui/flex";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Text } from "@/components/ui/typography";
 import { ButtonLink } from "@/components/shared/ButtonLink";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
@@ -89,20 +92,20 @@ function CartPanelBody({ onClose }: { onClose: () => void }) {
     );
   } else {
     body = (
-      <ul className="flex flex-col divide-y divide-border">
+      <Stack as="ul" className="divide-y divide-border">
         {items.map((item) => (
-          <li key={item.id}>
+          <Box as="li" key={item.id}>
             <CartLine item={item} compact onNavigate={onClose} />
-          </li>
+          </Box>
         ))}
-      </ul>
+      </Stack>
     );
   }
 
   return (
     <>
       <SheetHeader className="border-b border-border">
-        <SheetTitle>Your basket</SheetTitle>
+        <SheetTitle className="text-2xl font-extrabold">Your basket</SheetTitle>
         <SheetDescription>
           {items.length > 0
             ? `${pluralize(cart?.itemCount ?? 0, "item")} · ${formatMoney(cart?.subtotal ?? 0)}`
@@ -111,24 +114,28 @@ function CartPanelBody({ onClose }: { onClose: () => void }) {
       </SheetHeader>
 
       {items.length > 0 && (
-        <div className="flex items-center gap-2 border-b border-border bg-brand-soft px-5 py-2.5 text-fs-12 font-semibold tracking-wide text-brand-green-dark uppercase">
-          <Truck aria-hidden="true" className="size-4 shrink-0" />
-          Free delivery is included with this order
-        </div>
+        <Flex align="center" gap="2" className="bg-lime px-5 py-2.5 text-lime-foreground">
+          <PartyPopper aria-hidden="true" className="size-4 shrink-0" />
+          <Text as="span" variant="eyebrow" tone="inherit">
+            Free delivery unlocked — on every order
+          </Text>
+        </Flex>
       )}
 
       <ScrollArea className="min-h-0 flex-1">
-        <div className="px-5">{body}</div>
+        <Box className="px-5">{body}</Box>
       </ScrollArea>
 
       {items.length > 0 && (
         <SheetFooter>
-          <div className="flex items-baseline justify-between">
-            <span className="text-muted-foreground">Total</span>
-            <Price amount={cart?.grandTotal ?? 0} size="xl" className="font-heading" />
-          </div>
+          <Flex align="baseline" justify="between">
+            <Text as="span" tone="muted">
+              Total
+            </Text>
+            <Price amount={cart?.grandTotal ?? 0} size="xl" />
+          </Flex>
           {canCheckout ? (
-            <ButtonLink href={customerRoutes.checkout} onClick={onClose} size="lg" variant="cta" className="w-full">
+            <ButtonLink href={customerRoutes.checkout} onClick={onClose} size="xl" variant="cta" className="w-full">
               Checkout
               <ArrowRight aria-hidden="true" />
             </ButtonLink>
@@ -137,7 +144,7 @@ function CartPanelBody({ onClose }: { onClose: () => void }) {
               <AlertBody>Some items need attention before you can check out.</AlertBody>
             </Alert>
           )}
-          <ButtonLink href={customerRoutes.cart} onClick={onClose} variant="ghost" className="w-full">
+          <ButtonLink href={customerRoutes.cart} onClick={onClose} variant="ghost" className="w-full rounded-full">
             View full basket
           </ButtonLink>
         </SheetFooter>
@@ -148,17 +155,17 @@ function CartPanelBody({ onClose }: { onClose: () => void }) {
 
 function CartLinesSkeleton() {
   return (
-    <div aria-label="Loading" aria-busy="true" className="flex flex-col gap-5 py-5">
+    <Stack aria-label="Loading" aria-busy="true" gap="5" className="py-5">
       {Array.from({ length: 3 }, (_, i) => (
-        <div key={i} className="flex gap-3">
-          <Skeleton className="size-16 rounded-xl" />
-          <div className="flex flex-1 flex-col gap-2">
+        <Flex key={i} gap="3">
+          <Skeleton className="size-16 rounded-2xl" />
+          <Stack gap="2" className="flex-1">
             <Skeleton className="h-4 w-3/4" />
             <Skeleton className="h-3 w-1/3" />
-            <Skeleton className="h-9 w-28 rounded-full" />
-          </div>
-        </div>
+            <Skeleton className="h-10 w-28 rounded-full" />
+          </Stack>
+        </Flex>
       ))}
-    </div>
+    </Stack>
   );
 }

@@ -1,14 +1,16 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, LoaderCircle, Mail } from "lucide-react";
+import { ArrowRight, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
+import { Form } from "@/components/ui/form";
+import { Text } from "@/components/ui/typography";
 import { CheckboxField } from "@/components/shared/CheckboxField";
 import { InputField } from "@/components/shared/InputField";
+import { LoadingButton } from "@/components/shared/LoadingButton";
 import { PasswordField } from "@/components/shared/PasswordField";
 import { TextLink } from "@/components/shared/TextLink";
 import { homeForRole, publicRoutes, safeRedirect } from "@/lib/routes/routes";
@@ -73,12 +75,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
   };
 
   return (
-    <form
-      id={FORM_ID}
-      noValidate
-      className="flex flex-col gap-6"
-      onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))}
-    >
+    <Form id={FORM_ID} onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))}>
       <FieldGroup>
         <InputField
           id="email"
@@ -113,15 +110,14 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
         />
       </FieldGroup>
 
-      <Button type="submit" variant="signin" size="xl" disabled={isSubmitting} className="w-full">
-        {isSubmitting && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />}
+      <LoadingButton type="submit" variant="cta" size="xl" isLoading={isSubmitting} className="w-full">
         Sign in
         {!isSubmitting && <ArrowRight aria-hidden="true" />}
-      </Button>
+      </LoadingButton>
 
-      <p className="text-center text-sm text-muted-foreground">
+      <Text tone="muted" className="text-center">
         New to the market? <TextLink href={publicRoutes.register}>Create a free account</TextLink>
-      </p>
-    </form>
+      </Text>
+    </Form>
   );
 }

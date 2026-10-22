@@ -3,6 +3,9 @@
 import { CircleCheck, CircleX, FlaskConical, Nfc } from "lucide-react";
 import { Controller, type Control } from "react-hook-form";
 import { Alert, AlertBody, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Box } from "@/components/ui/box";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Text } from "@/components/ui/typography";
 import { ChoiceCards } from "@/components/shared/ChoiceCards";
 import { FieldMessage } from "@/components/shared/FieldMessage";
 import { STORE } from "@/constants/store";
@@ -17,30 +20,43 @@ const OUTCOMES: Record<MockPaymentFormValues["outcome"], { label: string; hint: 
 /** Decorative test card (no real card data anywhere — the gateway is a mock) */
 function TestCardFace() {
   return (
-    <div
+    <Stack
       aria-hidden="true"
-      className="relative flex w-full max-w-xs flex-col gap-6 overflow-hidden rounded-2xl bg-forest-gradient p-5 text-white shadow-lift"
+      gap="6"
+      className="relative w-full max-w-xs -rotate-2 overflow-hidden rounded-2xl bg-night p-5 text-night-foreground shadow-lift transition-transform hover:rotate-0"
     >
-      <div className="flex items-center justify-between">
-        <span className="font-sans text-fs-18 font-semibold">{STORE.name}</span>
-        <Nfc className="size-5 text-white/70" />
-      </div>
-      <span className="h-7 w-10 rounded-md bg-marigold/80" />
-      <div className="flex flex-col gap-1.5">
-        <span className="font-mono text-sm tracking-widest">4242 4242 4242 4242</span>
-        <div className="flex justify-between text-fs-11 font-semibold tracking-wider text-white/70 uppercase">
-          <span>Test card</span>
-          <span className="font-mono">12/30</span>
-        </div>
-      </div>
-    </div>
+      <Box className="absolute -top-10 -right-10 size-32 rounded-full bg-primary/50 blur-2xl" />
+      <Flex align="center" justify="between" className="relative">
+        <Text as="span" family="heading" weight="extrabold" tone="inherit" className="text-lg">
+          {STORE.name.toLowerCase()}
+          <Text as="span" tone="inherit" className="text-tangerine">
+            .
+          </Text>
+        </Text>
+        <Nfc className="size-5 text-night-muted" />
+      </Flex>
+      <Box className="relative h-7 w-10 rounded-md bg-lime" />
+      <Stack gap="1.5" className="relative">
+        <Text as="span" tone="inherit" family="mono" className="tracking-widest">
+          4242 4242 4242 4242
+        </Text>
+        <Flex justify="between" className="text-fs-11 font-semibold tracking-wider text-night-muted uppercase">
+          <Text as="span" tone="inherit" className="text-fs-11">
+            Test card
+          </Text>
+          <Text as="span" tone="inherit" family="mono" className="text-fs-11">
+            12/30
+          </Text>
+        </Flex>
+      </Stack>
+    </Stack>
   );
 }
 
 /** Mock gateway — card form ki jagah outcome (FLOW-MD 08 §16) */
 export function MockOutcomeField({ control, disabled }: { control: Control<MockPaymentFormValues>; disabled?: boolean }) {
   return (
-    <div className="flex flex-col gap-5">
+    <Stack gap="5">
       <Alert variant="warning">
         <FlaskConical aria-hidden="true" />
         <AlertBody>
@@ -53,7 +69,7 @@ export function MockOutcomeField({ control, disabled }: { control: Control<MockP
         control={control}
         name="outcome"
         render={({ field, fieldState }) => (
-          <div className="flex flex-col gap-2">
+          <Stack gap="2">
             <ChoiceCards
               id="payment-outcome"
               aria-label="Payment outcome"
@@ -73,9 +89,9 @@ export function MockOutcomeField({ control, disabled }: { control: Control<MockP
               })}
             />
             <FieldMessage id="outcome" error={fieldState.error?.message} />
-          </div>
+          </Stack>
         )}
       />
-    </div>
+    </Stack>
   );
 }

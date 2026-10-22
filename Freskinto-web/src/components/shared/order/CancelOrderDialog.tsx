@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, type ReactNode } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import type * as z from "zod";
+import { Form } from "@/components/ui/form";
 import { scrollToFirstError } from "@/lib/utils";
 import { cancelOrderSchema } from "@/modules/zod/cancel-order.model";
 import { SelectField } from "../SelectField";
@@ -89,12 +90,7 @@ function CancelOrderForm({
   const isOther = useWatch({ control, name: "reason" }) === "OTHER";
 
   return (
-    <form
-      id={FORM_ID}
-      noValidate
-      className="flex flex-col gap-4"
-      onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))}
-    >
+    <Form id={FORM_ID} className="gap-4" onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))}>
       <Controller
         control={control}
         name="reason"
@@ -121,6 +117,6 @@ function CancelOrderForm({
         error={errors.note?.message}
         {...register("note")}
       />
-    </form>
+    </Form>
   );
 }

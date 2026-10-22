@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { Controller, useForm, useWatch, type FieldErrors } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Grid } from "@/components/ui/grid";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { AdminFormPage } from "@/components/admin/AdminFormPage";
@@ -215,7 +216,7 @@ export function ProductForm({ product }: { product?: IAdminProduct }) {
 
       {tab === "pricing" && (
         <FieldGroup>
-          <div className="grid gap-5 sm:grid-cols-3">
+          <Grid gap="5" className="sm:grid-cols-3">
             <Field data-invalid={errors.price ? true : undefined}>
               <FieldLabel htmlFor="price">
                 Price
@@ -260,7 +261,7 @@ export function ProductForm({ product }: { product?: IAdminProduct }) {
               error={errors.maximumOrderQuantity?.message}
               {...register("maximumOrderQuantity")}
             />
-          </div>
+          </Grid>
           <FieldDescription>
             Customers add the minimum on their first click and can&apos;t exceed the maximum (or the stock on hand).
           </FieldDescription>

@@ -2,6 +2,8 @@
 
 import { Package } from "lucide-react";
 import { useState, type ReactNode } from "react";
+import { Box } from "@/components/ui/box";
+import { Stack } from "@/components/ui/flex";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CustomerPage } from "@/components/customer/CustomerPage";
 import { ButtonLink } from "@/components/shared/ButtonLink";
@@ -34,11 +36,11 @@ export function OrdersView() {
   let content: ReactNode;
   if (isLoading) {
     content = (
-      <div aria-label="Loading" aria-busy="true" className="flex flex-col gap-4">
+      <Stack aria-label="Loading" aria-busy="true" gap="4">
         {Array.from({ length: 3 }, (_, i) => (
-          <Skeleton key={i} className="h-44 w-full rounded-15" />
+          <Skeleton key={i} className="h-44 w-full rounded-3xl" />
         ))}
-      </div>
+      </Stack>
     );
   } else if (isError) {
     content = <ErrorState title="Couldn't load your orders" message={error.message} onRetry={() => void refetch()} />;
@@ -62,14 +64,14 @@ export function OrdersView() {
     );
   } else {
     content = (
-      <div className="flex flex-col gap-6">
-        <ul className={cn("flex flex-col gap-4", isFetching && "opacity-60 transition-opacity")}>
-          {data.data.map((order) => (
-            <li key={order.id}>
+      <Stack gap="6">
+        <Stack as="ul" gap="4" className={cn(isFetching && "opacity-60 transition-opacity")}>
+          {data.data.map((order, index) => (
+            <Box as="li" key={order.id} className="animate-fade-up" style={{ animationDelay: `${index * 50}ms` }}>
               <OrderCard order={order} />
-            </li>
+            </Box>
           ))}
-        </ul>
+        </Stack>
         <Pagination
           currentPage={data.meta.currentPage}
           totalPages={data.meta.pages}
@@ -78,7 +80,7 @@ export function OrdersView() {
           onPageChange={setPage}
           itemLabel="orders"
         />
-      </div>
+      </Stack>
     );
   }
 

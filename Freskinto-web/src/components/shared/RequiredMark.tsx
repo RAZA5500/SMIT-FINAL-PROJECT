@@ -1,8 +1,10 @@
+import { Text } from "@/components/ui/typography";
+
 /** Label ke saath "*" — screen readers ke liye `required` attribute kaafi hai */
 export function RequiredMark() {
   return (
-    <span aria-hidden="true" className="leading-none text-destructive">
+    <Text as="span" tone="destructive" aria-hidden="true" className="leading-none">
       *
-    </span>
+    </Text>
   );
 }

@@ -1,5 +1,9 @@
 import type { LucideIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Flex, Stack } from "@/components/ui/flex";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 
 interface StatTileProps {
@@ -7,7 +11,7 @@ interface StatTileProps {
   value: string | number | undefined;
   hint?: string;
   icon: LucideIcon;
-  /** Icon ka rang (text-* token) */
+  /** Icon tile ka rang (bg + text tokens) */
   tone?: string;
   isLoading?: boolean;
   /** Diya ho to tile ek filter button ban jati hai */
@@ -16,40 +20,63 @@ interface StatTileProps {
 }
 
 /** KPI tile: icon chip, uppercase micro label, bada number, ek line hint */
-export function StatTile({ label, value, hint, icon: Icon, tone = "text-brand-green", isLoading, onSelect, active }: StatTileProps) {
+export function StatTile({
+  label,
+  value,
+  hint,
+  icon: Icon,
+  tone = "bg-plum-soft text-primary",
+  isLoading,
+  onSelect,
+  active,
+}: StatTileProps) {
   const body = (
     <>
-      <span aria-hidden="true" className={cn("flex size-11 shrink-0 items-center justify-center rounded-xl bg-muted [&_svg]:size-5", tone)}>
+      <Flex
+        as="span"
+        align="center"
+        justify="center"
+        aria-hidden="true"
+        className={cn("size-12 shrink-0 rounded-2xl transition-transform group-hover/stat:-rotate-6 [&_svg]:size-5", tone)}
+      >
         <Icon />
-      </span>
-      <span className="flex min-w-0 flex-col gap-1 text-left">
-        <span className="text-fs-11 font-semibold tracking-wider text-muted-foreground uppercase">{label}</span>
+      </Flex>
+      <Stack as="span" gap="1" className="min-w-0 text-left">
+        <Text as="span" variant="eyebrow" tone="muted">
+          {label}
+        </Text>
         {isLoading ? (
           <Skeleton className="h-7 w-12" />
         ) : (
-          <span className="numeric text-fs-28 leading-none font-semibold text-foreground">{value ?? "—"}</span>
+          <Text as="span" family="heading" weight="bold" numeric className="text-3xl leading-none tracking-tight">
+            {value ?? "—"}
+          </Text>
         )}
-        {hint && <span className="text-fs-12 text-muted-foreground">{hint}</span>}
-      </span>
+        {hint && (
+          <Text as="span" tone="muted" weight="normal" className="text-fs-12">
+            {hint}
+          </Text>
+        )}
+      </Stack>
     </>
   );
 
-  const base = "flex items-center gap-4 rounded-15 border bg-card p-4 shadow-soft";
-
-  if (!onSelect) return <div className={cn(base, "border-border")}>{body}</div>;
+  if (!onSelect) {
+    return <Card className="group/stat flex-row items-center gap-4 rounded-3xl p-4">{body}</Card>;
+  }
 
   return (
-    <button
+    <Button
       type="button"
+      variant="outline"
       aria-pressed={active}
       onClick={onSelect}
       className={cn(
-        base,
-        "w-full outline-none transition hover:-translate-y-0.5 hover:shadow-lift focus-visible:ring-3 focus-visible:ring-ring/35",
-        active ? "border-primary ring-1 ring-primary" : "border-border",
+        "group/stat h-auto w-full justify-start gap-4 rounded-3xl bg-card p-4 whitespace-normal shadow-soft hover:-translate-y-0.5 hover:bg-card hover:shadow-lift",
+        active && "border-primary ring-2 ring-primary/30",
       )}
     >
       {body}
-    </button>
+    </Button>
   );
 }

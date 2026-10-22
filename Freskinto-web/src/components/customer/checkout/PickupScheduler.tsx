@@ -2,6 +2,8 @@
 
 import { CalendarDays, Clock } from "lucide-react";
 import { useState } from "react";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Text } from "@/components/ui/typography";
 import { ChipGroup } from "@/components/shared/ChipGroup";
 import { FieldMessage } from "@/components/shared/FieldMessage";
 import { STORE } from "@/constants/store";
@@ -72,12 +74,14 @@ export function PickupScheduler({ value, onChange, error }: PickupSchedulerProps
   const pick = (dayValue: string, hour: number) => onChange(`${dayValue}T${String(hour).padStart(2, "0")}:00`);
 
   return (
-    <div className="flex flex-col gap-5">
-      <div className="flex flex-col gap-2.5">
-        <p className="flex items-center gap-2 text-fs-13 font-medium">
-          <CalendarDays aria-hidden="true" className="size-4 text-brand-green" />
-          Collection day
-        </p>
+    <Stack gap="5">
+      <Stack gap="2.5">
+        <Flex align="center" gap="2">
+          <CalendarDays aria-hidden="true" className="size-4 text-primary" />
+          <Text as="span" weight="semibold" className="text-fs-13">
+            Collection day
+          </Text>
+        </Flex>
         <ChipGroup<string | null>
           aria-label="Collection day"
           options={days.map((item) => ({ value: item.key, label: item.label }))}
@@ -92,14 +96,16 @@ export function PickupScheduler({ value, onChange, error }: PickupSchedulerProps
           }}
           className="flex-wrap overflow-visible"
         />
-      </div>
+      </Stack>
 
       {day && (
-        <div className="flex flex-col gap-2.5">
-          <p className="flex items-center gap-2 text-fs-13 font-medium">
-            <Clock aria-hidden="true" className="size-4 text-brand-green" />
-            Collection time
-          </p>
+        <Stack gap="2.5">
+          <Flex align="center" gap="2">
+            <Clock aria-hidden="true" className="size-4 text-primary" />
+            <Text as="span" weight="semibold" className="text-fs-13">
+              Collection time
+            </Text>
+          </Flex>
           <ChipGroup<string | null>
             aria-label="Collection time"
             size="sm"
@@ -110,7 +116,7 @@ export function PickupScheduler({ value, onChange, error }: PickupSchedulerProps
             }}
             className="flex-wrap overflow-visible"
           />
-        </div>
+        </Stack>
       )}
 
       <FieldMessage
@@ -118,6 +124,6 @@ export function PickupScheduler({ value, onChange, error }: PickupSchedulerProps
         error={error}
         hint="We'll have your order packed and waiting at the counter."
       />
-    </div>
+    </Stack>
   );
 }

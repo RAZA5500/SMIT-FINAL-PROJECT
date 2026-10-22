@@ -1,23 +1,29 @@
 import * as React from "react"
+import { mergeProps } from "@base-ui/react/merge-props"
+import { useRender } from "@base-ui/react/use-render"
 import { cn } from "@/lib/utils"
 
-/** Freskinto card: white surface on ivory paper, hairline border, soft forest-tinted shadow */
+/** Freskinto card: white surface on lilac paper, hairline border, soft aubergine-tinted shadow */
 function Card({
   className,
   size = "default",
+  render,
   ...props
-}: React.ComponentProps<"div"> & { size?: "default" | "sm" | "lg" }) {
-  return (
-    <div
-      data-slot="card"
-      data-size={size}
-      className={cn(
-        "group/card flex flex-col gap-5 overflow-hidden rounded-15 border border-border bg-card py-5 text-sm text-card-foreground shadow-soft has-data-[slot=card-footer]:pb-0 data-[size=lg]:gap-6 data-[size=lg]:py-6 data-[size=sm]:gap-4 data-[size=sm]:py-4",
-        className
-      )}
-      {...props}
-    />
-  )
+}: useRender.ComponentProps<"div"> & { size?: "default" | "sm" | "lg" }) {
+  return useRender({
+    defaultTagName: "div",
+    props: mergeProps<"div">(
+      {
+        className: cn(
+          "group/card flex flex-col gap-5 overflow-hidden rounded-2xl border border-border bg-card py-5 text-sm text-card-foreground shadow-soft has-data-[slot=card-footer]:pb-0 data-[size=lg]:gap-6 data-[size=lg]:py-6 data-[size=sm]:gap-4 data-[size=sm]:py-4",
+          className
+        ),
+      },
+      props
+    ),
+    render,
+    state: { slot: "card", size },
+  })
 }
 
 function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
@@ -33,17 +39,21 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="card-title"
-      className={cn(
-        "font-heading text-lg leading-snug font-semibold tracking-tight group-data-[size=sm]/card:text-base",
-        className
-      )}
-      {...props}
-    />
-  )
+function CardTitle({ className, render, ...props }: useRender.ComponentProps<"div">) {
+  return useRender({
+    defaultTagName: "div",
+    props: mergeProps<"div">(
+      {
+        className: cn(
+          "font-heading text-lg leading-snug font-semibold tracking-tight group-data-[size=sm]/card:text-base",
+          className
+        ),
+      },
+      props
+    ),
+    render,
+    state: { slot: "card-title" },
+  })
 }
 
 function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
@@ -87,7 +97,7 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-footer"
       className={cn(
-        "flex items-center border-t border-border bg-modal-footer px-5 py-4 group-data-[size=lg]/card:px-6 group-data-[size=sm]/card:px-4",
+        "flex items-center border-t border-border bg-muted/50 px-5 py-4 group-data-[size=lg]/card:px-6 group-data-[size=sm]/card:px-4",
         className
       )}
       {...props}

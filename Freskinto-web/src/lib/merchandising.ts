@@ -60,8 +60,7 @@ const PRODUCT_PACKSHOTS: { pattern: RegExp; image: string }[] = [
   { pattern: /\b(bread|loaf|sourdough|bloomer)\b/, image: "whole-wheat-bread-loaf" },
 ];
 
-const TONES = ["green", "red", "sky", "amber", "rose", "orange", "cyan", "yellow", "teal", "violet", "stone"] as const;
-export type Tone = (typeof TONES)[number];
+export type Tone = "green" | "red" | "sky" | "amber" | "rose" | "orange" | "cyan" | "yellow" | "teal" | "violet" | "stone";
 
 interface ToneClasses {
   tile: string;
@@ -69,29 +68,29 @@ interface ToneClasses {
   chip: string;
 }
 
-/** Aisle tile tokens (globals.css) — har tone ek warm well par: sage, butter, clay, sky, rose, stone */
+/** Pastel wells (globals.css) — dono themes mein roshan, is liye icon/chip ink bhi fixed gehri */
 const TILES = {
-  sage: { tile: "bg-tile-sage", icon: "text-brand-green-dark", chip: "bg-tile-sage text-brand-green-dark" },
-  butter: { tile: "bg-tile-butter", icon: "text-saffron-ink", chip: "bg-tile-butter text-saffron-ink" },
-  clay: { tile: "bg-tile-clay", icon: "text-brand-orange", chip: "bg-tile-clay text-brand-orange" },
-  sky: { tile: "bg-tile-sky", icon: "text-info-ink", chip: "bg-tile-sky text-info-ink" },
-  rose: { tile: "bg-tile-rose", icon: "text-tomato-ink", chip: "bg-tile-rose text-tomato-ink" },
-  stone: { tile: "bg-tile-stone", icon: "text-neutral-ink", chip: "bg-tile-stone text-neutral-ink" },
+  lilac: { tile: "bg-tile-lilac", icon: "text-tile-ink-plum", chip: "bg-tile-lilac text-tile-ink-plum" },
+  peach: { tile: "bg-tile-peach", icon: "text-tile-ink-tangerine", chip: "bg-tile-peach text-tile-ink-tangerine" },
+  mint: { tile: "bg-tile-mint", icon: "text-tile-ink-lime", chip: "bg-tile-mint text-tile-ink-lime" },
+  butter: { tile: "bg-tile-butter", icon: "text-tile-ink-butter", chip: "bg-tile-butter text-tile-ink-butter" },
+  sky: { tile: "bg-tile-sky", icon: "text-tile-ink-sky", chip: "bg-tile-sky text-tile-ink-sky" },
+  rose: { tile: "bg-tile-rose", icon: "text-tile-ink-rose", chip: "bg-tile-rose text-tile-ink-rose" },
 } satisfies Record<string, ToneClasses>;
 
 /** Tone naam category data mein rehte hain; yahan har tone ka tile tay hota hai */
 export const TONE_CLASSES: Record<Tone, ToneClasses> = {
-  green: TILES.sage,
-  teal: TILES.sage,
+  green: TILES.mint,
+  teal: TILES.mint,
   amber: TILES.butter,
   yellow: TILES.butter,
-  orange: TILES.clay,
+  orange: TILES.peach,
   sky: TILES.sky,
   cyan: TILES.sky,
   red: TILES.rose,
   rose: TILES.rose,
-  violet: TILES.stone,
-  stone: TILES.stone,
+  violet: TILES.lilac,
+  stone: TILES.lilac,
 };
 
 export interface CategoryTheme {

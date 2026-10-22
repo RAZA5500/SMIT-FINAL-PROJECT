@@ -3,7 +3,9 @@
 import { FolderTree, Pencil, Plus, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Flex, Stack } from "@/components/ui/flex";
 import { Switch } from "@/components/ui/switch";
+import { Text } from "@/components/ui/typography";
 import { AdminDataTable, AdminEmptyState, type AdminColumn } from "@/components/admin/AdminDataTable";
 import { AdminFilterDropdown } from "@/components/admin/AdminFilterDropdown";
 import { AdminPage } from "@/components/admin/AdminPage";
@@ -25,18 +27,25 @@ function CategoryName({ category }: { category: ICategory }) {
   const tone = TONE_CLASSES[theme.tone];
   const Icon = theme.icon;
   return (
-    <div className="flex items-center gap-3">
-      <span
+    <Flex align="center" gap="3">
+      <Flex
+        as="span"
+        align="center"
+        justify="center"
         aria-hidden="true"
-        className={cn("flex size-10 shrink-0 items-center justify-center rounded-xl [&_svg]:size-5", tone.tile, tone.icon)}
+        className={cn("size-10 shrink-0 rounded-xl [&_svg]:size-5", tone.tile, tone.icon)}
       >
         <Icon />
-      </span>
-      <div className="flex min-w-0 flex-col gap-0.5">
-        <p className="truncate font-semibold text-foreground">{category.name}</p>
-        <p className="truncate font-mono text-fs-12 text-muted-foreground">/{category.slug}</p>
-      </div>
-    </div>
+      </Flex>
+      <Stack gap="0.5" className="min-w-0">
+        <Text weight="semibold" className="truncate">
+          {category.name}
+        </Text>
+        <Text tone="muted" family="mono" className="truncate text-fs-12">
+          /{category.slug}
+        </Text>
+      </Stack>
+    </Flex>
   );
 }
 
@@ -135,7 +144,7 @@ export function CategoriesView() {
       title="Categories"
       description="Organise the shop into aisles. Products can only be added to active categories without sub-categories."
       actions={
-        <Button onClick={() => openForm(null)}>
+        <Button className="rounded-full" onClick={() => openForm(null)}>
           <Plus aria-hidden="true" />
           New category
         </Button>
@@ -179,7 +188,7 @@ export function CategoriesView() {
               placeholder="Search categories…"
               className="w-full md:max-w-xs"
             />
-            <div className="flex flex-wrap items-center gap-2">
+            <Flex wrap align="center" gap="2">
               <AdminFilterDropdown
                 id="category-parent-filter"
                 label="Filter by parent"
@@ -202,7 +211,7 @@ export function CategoriesView() {
                   setPage(1);
                 }}
               />
-            </div>
+            </Flex>
           </>
         }
         footer={
@@ -230,15 +239,23 @@ export function CategoriesView() {
         onConfirm={() => deleting && deleteCategory.mutate(deleting.id, { onSuccess: () => setDeleting(null) })}
         entitySummary={
           deleting && (
-            <div className="flex flex-col gap-1.5">
-              <p className="text-sm font-semibold text-foreground">{deleting.name}</p>
-              <p className="font-mono text-fs-12 text-muted-foreground">/{deleting.slug}</p>
-              <p className="flex gap-3 pt-1 text-xs text-muted-foreground">
-                <span>Sub-categories: {deleting.childCount ?? 0}</span>
-                <span aria-hidden="true">•</span>
-                <span>Products: {deleting.productCount ?? 0}</span>
-              </p>
-            </div>
+            <Stack gap="1.5">
+              <Text weight="semibold">{deleting.name}</Text>
+              <Text tone="muted" family="mono" className="text-fs-12">
+                /{deleting.slug}
+              </Text>
+              <Flex gap="3" className="pt-1 text-xs text-muted-foreground">
+                <Text as="span" tone="inherit">
+                  Sub-categories: {deleting.childCount ?? 0}
+                </Text>
+                <Text as="span" tone="inherit" aria-hidden="true">
+                  •
+                </Text>
+                <Text as="span" tone="inherit">
+                  Products: {deleting.productCount ?? 0}
+                </Text>
+              </Flex>
+            </Stack>
           )
         }
       />

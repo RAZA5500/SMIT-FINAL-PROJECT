@@ -2,9 +2,11 @@
 
 import { ImageUp, X } from "lucide-react";
 import { useRef, useState, type DragEvent } from "react";
+import { Flex, Stack } from "@/components/ui/flex";
 import { Input } from "@/components/ui/input";
 import { InputGroupButton } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
+import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 
 interface UploadDropzoneProps {
@@ -40,10 +42,10 @@ export function UploadDropzone({
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <span id={`${id}-label`} className="text-sm font-semibold text-foreground">
+    <Stack gap="2">
+      <Text as="span" id={`${id}-label`} weight="semibold" className="text-sm">
         {label}
-      </span>
+      </Text>
       <Label
         htmlFor={id}
         onDragOver={(event) => {
@@ -53,26 +55,29 @@ export function UploadDropzone({
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
         className={cn(
-          "cursor-pointer flex flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-input bg-muted px-4 py-8 text-center font-normal transition-colors hover:border-primary",
+          "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-input bg-muted/60 px-4 py-8 text-center font-normal transition-colors hover:border-primary hover:bg-plum-soft",
           "focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/25",
           dragging && "border-primary bg-background",
         )}
       >
-        <span
+        <Flex
+          as="span"
+          align="center"
+          justify="center"
           aria-hidden="true"
-          className={cn("flex size-12 items-center justify-center rounded-full border bg-background text-brand [&_svg]:size-5")}
+          className="size-12 rounded-2xl bg-lime text-lime-foreground [&_svg]:size-5"
         >
           <ImageUp aria-hidden="true" />
-        </span>
-        <span className="text-sm">
-          <span className="font-semibold text-brand">
+        </Flex>
+        <Text as="span" className="text-sm">
+          <Text as="span" tone="primary" weight="semibold">
             Choose an image
-          </span>{" "}
+          </Text>{" "}
           or drag it here
-        </span>
-        <span id={`${id}-hint`} className="text-fs-12 text-muted-foreground">
+        </Text>
+        <Text as="span" id={`${id}-hint`} tone="muted" className="text-fs-12">
           {hint}
-        </span>
+        </Text>
         <Input
           ref={inputRef}
           id={id}
@@ -85,15 +90,15 @@ export function UploadDropzone({
         />
       </Label>
       {fileName && (
-        <div className={cn("flex items-center justify-between gap-3 rounded-xl bg-muted px-3 py-2")}>
-          <span className={cn("truncate text-sm")}>
+        <Flex align="center" justify="between" gap="3" className="rounded-xl bg-muted px-3 py-2">
+          <Text as="span" className="truncate text-sm">
             {fileName}
-          </span>
+          </Text>
           <InputGroupButton size="icon-xs" aria-label={`Remove ${fileName}`} onClick={clear}>
             <X aria-hidden="true" />
           </InputGroupButton>
-        </div>
+        </Flex>
       )}
-    </div>
+    </Stack>
   );
 }

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Flex } from "@/components/ui/flex";
 import { productVisual, TONE_CLASSES } from "@/lib/merchandising";
 import { cn } from "@/lib/utils";
 
@@ -18,7 +19,7 @@ interface ProductImageProps {
 }
 
 /**
- * Product visual: demo packshot (shot on white, multiply-blended onto a warm aisle tile)
+ * Product visual: demo packshot (shot on white, multiply-blended onto a pastel well)
  * ya — jab koi photo fit na ho — category icon. Default square.
  */
 export function ProductImage({
@@ -36,13 +37,10 @@ export function ProductImage({
   const Icon = theme.icon;
 
   return (
-    <div
-      className={cn(
-        "relative isolate flex aspect-square items-center justify-center overflow-hidden",
-        tone.tile,
-        muted && "grayscale",
-        className,
-      )}
+    <Flex
+      align="center"
+      justify="center"
+      className={cn("relative isolate aspect-square overflow-hidden", tone.tile, muted && "grayscale", className)}
     >
       {image ? (
         <Image
@@ -62,6 +60,6 @@ export function ProductImage({
           aria-hidden={alt ? undefined : true}
         />
       )}
-    </div>
+    </Flex>
   );
 }

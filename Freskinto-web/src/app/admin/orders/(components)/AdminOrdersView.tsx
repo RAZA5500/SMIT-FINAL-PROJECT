@@ -1,12 +1,16 @@
 "use client";
 
-import { ArrowRight, ReceiptText, Store, Truck } from "lucide-react";
+import { ArrowRight, CircleCheck, Clock, PackageCheck, ReceiptText, Store, Truck, type LucideIcon } from "lucide-react";
 import { useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Grid } from "@/components/ui/grid";
 import { Input } from "@/components/ui/input";
+import { Text } from "@/components/ui/typography";
 import { AdminDataTable, AdminEmptyState, type AdminColumn } from "@/components/admin/AdminDataTable";
 import { AdminFilterDropdown } from "@/components/admin/AdminFilterDropdown";
 import { AdminPage } from "@/components/admin/AdminPage";
+import { StatTile } from "@/components/admin/StatTile";
 import { ButtonLink } from "@/components/shared/ButtonLink";
 import { Pagination } from "@/components/shared/Pagination";
 import { SearchInput } from "@/components/shared/SearchInput";
@@ -32,16 +36,18 @@ const COLUMNS: AdminColumn<IOrderSummary>[] = [
     key: "order",
     header: "Order",
     cell: (order) => (
-      <div className="flex flex-col gap-0.5">
+      <Stack gap="0.5">
         <TextLink
           href={adminRoutes.orderDetail(order.id)}
           tone="default"
-          className="numeric font-semibold tracking-tight hover:text-brand-green"
+          className="numeric font-mono font-semibold tracking-tight hover:text-primary"
         >
           {order.orderNumber}
         </TextLink>
-        <span className="numeric text-fs-12 text-muted-foreground">{formatDateTime(order.createdAt)}</span>
-      </div>
+        <Text as="span" tone="muted" numeric className="text-fs-12">
+          {formatDateTime(order.createdAt)}
+        </Text>
+      </Stack>
     ),
   },
   {
@@ -50,15 +56,19 @@ const COLUMNS: AdminColumn<IOrderSummary>[] = [
     hideBelow: "md",
     className: "max-w-56",
     cell: (order) => (
-      <div className="flex items-center gap-2.5">
+      <Flex align="center" gap="2.5">
         <Avatar size="sm" className="size-8">
-          <AvatarFallback>{initials(order.customer.name)}</AvatarFallback>
+          <AvatarFallback className="bg-plum-soft font-semibold text-primary">{initials(order.customer.name)}</AvatarFallback>
         </Avatar>
-        <div className="flex min-w-0 flex-col gap-0.5">
-          <p className="truncate font-medium">{order.customer.name}</p>
-          <p className="truncate text-fs-12 text-muted-foreground">{order.customer.email}</p>
-        </div>
-      </div>
+        <Stack gap="0.5" className="min-w-0">
+          <Text weight="medium" className="truncate">
+            {order.customer.name}
+          </Text>
+          <Text tone="muted" className="truncate text-fs-12">
+            {order.customer.email}
+          </Text>
+        </Stack>
+      </Flex>
     ),
   },
   {
@@ -68,10 +78,10 @@ const COLUMNS: AdminColumn<IOrderSummary>[] = [
     cell: (order) => {
       const DeliveryIcon = order.deliveryType === "PICKUP" ? Store : Truck;
       return (
-        <span className="flex items-center gap-1.5 text-muted-foreground">
+        <Flex as="span" align="center" gap="1.5" className="text-muted-foreground">
           <DeliveryIcon aria-hidden="true" className="size-4" />
           {DELIVERY_TYPE_LABELS[order.deliveryType]}
-        </span>
+        </Flex>
       );
     },
   },
@@ -96,7 +106,7 @@ const COLUMNS: AdminColumn<IOrderSummary>[] = [
         variant="ghost"
         size="sm"
         aria-label={`View order ${order.orderNumber}`}
-        className="text-brand-green hover:text-brand-green-dark"
+        className="rounded-full text-primary"
       >
         View
         <ArrowRight aria-hidden="true" />
@@ -104,6 +114,29 @@ const COLUMNS: AdminColumn<IOrderSummary>[] = [
     ),
   },
 ];
+
+/** Kaam ki queue — har tile ka count `meta.total` (limit 1) se; click = status filter */
+const QUEUE: { status: OrderStatus; label: string; hint: string; icon: LucideIcon; tone: string }[] = [
+  { status: "PENDING", label: "Awaiting payment", hint: "Released if unpaid", icon: Clock, tone: "bg-warning-soft text-warning-ink" },
+  { status: "CONFIRMED", label: "To prepare", hint: "Paid & confirmed", icon: CircleCheck, tone: "bg-lime text-lime-foreground" },
+  { status: "PROCESSING", label: "Being packed", hint: "Picking in progress", icon: PackageCheck, tone: "bg-plum-soft text-primary" },
+];
+
+function QueueTile({ tile, active, onSelect }: { tile: (typeof QUEUE)[number]; active: boolean; onSelect: () => void }) {
+  const { data, isLoading } = useGetAdminOrders({ limit: 1, status: tile.status });
+  return (
+    <StatTile
+      label={tile.label}
+      value={data?.meta.total}
+      hint={tile.hint}
+      icon={tile.icon}
+      tone={tile.tone}
+      isLoading={isLoading}
+      active={active}
+      onSelect={onSelect}
+    />
+  );
+}
 
 export function AdminOrdersView() {
   const [search, setSearch] = useState("");
@@ -134,6 +167,16 @@ export function AdminOrdersView() {
 
   return (
     <AdminPage eyebrow="Operations" title="Orders" description="Move paid orders through preparation to delivery or collection.">
+      <Grid gap="4" className="sm:grid-cols-3">
+        {QUEUE.map((tile) => (
+          <QueueTile
+            key={tile.status}
+            tile={tile}
+            active={status === tile.status}
+            onSelect={() => onFilter(setStatus)(status === tile.status ? null : tile.status)}
+          />
+        ))}
+      </Grid>
       <AdminDataTable
         caption="Orders"
         columns={COLUMNS}
@@ -161,7 +204,7 @@ export function AdminOrdersView() {
               placeholder="Order number or customer…"
               className="w-full md:max-w-xs"
             />
-            <div className="flex flex-wrap items-center gap-2">
+            <Flex wrap align="center" gap="2">
               <AdminFilterDropdown
                 id="admin-order-status-filter"
                 label="Filter by order status"
@@ -178,7 +221,7 @@ export function AdminOrdersView() {
                 value={paymentStatus}
                 onValueChange={onFilter(setPaymentStatus)}
               />
-              <div className="flex items-center gap-1.5">
+              <Flex align="center" gap="1.5">
                 <Input
                   type="date"
                   aria-label="Placed from"
@@ -187,7 +230,9 @@ export function AdminOrdersView() {
                   onChange={(event) => onFilter(setDateFrom)(event.target.value)}
                   className="h-9 w-40 rounded-lg text-sm"
                 />
-                <span className="text-fs-13 text-muted-foreground">to</span>
+                <Text as="span" tone="muted" className="text-fs-13">
+                  to
+                </Text>
                 <Input
                   type="date"
                   aria-label="Placed to"
@@ -196,8 +241,8 @@ export function AdminOrdersView() {
                   onChange={(event) => onFilter(setDateTo)(event.target.value)}
                   className="h-9 w-40 rounded-lg text-sm"
                 />
-              </div>
-            </div>
+              </Flex>
+            </Flex>
           </>
         }
         footer={

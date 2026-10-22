@@ -1,17 +1,22 @@
+import { Stack } from "@/components/ui/flex";
+import { Text } from "@/components/ui/typography";
 import { LogoMark } from "./Logo";
 
 /** Poore page ka loading (AuthGuard role verify kar raha ho) */
 export function PageLoader() {
   return (
-    <div
+    <Stack
+      align="center"
+      justify="center"
+      gap="5"
       aria-busy="true"
       aria-label="Loading"
-      className="flex min-h-dvh flex-1 flex-col items-center justify-center gap-4"
+      className="min-h-dvh flex-1"
     >
-      <LogoMark size="lg" className="animate-pulse" />
-      <p aria-hidden="true" className="text-fs-11 font-semibold tracking-widest text-muted-foreground uppercase">
+      <LogoMark size="lg" className="animate-bounce" />
+      <Text as="span" variant="eyebrow" tone="muted" aria-hidden="true">
         Opening the market…
-      </p>
-    </div>
+      </Text>
+    </Stack>
   );
 }

@@ -8,6 +8,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Flex } from "@/components/ui/flex";
+import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 
 interface PaginationProps {
@@ -46,11 +48,18 @@ export function Pagination({
   const last = Math.min(currentPage * limit, total);
 
   return (
-    <div className={cn("flex flex-wrap items-center justify-between gap-3", className)}>
-      <p className="text-fs-13 text-muted-foreground">
-        Showing <span className="numeric font-semibold text-foreground">{`${first}-${last}`}</span> of{" "}
-        <span className="numeric font-semibold text-foreground">{total}</span> {itemLabel}
-      </p>
+    <Flex wrap align="center" justify="between" gap="3" className={cn(className)}>
+      <Text tone="muted" className="text-fs-13">
+        Showing{" "}
+        <Text as="span" weight="semibold" numeric>
+          {`${first}-${last}`}
+        </Text>{" "}
+        of{" "}
+        <Text as="span" weight="semibold" numeric>
+          {total}
+        </Text>{" "}
+        {itemLabel}
+      </Text>
       <PaginationRoot className="w-auto">
         <PaginationContent>
           <PaginationItem>
@@ -68,6 +77,6 @@ export function Pagination({
           </PaginationItem>
         </PaginationContent>
       </PaginationRoot>
-    </div>
+    </Flex>
   );
 }

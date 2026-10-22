@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
+import { Box } from "@/components/ui/box";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
+import { Flex } from "@/components/ui/flex";
 import { cn } from "@/lib/utils";
 
 interface DataTableCardProps {
@@ -17,12 +19,12 @@ interface DataTableCardProps {
 /** Admin list screens ka card: toolbar → table → pagination */
 export function DataTableCard({ toolbar, children, footer, busy = false, className }: DataTableCardProps) {
   return (
-    <Card aria-busy={busy || undefined} className={cn("min-w-0 gap-0 py-0", className)}>
+    <Card aria-busy={busy || undefined} className={cn("min-w-0 gap-0 rounded-3xl py-0", className)}>
       {toolbar && (
         <CardHeader className={cn("flex flex-wrap items-center gap-3 border-b py-4")}>{toolbar}</CardHeader>
       )}
       {/* relative: andar ke sr-only labels isi scroll box mein clip hon, page chaura na ho */}
-      <div className={cn("relative min-w-0 overflow-x-auto", busy && "opacity-60 transition-opacity")}>{children}</div>
+      <Box className={cn("relative min-w-0 overflow-x-auto", busy && "opacity-60 transition-opacity")}>{children}</Box>
       {footer && <CardFooter className={cn("block py-3")}>{footer}</CardFooter>}
     </Card>
   );
@@ -31,8 +33,8 @@ export function DataTableCard({ toolbar, children, footer, busy = false, classNa
 /** Toolbar filters ka group — chhoti screen par wrap */
 export function ToolbarFilters({ children }: { children: ReactNode }) {
   return (
-    <div className={cn("flex flex-wrap items-center gap-2 md:ml-auto")}>
+    <Flex wrap align="center" gap="2" className="md:ml-auto">
       {children}
-    </div>
+    </Flex>
   );
 }

@@ -2,6 +2,8 @@ import { Plus, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Text } from "@/components/ui/typography";
 import { Price } from "@/components/shared/Price";
 import { ProductImage } from "@/components/shared/ProductImage";
 import { productPackshot } from "@/lib/merchandising";
@@ -25,46 +27,51 @@ export function ProductPreview({ name, categoryName, price, minimumOrderQuantity
   const minQty = Number(minimumOrderQuantity);
 
   return (
-    <Card>
+    <Card className="rounded-3xl">
       <CardHeader>
         <CardTitle className={cn("font-sans text-base")}>Shop preview</CardTitle>
         <CardDescription>How customers will see it on the shelf.</CardDescription>
         <CardAction>
-          <Badge variant="outline" className={cn("text-brand")}>
+          <Badge variant="lime">
             <Sparkles aria-hidden="true" />
             Live
           </Badge>
         </CardAction>
       </CardHeader>
       <CardContent className={cn("flex flex-col gap-3")}>
-        <Card aria-hidden="true" className={cn("mx-auto w-full max-w-60 gap-0 py-0 overflow-hidden")}>
-          <ProductImage name={displayName} categoryName={categoryName} sizes="240px" />
-          <div className="flex flex-col gap-3 p-3.5">
-            <div className="flex flex-col gap-1">
-              <span className="text-fs-11 font-bold tracking-wider text-muted-foreground uppercase truncate">
+        <Card aria-hidden="true" className="mx-auto w-full max-w-60 gap-0 rounded-3xl border-2 py-0 shadow-none">
+          <ProductImage name={displayName} categoryName={categoryName} sizes="240px" className="m-2 rounded-2xl" />
+          <Stack gap="3" className="p-3.5 pt-1.5">
+            <Stack gap="1">
+              <Text as="span" variant="eyebrow" tone="muted" className="truncate">
                 {categoryName || "Category"}
-              </span>
-              <p className="line-clamp-2 min-h-10 text-sm font-semibold leading-5 text-foreground">
+              </Text>
+              <Text weight="semibold" className="line-clamp-2 min-h-10 leading-5">
                 {displayName}
-              </p>
-            </div>
-            <div className="flex items-baseline justify-between gap-2">
-              <Price amount={Number.isFinite(priceValue) && priceValue > 0 ? priceValue : 0} size="md" tone="brand" />
-              <span className="text-fs-12 text-muted-foreground">
+              </Text>
+            </Stack>
+            <Flex align="baseline" justify="between" gap="2">
+              <Price amount={Number.isFinite(priceValue) && priceValue > 0 ? priceValue : 0} size="md" />
+              <Text as="span" tone="muted" className="text-fs-12">
                 {minQty > 1 ? `Min. ${minQty}` : "each"}
-              </span>
-            </div>
-            <Button size="sm" tabIndex={-1} className={cn("pointer-events-none w-full rounded-full")}>
+              </Text>
+            </Flex>
+            <Button
+              variant="outline"
+              size="sm"
+              tabIndex={-1}
+              className={cn("pointer-events-none w-full rounded-full border-2 border-foreground/80 font-bold")}
+            >
               <Plus data-icon="inline-start" aria-hidden="true" />
               Add to basket
             </Button>
-          </div>
+          </Stack>
         </Card>
-        <p className="text-fs-12 text-muted-foreground">
+        <Text tone="muted" className="text-fs-12">
           {hasPhoto
             ? "A matching demo photo is used for this name."
             : "No demo photo matches this name — the shop shows the category icon instead."}
-        </p>
+        </Text>
       </CardContent>
     </Card>
   );

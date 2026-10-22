@@ -1,3 +1,6 @@
+import { Flex, Stack } from "@/components/ui/flex";
+import { Separator } from "@/components/ui/separator";
+import { Text } from "@/components/ui/typography";
 import { cn, formatMoney } from "@/lib/utils";
 
 interface OrderTotalsProps {
@@ -13,7 +16,20 @@ interface OrderTotalsProps {
   className?: string;
 }
 
-/** Server ke totals (client kuch calculate nahi karta) — Free shipping highlight */
+function TotalRow({ label, value, valueClassName }: { label: string; value: string; valueClassName?: string }) {
+  return (
+    <Flex align="center" justify="between" gap="4">
+      <Text as="dt" tone="muted">
+        {label}
+      </Text>
+      <Text as="dd" weight="medium" numeric className={cn(valueClassName)}>
+        {value}
+      </Text>
+    </Flex>
+  );
+}
+
+/** Server ke totals (client kuch calculate nahi karta) — Free shipping lime highlight */
 export function OrderTotals({
   subtotal,
   shippingCost,
@@ -27,27 +43,25 @@ export function OrderTotals({
   const hasDiscount = discount !== undefined && discount !== null && Number(discount) > 0;
 
   return (
-    <dl className={cn("flex flex-col gap-2 text-sm", className)}>
-      <div className="flex items-center justify-between gap-4">
-        <dt className="text-muted-foreground">{subtotalLabel}</dt>
-        <dd className="numeric font-medium text-foreground">{formatMoney(subtotal)}</dd>
-      </div>
+    <Stack as="dl" gap="2" className={cn("text-sm", className)}>
+      <TotalRow label={subtotalLabel} value={formatMoney(subtotal)} />
       {hasDiscount && (
-        <div className="flex items-center justify-between gap-4">
-          <dt className="text-muted-foreground">Discount</dt>
-          <dd className="numeric font-medium text-brand-green">−{formatMoney(discount ?? 0)}</dd>
-        </div>
+        <TotalRow label="Discount" value={`−${formatMoney(discount ?? 0)}`} valueClassName="text-success-ink" />
       )}
-      <div className="flex items-center justify-between gap-4">
-        <dt className="text-muted-foreground">{shippingLabel}</dt>
-        <dd className={cn("numeric font-medium", free ? "text-brand-green" : "text-foreground")}>
-          {free ? "Free" : formatMoney(shippingCost)}
-        </dd>
-      </div>
-      <div className="mt-1 flex items-baseline justify-between gap-4 border-t border-dashed border-input pt-3">
-        <dt className="font-semibold text-foreground">Total</dt>
-        <dd className="numeric font-heading text-fs-24 font-semibold text-foreground">{formatMoney(total)}</dd>
-      </div>
-    </dl>
+      <TotalRow
+        label={shippingLabel}
+        value={free ? "Free" : formatMoney(shippingCost)}
+        valueClassName={cn(free && "rounded-full bg-lime px-2 font-bold text-lime-foreground")}
+      />
+      <Separator className="my-1.5" />
+      <Flex align="baseline" justify="between" gap="4">
+        <Text as="dt" weight="bold">
+          Total
+        </Text>
+        <Text as="dd" family="heading" weight="extrabold" numeric className="text-3xl tracking-tight">
+          {formatMoney(total)}
+        </Text>
+      </Flex>
+    </Stack>
   );
 }

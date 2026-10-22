@@ -2,22 +2,24 @@
 
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Flex } from "@/components/ui/flex";
+import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 
 const SIZES = {
-  sm: { root: "h-9 p-0.5", button: "size-8", value: "min-w-7 text-sm" },
-  md: { root: "h-10 p-0.5", button: "size-9", value: "min-w-8 text-sm" },
-  lg: { root: "h-12 p-1", button: "size-10", value: "min-w-10 text-base" },
+  sm: { root: "h-10 p-0.5", button: "size-9", value: "min-w-7 text-sm" },
+  md: { root: "h-11 p-0.5", button: "size-10", value: "min-w-8 text-base" },
+  lg: { root: "h-12 p-1", button: "size-10", value: "min-w-10 text-lg" },
 } as const;
 
 const VARIANTS = {
-  // In-basket state on product cards — deep forest pill
+  // In-basket state on product cards — aubergine pill
   solid: {
-    root: "bg-brand-green-forest text-white shadow-soft",
-    button: "text-white hover:bg-white/15 hover:text-white disabled:opacity-40",
+    root: "bg-primary text-primary-foreground shadow-soft",
+    button: "text-primary-foreground hover:bg-primary-foreground/15 hover:text-primary-foreground disabled:opacity-40",
   },
   outline: {
-    root: "border border-input bg-card text-foreground",
+    root: "border-2 border-border bg-card text-foreground",
     button: "hover:bg-muted disabled:opacity-35",
   },
 } as const;
@@ -59,10 +61,13 @@ export function QuantityStepper({
   const removes = removeAtMinimum && atMinimum;
 
   return (
-    <div
+    <Flex
+      inline
+      align="center"
+      justify="between"
       role="group"
       aria-label={`Quantity of ${label}`}
-      className={cn("inline-flex items-center justify-between rounded-full", s.root, v.root, className)}
+      className={cn("rounded-full", s.root, v.root, className)}
     >
       <Button
         variant="ghost"
@@ -74,9 +79,17 @@ export function QuantityStepper({
       >
         {removes ? <Trash2 aria-hidden="true" /> : <Minus aria-hidden="true" />}
       </Button>
-      <span aria-live="polite" className={cn("numeric text-center font-semibold", s.value)}>
+      <Text
+        as="span"
+        aria-live="polite"
+        tone="inherit"
+        family="heading"
+        weight="extrabold"
+        numeric
+        className={cn("text-center", s.value)}
+      >
         {quantity}
-      </span>
+      </Text>
       <Button
         variant="ghost"
         size="icon"
@@ -87,6 +100,6 @@ export function QuantityStepper({
       >
         <Plus aria-hidden="true" />
       </Button>
-    </div>
+    </Flex>
   );
 }

@@ -1,4 +1,7 @@
 import type { ReactNode } from "react";
+import { Box } from "@/components/ui/box";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Heading, Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 
 interface PageHeaderProps {
@@ -11,7 +14,7 @@ interface PageHeaderProps {
   actions?: ReactNode;
   /** Breadcrumbs ya back link — sab se upar */
   breadcrumbs?: ReactNode;
-  /** `page`: storefront ka bada serif title · `compact`: admin workspace */
+  /** `page`: storefront ka bada display title · `compact`: admin workspace */
   size?: "page" | "compact";
   className?: string;
 }
@@ -28,28 +31,37 @@ export function PageHeader({
   className,
 }: PageHeaderProps) {
   return (
-    <div className={cn("flex flex-col gap-4", className)}>
+    <Stack gap="4" className={cn(className)}>
       {breadcrumbs}
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="flex min-w-0 flex-col gap-2">
-          {eyebrow && <div className="kicker">{eyebrow}</div>}
-          <h1
-            className={cn(
-              "font-heading text-foreground",
-              size === "page" ? "text-fs-32 sm:text-fs-40" : "text-fs-24 tracking-tight",
-            )}
-          >
-            {title}
-          </h1>
-          {description && (
-            <div className={cn("max-w-2xl text-muted-foreground", size === "page" ? "text-base" : "text-sm")}>
-              {description}
-            </div>
+      <Flex wrap align="end" justify="between" gap="4">
+        <Stack gap="2" className="min-w-0">
+          {eyebrow && (
+            <Text as="div" variant="eyebrow" tone="primary">
+              {eyebrow}
+            </Text>
           )}
-          {meta && <div className="flex flex-wrap items-center gap-2 pt-1">{meta}</div>}
-        </div>
-        {actions && <div className="flex flex-wrap items-center gap-2.5">{actions}</div>}
-      </div>
-    </div>
+          <Heading size={size === "page" ? "display" : "2"} className={cn(size === "compact" && "sm:text-2xl")}>
+            {title}
+          </Heading>
+          {description && (
+            <Text as="div" tone="muted" className={cn("max-w-2xl", size === "page" ? "text-base" : "text-sm")}>
+              {description}
+            </Text>
+          )}
+          {meta && (
+            <Flex wrap align="center" gap="2" className="pt-1">
+              {meta}
+            </Flex>
+          )}
+        </Stack>
+        {actions && (
+          <Box>
+            <Flex wrap align="center" gap="2.5">
+              {actions}
+            </Flex>
+          </Box>
+        )}
+      </Flex>
+    </Stack>
   );
 }

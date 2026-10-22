@@ -15,7 +15,10 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
+import { Box } from "@/components/ui/box";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Label } from "@/components/ui/label";
 import { LoadingButton } from "./LoadingButton";
 
 export interface StandardDestructiveModalProps {
@@ -67,7 +70,7 @@ function StandardDestructiveBody({
   return (
     <AlertDialogContent>
       <AlertDialogHeader>
-        <AlertDialogMedia className="bg-tomato-soft text-destructive">
+        <AlertDialogMedia className="bg-destructive-soft text-destructive">
           <TriangleAlert aria-hidden="true" />
         </AlertDialogMedia>
         <AlertDialogText>
@@ -78,29 +81,29 @@ function StandardDestructiveBody({
 
       <AlertDialogBody>
         {entitySummary && (
-          <div data-slot="entity-summary" className="rounded-xl border border-border bg-muted/60 p-4 text-sm">
+          <Box data-slot="entity-summary" className="rounded-xl border border-border bg-muted/60 p-4 text-sm">
             {entitySummary}
-          </div>
+          </Box>
         )}
 
         {children}
 
-        <div className="flex flex-col gap-3 rounded-xl border border-destructive/20 bg-tomato-soft p-4">
+        <Stack gap="3" className="rounded-xl border border-destructive/20 bg-destructive-soft p-4">
           <Badge variant="destructive" className="w-fit bg-card">
             <TriangleAlert aria-hidden="true" />
             This action cannot be undone
           </Badge>
-          <div className="flex items-start gap-3">
+          <Flex align="start" gap="3">
             <Checkbox
               id={ackId}
               checked={acknowledged}
               onCheckedChange={(checked) => setAcknowledged(Boolean(checked))}
             />
-            <label htmlFor={ackId} className="cursor-pointer text-sm font-medium text-tomato-ink">
+            <Label htmlFor={ackId} className="cursor-pointer text-sm leading-snug text-destructive-ink">
               I understand the consequences and want to continue
-            </label>
-          </div>
-        </div>
+            </Label>
+          </Flex>
+        </Stack>
       </AlertDialogBody>
 
       <AlertDialogFooter>

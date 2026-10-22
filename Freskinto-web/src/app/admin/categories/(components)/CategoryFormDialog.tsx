@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
 import { FieldGroup } from "@/components/ui/field";
 import { AppModal } from "@/components/shared/AppModal";
 import { InputField } from "@/components/shared/InputField";
@@ -111,9 +112,9 @@ function CategoryForm({
   ];
 
   return (
-    <form
+    <Form
       id={FORM_ID}
-      noValidate
+      className="block"
       onSubmit={handleSubmit(
         (values) => onSubmit(values, (message) => setError("name", { message })),
         () => scrollToFirstError(FORM_ID),
@@ -158,6 +159,6 @@ function CategoryForm({
           )}
         />
       </FieldGroup>
-    </form>
+    </Form>
   );
 }

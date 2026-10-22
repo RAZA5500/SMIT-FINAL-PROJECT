@@ -1,4 +1,8 @@
 import { ArrowRight, Clock, Store, Truck } from "lucide-react";
+import { Box } from "@/components/ui/box";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Heading, Text } from "@/components/ui/typography";
 import { OrderProgress } from "@/components/shared/order/OrderProgress";
 import { Price } from "@/components/shared/Price";
 import { StatusBadge } from "@/components/shared/StatusBadge";
@@ -15,53 +19,63 @@ export function OrderCard({ order }: { order: IOrderSummary }) {
   const DeliveryIcon = order.deliveryType === "PICKUP" ? Store : Truck;
 
   return (
-    <article className="group/order relative overflow-hidden rounded-15 border border-border bg-card shadow-soft transition duration-300 hover:-translate-y-0.5 hover:border-brand-green/30 hover:shadow-lift">
-      <div className="flex flex-wrap items-start justify-between gap-3 px-5 pt-5">
-        <div className="flex min-w-0 flex-col gap-1.5">
-          <h3 className="font-heading text-fs-18 font-semibold tracking-tight">
-            <TextLink
-              href={customerRoutes.orderDetail(order.id)}
-              tone="default"
-              className="after:absolute after:inset-0 hover:no-underline"
-            >
-              {order.orderNumber}
-            </TextLink>
-          </h3>
-          <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-fs-13 text-muted-foreground">
-            <span className="numeric">{formatDateTime(order.createdAt)}</span>
-            <span aria-hidden="true">·</span>
-            <span className="inline-flex items-center gap-1">
-              <DeliveryIcon aria-hidden="true" className="size-3.5" />
-              {DELIVERY_TYPE_LABELS[order.deliveryType]}
-            </span>
-            <span aria-hidden="true">·</span>
-            <span>{pluralize(order.itemCount, "item")}</span>
-          </p>
-        </div>
-        <Price amount={order.total} size="lg" className="font-heading" />
-      </div>
+    <Card
+      render={<Box as="article" />}
+      className="group/order pop-hover relative gap-0 rounded-3xl border-2 py-0 shadow-none has-data-[slot=card-footer]:pb-0"
+    >
+      <CardContent className="flex flex-col gap-5 pt-5">
+        <Flex wrap align="start" justify="between" gap="3">
+          <Stack gap="1.5" className="min-w-0">
+            <Heading as="h3" size="4" className="font-mono tracking-tight">
+              <TextLink
+                href={customerRoutes.orderDetail(order.id)}
+                tone="default"
+                className="after:absolute after:inset-0 after:rounded-3xl hover:no-underline"
+              >
+                {order.orderNumber}
+              </TextLink>
+            </Heading>
+            <Flex wrap align="center" gap="2" className="text-fs-13 text-muted-foreground">
+              <Text as="span" tone="inherit" numeric className="text-fs-13">
+                {formatDateTime(order.createdAt)}
+              </Text>
+              <Text as="span" tone="inherit" aria-hidden="true">
+                ·
+              </Text>
+              <Flex as="span" inline align="center" gap="1">
+                <DeliveryIcon aria-hidden="true" className="size-3.5" />
+                {DELIVERY_TYPE_LABELS[order.deliveryType]}
+              </Flex>
+              <Text as="span" tone="inherit" aria-hidden="true">
+                ·
+              </Text>
+              <Text as="span" tone="inherit" className="text-fs-13">
+                {pluralize(order.itemCount, "item")}
+              </Text>
+            </Flex>
+          </Stack>
+          <Price amount={order.total} size="lg" />
+        </Flex>
+        <OrderProgress status={order.status} className="pb-5" />
+      </CardContent>
 
-      <div className="px-5 py-5">
-        <OrderProgress status={order.status} />
-      </div>
-
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-dashed border-input bg-modal-footer px-5 py-3">
-        <div className="flex flex-wrap items-center gap-2">
+      <CardFooter className="flex-wrap justify-between gap-3 border-t-2 border-dashed border-input py-3">
+        <Flex wrap align="center" gap="2">
           <StatusBadge status={order.status} />
           <StatusBadge status={order.paymentStatus} />
-        </div>
+        </Flex>
         {awaitingPayment ? (
-          <span className="flex items-center gap-1.5 text-sm font-semibold text-warning-ink">
-            <Clock aria-hidden="true" className="size-4" />
+          <Flex align="center" gap="1.5" className="text-sm font-semibold text-warning-ink">
+            <Clock aria-hidden="true" className="size-4 animate-pulse" />
             Awaiting payment — open to pay
-          </span>
+          </Flex>
         ) : (
-          <span className="flex items-center gap-1 text-sm font-semibold text-brand-green">
+          <Flex align="center" gap="1" className="text-sm font-semibold text-primary">
             View details
-            <ArrowRight aria-hidden="true" className="size-4 transition-transform group-hover/order:translate-x-0.5" />
-          </span>
+            <ArrowRight aria-hidden="true" className="size-4 transition-transform group-hover/order:translate-x-1" />
+          </Flex>
         )}
-      </div>
-    </article>
+      </CardFooter>
+    </Card>
   );
 }

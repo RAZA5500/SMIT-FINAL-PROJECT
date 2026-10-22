@@ -2,114 +2,171 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* Dark mode nahi hai — yeh line OS theme ko `dark:` classes trigger karne se rokti hai */
+/* Dark mode class se — `ThemeToggle` <html> par `.dark` lagata hai (OS theme khud se nahi badalta) */
 @custom-variant dark (&:is(.dark *));
 
 /* ---------------------------------------------------------------------------
-   Freskinto design tokens — "Botanical Market & Editorial Grocer"
-   - Storefront: warm ivory & stone surfaces, deep forest/emerald brand accents
-     (--brand-green), editorial serif typography (Fraunces for headings),
-     tactile cards with subtle hover lift, floating glassmorphic navigation.
-   - Admin: high-density precision workspace, clean data tables, crisp Inter sans-serif.
-   - Components use semantic token classes (bg-brand-green, rounded-15, text-fs-20 ...)
-     never raw hex.
-   - Toast (sonner) runs on these tokens: popover, border, radius, success,
-     info, warning, destructive.
+   Freskinto design tokens — "Produce Pop"
+   Aubergine (primary) × Tangerine (CTA) × Lime (highlight), soft lilac paper.
+   - Storefront: bold Bricolage Grotesque display type, sticker badges, "pop"
+     cards that lift onto an ink offset shadow, deep aubergine "night" blocks.
+   - Admin: same tokens, calmer density (Inter headings via [data-surface]).
+   - Components semantic classes use karte hain (bg-primary, bg-tangerine,
+     text-lime-ink ...) — kabhi raw hex nahi.
 --------------------------------------------------------------------------- */
 :root {
-  --radius: 0.625rem;
+  --radius: 0.875rem;
 
-  /* Surfaces — warm ivory, linen, stone */
-  --background: #faf8f5;
-  --foreground: #141c16;
+  /* Surfaces — lilac paper, white cards */
+  --background: #f7f5fa;
+  --foreground: #1d1428;
   --card: #ffffff;
-  --card-foreground: #141c16;
+  --card-foreground: #1d1428;
   --popover: #ffffff;
-  --popover-foreground: #141c16;
-  --workspace: #f4f2ec;
+  --popover-foreground: #1d1428;
+  --workspace: #f2eff7;
 
-  /* Core roles */
-  --primary: #15803d;
+  /* Core shadcn roles */
+  --primary: #5b2a86;
   --primary-foreground: #ffffff;
-  --secondary: #f3f1ea;
-  --secondary-foreground: #141c16;
-  --muted: #f3f1ea;
-  --muted-foreground: #5e6860;
-  --accent: #edf7f0;
-  --accent-foreground: #0b4f2c;
-  --destructive: #dc2626;
-  --border: #e6e3da;
-  --input: #d4d0c5;
-  --ring: #15803d;
+  --secondary: #efebf4;
+  --secondary-foreground: #1d1428;
+  --muted: #efebf4;
+  --muted-foreground: #675e74;
+  --accent: #efe7f8;
+  --accent-foreground: #3f1b60;
+  --destructive: #d4313a;
+  --border: #e5dfec;
+  --input: #d6cee0;
+  --ring: #7c4dbb;
 
-  /* Brand — lush botanical market & deep forest emerald */
-  --brand: #15803d;
-  --brand-green: #15803d;
-  --brand-green-dark: #0f5c2b;
-  --brand-green-forest: #073820;
-  --brand-green-light: #22c55e;
-  --brand-green-vivid: #4ade80;
-  --brand-strong: #0a4d29;
-  --brand-soft: #edf7f0;
-  --brand-mint: #dcfce7;
+  /* Brand */
+  --plum-soft: #efe7f8;
+  --plum-strong: #3f1b60;
+  --tangerine: #ff7a3d;
+  --tangerine-foreground: #1d1428;
+  --tangerine-soft: #ffeee4;
+  --tangerine-ink: #a8400e;
+  --lime: #c6f36b;
+  --lime-foreground: #1d1428;
+  --lime-soft: #effbd6;
+  --lime-ink: #3d5c0f;
+  /* "Night" — storefront ke dark blocks (hero, footer, promo) dono themes mein */
+  --night: #1c0f2b;
+  --night-foreground: #f6f0fb;
+  --night-muted: #b9a8cc;
+  --night-border: rgb(255 255 255 / 0.12);
 
-  /* Warm accents — sunlit apricot, heirloom gold, marigold */
-  --brand-orange: #ea580c;
-  --marigold: #d97706;
-  --ink: #141c16;
-  --paper: #faf8f5;
-
-  /* Semantic status */
-  --tomato: #dc2626;
-  --tomato-soft: #fef2f2;
-  --tomato-ink: #991b1b;
-  --saffron: #d97706;
-  --saffron-soft: #fffbeb;
-  --saffron-ink: #92400e;
-  --success: #15803d;
-  --success-soft: #f0fdf4;
-  --success-ink: #166534;
+  /* Status */
+  --destructive-soft: #fdeced;
+  --destructive-ink: #9b1c24;
+  --success: #1f8a52;
+  --success-soft: #e6f6ec;
+  --success-ink: #13623b;
   --warning: #d97706;
-  --warning-soft: #fffbeb;
-  --warning-ink: #92400e;
-  --info: #0284c7;
-  --info-soft: #f0f9ff;
-  --info-ink: #0369a1;
-  --neutral-soft: #f3f1ea;
-  --neutral-ink: #48524a;
+  --warning-soft: #fff3dc;
+  --warning-ink: #8a4b06;
+  --info: #2563eb;
+  --info-soft: #e8effd;
+  --info-ink: #1d4ed8;
+  --neutral-soft: #efebf4;
+  --neutral-ink: #4d4459;
 
-  /* Aisle tiles — artisanal grocery wells for product packs */
-  --tile-sage: #eff8f2;
-  --tile-butter: #fdf8eb;
-  --tile-clay: #fcf3eb;
-  --tile-sky: #edf5fc;
-  --tile-rose: #fdf1f1;
-  --tile-stone: #f5f4ee;
+  /* Product wells — pastel tiles jin par packshots multiply hote hain (dono themes mein roshan) */
+  --tile-lilac: #f1ebfa;
+  --tile-peach: #fff0e6;
+  --tile-mint: #e9f8ee;
+  --tile-butter: #fdf6dc;
+  --tile-sky: #e8f2fd;
+  --tile-rose: #fdecef;
+  /* Tiles dono themes mein roshan rehti hain — un par ink bhi hamesha gehri (.dark override nahi) */
+  --ink: #1d1428;
+  --tile-ink-plum: #5b2a86;
+  --tile-ink-tangerine: #a8400e;
+  --tile-ink-lime: #3d5c0f;
+  --tile-ink-butter: #8a4b06;
+  --tile-ink-sky: #1d4ed8;
+  --tile-ink-rose: #9b1c24;
 
-  /* Surface helpers */
-  --icon-bg-green: #edf7f0;
-  --modal-footer-bg: #f7f5ef;
-  --order-card-bg: #f9f8f4;
-  --glass-bg: rgba(250, 248, 245, 0.88);
-  --navbar-bg: rgba(250, 248, 245, 0.94);
+  /* Charts — chart-1 single-series bars (dataviz validator: OKLCH L band + 3:1 vs card) */
+  --chart-1: #7c4dbb;
+  --chart-2: #ff7a3d;
+  --chart-3: #7aa51b;
+  --chart-4: #2f80ed;
+  --chart-5: #e0457b;
 
-  /* Gradients */
-  --gradient-brand: linear-gradient(135deg, #166534 0%, #15803d 50%, #22c55e 100%);
-  --gradient-forest: linear-gradient(135deg, #052a17 0%, #073820 60%, #0f5c2b 100%);
-
-  /* Admin sidebar — rich deep evergreen noir */
-  --sidebar: #081f14;
-  --sidebar-foreground: #ecf5ef;
-  --sidebar-muted: rgba(236, 245, 239, 0.65);
-  --sidebar-primary: #4ade80;
-  --sidebar-primary-foreground: #052a17;
-  --sidebar-accent: rgba(255, 255, 255, 0.08);
+  /* Admin sidebar — night aubergine */
+  --sidebar: #1c0f2b;
+  --sidebar-foreground: #f1eaf8;
+  --sidebar-primary: #c6f36b;
+  --sidebar-primary-foreground: #1d1428;
+  --sidebar-accent: rgb(255 255 255 / 0.08);
   --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: rgba(255, 255, 255, 0.09);
-  --sidebar-ring: #4ade80;
+  --sidebar-border: rgb(255 255 255 / 0.1);
+  --sidebar-ring: #c6f36b;
 
-  /* Heading font — Fraunces serif for customer storefront */
-  --heading-font: var(--font-fraunces), ui-serif, Georgia, serif;
+  --glass-bg: rgb(255 255 255 / 0.78);
+  --pop-shadow-color: #1d1428;
+
+  --heading-font: var(--font-bricolage), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+.dark {
+  --background: #130d1a;
+  --foreground: #f3eef8;
+  --card: #1b1424;
+  --card-foreground: #f3eef8;
+  --popover: #201829;
+  --popover-foreground: #f3eef8;
+  --workspace: #17111f;
+
+  --primary: #c4a2f5;
+  --primary-foreground: #1d1428;
+  --secondary: #261d31;
+  --secondary-foreground: #f3eef8;
+  --muted: #241b2e;
+  --muted-foreground: #a99db8;
+  --accent: #2c2140;
+  --accent-foreground: #e6d6fb;
+  --destructive: #ff6b72;
+  --border: #30263c;
+  --input: #3b2f49;
+  --ring: #b48cf0;
+
+  --plum-soft: #2c2140;
+  --plum-strong: #e6d6fb;
+  --tangerine-soft: #3a2117;
+  --tangerine-ink: #ff9a66;
+  --lime-soft: #26311a;
+  --lime-ink: #c6f36b;
+  --night: #0d0813;
+  --night-border: rgb(255 255 255 / 0.1);
+
+  --destructive-soft: #3a1a1f;
+  --destructive-ink: #ff8f94;
+  --success: #5fd394;
+  --success-soft: #16301f;
+  --success-ink: #7be0a9;
+  --warning: #f8b34a;
+  --warning-soft: #33250f;
+  --warning-ink: #fac773;
+  --info: #7aa7ff;
+  --info-soft: #172338;
+  --info-ink: #9dbdff;
+  --neutral-soft: #261d31;
+  --neutral-ink: #cfc4dc;
+
+  --chart-1: #9a72de;
+  --chart-2: #ff7a3d;
+  --chart-3: #c6f36b;
+  --chart-4: #7aa7ff;
+  --chart-5: #ff7aa8;
+
+  --sidebar: #0d0813;
+  --sidebar-border: rgb(255 255 255 / 0.08);
+
+  --glass-bg: rgb(27 20 36 / 0.78);
+  --pop-shadow-color: #b48cf0;
 }
 
 [data-surface="admin"] {
@@ -118,8 +175,7 @@
 
 @theme inline {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
-  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-display: var(--font-bricolage), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --color-background: var(--background);
@@ -142,26 +198,23 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  --color-brand: var(--brand);
-  --color-brand-green: var(--brand-green);
-  --color-brand-green-dark: var(--brand-green-dark);
-  --color-brand-green-forest: var(--brand-green-forest);
-  --color-brand-green-light: var(--brand-green-light);
-  --color-brand-green-vivid: var(--brand-green-vivid);
-  --color-brand-strong: var(--brand-strong);
-  --color-brand-soft: var(--brand-soft);
-  --color-brand-mint: var(--brand-mint);
-  --color-brand-orange: var(--brand-orange);
-  --color-marigold: var(--marigold);
-  --color-ink: var(--ink);
-  --color-paper: var(--paper);
+  --color-plum-soft: var(--plum-soft);
+  --color-plum-strong: var(--plum-strong);
+  --color-tangerine: var(--tangerine);
+  --color-tangerine-foreground: var(--tangerine-foreground);
+  --color-tangerine-soft: var(--tangerine-soft);
+  --color-tangerine-ink: var(--tangerine-ink);
+  --color-lime: var(--lime);
+  --color-lime-foreground: var(--lime-foreground);
+  --color-lime-soft: var(--lime-soft);
+  --color-lime-ink: var(--lime-ink);
+  --color-night: var(--night);
+  --color-night-foreground: var(--night-foreground);
+  --color-night-muted: var(--night-muted);
+  --color-night-border: var(--night-border);
 
-  --color-tomato: var(--tomato);
-  --color-tomato-soft: var(--tomato-soft);
-  --color-tomato-ink: var(--tomato-ink);
-  --color-saffron: var(--saffron);
-  --color-saffron-soft: var(--saffron-soft);
-  --color-saffron-ink: var(--saffron-ink);
+  --color-destructive-soft: var(--destructive-soft);
+  --color-destructive-ink: var(--destructive-ink);
   --color-success: var(--success);
   --color-success-soft: var(--success-soft);
   --color-success-ink: var(--success-ink);
@@ -174,22 +227,31 @@
   --color-neutral-soft: var(--neutral-soft);
   --color-neutral-ink: var(--neutral-ink);
 
-  --color-tile-sage: var(--tile-sage);
+  --color-tile-lilac: var(--tile-lilac);
+  --color-tile-peach: var(--tile-peach);
+  --color-tile-mint: var(--tile-mint);
   --color-tile-butter: var(--tile-butter);
-  --color-tile-clay: var(--tile-clay);
   --color-tile-sky: var(--tile-sky);
   --color-tile-rose: var(--tile-rose);
-  --color-tile-stone: var(--tile-stone);
+  --color-ink: var(--ink);
+  --color-tile-ink-plum: var(--tile-ink-plum);
+  --color-tile-ink-tangerine: var(--tile-ink-tangerine);
+  --color-tile-ink-lime: var(--tile-ink-lime);
+  --color-tile-ink-butter: var(--tile-ink-butter);
+  --color-tile-ink-sky: var(--tile-ink-sky);
+  --color-tile-ink-rose: var(--tile-ink-rose);
 
-  --color-icon-bg-green: var(--icon-bg-green);
-  --color-modal-footer: var(--modal-footer-bg);
-  --color-order-card: var(--order-card-bg);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
   --color-glass: var(--glass-bg);
-  --color-navbar: var(--navbar-bg);
+  --color-pop: var(--pop-shadow-color);
 
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-muted: var(--sidebar-muted);
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
   --color-sidebar-accent: var(--sidebar-accent);
@@ -204,72 +266,52 @@
   --radius-2xl: calc(var(--radius) * 1.5);
   --radius-3xl: calc(var(--radius) * 2);
   --radius-4xl: calc(var(--radius) * 2.5);
+
+  /* "Pop" — ink offset shadow (storefront cards/CTAs hover par is par uthte hain) */
+  --shadow-pop: 4px 4px 0 0 var(--pop-shadow-color);
+  --shadow-pop-sm: 2px 2px 0 0 var(--pop-shadow-color);
 }
 
 @theme {
-  /* Named radius — modals, cards, hero tiles */
-  --radius-15: 0.75rem;
-
-  /* Type scale — text-fs-* (display sizes ka leading tight) */
+  /* Display sizes ka leading tight — text-fs-* */
   --text-fs-11: 0.6875rem;
   --text-fs-11--line-height: 1rem;
   --text-fs-12: 0.75rem;
   --text-fs-12--line-height: 1.125rem;
   --text-fs-13: 0.8125rem;
   --text-fs-13--line-height: 1.25rem;
-  --text-fs-14: 0.875rem;
-  --text-fs-14--line-height: 1.375rem;
   --text-fs-15: 0.9375rem;
   --text-fs-15--line-height: 1.5rem;
-  --text-fs-16: 1rem;
-  --text-fs-16--line-height: 1.5rem;
-  --text-fs-18: 1.125rem;
-  --text-fs-18--line-height: 1.75rem;
-  --text-fs-20: 1.25rem;
-  --text-fs-20--line-height: 1.75rem;
-  --text-fs-24: 1.5rem;
-  --text-fs-24--line-height: 2rem;
-  --text-fs-28: 1.75rem;
-  --text-fs-28--line-height: 2.125rem;
-  --text-fs-32: 2rem;
-  --text-fs-32--line-height: 2.25rem;
   --text-fs-40: 2.5rem;
-  --text-fs-40--line-height: 1.1;
-  --text-fs-48: 3rem;
-  --text-fs-48--line-height: 1.05;
+  --text-fs-40--line-height: 1.05;
   --text-fs-56: 3.5rem;
-  --text-fs-56--line-height: 1.04;
-  --text-fs-64: 4rem;
-  --text-fs-64--line-height: 1.02;
-  --text-fs-80: 5rem;
-  --text-fs-80--line-height: 1;
+  --text-fs-56--line-height: 1;
+  --text-fs-72: 4.5rem;
+  --text-fs-72--line-height: 0.95;
 
-  /* Layout tokens — sticky offsets, sidebar widths, containers */
+  /* Layout tokens */
   --spacing-header: 5.5rem;
-  --spacing-navbar: 3.5rem;
-  --spacing-sidebar: 16rem;
-  --spacing-sidebar-rail: 4.5rem;
-  --container-page: 82rem;
-  --container-narrow: 44rem;
+  --container-page: 84rem;
   --container-form: 28rem;
 
   --breakpoint-xs: 26rem;
 
-  --shadow-soft: 0 1px 3px rgb(20 28 22 / 0.04), 0 8px 24px -12px rgb(20 28 22 / 0.08);
-  --shadow-lift: 0 4px 14px rgb(20 28 22 / 0.07), 0 18px 36px -14px rgb(20 28 22 / 0.12);
-  --shadow-float: 0 12px 36px -10px rgb(20 28 22 / 0.12), 0 2px 6px rgb(20 28 22 / 0.04);
-  --shadow-glow: 0 10px 30px -10px rgb(21 128 61 / 0.35);
+  --shadow-soft: 0 1px 2px rgb(29 20 40 / 0.05), 0 8px 24px -12px rgb(29 20 40 / 0.12);
+  --shadow-lift: 0 6px 16px rgb(29 20 40 / 0.08), 0 22px 40px -16px rgb(29 20 40 / 0.22);
+  --shadow-glow: 0 10px 30px -8px rgb(255 122 61 / 0.55);
 
-  --animate-fade-up: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-up: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-bump: bump 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  --animate-marquee: marquee 42s linear infinite;
+  --animate-marquee: marquee 38s linear infinite;
   --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 9s ease-in-out infinite;
   --animate-pop: pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-wiggle: wiggle 0.5s ease-in-out;
 
   @keyframes fade-up {
     from {
       opacity: 0;
-      transform: translateY(16px);
+      transform: translateY(18px);
     }
     to {
       opacity: 1;
@@ -282,7 +324,7 @@
       transform: scale(1);
     }
     40% {
-      transform: scale(1.25);
+      transform: scale(1.3);
     }
     100% {
       transform: scale(1);
@@ -292,7 +334,7 @@
   @keyframes pop {
     from {
       opacity: 0;
-      transform: scale(0.7);
+      transform: scale(0.8);
     }
     to {
       opacity: 1;
@@ -312,10 +354,23 @@
   @keyframes float {
     0%,
     100% {
-      transform: translateY(0);
+      translate: 0 0;
     }
     50% {
-      transform: translateY(-6px);
+      translate: 0 -10px;
+    }
+  }
+
+  @keyframes wiggle {
+    0%,
+    100% {
+      rotate: 0deg;
+    }
+    25% {
+      rotate: -6deg;
+    }
+    75% {
+      rotate: 6deg;
     }
   }
 }
@@ -332,6 +387,11 @@
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
     -webkit-text-size-adjust: 100%;
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
   }
 
   body {
@@ -344,8 +404,7 @@
   h3,
   h4 {
     font-family: var(--heading-font);
-    font-weight: 700;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.03em;
     text-wrap: balance;
   }
 
@@ -355,8 +414,8 @@
   }
 
   ::selection {
-    background-color: var(--brand-green);
-    color: var(--primary-foreground);
+    background-color: var(--lime);
+    color: var(--lime-foreground);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -378,59 +437,34 @@
    Semantic utilities
 --------------------------------------------------------------------------- */
 
-/* Heading font */
 @utility font-heading {
   font-family: var(--heading-font);
-}
-
-/* Har page ka content column */
-@utility page-container {
-  margin-inline: auto;
-  width: 100%;
-  max-width: 82rem;
-  padding-inline: 1rem;
-
-  @media (min-width: 40rem) {
-    padding-inline: 1.5rem;
-  }
-
-  @media (min-width: 64rem) {
-    padding-inline: 2rem;
-  }
-}
-
-/* Modern eyebrow label */
-@utility kicker {
-  font-size: 0.6875rem;
-  line-height: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--brand-green);
 }
 
 /* Floating header / overlay surfaces */
 @utility glass {
   background-color: var(--glass-bg);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  backdrop-filter: blur(18px) saturate(170%);
 }
 
-@utility bg-brand-gradient {
-  background-image: var(--gradient-brand);
+/* Highlighter marker behind a word — "fresh" in lime */
+@utility marker {
+  background-image: linear-gradient(transparent 12%, var(--lime) 12%, var(--lime) 88%, transparent 88%);
+  color: var(--lime-foreground);
+  padding-inline: 0.18em;
+  border-radius: 0.2em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
-@utility bg-forest-gradient {
-  background-image: var(--gradient-forest);
-}
-
-/* Subtle dot pattern */
+/* Subtle dot grid (dark blocks par currentColor se) */
 @utility texture-dots {
   background-image: radial-gradient(currentColor 1px, transparent 1px);
-  background-size: 20px 20px;
+  background-size: 22px 22px;
 }
 
-/* Packshots card ke background mein ghul jayen */
+/* Packshots card ke tile mein ghul jayen */
 @utility blend-packshot {
   mix-blend-mode: multiply;
 }
@@ -445,7 +479,36 @@
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+@utility no-scrollbar {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @utility scrollbar-thin {
   scrollbar-width: thin;
   scrollbar-color: var(--input) transparent;
+}
+
+/* Marquee ke kinaare dhundle */
+@utility mask-fade-x {
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+/* "Pop" interaction — hover par card ink shadow par uthta hai */
+@utility pop-hover {
+  transition:
+    translate 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 160ms ease;
+
+  &:hover,
+  &:has(:focus-visible) {
+    translate: -3px -3px;
+    box-shadow: var(--shadow-pop);
+    border-color: var(--foreground);
+  }
 }

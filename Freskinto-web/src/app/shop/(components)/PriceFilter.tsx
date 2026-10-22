@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { Slider } from "@/components/ui/slider";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Grid } from "@/components/ui/grid";
+import { Text } from "@/components/ui/typography";
 import { ChipGroup } from "@/components/shared/ChipGroup";
 import { PRICE_PRESETS } from "@/constants/filters";
 import { formatMoney } from "@/lib/utils";
@@ -37,7 +40,7 @@ export function PriceFilter({ min, max, ceiling, onCommit }: PriceFilterProps) {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <Stack gap="4">
       <ChipGroup<string | null>
         aria-label="Price brackets"
         size="sm"
@@ -53,11 +56,15 @@ export function PriceFilter({ min, max, ceiling, onCommit }: PriceFilterProps) {
         className="flex-wrap overflow-visible"
       />
 
-      <div className="flex flex-col gap-2">
-        <div className="flex justify-between font-mono text-fs-12 text-muted-foreground">
-          <span>{formatMoney(range[0])}</span>
-          <span>{range[1] >= ceiling ? `${formatMoney(ceiling)}+` : formatMoney(range[1])}</span>
-        </div>
+      <Stack gap="3">
+        <Flex justify="between">
+          <Text as="span" family="mono" weight="bold" className="rounded-md bg-plum-soft px-2 py-0.5 text-fs-12 text-accent-foreground">
+            {formatMoney(range[0])}
+          </Text>
+          <Text as="span" family="mono" weight="bold" className="rounded-md bg-plum-soft px-2 py-0.5 text-fs-12 text-accent-foreground">
+            {range[1] >= ceiling ? `${formatMoney(ceiling)}+` : formatMoney(range[1])}
+          </Text>
+        </Flex>
         <Slider
           min={0}
           max={ceiling}
@@ -67,9 +74,9 @@ export function PriceFilter({ min, max, ceiling, onCommit }: PriceFilterProps) {
           onValueCommitted={(value) => commit(value as readonly number[])}
           aria-label="Price range"
         />
-      </div>
+      </Stack>
 
-      <div className="grid grid-cols-2 gap-2">
+      <Grid cols="2" gap="2">
         {(["Min", "Max"] as const).map((label, index) => (
           <InputGroup key={label} className="h-9">
             <InputGroupAddon>
@@ -97,7 +104,7 @@ export function PriceFilter({ min, max, ceiling, onCommit }: PriceFilterProps) {
             />
           </InputGroup>
         ))}
-      </div>
-    </div>
+      </Grid>
+    </Stack>
   );
 }

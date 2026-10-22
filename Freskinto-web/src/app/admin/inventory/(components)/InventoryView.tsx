@@ -3,7 +3,9 @@
 import { Boxes, History, PackagePlus, SlidersHorizontal } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Flex, Stack } from "@/components/ui/flex";
 import { Progress } from "@/components/ui/progress";
+import { Text } from "@/components/ui/typography";
 import { AdminDataTable, AdminEmptyState, type AdminColumn } from "@/components/admin/AdminDataTable";
 import { AdminFilterDropdown } from "@/components/admin/AdminFilterDropdown";
 import { AdminPage } from "@/components/admin/AdminPage";
@@ -35,14 +37,16 @@ function StockMeter({ inventory }: { inventory: IInventory }) {
   const scale = Math.max(1, inventory.lowStockThreshold * 3);
   const value = Math.min(100, Math.round((inventory.qtyOnHand / scale) * 100));
   return (
-    <div className="flex items-center gap-3">
-      <span className="numeric w-10 text-right text-base font-semibold">{inventory.qtyOnHand}</span>
+    <Flex align="center" gap="3">
+      <Text as="span" weight="bold" numeric className="w-10 text-right text-base">
+        {inventory.qtyOnHand}
+      </Text>
       <Progress
         value={value}
         aria-label={`${inventory.product.name} stock level`}
         className={cn("w-20", METER_TONE[inventory.stockStatus])}
       />
-    </div>
+    </Flex>
   );
 }
 
@@ -74,21 +78,25 @@ export function InventoryView() {
       header: "Product",
       className: "max-w-72",
       cell: (inventory) => (
-        <div className="flex items-center gap-3">
+        <Flex align="center" gap="3">
           <ProductImage
             name={inventory.product.name}
             sizes="44px"
-            className="size-11 shrink-0 rounded-lg border border-border"
+            className="size-11 shrink-0 rounded-xl border border-border"
             imageClassName="p-1"
           />
-          <div className="flex min-w-0 flex-col gap-0.5">
-            <div className="flex items-center gap-2">
-              <p className="truncate font-semibold">{inventory.product.name}</p>
+          <Stack gap="0.5" className="min-w-0">
+            <Flex align="center" gap="2">
+              <Text weight="semibold" className="truncate">
+                {inventory.product.name}
+              </Text>
               {!inventory.product.isActive && <StatusBadge status="INACTIVE" />}
-            </div>
-            <p className="font-mono text-fs-12 text-muted-foreground">{inventory.product.sku}</p>
-          </div>
-        </div>
+            </Flex>
+            <Text tone="muted" family="mono" className="text-fs-12">
+              {inventory.product.sku}
+            </Text>
+          </Stack>
+        </Flex>
       ),
     },
     { key: "onHand", header: "On hand", cell: (inventory) => <StockMeter inventory={inventory} /> },

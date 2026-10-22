@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
 import { AppModal } from "@/components/shared/AppModal";
 import { CheckboxField } from "@/components/shared/CheckboxField";
 import { InputField } from "@/components/shared/InputField";
@@ -45,7 +46,7 @@ export function AddressFormDialog({ open, onOpenChange, address }: AddressFormDi
       description="Saved addresses appear at checkout for one-tap delivery."
       footer={
         <>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isPending}>
+          <Button variant="outline" className="rounded-full" onClick={() => onOpenChange(false)} disabled={isPending}>
             Cancel
           </Button>
           <LoadingButton type="submit" form={FORM_ID} variant="cta" isLoading={isPending}>
@@ -79,9 +80,8 @@ function AddressForm({ address, onSubmit }: { address: IAddress | null; onSubmit
   });
 
   return (
-    <form
+    <Form
       id={FORM_ID}
-      noValidate
       className="grid gap-4 sm:grid-cols-2"
       onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))}
     >
@@ -136,6 +136,6 @@ function AddressForm({ address, onSubmit }: { address: IAddress | null; onSubmit
           )}
         />
       )}
-    </form>
+    </Form>
   );
 }

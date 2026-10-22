@@ -1,4 +1,8 @@
 import { CircleX, type LucideIcon } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Box } from "@/components/ui/box";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Text } from "@/components/ui/typography";
 import { cn, formatDateTime } from "@/lib/utils";
 
 export interface TimelineStep {
@@ -16,67 +20,82 @@ interface OrderTimelineProps {
   className?: string;
 }
 
-/** Vertical order tracking: har step ka timestamp, agla step "Up next" */
+/** Vertical order tracking: har step ka timestamp, agla step "Up next" (pulsing tangerine) */
 export function OrderTimeline({ steps, cancelledAt, className }: OrderTimelineProps) {
   const cancelled = Boolean(cancelledAt);
   const visible = cancelled ? steps.filter((step) => step.at) : steps;
   const nextIndex = visible.findIndex((step) => !step.at);
 
   return (
-    <ol className={cn("flex flex-col", className)}>
+    <Stack as="ol" className={cn(className)}>
       {visible.map((step, index) => {
         const Icon = step.icon;
         const done = Boolean(step.at);
         const isNext = index === nextIndex && !cancelled;
         const last = index === visible.length - 1 && !cancelled;
         return (
-          <li key={step.key} className="relative flex gap-4 pb-6 last:pb-0">
+          <Flex as="li" key={step.key} gap="4" className="relative pb-6 last:pb-0">
             {!last && (
-              <span
+              <Box
+                as="span"
                 aria-hidden="true"
                 className={cn(
-                  "absolute top-10 bottom-0 left-5 w-px -translate-x-1/2 border-l-2",
-                  done ? "border-brand-green" : "border-dashed border-input",
+                  "absolute top-11 bottom-1 left-5 w-0.5 -translate-x-1/2 rounded-full",
+                  done ? "bg-primary" : "bg-border",
                 )}
               />
             )}
-            <span
+            <Flex
+              as="span"
+              align="center"
+              justify="center"
               className={cn(
-                "relative z-10 flex size-10 shrink-0 items-center justify-center rounded-full [&_svg]:size-5",
-                done && "bg-brand-green text-white",
-                isNext && "border-2 border-brand-green bg-brand-soft text-brand-green",
+                "relative z-10 size-10 shrink-0 rounded-full [&_svg]:size-5",
+                done && "bg-primary text-primary-foreground",
+                isNext && "border-2 border-pop bg-tangerine text-tangerine-foreground shadow-pop-sm",
                 !done && !isNext && "border border-border bg-card text-muted-foreground",
               )}
             >
               <Icon aria-hidden="true" />
-            </span>
-            <div className="flex flex-col gap-0.5 pt-1.5">
-              <div className="flex flex-wrap items-center gap-2">
-                <p className={cn("text-sm font-semibold", done || isNext ? "text-foreground" : "text-muted-foreground")}>
+            </Flex>
+            <Stack gap="0.5" className="pt-1.5">
+              <Flex wrap align="center" gap="2">
+                <Text weight="semibold" tone={done || isNext ? "default" : "muted"}>
                   {step.label}
-                </p>
+                </Text>
                 {isNext && (
-                  <span className="rounded-full bg-brand-soft px-2 py-0.5 text-fs-11 font-semibold text-brand-green-dark">
+                  <Badge variant="lime" className="h-5 animate-pulse px-2 text-fs-11">
                     Up next
-                  </span>
+                  </Badge>
                 )}
-              </div>
-              <p className="numeric text-fs-13 text-muted-foreground">{done ? formatDateTime(step.at) : "Pending"}</p>
-            </div>
-          </li>
+              </Flex>
+              <Text tone="muted" numeric className="text-fs-13">
+                {done ? formatDateTime(step.at) : "Pending"}
+              </Text>
+            </Stack>
+          </Flex>
         );
       })}
       {cancelled && (
-        <li className="relative flex gap-4">
-          <span className="relative z-10 flex size-10 shrink-0 items-center justify-center rounded-full bg-destructive text-white [&_svg]:size-5">
+        <Flex as="li" gap="4" className="relative">
+          <Flex
+            as="span"
+            align="center"
+            justify="center"
+            className="relative z-10 size-10 shrink-0 rounded-full bg-destructive text-white dark:text-background [&_svg]:size-5"
+          >
             <CircleX aria-hidden="true" />
-          </span>
-          <div className="flex flex-col gap-0.5 pt-1.5">
-            <p className="text-sm font-semibold text-destructive">Cancelled</p>
-            <p className="numeric text-fs-13 text-muted-foreground">{formatDateTime(cancelledAt)}</p>
-          </div>
-        </li>
+          </Flex>
+          <Stack gap="0.5" className="pt-1.5">
+            <Text weight="semibold" tone="destructive">
+              Cancelled
+            </Text>
+            <Text tone="muted" numeric className="text-fs-13">
+              {formatDateTime(cancelledAt)}
+            </Text>
+          </Stack>
+        </Flex>
       )}
-    </ol>
+    </Stack>
   );
 }

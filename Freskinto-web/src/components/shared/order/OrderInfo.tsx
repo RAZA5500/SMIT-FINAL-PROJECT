@@ -1,5 +1,6 @@
 import { CalendarClock, CircleX, MapPin, NotebookPen, Store, Truck, UserRound } from "lucide-react";
 import { Alert, AlertBody, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Stack } from "@/components/ui/flex";
 import { formatDateTime } from "@/lib/utils";
 import { InfoRow } from "../InfoRow";
 
@@ -18,7 +19,7 @@ export function OrderInfo({ pickup, pickupAt, addressText, customer, notes, canc
   const TypeIcon = pickup ? Store : Truck;
 
   return (
-    <div className="flex flex-col gap-4">
+    <Stack gap="4">
       <InfoRow icon={<TypeIcon aria-hidden="true" />} label="Fulfilment">
         {pickup ? "Click & collect" : "Home delivery"}
       </InfoRow>
@@ -52,6 +53,6 @@ export function OrderInfo({ pickup, pickupAt, addressText, customer, notes, canc
           </AlertBody>
         </Alert>
       )}
-    </div>
+    </Stack>
   );
 }

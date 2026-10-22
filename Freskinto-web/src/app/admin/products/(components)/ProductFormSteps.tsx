@@ -1,7 +1,11 @@
 "use client";
 
 import { Check } from "lucide-react";
+import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
+import { Flex } from "@/components/ui/flex";
+import { Grid } from "@/components/ui/grid";
+import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 import { PRODUCT_FORM_TABS, type ProductFormTab } from "@/modules/zod/product.model";
 
@@ -22,36 +26,43 @@ export function ProductFormSteps({ current, onSelect }: ProductFormStepsProps) {
   const currentIndex = PRODUCT_FORM_TABS.indexOf(current);
 
   return (
-    <ol className="grid grid-cols-3 gap-2" aria-label="Form steps">
+    <Grid as="ol" cols="3" gap="2" aria-label="Form steps">
       {PRODUCT_FORM_TABS.map((step, index) => {
         const done = index < currentIndex;
         const active = step === current;
         return (
-          <li key={step}>
+          <Box as="li" key={step}>
             <Button
               variant="outline"
               aria-current={active ? "step" : undefined}
               onClick={() => onSelect(step)}
               className={cn(
-                "h-auto w-full justify-start gap-2.5 rounded-xl px-3 py-2.5",
-                active && "border-primary ring-1 ring-primary hover:border-primary",
+                "h-auto w-full justify-start gap-2.5 rounded-2xl px-3 py-2.5",
+                active && "border-primary bg-plum-soft ring-1 ring-primary hover:border-primary hover:bg-plum-soft",
               )}
             >
-              <span
+              <Flex
+                as="span"
+                align="center"
+                justify="center"
                 className={cn(
-                  "font-mono text-xs flex size-6 shrink-0 items-center justify-center rounded-full",
-                  done || active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground",
+                  "size-7 shrink-0 rounded-full font-mono text-xs",
+                  active
+                    ? "bg-tangerine text-tangerine-foreground"
+                    : done
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground",
                 )}
               >
                 {done ? <Check aria-hidden="true" className="size-3.5" /> : index + 1}
-              </span>
-              <span className="font-semibold truncate">
+              </Flex>
+              <Text as="span" weight="semibold" className="truncate">
                 {TAB_LABELS[step]}
-              </span>
+              </Text>
             </Button>
-          </li>
+          </Box>
         );
       })}
-    </ol>
+    </Grid>
   );
 }

@@ -1,7 +1,11 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { Box } from "@/components/ui/box";
+import { Flex } from "@/components/ui/flex";
+import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 
 export interface ChoiceOption<T extends string = string> {
@@ -29,8 +33,8 @@ interface ChoiceCardsProps<T extends string> {
 }
 
 /**
- * Radio group as big tappable cards. Checked card gets a forest border and a soft
- * brand wash — selection ek nazar mein samajh aati hai.
+ * Radio group as big tappable cards. Checked card gets an aubergine ring and a lilac wash, aur
+ * icon tile lime ho jati hai — selection ek nazar mein samajh aati hai.
  */
 export function ChoiceCards<T extends string>({
   id,
@@ -57,29 +61,40 @@ export function ChoiceCards<T extends string>({
       {options.map((option) => {
         const optionId = `${id}-${option.value}`;
         return (
-          <label
+          <Label
             key={option.value}
             htmlFor={optionId}
             className={cn(
-              "flex cursor-pointer items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-foreground/30 has-data-checked:border-primary has-data-checked:bg-brand-soft/60 has-data-checked:ring-1 has-data-checked:ring-primary has-disabled:cursor-not-allowed has-disabled:opacity-60",
+              "group/choice flex cursor-pointer items-center gap-3 rounded-2xl border-2 border-border bg-card p-4 font-normal transition-all hover:border-foreground/30 has-data-checked:border-primary has-data-checked:bg-plum-soft has-disabled:cursor-not-allowed has-disabled:opacity-60",
               optionClassName,
             )}
           >
             {option.icon && (
-              <span
+              <Flex
+                as="span"
                 aria-hidden="true"
-                className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-brand-green [&_svg]:size-5"
+                align="center"
+                justify="center"
+                className="size-11 shrink-0 rounded-xl bg-muted text-primary transition-colors group-has-data-checked/choice:bg-lime group-has-data-checked/choice:text-lime-foreground [&_svg]:size-5"
               >
                 {option.icon}
-              </span>
+              </Flex>
             )}
-            <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-              <span className="text-sm font-semibold text-foreground">{option.title}</span>
-              {option.description && <span className="text-fs-13 text-muted-foreground">{option.description}</span>}
-            </span>
+            <Flex as="span" direction="col" gap="0.5" className="min-w-0 flex-1">
+              <Text as="span" weight="semibold">
+                {option.title}
+              </Text>
+              {option.description && (
+                <Text as="span" tone="muted" className="text-fs-13">
+                  {option.description}
+                </Text>
+              )}
+            </Flex>
             {option.aside}
-            <RadioGroupItem value={option.value} id={optionId} disabled={option.disabled} />
-          </label>
+            <Box as="span" className="shrink-0">
+              <RadioGroupItem value={option.value} id={optionId} disabled={option.disabled} />
+            </Box>
+          </Label>
         );
       })}
     </RadioGroup>

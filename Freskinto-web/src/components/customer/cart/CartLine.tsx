@@ -4,6 +4,8 @@ import { CircleAlert, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Text } from "@/components/ui/typography";
 import { DeleteDialog } from "@/components/shared/DeleteDialog";
 import { Price } from "@/components/shared/Price";
 import { ProductImage } from "@/components/shared/ProductImage";
@@ -34,13 +36,14 @@ export function CartLine({ item, compact = false, onNavigate, className }: CartL
   const issue = cartItemIssue(item);
 
   return (
-    <div className={cn("flex gap-3 py-4 sm:gap-4", isRemoving && "opacity-50", className)}>
-      <Link
-        href={publicRoutes.product(item.productId)}
-        onClick={onNavigate}
+    <Flex gap="3" className={cn("py-4 transition-opacity sm:gap-4", isRemoving && "opacity-50", className)}>
+      <Button
+        variant="ghost"
+        nativeButton={false}
         tabIndex={-1}
         aria-hidden="true"
-        className="shrink-0 self-start overflow-hidden rounded-xl border border-border"
+        render={<Link href={publicRoutes.product(item.productId)} onClick={onNavigate} />}
+        className="h-auto shrink-0 self-start overflow-hidden rounded-2xl border border-border p-0 hover:bg-transparent"
       >
         <ProductImage
           name={item.name}
@@ -49,11 +52,11 @@ export function CartLine({ item, compact = false, onNavigate, className }: CartL
           imageClassName="p-1.5"
           muted={!item.isAvailable}
         />
-      </Link>
+      </Button>
 
-      <div className="flex min-w-0 flex-1 flex-col gap-2.5">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex min-w-0 flex-col gap-0.5">
+      <Stack gap="2.5" className="min-w-0 flex-1">
+        <Flex align="start" justify="between" gap="3">
+          <Stack gap="0.5" className="min-w-0">
             <TextLink
               href={publicRoutes.product(item.productId)}
               onClick={onNavigate}
@@ -62,15 +65,18 @@ export function CartLine({ item, compact = false, onNavigate, className }: CartL
             >
               {item.name}
             </TextLink>
-            <p className="text-fs-13 text-muted-foreground">
-              <span className="numeric">{formatMoney(item.price)}</span> each
+            <Text tone="muted" className="text-fs-13">
+              <Text as="span" tone="inherit" numeric className="text-fs-13">
+                {formatMoney(item.price)}
+              </Text>{" "}
+              each
               {item.minimumOrderQuantity > 1 && ` · Min. ${item.minimumOrderQuantity}`}
-            </p>
-          </div>
+            </Text>
+          </Stack>
           <Price amount={item.lineTotal} size="md" className="shrink-0" />
-        </div>
+        </Flex>
 
-        <div className="flex items-center justify-between gap-2">
+        <Flex align="center" justify="between" gap="2">
           <QuantityStepper
             size="sm"
             label={item.name}
@@ -86,24 +92,26 @@ export function CartLine({ item, compact = false, onNavigate, className }: CartL
             <Button
               variant="ghost"
               size="sm"
-              className="text-muted-foreground hover:text-destructive"
+              className="rounded-full text-muted-foreground hover:bg-destructive-soft hover:text-destructive"
               disabled={isRemoving}
               onClick={() => setConfirmOpen(true)}
             >
               <Trash2 aria-hidden="true" />
               Remove
-              <span className="sr-only">{item.name}</span>
+              <Text as="span" className="sr-only">
+                {item.name}
+              </Text>
             </Button>
           )}
-        </div>
+        </Flex>
 
         {issue && (
-          <p role="alert" className="flex items-center gap-1.5 text-fs-13 font-medium text-destructive">
+          <Flex role="alert" align="center" gap="1.5" className="text-fs-13 font-medium text-destructive">
             <CircleAlert aria-hidden="true" className="size-3.5 shrink-0" />
             {issue}
-          </p>
+          </Flex>
         )}
-      </div>
+      </Stack>
 
       <DeleteDialog
         open={confirmOpen}
@@ -117,6 +125,6 @@ export function CartLine({ item, compact = false, onNavigate, className }: CartL
           setConfirmOpen(false);
         }}
       />
-    </div>
+    </Flex>
   );
 }

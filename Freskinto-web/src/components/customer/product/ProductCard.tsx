@@ -2,6 +2,10 @@
 
 import { Flame, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Box } from "@/components/ui/box";
+import { Card } from "@/components/ui/card";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Heading, Text } from "@/components/ui/typography";
 import { Price } from "@/components/shared/Price";
 import { ProductImage } from "@/components/shared/ProductImage";
 import { TextLink } from "@/components/shared/TextLink";
@@ -10,6 +14,7 @@ import { publicRoutes } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
 import type { IProduct } from "@/services/products/types";
 import { ProductCartControl } from "./ProductCartControl";
+import { ProductQuickView } from "./ProductQuickView";
 
 interface ProductCardProps {
   product: IProduct;
@@ -18,7 +23,7 @@ interface ProductCardProps {
   className?: string;
 }
 
-/** Stock / "new" signals over the packshot — sirf asli data (stockStatus, createdAt) */
+/** Stock / "new" stickers over the packshot — sirf asli data (stockStatus, createdAt) */
 export function ProductBadges({ product, className }: { product: IProduct; className?: string }) {
   const outOfStock = product.stockStatus === "OUT_OF_STOCK";
   const lowStock = product.stockStatus === "LOW_STOCK";
@@ -26,73 +31,81 @@ export function ProductBadges({ product, className }: { product: IProduct; class
   if (!outOfStock && !lowStock && !isNew) return null;
 
   return (
-    <div className={cn("pointer-events-none flex flex-col items-start gap-1.5", className)}>
+    <Stack align="start" gap="1.5" className={cn("pointer-events-none", className)}>
       {outOfStock ? (
         <Badge variant="destructive">Sold out</Badge>
       ) : lowStock ? (
-        <Badge variant="warning">
+        <Badge variant="sticker-tangerine">
           <Flame aria-hidden="true" />
           Low stock
         </Badge>
       ) : null}
       {isNew && !outOfStock && (
-        <Badge variant="marigold">
+        <Badge variant="sticker">
           <Sparkles aria-hidden="true" />
           New in
         </Badge>
       )}
-    </div>
+    </Stack>
   );
 }
 
-/** Shop shelf card — clean lift on hover, packshot on a soft tile, stretched name link, basket control */
+/** Shop shelf card — "pop" lift onto an ink shadow, packshot in a pastel well, quick view, basket control */
 export function ProductCard({ product, eager = false, className }: ProductCardProps) {
+  const outOfStock = product.stockStatus === "OUT_OF_STOCK";
+
   return (
-    <article
+    <Card
+      render={<Box as="article" />}
       className={cn(
-        "group/product relative flex h-full flex-col overflow-hidden rounded-15 border border-border bg-card shadow-soft transition duration-200 hover:-translate-y-0.5 hover:border-brand-green/25 hover:shadow-lift",
+        "group/product pop-hover relative h-full gap-0 rounded-3xl border-2 py-0 shadow-none",
         className,
       )}
     >
-      <div className="relative">
+      <Box className="relative p-2">
         <ProductImage
           name={product.name}
           categoryName={product.category.name}
           eager={eager}
-          muted={product.stockStatus === "OUT_OF_STOCK"}
-          imageClassName="transition-transform duration-300 group-hover/product:scale-[1.03]"
+          muted={outOfStock}
+          className="rounded-2xl"
+          imageClassName="transition-transform duration-500 group-hover/product:scale-110 group-hover/product:-rotate-3"
         />
-        <ProductBadges product={product} className="absolute top-3 left-3" />
-      </div>
+        <ProductBadges product={product} className="absolute top-4 left-4" />
+        <ProductQuickView
+          product={product}
+          className="absolute top-4 right-4 z-20 sm:opacity-0 sm:group-hover/product:opacity-100 sm:focus-visible:opacity-100"
+        />
+      </Box>
 
-      <div className="flex flex-1 flex-col gap-3 p-3.5 sm:p-4">
-        <div className="flex flex-col gap-1">
-          <p className="truncate text-fs-11 font-bold tracking-wider text-muted-foreground uppercase">
+      <Stack gap="3" className="flex-1 px-3.5 pt-1 pb-3.5 sm:px-4 sm:pb-4">
+        <Stack gap="1">
+          <Text variant="eyebrow" tone="muted" className="truncate">
             {product.category.name}
-          </p>
-          <h3 className="line-clamp-2 min-h-11 font-heading text-fs-16 leading-snug font-semibold">
-            {/* Stretched link: poora card clickable, basket control upar (z-10) */}
+          </Text>
+          <Heading as="h3" size="5" className="line-clamp-2 min-h-11 leading-snug">
+            {/* Stretched link: poora card clickable, basket control + quick view upar (z-10/z-20) */}
             <TextLink
               href={publicRoutes.product(product.id)}
               tone="default"
-              className="after:absolute after:inset-0 after:rounded-15 hover:no-underline focus-visible:ring-0 focus-visible:after:ring-3 focus-visible:after:ring-ring/40"
+              className="after:absolute after:inset-0 after:rounded-3xl hover:no-underline focus-visible:ring-0 focus-visible:after:ring-3 focus-visible:after:ring-ring/40"
             >
               {product.name}
             </TextLink>
-          </h3>
-        </div>
+          </Heading>
+        </Stack>
 
-        <div className="mt-auto flex items-baseline justify-between gap-2">
-          <Price amount={product.price} size="lg" tone="brand" />
-          <span className="text-fs-12 text-muted-foreground">
+        <Flex align="baseline" justify="between" gap="2" className="mt-auto">
+          <Price amount={product.price} size="lg" />
+          <Text as="span" tone="muted" className="text-fs-12">
             {product.minimumOrderQuantity > 1 ? `Min. ${product.minimumOrderQuantity}` : "each"}
-          </span>
-        </div>
+          </Text>
+        </Flex>
 
-        <div className="relative z-10">
+        <Box className="relative z-10">
           <ProductCartControl product={product} />
-        </div>
-      </div>
-    </article>
+        </Box>
+      </Stack>
+    </Card>
   );
 }

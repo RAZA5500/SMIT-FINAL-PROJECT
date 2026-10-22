@@ -1,5 +1,7 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import type { ReactNode } from "react";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Heading, Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 import { ButtonLink } from "./ButtonLink";
 
@@ -13,10 +15,12 @@ interface SectionHeadingProps {
   hrefLabel?: string;
   /** Extra controls */
   actions?: ReactNode;
+  /** Night (dark) blocks par roshan text */
+  inverse?: boolean;
   className?: string;
 }
 
-/** Section ka sar — kicker, serif title, "View all" */
+/** Section ka sar — eyebrow, chunky display title, "View all" */
 export function SectionHeading({
   id,
   title,
@@ -25,26 +29,40 @@ export function SectionHeading({
   href,
   hrefLabel = "View all",
   actions,
+  inverse = false,
   className,
 }: SectionHeadingProps) {
   return (
-    <div className={cn("flex items-end justify-between gap-4", className)}>
-      <div className="flex min-w-0 flex-col gap-2">
-        {eyebrow && <div className="kicker">{eyebrow}</div>}
-        <h2 id={id} className="font-heading text-fs-24 text-foreground sm:text-fs-32">
-          {title}
-        </h2>
-        {description && <p className="text-muted-foreground sm:text-base">{description}</p>}
-      </div>
-      <div className="flex shrink-0 items-center gap-2">
-        {href && (
-          <ButtonLink href={href} variant="ghost" size="sm" className="text-brand-green hover:text-brand-green-dark">
-            {hrefLabel}
-            <ArrowRight aria-hidden="true" />
-          </ButtonLink>
+    <Flex wrap align="end" justify="between" gap="4" className={cn(className)}>
+      <Stack gap="2" className="min-w-0">
+        {eyebrow && (
+          <Text as="div" variant="eyebrow" tone={inverse ? "inherit" : "primary"} className={cn(inverse && "text-lime")}>
+            {eyebrow}
+          </Text>
         )}
-        {actions}
-      </div>
-    </div>
+        <Heading id={id} size="1" tone={inverse ? "night" : "default"}>
+          {title}
+        </Heading>
+        {description && (
+          <Text tone={inverse ? "night-muted" : "muted"} className="max-w-2xl sm:text-base">
+            {description}
+          </Text>
+        )}
+      </Stack>
+      {(href || actions) && (
+        <Flex align="center" gap="2" className="shrink-0">
+          {actions}
+          {href && (
+            <ButtonLink href={href} variant={inverse ? "glass" : "outline"} className="group/more rounded-full">
+              {hrefLabel}
+              <ArrowUpRight
+                aria-hidden="true"
+                className="transition-transform group-hover/more:translate-x-0.5 group-hover/more:-translate-y-0.5"
+              />
+            </ButtonLink>
+          )}
+        </Flex>
+      )}
+    </Flex>
   );
 }

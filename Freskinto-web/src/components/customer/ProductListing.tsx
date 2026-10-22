@@ -2,6 +2,9 @@
 
 import { SearchX } from "lucide-react";
 import type { ReactNode } from "react";
+import { Box } from "@/components/ui/box";
+import { Grid } from "@/components/ui/grid";
+import { Stack } from "@/components/ui/flex";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { cn } from "@/lib/utils";
@@ -31,7 +34,7 @@ interface ProductListingProps {
 
 /**
  * Responsive product grid/list with every state built in: skeleton, error (retry), empty,
- * aur subtle background-refetch dimming.
+ * aur subtle background-refetch dimming. Cards ek ek kar ke fade-up hote hain.
  */
 export function ProductListing({
   products,
@@ -71,23 +74,28 @@ export function ProductListing({
 
   if (layout === "list") {
     return (
-      <ul className={cn("flex flex-col gap-3", dimmed, className)}>
+      <Stack as="ul" gap="3" className={cn(dimmed, className)}>
         {products.map((product) => (
-          <li key={product.id}>
+          <Box as="li" key={product.id}>
             <ProductListItem product={product} />
-          </li>
+          </Box>
         ))}
-      </ul>
+      </Stack>
     );
   }
 
   return (
-    <ul className={cn(PRODUCT_GRID_CLASS, dimmed, className)}>
+    <Grid as="ul" className={cn(PRODUCT_GRID_CLASS, dimmed, className)}>
       {products.map((product, index) => (
-        <li key={product.id}>
+        <Box
+          as="li"
+          key={product.id}
+          className="animate-fade-up"
+          style={{ animationDelay: `${Math.min(index, 11) * 40}ms` }}
+        >
           <ProductCard product={product} eager={index < eagerCount} />
-        </li>
+        </Box>
       ))}
-    </ul>
+    </Grid>
   );
 }

@@ -2,6 +2,7 @@ import {
   Boxes,
   FolderTree,
   Home,
+  LayoutDashboard,
   MapPin,
   Package,
   ReceiptText,
@@ -47,6 +48,7 @@ export const ADMIN_NAV: NavGroup[] = [
   {
     label: "Operations",
     items: [
+      { label: "Overview", href: adminRoutes.home, icon: LayoutDashboard },
       { label: "Orders", href: adminRoutes.orders, icon: ReceiptText },
       { label: "Customers", href: adminRoutes.customers, icon: Users },
     ],

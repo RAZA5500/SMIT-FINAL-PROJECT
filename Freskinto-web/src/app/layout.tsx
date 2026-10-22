@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import Script from "next/script";
 import { STORE } from "@/constants/store";
+import { THEME_INIT_SCRIPT } from "@/hooks/useTheme";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 import { Providers } from "./providers/providers";
@@ -13,12 +15,11 @@ const inter = localFont({
   display: "swap",
 });
 
-const fraunces = localFont({
-  src: [
-    { path: "./fonts/fraunces-latin.woff2", weight: "100 900", style: "normal" },
-    { path: "./fonts/fraunces-italic-latin.woff2", weight: "100 900", style: "italic" },
-  ],
-  variable: "--font-fraunces",
+/* Display headings — Bricolage Grotesque (SIL OFL 1.1) */
+const bricolage = localFont({
+  src: "./fonts/bricolage-grotesque-latin.woff2",
+  variable: "--font-bricolage",
+  weight: "200 800",
   display: "swap",
 });
 
@@ -40,7 +41,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#faf8f5",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f7f5fa" },
+    { media: "(prefers-color-scheme: dark)", color: "#130d1a" },
+  ],
 };
 
 /* Document shell — `<html>`/`<body>` Next.js root layout ki zaroorat hain */
@@ -53,10 +57,13 @@ export default function RootLayout({
     <html
       lang="en-GB"
       data-scroll-behavior="smooth"
-      className={cn(inter.variable, fraunces.variable, jetbrains.variable)}
+      className={cn(inter.variable, bricolage.variable, jetbrains.variable)}
       suppressHydrationWarning
     >
       <body className={cn("flex min-h-dvh flex-col")} suppressHydrationWarning>
+        <Script id="theme-init" strategy="beforeInteractive">
+          {THEME_INIT_SCRIPT}
+        </Script>
         <Providers>{children}</Providers>
       </body>
     </html>

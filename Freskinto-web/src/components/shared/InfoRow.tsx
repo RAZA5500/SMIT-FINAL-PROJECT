@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
 import { cn } from "@/lib/utils";
 
 interface InfoRowProps {
@@ -8,20 +9,20 @@ interface InfoRowProps {
   className?: string;
 }
 
-/** Icon chip + chhota label + value — order details, profile, customer modal */
+/** Icon tile + chhota label + value (shadcn `Item`) — order details, profile, customer modal */
 export function InfoRow({ icon, label, children, className }: InfoRowProps) {
   return (
-    <div className={cn("flex items-start gap-3", className)}>
-      <span
+    <Item size="xs" className={cn("items-start gap-3 p-0", className)}>
+      <ItemMedia
         aria-hidden="true"
-        className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand-green [&_svg]:size-4"
+        className="size-9 translate-y-0 rounded-xl bg-plum-soft text-primary group-has-data-[slot=item-description]/item:translate-y-0 [&_svg]:size-4"
       >
         {icon}
-      </span>
-      <div className="flex min-w-0 flex-col gap-0.5">
-        <p className="text-fs-12 text-muted-foreground">{label}</p>
-        <div className="text-sm text-foreground">{children}</div>
-      </div>
-    </div>
+      </ItemMedia>
+      <ItemContent className="min-w-0 gap-0.5">
+        <ItemDescription className="text-fs-12">{label}</ItemDescription>
+        <ItemTitle className="line-clamp-none w-full font-normal text-foreground">{children}</ItemTitle>
+      </ItemContent>
+    </Item>
   );
 }

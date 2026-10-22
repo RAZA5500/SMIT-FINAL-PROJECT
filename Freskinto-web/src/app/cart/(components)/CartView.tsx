@@ -3,8 +3,13 @@
 import { ArrowRight, CircleAlert, ShoppingBasket, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Alert, AlertBody, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Flex, Stack } from "@/components/ui/flex";
+import { Grid } from "@/components/ui/grid";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Text } from "@/components/ui/typography";
 import { cartHasIssues } from "@/components/customer/cart/cart-availability";
 import { CartLine } from "@/components/customer/cart/CartLine";
 import { CartSummaryCard } from "@/components/customer/cart/CartSummaryCard";
@@ -94,16 +99,25 @@ function FilledBasket({ cart, onClear }: { cart: ICart; onClear: () => void }) {
 
   return (
     <>
-      <div className="grid items-start gap-6 lg:grid-cols-12 lg:gap-8">
-        <section aria-label="Basket items" className="rounded-15 border border-border bg-card shadow-soft lg:col-span-8">
-          <header className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
-            <h2 className="font-heading text-fs-18 font-semibold">{pluralize(cart.items.length, "product")}</h2>
-            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-destructive" onClick={onClear}>
-              <Trash2 aria-hidden="true" />
-              Clear basket
-            </Button>
-          </header>
-          <div className="flex flex-col gap-4 px-5">
+      <Grid align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
+        <Card render={<Box as="section" aria-label="Basket items" />} className="gap-0 rounded-3xl border-2 py-0 lg:col-span-8">
+          <CardHeader className="border-b border-border py-4">
+            <CardTitle render={<Box as="span" />} className="text-xl font-bold">
+              {pluralize(cart.items.length, "product")}
+            </CardTitle>
+            <CardAction className="top-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="rounded-full text-muted-foreground hover:bg-destructive-soft hover:text-destructive"
+                onClick={onClear}
+              >
+                <Trash2 aria-hidden="true" />
+                Clear basket
+              </Button>
+            </CardAction>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
             {hasIssues && (
               <Alert variant="destructive" className="mt-4">
                 <CircleAlert aria-hidden="true" />
@@ -113,38 +127,40 @@ function FilledBasket({ cart, onClear }: { cart: ICart; onClear: () => void }) {
                 </AlertBody>
               </Alert>
             )}
-            <ul className="flex flex-col divide-y divide-border">
+            <Stack as="ul" className="divide-y divide-border">
               {cart.items.map((item) => (
-                <li key={item.id}>
+                <Box as="li" key={item.id}>
                   <CartLine item={item} />
-                </li>
+                </Box>
               ))}
-            </ul>
-          </div>
-        </section>
+            </Stack>
+          </CardContent>
+        </Card>
 
-        <CartSummaryCard cart={cart} className="lg:sticky lg:top-header lg:col-span-4">
+        <CartSummaryCard cart={cart} className="lg:sticky lg:top-28 lg:col-span-4">
           {checkoutAction}
-          <ButtonLink href={customerRoutes.cartSummary} variant="outline" className="w-full rounded-full">
+          <ButtonLink href={customerRoutes.cartSummary} variant="outline" className="w-full rounded-full border-2">
             Review order summary
           </ButtonLink>
-          <ButtonLink href={shopUrl()} variant="ghost" className="w-full">
+          <ButtonLink href={shopUrl()} variant="ghost" className="w-full rounded-full">
             Continue shopping
           </ButtonLink>
         </CartSummaryCard>
-      </div>
+      </Grid>
 
-      {/* Phone: checkout hamesha nazar mein — tab bar ke upar */}
-      <div className="fixed inset-x-0 bottom-16 z-30 border-t border-border bg-card/95 px-4 py-3 backdrop-blur lg:hidden">
-        <div className="flex items-center gap-3">
-          <div className="flex flex-col gap-0.5">
-            <span className="text-fs-12 text-muted-foreground">Total</span>
-            <Price amount={cart.grandTotal} size="lg" className="font-heading" />
-          </div>
-          <div className="flex-1">{checkoutAction}</div>
-        </div>
-      </div>
-      <div aria-hidden="true" className="h-16 lg:hidden" />
+      {/* Phone: checkout hamesha nazar mein — floating tab bar ke upar */}
+      <Box className="glass fixed inset-x-3 bottom-24 z-30 rounded-3xl border border-border/70 px-4 py-3 shadow-lift lg:hidden">
+        <Flex align="center" gap="3">
+          <Stack gap="0.5">
+            <Text as="span" tone="muted" className="text-fs-12">
+              Total
+            </Text>
+            <Price amount={cart.grandTotal} size="lg" />
+          </Stack>
+          <Box className="flex-1">{checkoutAction}</Box>
+        </Flex>
+      </Box>
+      <Box aria-hidden="true" className="h-20 lg:hidden" />
     </>
   );
 }
@@ -156,7 +172,7 @@ function SuggestedProducts({ excludeIds }: { excludeIds: string[] }) {
   if (!isLoading && !isError && !products?.length) return null;
 
   return (
-    <section aria-label="Suggestions" className="flex flex-col gap-6 pt-6">
+    <Stack as="section" aria-label="Suggestions" gap="6" className="pt-6">
       <SectionHeading
         eyebrow="While you're here"
         title="You might also like"
@@ -171,26 +187,26 @@ function SuggestedProducts({ excludeIds }: { excludeIds: string[] }) {
         onRetry={() => void refetch()}
         skeleton={<ProductGridSkeleton count={4} />}
       />
-    </section>
+    </Stack>
   );
 }
 
 function CartViewSkeleton() {
   return (
-    <div aria-label="Loading" aria-busy="true" className="grid items-start gap-6 lg:grid-cols-12 lg:gap-8">
-      <div className="flex flex-col gap-5 rounded-15 border border-border bg-card p-5 lg:col-span-8">
+    <Grid aria-label="Loading" aria-busy="true" align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
+      <Card className="gap-5 rounded-3xl border-2 p-5 lg:col-span-8">
         {Array.from({ length: 3 }, (_, i) => (
-          <div key={i} className="flex gap-4">
-            <Skeleton className="size-24 rounded-xl" />
-            <div className="flex flex-1 flex-col gap-2">
+          <Flex key={i} gap="4">
+            <Skeleton className="size-24 rounded-2xl" />
+            <Stack gap="2" className="flex-1">
               <Skeleton className="h-4 w-3/5" />
               <Skeleton className="h-3 w-1/4" />
-              <Skeleton className="h-9 w-32 rounded-full" />
-            </div>
-          </div>
+              <Skeleton className="h-10 w-32 rounded-full" />
+            </Stack>
+          </Flex>
         ))}
-      </div>
-      <Skeleton className="h-96 w-full rounded-15 lg:col-span-4" />
-    </div>
+      </Card>
+      <Skeleton className="h-96 w-full rounded-3xl lg:col-span-4" />
+    </Grid>
   );
 }

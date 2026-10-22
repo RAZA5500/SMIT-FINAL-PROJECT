@@ -1,6 +1,7 @@
 "use client";
 
 import { findCategory, findParent, type CategoryNode } from "@/components/customer/shop/category-tree";
+import { Stack } from "@/components/ui/flex";
 import { ChipGroup } from "@/components/shared/ChipGroup";
 
 interface CategoryPillsProps {
@@ -19,16 +20,14 @@ export function CategoryPills({ aisles, selected, onSelect }: CategoryPillsProps
   const hasChildren = Boolean(root && root.children.length > 0 && selected);
 
   return (
-    <div
+    <Stack
       id="aisles"
-      className="sticky top-0 z-30 -mx-4 flex flex-col gap-1 border-b border-border/60 bg-background/90 px-4 py-2 backdrop-blur-md sm:-mx-6 sm:px-6 lg:top-header lg:-mx-8 lg:px-8"
+      gap="1"
+      className="sticky top-0 z-30 -mx-4 border-b border-border/60 bg-background/85 px-4 py-2 backdrop-blur-md sm:-mx-6 sm:px-6 lg:top-header lg:-mx-8 lg:px-8"
     >
       <ChipGroup<string | null>
         aria-label="Aisles"
-        options={[
-          { value: null, label: "All aisles" },
-          ...aisles.map((aisle) => ({ value: aisle.id, label: aisle.name })),
-        ]}
+        options={[{ value: null, label: "All aisles" }, ...aisles.map((aisle) => ({ value: aisle.id, label: aisle.name }))]}
         value={root?.id ?? null}
         onValueChange={onSelect}
       />
@@ -42,8 +41,9 @@ export function CategoryPills({ aisles, selected, onSelect }: CategoryPillsProps
           ]}
           value={selected}
           onValueChange={onSelect}
+          className="animate-fade-up"
         />
       )}
-    </div>
+    </Stack>
   );
 }

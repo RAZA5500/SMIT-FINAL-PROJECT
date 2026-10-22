@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Lock } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
 import { MockOutcomeField } from "@/components/customer/checkout/MockOutcomeField";
 import { AppModal } from "@/components/shared/AppModal";
 import { LoadingButton } from "@/components/shared/LoadingButton";
@@ -70,8 +71,8 @@ function PayNowForm({ disabled, onPay }: { disabled: boolean; onPay: (values: Mo
   });
 
   return (
-    <form id={FORM_ID} noValidate onSubmit={handleSubmit(onPay, () => scrollToFirstError(FORM_ID))}>
+    <Form id={FORM_ID} onSubmit={handleSubmit(onPay, () => scrollToFirstError(FORM_ID))}>
       <MockOutcomeField control={control} disabled={disabled} />
-    </form>
+    </Form>
   );
 }

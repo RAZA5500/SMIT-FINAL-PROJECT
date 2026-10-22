@@ -1,3 +1,4 @@
+import { Box } from "@/components/ui/box";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 
@@ -9,7 +10,7 @@ interface TableSkeletonProps {
 /** Loading state skeleton — "Loading..." text nahi (FLOW-MD 07 §7) */
 export function TableSkeleton({ rows = 5, columns }: TableSkeletonProps) {
   return (
-    <div aria-label="Loading" aria-busy="true">
+    <Box aria-label="Loading" aria-busy="true">
       <Table>
         <TableBody>
           {Array.from({ length: rows }, (_, row) => (
@@ -23,6 +24,6 @@ export function TableSkeleton({ rows = 5, columns }: TableSkeletonProps) {
           ))}
         </TableBody>
       </Table>
-    </div>
+    </Box>
   );
 }

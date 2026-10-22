@@ -1,11 +1,13 @@
 "use client";
 
 import { LayoutGrid, List, SlidersHorizontal } from "lucide-react";
+import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
+import { Flex, Stack } from "@/components/ui/flex";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { SearchInput } from "@/components/shared/SearchInput";
 import { SelectField } from "@/components/shared/SelectField";
 import { SHOP_SORT_OPTIONS } from "@/constants/filters";
-import { cn } from "@/lib/utils";
 import type { ProductSort } from "@/services/products/types";
 import type { ProductLayout } from "@/stores/shop-store";
 import { ActiveFilters } from "./ActiveFilters";
@@ -21,6 +23,7 @@ export function SortSelect({ id, shop }: { id: string; shop: ShopParamsApi }) {
       value={shop.sort ?? "newest"}
       onValueChange={(sort) => shop.update({ sort: sort === "newest" ? null : sort })}
       containerClassName="w-full sm:w-52"
+      className="h-11 rounded-full"
     />
   );
 }
@@ -36,46 +39,48 @@ interface ShopToolbarProps {
 /** Results ke upar: filters (phone), debounced search, sort, grid/list, aur lage hue filters */
 export function ShopToolbar({ shop, categoryName, layout, onLayoutChange, onOpenFilters }: ShopToolbarProps) {
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap items-center gap-3">
-        <Button variant="outline" className="lg:hidden" onClick={onOpenFilters}>
+    <Stack gap="3">
+      <Flex wrap align="center" gap="3">
+        <Button variant="outline" className="h-11 rounded-full border-2 lg:hidden" onClick={onOpenFilters}>
           <SlidersHorizontal aria-hidden="true" />
           Filters
         </Button>
-        <div className="min-w-0 flex-1 basis-56">
+        <Box className="min-w-0 flex-1 basis-56">
           <SearchInput
             value={shop.q}
             onValueChange={(q) => shop.update({ q }, { replace: true })}
             placeholder="Search this shop…"
             aria-label="Search products in the shop"
+            className="h-11 rounded-full border-2"
           />
-        </div>
-        <div className="ml-auto hidden items-center gap-2 sm:flex">
+        </Box>
+        <Flex align="center" gap="2" className="ml-auto hidden sm:flex">
           <SortSelect id="shop-sort" shop={shop} />
-          <div role="group" aria-label="Layout" className="inline-flex rounded-xl border border-input bg-card p-0.5">
-            {(
-              [
-                { value: "grid", label: "Grid view", icon: LayoutGrid },
-                { value: "list", label: "List view", icon: List },
-              ] as const
-            ).map(({ value, label, icon: Icon }) => (
-              <Button
-                key={value}
-                type="button"
-                variant="ghost"
-                size="icon-sm"
-                aria-label={label}
-                aria-pressed={layout === value}
-                onClick={() => onLayoutChange(value)}
-                className={cn("rounded-lg", layout === value && "bg-brand-soft text-brand-green-dark")}
-              >
-                <Icon aria-hidden="true" />
-              </Button>
-            ))}
-          </div>
-        </div>
-      </div>
+          <ToggleGroup
+            aria-label="Layout"
+            spacing={0}
+            value={[layout]}
+            onValueChange={(next) => next[0] && onLayoutChange(next[0] as ProductLayout)}
+            className="rounded-full border-2 border-border bg-card p-0.5"
+          >
+            <ToggleGroupItem
+              value="grid"
+              aria-label="Grid view"
+              className="size-9 rounded-full! px-0 aria-pressed:bg-primary aria-pressed:text-primary-foreground"
+            >
+              <LayoutGrid aria-hidden="true" />
+            </ToggleGroupItem>
+            <ToggleGroupItem
+              value="list"
+              aria-label="List view"
+              className="size-9 rounded-full! px-0 aria-pressed:bg-primary aria-pressed:text-primary-foreground"
+            >
+              <List aria-hidden="true" />
+            </ToggleGroupItem>
+          </ToggleGroup>
+        </Flex>
+      </Flex>
       <ActiveFilters shop={shop} categoryName={categoryName} />
-    </div>
+    </Stack>
   );
 }
