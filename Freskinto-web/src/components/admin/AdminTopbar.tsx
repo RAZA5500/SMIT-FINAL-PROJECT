@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, ExternalLink, Package, ShoppingBag, UserPlus } from "lucide-react";
+import { Bell, ExternalLink } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Box } from "@/components/ui/box";
@@ -13,17 +13,15 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Text } from "@/components/ui/typography";
 import { ButtonLink } from "@/components/shared/ButtonLink";
 import { PageBreadcrumbs } from "@/components/shared/PageBreadcrumbs";
+import { NOTIFICATIONS } from "@/data/admin";
 import { adminMockRoutes, adminRoutes, publicRoutes } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
 import { AdminCommandMenu } from "./AdminCommandMenu";
 import { activeNavItem, adminSubPage } from "./admin-nav";
+import { NOTIFICATION_KINDS } from "./notification-kinds";
 
-/** Static preview (notifications backend scope mein nahi — user decision) */
-const PREVIEW_NOTIFICATIONS = [
-  { icon: ShoppingBag, title: "New order received", text: "A customer placed an order for 4 items.", time: "10 min ago" },
-  { icon: Package, title: "Low stock alert", text: "A product dropped below its threshold.", time: "45 min ago" },
-  { icon: UserPlus, title: "New customer", text: "Someone created an account.", time: "2 h ago" },
-];
+/** Static preview (notifications backend scope mein nahi — user decision): sirf unread sample alerts */
+const PREVIEW_NOTIFICATIONS = NOTIFICATIONS.filter((item) => !item.read).slice(0, 3);
 
 function NotificationsMenu() {
   return (
@@ -42,20 +40,23 @@ function NotificationsMenu() {
           <Badge variant="tag">Preview</Badge>
         </PopoverHeader>
         <ItemGroup className={cn("gap-0 p-1.5")}>
-          {PREVIEW_NOTIFICATIONS.map(({ icon: Icon, title, text, time }) => (
-            <Item key={title} size="sm" className={cn("items-start")}>
-              <ItemMedia className={cn("size-9 rounded-lg border bg-background text-brand [&_svg]:size-4")}>
-                <Icon aria-hidden="true" />
-              </ItemMedia>
-              <ItemContent className={cn("min-w-0 gap-0.5")}>
-                <ItemTitle className={cn("font-semibold")}>{title}</ItemTitle>
-                <ItemDescription className={cn("line-clamp-1")}>{text}</ItemDescription>
-                <Text as="span" variant="code" tone="muted">
-                  {time}
-                </Text>
-              </ItemContent>
-            </Item>
-          ))}
+          {PREVIEW_NOTIFICATIONS.map(({ id, kind, title, message, time }) => {
+            const { icon: Icon, tone } = NOTIFICATION_KINDS[kind];
+            return (
+              <Item key={id} size="sm" className={cn("items-start")}>
+                <ItemMedia className={cn("size-9 rounded-lg border bg-background [&_svg]:size-4", tone)}>
+                  <Icon aria-hidden="true" />
+                </ItemMedia>
+                <ItemContent className={cn("min-w-0 gap-0.5")}>
+                  <ItemTitle className={cn("font-semibold")}>{title}</ItemTitle>
+                  <ItemDescription className={cn("line-clamp-1")}>{message}</ItemDescription>
+                  <Text as="span" variant="code" tone="muted">
+                    {time}
+                  </Text>
+                </ItemContent>
+              </Item>
+            );
+          })}
         </ItemGroup>
         <Box className={cn("border-t p-1.5")}>
           <ButtonLink href={adminMockRoutes.notifications} variant="ghost" className={cn("w-full rounded-xl text-brand")}>

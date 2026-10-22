@@ -66,6 +66,7 @@ export function BrandsView() {
                 setPage(1);
               }}
               placeholder="Search brands…"
+              aria-label="Search brands"
               className={cn("w-full md:max-w-xs")}
             />
             <ToolbarFilters>

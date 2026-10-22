@@ -69,6 +69,7 @@ export function StockMovementsView() {
                 setPage(1);
               }}
               placeholder="Product or order number…"
+              aria-label="Search stock movements"
               className={cn("w-full md:max-w-xs")}
             />
             <ToolbarFilters>

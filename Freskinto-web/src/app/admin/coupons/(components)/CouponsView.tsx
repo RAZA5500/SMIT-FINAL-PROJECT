@@ -77,6 +77,7 @@ export function CouponsView() {
                 setPage(1);
               }}
               placeholder="Search codes…"
+              aria-label="Search coupons"
               className={cn("w-full md:max-w-xs")}
             />
             <ToolbarFilters>

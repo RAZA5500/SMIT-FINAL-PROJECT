@@ -75,6 +75,7 @@ export function AllergensView() {
                 setPage(1);
               }}
               placeholder="Product or SKU…"
+              aria-label="Search allergen declarations"
               className={cn("w-full md:max-w-xs")}
             />
             <ToolbarFilters>
