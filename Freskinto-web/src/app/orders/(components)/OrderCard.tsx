@@ -21,7 +21,7 @@ export function OrderCard({ order }: { order: IOrderSummary }) {
   return (
     <Card
       render={<Box as="article" />}
-      className="group/order pop-hover relative gap-0 rounded-3xl border-2 py-0 shadow-none has-data-[slot=card-footer]:pb-0"
+      className="group/order relative gap-0 py-0 transition-colors hover:border-foreground/15 has-data-[slot=card-footer]:pb-0"
     >
       <CardContent className="flex flex-col gap-5 pt-5">
         <Flex wrap align="start" justify="between" gap="3">
@@ -30,7 +30,7 @@ export function OrderCard({ order }: { order: IOrderSummary }) {
               <TextLink
                 href={customerRoutes.orderDetail(order.id)}
                 tone="default"
-                className="after:absolute after:inset-0 after:rounded-3xl hover:no-underline"
+                className="after:absolute after:inset-0 after:rounded-xl hover:no-underline"
               >
                 {order.orderNumber}
               </TextLink>
@@ -54,23 +54,23 @@ export function OrderCard({ order }: { order: IOrderSummary }) {
               </Text>
             </Flex>
           </Stack>
-          <Price amount={order.total} size="lg" />
+          <Price amount={order.total} size="md" />
         </Flex>
         <OrderProgress status={order.status} className="pb-5" />
       </CardContent>
 
-      <CardFooter className="flex-wrap justify-between gap-3 border-t-2 border-dashed border-input py-3">
+      <CardFooter className="flex-wrap justify-between gap-3 border-t py-3">
         <Flex wrap align="center" gap="2">
           <StatusBadge status={order.status} />
           <StatusBadge status={order.paymentStatus} />
         </Flex>
         {awaitingPayment ? (
-          <Flex align="center" gap="1.5" className="text-sm font-semibold text-warning-ink">
+          <Flex align="center" gap="1.5" className="text-sm font-medium text-warning-ink">
             <Clock aria-hidden="true" className="size-4 animate-pulse" />
             Awaiting payment — open to pay
           </Flex>
         ) : (
-          <Flex align="center" gap="1" className="text-sm font-semibold text-primary">
+          <Flex align="center" gap="1" className="text-sm font-medium text-primary">
             View details
             <ArrowRight aria-hidden="true" className="size-4 transition-transform group-hover/order:translate-x-1" />
           </Flex>

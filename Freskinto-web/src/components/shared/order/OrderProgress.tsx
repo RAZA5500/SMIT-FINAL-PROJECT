@@ -29,13 +29,13 @@ export function OrderProgress({ status, className }: { status: OrderStatus; clas
           as="span"
           key={index}
           className={cn(
-            "h-1.5 flex-1 rounded-full transition-colors",
+            "h-1 flex-1 rounded-full transition-colors",
             stopped
               ? "bg-destructive/25"
               : index < current
                 ? "bg-primary"
                 : index === current
-                  ? "bg-tangerine"
+                  ? "bg-primary/35"
                   : "bg-muted",
           )}
         />

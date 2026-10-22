@@ -59,7 +59,7 @@ export function ProductDetailView({ id }: { id: string }) {
             title="This product isn't available"
             message="It may have sold out for good or been removed from the shop."
             action={
-              <ButtonLink href={shopUrl()} variant="cta">
+              <ButtonLink href={shopUrl()}>
                 <ArrowLeft aria-hidden="true" />
                 Back to the shop
               </ButtonLink>
@@ -95,29 +95,27 @@ function ProductOverview({ product }: { product: IProduct }) {
         ]}
       />
 
-      <Grid gap="8" className="lg:grid-cols-12 lg:gap-14">
-        <Box className="relative lg:col-span-7">
-          <Box aria-hidden="true" className="absolute inset-0 translate-x-3 translate-y-3 rounded-4xl bg-lime" />
-          <Box className="relative overflow-hidden rounded-4xl border-2 border-pop">
-            <ProductImage
-              name={product.name}
-              categoryName={product.category.name}
-              alt={product.name}
-              eager
-              sizes="(min-width: 1024px) 680px, 100vw"
-              muted={product.stockStatus === "OUT_OF_STOCK"}
-              imageClassName="p-10 sm:p-16 animate-float-slow"
-            />
-          </Box>
-          <ProductBadges product={product} className="absolute top-5 left-5" />
+      <Grid gap="8" className="lg:grid-cols-2 lg:gap-14">
+        <Box className="relative">
+          <ProductImage
+            name={product.name}
+            categoryName={product.category.name}
+            alt={product.name}
+            eager
+            sizes="(min-width: 1024px) 680px, 100vw"
+            muted={product.stockStatus === "OUT_OF_STOCK"}
+            className="rounded-xl sm:aspect-4/3"
+            imageClassName="p-10 sm:p-14"
+          />
+          <ProductBadges product={product} className="absolute top-4 left-4" />
         </Box>
 
-        <Stack gap="6" className="lg:col-span-5 lg:py-2">
+        <Stack gap="6" className="lg:py-2">
           <Stack gap="3">
             <TextLink href={shopUrl({ category: product.category.id })} className="w-fit hover:no-underline">
               <AisleTag index={aisleIndex} label={product.category.name} />
             </TextLink>
-            <Heading as="h1" size="hero" className="sm:text-fs-56 xl:text-fs-56">
+            <Heading as="h1" size="1">
               {product.name}
             </Heading>
             <Text tone="muted" family="mono" className="text-fs-12">
@@ -126,30 +124,30 @@ function ProductOverview({ product }: { product: IProduct }) {
           </Stack>
 
           <Flex wrap align="center" gap="4">
-            <Price amount={product.price} size="xl" tone="brand" className="text-5xl" />
+            <Price amount={product.price} size="xl" />
             <StatusBadge status={product.stockStatus} />
           </Flex>
 
           <PurchasePanel product={product} />
 
-          <Accordion defaultValue={[PERKS[0].title]} className="rounded-3xl border-2 border-border bg-card px-5">
+          <Accordion defaultValue={[PERKS[0].title]} className="rounded-lg border border-border px-4">
             {PERKS.map(({ icon: Icon, title, text }) => (
               <AccordionItem key={title} value={title}>
-                <AccordionTrigger className="items-center py-4 text-base font-semibold hover:no-underline">
+                <AccordionTrigger className="items-center py-3.5 font-medium hover:no-underline">
                   <Flex as="span" align="center" gap="3">
                     <Flex
                       as="span"
                       align="center"
                       justify="center"
                       aria-hidden="true"
-                      className="size-9 rounded-xl bg-plum-soft text-primary"
+                      className="size-8 rounded-md bg-muted text-muted-foreground"
                     >
                       <Icon className="size-4" />
                     </Flex>
                     {title}
                   </Flex>
                 </AccordionTrigger>
-                <AccordionContent className="pl-12 text-muted-foreground">{text}</AccordionContent>
+                <AccordionContent className="pl-11 text-muted-foreground">{text}</AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
@@ -172,7 +170,6 @@ function RelatedProducts({ product }: { product: IProduct }) {
   return (
     <Stack as="section" aria-label="Related products" gap="6">
       <SectionHeading
-        eyebrow="Same aisle"
         title={`More from ${product.category.name}`}
         href={shopUrl({ category: product.category.id })}
       />
@@ -180,21 +177,21 @@ function RelatedProducts({ product }: { product: IProduct }) {
         <ErrorState title="Couldn't load products" message={error?.message} onRetry={() => void refetch()} />
       ) : (
         <Carousel opts={{ align: "start", dragFree: true }} aria-label={`More from ${product.category.name}`}>
-          <CarouselContent className="-ml-3 py-2 sm:-ml-5">
+          <CarouselContent className="-ml-3 sm:-ml-4">
             {isLoading
               ? Array.from({ length: 4 }, (_, index) => (
-                  <CarouselItem key={index} className="basis-1/2 pl-3 sm:pl-5 md:basis-1/3 xl:basis-1/4">
+                  <CarouselItem key={index} className="basis-1/2 pl-3 sm:pl-4 md:basis-1/3 xl:basis-1/4">
                     <ProductCardSkeleton />
                   </CarouselItem>
                 ))
               : related?.map((item) => (
-                  <CarouselItem key={item.id} className="basis-1/2 pl-3 sm:pl-5 md:basis-1/3 xl:basis-1/4">
+                  <CarouselItem key={item.id} className="basis-1/2 pl-3 sm:pl-4 md:basis-1/3 xl:basis-1/4">
                     <ProductCard product={item} />
                   </CarouselItem>
                 ))}
           </CarouselContent>
-          <CarouselPrevious className="-left-3 hidden size-11 border-2 bg-card shadow-lift md:flex" />
-          <CarouselNext className="-right-3 hidden size-11 border-2 bg-card shadow-lift md:flex" />
+          <CarouselPrevious className="-left-4 hidden bg-background shadow-soft md:flex" />
+          <CarouselNext className="-right-4 hidden bg-background shadow-soft md:flex" />
         </Carousel>
       )}
     </Stack>
@@ -205,14 +202,14 @@ function ProductDetailSkeleton() {
   return (
     <Container aria-label="Loading" aria-busy="true" className="flex flex-col gap-6 py-8 sm:py-10">
       <Skeleton className="h-4 w-64" />
-      <Grid gap="8" className="lg:grid-cols-12 lg:gap-14">
-        <Skeleton className="aspect-square w-full rounded-4xl lg:col-span-7" />
-        <Stack gap="4" className="lg:col-span-5 lg:py-2">
-          <Skeleton className="h-6 w-36 rounded-full" />
-          <Skeleton className="h-14 w-4/5" />
-          <Skeleton className="h-16 w-36 rounded-lg" />
-          <Skeleton className="h-12 w-full rounded-full" />
-          <Skeleton className="h-40 w-full rounded-3xl" />
+      <Grid gap="8" className="lg:grid-cols-2 lg:gap-14">
+        <Skeleton className="aspect-square w-full rounded-xl sm:aspect-4/3" />
+        <Stack gap="4" className="lg:py-2">
+          <Skeleton className="h-6 w-36" />
+          <Skeleton className="h-9 w-4/5" />
+          <Skeleton className="h-9 w-28" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-40 w-full rounded-lg" />
         </Stack>
       </Grid>
     </Container>

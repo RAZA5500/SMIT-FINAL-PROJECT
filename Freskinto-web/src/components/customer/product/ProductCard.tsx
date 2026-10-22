@@ -1,6 +1,5 @@
 "use client";
 
-import { Flame, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Box } from "@/components/ui/box";
 import { Card } from "@/components/ui/card";
@@ -23,7 +22,7 @@ interface ProductCardProps {
   className?: string;
 }
 
-/** Stock / "new" stickers over the packshot — sirf asli data (stockStatus, createdAt) */
+/** Stock / "new" labels over the packshot — sirf asli data (stockStatus, createdAt) */
 export function ProductBadges({ product, className }: { product: IProduct; className?: string }) {
   const outOfStock = product.stockStatus === "OUT_OF_STOCK";
   const lowStock = product.stockStatus === "LOW_STOCK";
@@ -31,26 +30,18 @@ export function ProductBadges({ product, className }: { product: IProduct; class
   if (!outOfStock && !lowStock && !isNew) return null;
 
   return (
-    <Stack align="start" gap="1.5" className={cn("pointer-events-none", className)}>
+    <Stack align="start" gap="1" className={cn("pointer-events-none", className)}>
       {outOfStock ? (
-        <Badge variant="destructive">Sold out</Badge>
+        <Badge variant="outline">Sold out</Badge>
       ) : lowStock ? (
-        <Badge variant="sticker-tangerine">
-          <Flame aria-hidden="true" />
-          Low stock
-        </Badge>
+        <Badge variant="outline">Low stock</Badge>
       ) : null}
-      {isNew && !outOfStock && (
-        <Badge variant="sticker">
-          <Sparkles aria-hidden="true" />
-          New in
-        </Badge>
-      )}
+      {isNew && !outOfStock && <Badge variant="brand">New</Badge>}
     </Stack>
   );
 }
 
-/** Shop shelf card — "pop" lift onto an ink shadow, packshot in a pastel well, quick view, basket control */
+/** Shop shelf card — thin border, packshot on a grey well, quick view and basket control */
 export function ProductCard({ product, eager = false, className }: ProductCardProps) {
   const outOfStock = product.stockStatus === "OUT_OF_STOCK";
 
@@ -58,18 +49,18 @@ export function ProductCard({ product, eager = false, className }: ProductCardPr
     <Card
       render={<Box as="article" />}
       className={cn(
-        "group/product pop-hover relative h-full gap-0 rounded-3xl border-2 py-0 shadow-none",
+        "group/product relative h-full gap-0 py-0 transition-[border-color,box-shadow] duration-200 hover:border-foreground/15 hover:shadow-soft",
         className,
       )}
     >
-      <Box className="relative p-2">
+      <Box className="relative p-2 pb-0">
         <ProductImage
           name={product.name}
           categoryName={product.category.name}
           eager={eager}
           muted={outOfStock}
-          className="rounded-2xl"
-          imageClassName="transition-transform duration-500 group-hover/product:scale-110 group-hover/product:-rotate-3"
+          className="rounded-lg"
+          imageClassName="transition-transform duration-300 group-hover/product:scale-105"
         />
         <ProductBadges product={product} className="absolute top-4 left-4" />
         <ProductQuickView
@@ -78,17 +69,17 @@ export function ProductCard({ product, eager = false, className }: ProductCardPr
         />
       </Box>
 
-      <Stack gap="3" className="flex-1 px-3.5 pt-1 pb-3.5 sm:px-4 sm:pb-4">
+      <Stack gap="3" className="flex-1 p-3 sm:p-4">
         <Stack gap="1">
-          <Text variant="eyebrow" tone="muted" className="truncate">
+          <Text variant="small" tone="muted" className="truncate">
             {product.category.name}
           </Text>
-          <Heading as="h3" size="5" className="line-clamp-2 min-h-11 leading-snug">
+          <Heading as="h3" size="5" className="line-clamp-2 min-h-10 font-medium">
             {/* Stretched link: poora card clickable, basket control + quick view upar (z-10/z-20) */}
             <TextLink
               href={publicRoutes.product(product.id)}
               tone="default"
-              className="after:absolute after:inset-0 after:rounded-3xl hover:no-underline focus-visible:ring-0 focus-visible:after:ring-3 focus-visible:after:ring-ring/40"
+              className="font-medium after:absolute after:inset-0 after:rounded-xl hover:text-foreground hover:no-underline focus-visible:ring-0 focus-visible:after:ring-3 focus-visible:after:ring-ring/30"
             >
               {product.name}
             </TextLink>
@@ -96,7 +87,7 @@ export function ProductCard({ product, eager = false, className }: ProductCardPr
         </Stack>
 
         <Flex align="baseline" justify="between" gap="2" className="mt-auto">
-          <Price amount={product.price} size="lg" />
+          <Price amount={product.price} size="md" />
           <Text as="span" tone="muted" className="text-fs-12">
             {product.minimumOrderQuantity > 1 ? `Min. ${product.minimumOrderQuantity}` : "each"}
           </Text>

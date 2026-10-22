@@ -77,25 +77,21 @@ export function HeroSearch() {
           itemToStringValue={(product: IProduct) => product.name}
           filter={null}
         >
-          <AutocompleteInputGroup className="h-14 rounded-full border-2 border-pop bg-card pr-1.5 shadow-pop has-[[data-slot=input-group-control]:focus-visible]:ring-4 has-[[data-slot=input-group-control]:focus-visible]:ring-lime/60 dark:border-transparent">
-            <InputGroupAddon className="pl-5 text-primary">
+          <AutocompleteInputGroup className="h-12 rounded-lg bg-background pr-1.5">
+            <InputGroupAddon className="pl-3.5 text-muted-foreground">
               {isFetching && enabled ? <Spinner aria-hidden="true" /> : <Search aria-hidden="true" className="size-5" />}
             </InputGroupAddon>
             <AutocompleteInput
               aria-label="Search grocery items"
-              placeholder="Search apples, sourdough, chicken fillets, milk…"
+              placeholder="Search apples, bread, chicken, milk…"
               className="text-base"
             />
             <InputGroupAddon align="inline-end" className="pr-0">
-              <InputGroupButton
-                type="submit"
-                variant="default"
-                className="h-11 rounded-full bg-tangerine px-5 font-bold text-tangerine-foreground hover:bg-tangerine/90"
-              >
-                <Text as="span" tone="inherit" weight="bold" className="hidden sm:inline">
-                  Find fresh
+              <InputGroupButton type="submit" variant="default" className="h-9 rounded-md px-4">
+                <Text as="span" tone="inherit" weight="medium" className="hidden sm:inline">
+                  Search
                 </Text>
-                <ArrowRight aria-hidden="true" />
+                <ArrowRight aria-hidden="true" className="sm:hidden" />
               </InputGroupButton>
             </InputGroupAddon>
           </AutocompleteInputGroup>
@@ -116,25 +112,25 @@ export function HeroSearch() {
                     name={product.name}
                     categoryName={product.category.name}
                     sizes="44px"
-                    className="size-11 shrink-0 rounded-lg"
+                    className="size-10 shrink-0 rounded-md"
                     imageClassName="p-1"
                   />
                   <Stack as="span" gap="0.5" className="min-w-0 flex-1">
-                    <Text as="span" weight="semibold" className="truncate">
+                    <Text as="span" weight="medium" className="truncate">
                       {product.name}
                     </Text>
                     <Text as="span" tone="muted" className="truncate text-fs-12">
                       {product.category.name}
                     </Text>
                   </Stack>
-                  <Price amount={product.price} size="sm" tone="brand" />
+                  <Price amount={product.price} size="sm" />
                 </AutocompleteItem>
               )}
             </AutocompleteList>
             {results.length > 0 && (
               <AutocompleteFooter>
                 {/* Portal form ke bahar render hota hai — submit nahi, seedha handler */}
-                <Button type="button" variant="ghost" onClick={submit} className="w-full justify-between rounded-xl text-primary">
+                <Button type="button" variant="ghost" onClick={submit} className="w-full justify-between text-primary">
                   See all {total} results for “{query}”
                   <ArrowRight aria-hidden="true" />
                 </Button>
@@ -145,23 +141,23 @@ export function HeroSearch() {
       </Form>
 
       <Flex wrap align="center" gap="2">
-        <Flex as="span" align="center" gap="1.5" className="text-night-muted">
-          <TrendingUp aria-hidden="true" className="size-4 text-lime" />
-          <Text as="span" tone="inherit" weight="semibold" className="text-fs-12">
-            Trending:
+        <Flex as="span" align="center" gap="1.5" className="text-muted-foreground">
+          <TrendingUp aria-hidden="true" className="size-3.5" />
+          <Text as="span" tone="inherit" className="text-fs-12">
+            Popular:
           </Text>
         </Flex>
         {POPULAR_SEARCHES.map((term) => (
           <Button
             key={term}
             type="button"
-            variant="glass"
+            variant="outline"
             size="xs"
             onClick={() => {
               setValue(term);
               setOpen(true);
             }}
-            className="hover:bg-lime hover:text-lime-foreground"
+            className="font-normal text-muted-foreground hover:text-foreground"
           >
             {term}
           </Button>

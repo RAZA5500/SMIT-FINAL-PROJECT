@@ -68,46 +68,39 @@ describe("HomeView", () => {
     useAuthStore.setState({ token: null, user: null, _hasHydrated: true });
   });
 
-  it("renders every homepage section: hero, shelves, aisles, market box, how it works, reviews and join banner", async () => {
+  it("renders the three homepage sections: hero, aisles and popular products", async () => {
     mockStoreApi();
     renderWithProviders(<HomeView />);
 
-    expect(screen.getByRole("heading", { name: /The freshest market/i })).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/Search apples, sourdough, chicken fillets, milk/i)).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Fresh on the shelves/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Explore Market Stalls/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Build your market box/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Better Groceries\. Better Planet\. Better Price\./i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Loved By Local Shoppers/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Join the neighbourhood market\./i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Fresh groceries, delivered to your door/i })).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/Search apples, bread, chicken, milk/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Shop by aisle" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Popular right now" })).toBeInTheDocument();
 
-    // Aisles bento uses the real categories from the API
+    // Aisles grid uses the real categories from the API
     expect(await screen.findByRole("heading", { name: "Fresh Fruits" })).toBeInTheDocument();
+    // Products shelf shows real products
+    expect((await screen.findAllByRole("link", { name: "Royal Gala Apples" })).length).toBeGreaterThan(0);
   });
 
-  it("filters the reviews carousel to 5-star reviews", async () => {
-    mockStoreApi();
-    renderWithProviders(<HomeView />);
-
-    expect(screen.getByText("Jack H.")).toBeInTheDocument();
-    await userEvent.setup().click(screen.getByRole("button", { name: "5-Star Only" }));
-    expect(screen.queryByText("Jack H.")).not.toBeInTheDocument();
-    expect(screen.getByText("Charlotte D.")).toBeInTheDocument();
-  });
-
-  it("market box: picking an item enables the box button, and a guest is sent to sign in", async () => {
+  it("switches the products shelf between tabs", async () => {
     mockStoreApi();
     renderWithProviders(<HomeView />);
     const user = userEvent.setup();
 
-    const addBox = screen.getByRole("button", { name: /Add box to basket/i });
-    expect(addBox).toBeDisabled();
+    const newIn = screen.getByRole("tab", { name: "New in" });
+    expect(newIn).toHaveAttribute("aria-selected", "true");
+    await user.click(screen.getByRole("tab", { name: "Under £2" }));
+    expect(screen.getByRole("tab", { name: "Under £2" })).toHaveAttribute("aria-selected", "true");
+    expect(newIn).toHaveAttribute("aria-selected", "false");
+  });
 
-    const [firstPick] = await screen.findAllByRole("button", { name: /Royal Gala Apples £2\.40/i });
-    await user.click(firstPick);
-    expect(screen.getByText(/1 pick in your box/i)).toBeInTheDocument();
+  it("hero search sends the query to the shop", async () => {
+    mockStoreApi();
+    renderWithProviders(<HomeView />);
+    const user = userEvent.setup();
 
-    await user.click(addBox);
-    expect(push).toHaveBeenCalledWith("/login?redirect=%2F");
+    await user.type(screen.getByRole("combobox", { name: /Search grocery items/i }), "milk{Enter}");
+    expect(push).toHaveBeenCalledWith("/shop?q=milk");
   });
 });

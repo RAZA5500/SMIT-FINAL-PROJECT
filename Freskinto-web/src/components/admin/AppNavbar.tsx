@@ -39,7 +39,7 @@ export function AppNavbar() {
       gap="3"
       className="glass sticky top-0 z-30 h-16 shrink-0 border-b border-border px-4 sm:px-6 md:rounded-t-3xl"
     >
-      <SidebarTrigger className="-ml-1 rounded-full" />
+      <SidebarTrigger className="-ml-1" />
       <Separator orientation="vertical" className="data-vertical:h-5 data-vertical:self-center" />
       <PageBreadcrumbs root={{ label: "Admin", href: adminRoutes.home }} items={crumbs} className="min-w-0 flex-1" />
 
@@ -47,7 +47,7 @@ export function AppNavbar() {
         variant="outline"
         onClick={openPalette}
         aria-label="Open command palette"
-        className="hidden w-56 justify-start gap-2 rounded-full bg-muted/60 font-normal text-muted-foreground shadow-none md:inline-flex"
+        className="hidden w-56 justify-start gap-2 bg-muted/60 font-normal text-muted-foreground shadow-none md:inline-flex"
       >
         <Search aria-hidden="true" />
         <Text as="span" tone="inherit" className="flex-1 text-left">
@@ -57,11 +57,11 @@ export function AppNavbar() {
           <Kbd className="bg-card">⌘K</Kbd>
         </Box>
       </Button>
-      <Button variant="ghost" size="icon" aria-label="Open command palette" onClick={openPalette} className="rounded-full md:hidden">
+      <Button variant="ghost" size="icon" aria-label="Open command palette" onClick={openPalette} className="md:hidden">
         <Search aria-hidden="true" />
       </Button>
       <ThemeToggle />
-      <ButtonLink href={publicRoutes.shop} variant="outline" size="sm" className="hidden rounded-full sm:inline-flex">
+      <ButtonLink href={publicRoutes.shop} variant="outline" size="sm" className="hidden sm:inline-flex">
         <ExternalLink aria-hidden="true" />
         Storefront
       </ButtonLink>

@@ -1,4 +1,4 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import type { ReactNode } from "react";
 import { Flex, Stack } from "@/components/ui/flex";
 import { Heading, Text } from "@/components/ui/typography";
@@ -15,12 +15,10 @@ interface SectionHeadingProps {
   hrefLabel?: string;
   /** Extra controls */
   actions?: ReactNode;
-  /** Night (dark) blocks par roshan text */
-  inverse?: boolean;
   className?: string;
 }
 
-/** Section ka sar — eyebrow, chunky display title, "View all" */
+/** Section ka sar — optional muted eyebrow, title, one-line description, quiet "View all" link */
 export function SectionHeading({
   id,
   title,
@@ -29,22 +27,21 @@ export function SectionHeading({
   href,
   hrefLabel = "View all",
   actions,
-  inverse = false,
   className,
 }: SectionHeadingProps) {
   return (
     <Flex wrap align="end" justify="between" gap="4" className={cn(className)}>
-      <Stack gap="2" className="min-w-0">
+      <Stack gap="1.5" className="min-w-0">
         {eyebrow && (
-          <Text as="div" variant="eyebrow" tone={inverse ? "inherit" : "primary"} className={cn(inverse && "text-lime")}>
+          <Text as="div" variant="eyebrow" tone="muted">
             {eyebrow}
           </Text>
         )}
-        <Heading id={id} size="1" tone={inverse ? "night" : "default"}>
+        <Heading id={id} size="2">
           {title}
         </Heading>
         {description && (
-          <Text tone={inverse ? "night-muted" : "muted"} className="max-w-2xl sm:text-base">
+          <Text tone="muted" className="max-w-2xl">
             {description}
           </Text>
         )}
@@ -53,12 +50,9 @@ export function SectionHeading({
         <Flex align="center" gap="2" className="shrink-0">
           {actions}
           {href && (
-            <ButtonLink href={href} variant={inverse ? "glass" : "outline"} className="group/more rounded-full">
+            <ButtonLink href={href} variant="ghost" size="sm" className="group/more -mr-3">
               {hrefLabel}
-              <ArrowUpRight
-                aria-hidden="true"
-                className="transition-transform group-hover/more:translate-x-0.5 group-hover/more:-translate-y-0.5"
-              />
+              <ArrowRight aria-hidden="true" className="transition-transform group-hover/more:translate-x-0.5" />
             </ButtonLink>
           )}
         </Flex>

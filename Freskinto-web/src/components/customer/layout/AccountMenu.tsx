@@ -34,13 +34,13 @@ export function AccountMenu() {
   const user = useAuthStore((state) => state.user);
 
   // Hydration se pehle khali jagah — "Sign in" flash na ho
-  if (!hasHydrated) return <Box as="span" aria-hidden="true" className="inline-block size-10" />;
+  if (!hasHydrated) return <Box as="span" aria-hidden="true" className="inline-block size-9" />;
 
   if (!token || !user) {
     return (
-      <ButtonLink href={publicRoutes.login} variant="ghost" className="rounded-full px-3">
+      <ButtonLink href={publicRoutes.login} variant="ghost" className="px-2.5">
         <UserRound aria-hidden="true" />
-        <Text as="span" tone="inherit" weight="semibold" className="hidden lg:inline">
+        <Text as="span" tone="inherit" weight="medium" className="hidden lg:inline">
           Sign in
         </Text>
         <Text as="span" className="sr-only lg:hidden">
@@ -55,12 +55,12 @@ export function AccountMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        render={<Button variant="ghost" aria-label="Account menu" className="gap-2 rounded-full pr-3 pl-1.5" />}
+        render={<Button variant="ghost" aria-label="Account menu" className="gap-2 pr-2.5 pl-1.5" />}
       >
-        <Avatar size="sm" className="size-8">
-          <AvatarFallback className="bg-primary font-bold text-primary-foreground">{initials(user.name)}</AvatarFallback>
+        <Avatar size="sm" className="size-7">
+          <AvatarFallback className="text-fs-11">{initials(user.name)}</AvatarFallback>
         </Avatar>
-        <Text as="span" tone="inherit" weight="semibold" className="hidden max-w-28 truncate lg:inline">
+        <Text as="span" tone="inherit" weight="medium" className="hidden max-w-28 truncate lg:inline">
           {user.name.split(" ")[0]}
         </Text>
         <ChevronDown aria-hidden="true" className="hidden text-muted-foreground lg:inline" />

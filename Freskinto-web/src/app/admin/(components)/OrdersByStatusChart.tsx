@@ -35,16 +35,16 @@ export function OrdersByStatusChart({ counts, isLoading }: OrdersByStatusChartPr
 
   return (
     <Tabs defaultValue="chart" className="gap-0">
-      <Card className="gap-4 rounded-3xl">
+      <Card className="gap-4 rounded-xl">
         <CardHeader>
-          <CardTitle className="text-lg font-bold">Orders by status</CardTitle>
+          <CardTitle>Orders by status</CardTitle>
           <CardDescription>Every order in the store, grouped by where it is now.</CardDescription>
           <CardAction>
-            <TabsList className="rounded-full">
-              <TabsTrigger value="chart" aria-label="Chart view" className="rounded-full px-2.5">
+            <TabsList>
+              <TabsTrigger value="chart" aria-label="Chart view" className="px-2.5">
                 <BarChart3 aria-hidden="true" />
               </TabsTrigger>
-              <TabsTrigger value="table" aria-label="Table view" className="rounded-full px-2.5">
+              <TabsTrigger value="table" aria-label="Table view" className="px-2.5">
                 <Table2 aria-hidden="true" />
               </TabsTrigger>
             </TabsList>
@@ -52,7 +52,7 @@ export function OrdersByStatusChart({ counts, isLoading }: OrdersByStatusChartPr
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <Skeleton className="h-72 w-full rounded-2xl" />
+            <Skeleton className="h-72 w-full rounded-xl" />
           ) : (
             <>
               <TabsContent value="chart">

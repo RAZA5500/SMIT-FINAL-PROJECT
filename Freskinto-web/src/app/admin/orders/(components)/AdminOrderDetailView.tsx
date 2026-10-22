@@ -86,7 +86,7 @@ export function AdminOrderDetailView({ id }: { id: string }) {
   const [cancelOpen, setCancelOpen] = useState(false);
 
   const backLink = (
-    <ButtonLink href={adminRoutes.orders} variant="outline" className="rounded-full">
+    <ButtonLink href={adminRoutes.orders} variant="outline">
       <ArrowLeft aria-hidden="true" />
       All orders
     </ButtonLink>
@@ -96,10 +96,10 @@ export function AdminOrderDetailView({ id }: { id: string }) {
     return (
       <AdminPage title="Order details">
         <Stack aria-label="Loading" aria-busy="true" gap="6">
-          <Skeleton className="h-24 w-full rounded-3xl" />
+          <Skeleton className="h-24 w-full rounded-xl" />
           <Grid gap="6" className="lg:grid-cols-3">
-            <Skeleton className="h-80 w-full rounded-3xl lg:col-span-2" />
-            <Skeleton className="h-80 w-full rounded-3xl" />
+            <Skeleton className="h-80 w-full rounded-xl lg:col-span-2" />
+            <Skeleton className="h-80 w-full rounded-xl" />
           </Grid>
         </Stack>
       </AdminPage>
@@ -144,26 +144,26 @@ export function AdminOrderDetailView({ id }: { id: string }) {
     >
       <Card
         render={<Box as="section" aria-label="Next step" />}
-        className="gap-4 rounded-3xl border-2 border-primary/20 bg-plum-soft p-5 shadow-none sm:flex-row sm:items-center"
+        className="gap-4 p-5 sm:flex-row sm:items-center"
       >
         <Flex
           as="span"
           align="center"
           justify="center"
           aria-hidden="true"
-          className="size-12 shrink-0 -rotate-6 rounded-2xl bg-lime text-lime-foreground [&_svg]:size-6"
+          className="size-10 shrink-0 rounded-md bg-accent text-accent-foreground [&_svg]:size-5"
         >
           <StepIcon />
         </Flex>
         <Stack gap="0.5" className="flex-1">
-          <Text weight="bold" className="text-base">
+          <Text weight="semibold" className="text-base">
             {step.title}
           </Text>
           <Text tone="muted">{step.text}</Text>
         </Stack>
         <Flex wrap align="center" gap="2">
           {canCancel && (
-            <Button variant="destructive-outline" className="rounded-full" disabled={busy} onClick={() => setCancelOpen(true)}>
+            <Button variant="destructive-outline" disabled={busy} onClick={() => setCancelOpen(true)}>
               <XCircle aria-hidden="true" />
               Cancel order
             </Button>
@@ -173,7 +173,7 @@ export function AdminOrderDetailView({ id }: { id: string }) {
               key={status}
               isLoading={updateStatus.isPending && updateStatus.variables?.payload.status === status}
               disabled={busy}
-              className="rounded-full"
+             
               onClick={() => updateStatus.mutate({ id: order.id, payload: { status } })}
             >
               Mark as {ORDER_STATUS_LABELS[status]}

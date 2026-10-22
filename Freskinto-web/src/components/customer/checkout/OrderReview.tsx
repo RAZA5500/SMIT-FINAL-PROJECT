@@ -32,12 +32,12 @@ function ReviewSection({
   children: ReactNode;
 }) {
   return (
-    <Stack as="section" gap="3" className="rounded-2xl border border-border bg-muted/40 p-4">
+    <Stack as="section" gap="3" className="rounded-xl border border-border bg-muted/40 p-4">
       <Flex align="center" justify="between" gap="3">
         <Heading as="h3" size="5">
           {title}
         </Heading>
-        <Button type="button" variant="ghost" size="sm" className="rounded-full" onClick={() => onEdit(tab)}>
+        <Button type="button" variant="ghost" size="sm" onClick={() => onEdit(tab)}>
           <Pencil aria-hidden="true" />
           Edit
           <Text as="span" className="sr-only">

@@ -11,7 +11,7 @@ interface StatTileProps {
   value: string | number | undefined;
   hint?: string;
   icon: LucideIcon;
-  /** Icon tile ka rang (bg + text tokens) */
+  /** Icon tile ka rang (bg + text tokens) — sirf status ke liye rang, warna grey */
   tone?: string;
   isLoading?: boolean;
   /** Diya ho to tile ek filter button ban jati hai */
@@ -19,13 +19,13 @@ interface StatTileProps {
   active?: boolean;
 }
 
-/** KPI tile: icon chip, uppercase micro label, bada number, ek line hint */
+/** KPI tile: icon chip, label, number, ek line hint */
 export function StatTile({
   label,
   value,
   hint,
   icon: Icon,
-  tone = "bg-plum-soft text-primary",
+  tone = "bg-muted text-muted-foreground",
   isLoading,
   onSelect,
   active,
@@ -37,18 +37,18 @@ export function StatTile({
         align="center"
         justify="center"
         aria-hidden="true"
-        className={cn("size-12 shrink-0 rounded-2xl transition-transform group-hover/stat:-rotate-6 [&_svg]:size-5", tone)}
+        className={cn("size-9 shrink-0 rounded-md [&_svg]:size-4", tone)}
       >
         <Icon />
       </Flex>
       <Stack as="span" gap="1" className="min-w-0 text-left">
-        <Text as="span" variant="eyebrow" tone="muted">
+        <Text as="span" tone="muted" className="text-fs-13">
           {label}
         </Text>
         {isLoading ? (
           <Skeleton className="h-7 w-12" />
         ) : (
-          <Text as="span" family="heading" weight="bold" numeric className="text-3xl leading-none tracking-tight">
+          <Text as="span" weight="semibold" numeric className="text-2xl leading-tight tracking-tight">
             {value ?? "—"}
           </Text>
         )}
@@ -62,7 +62,7 @@ export function StatTile({
   );
 
   if (!onSelect) {
-    return <Card className="group/stat flex-row items-center gap-4 rounded-3xl p-4">{body}</Card>;
+    return <Card className="flex-row items-start gap-3 p-4">{body}</Card>;
   }
 
   return (
@@ -72,8 +72,8 @@ export function StatTile({
       aria-pressed={active}
       onClick={onSelect}
       className={cn(
-        "group/stat h-auto w-full justify-start gap-4 rounded-3xl bg-card p-4 whitespace-normal shadow-soft hover:-translate-y-0.5 hover:bg-card hover:shadow-lift",
-        active && "border-primary ring-2 ring-primary/30",
+        "h-auto w-full items-start justify-start gap-3 rounded-xl bg-card p-4 font-normal whitespace-normal hover:bg-muted/40",
+        active && "border-primary/60 bg-accent/40 hover:bg-accent/40",
       )}
     >
       {body}

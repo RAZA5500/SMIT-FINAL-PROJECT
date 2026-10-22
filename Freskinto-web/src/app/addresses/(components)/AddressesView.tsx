@@ -41,7 +41,7 @@ export function AddressesView() {
     content = (
       <Grid aria-label="Loading" aria-busy="true" gap="4" className="sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 3 }, (_, i) => (
-          <Skeleton key={i} className="h-60 w-full rounded-3xl" />
+          <Skeleton key={i} className="h-60 w-full rounded-xl" />
         ))}
       </Grid>
     );
@@ -54,7 +54,7 @@ export function AddressesView() {
         title="No saved addresses"
         message="Save an address to check out faster next time."
         action={
-          <Button variant="cta" size="lg" onClick={openCreate}>
+          <Button size="lg" onClick={openCreate}>
             <Plus aria-hidden="true" />
             Add address
           </Button>
@@ -84,17 +84,17 @@ export function AddressesView() {
               type="button"
               variant="outline"
               onClick={openCreate}
-              className="group/add size-full min-h-60 flex-col gap-3 rounded-3xl border-2 border-dashed bg-card/60 text-muted-foreground shadow-none hover:border-primary hover:bg-plum-soft hover:text-primary"
+              className="size-full min-h-56 flex-col gap-3 rounded-xl border-dashed text-muted-foreground hover:bg-muted/40 hover:text-foreground"
             >
               <Flex
                 as="span"
                 align="center"
                 justify="center"
-                className="size-12 rounded-2xl bg-muted transition-transform group-hover/add:rotate-90 group-hover/add:bg-lime group-hover/add:text-lime-foreground [&_svg]:size-5"
+                className="size-9 rounded-md bg-muted [&_svg]:size-4"
               >
                 <Plus aria-hidden="true" />
               </Flex>
-              <Text as="span" tone="inherit" weight="semibold">
+              <Text as="span" tone="inherit" weight="medium">
                 Add a new address
               </Text>
             </Button>
@@ -119,7 +119,7 @@ export function AddressesView() {
       description="Manage where we deliver. Your default address is pre-selected at checkout."
       breadcrumbs={[{ label: "Addresses" }]}
       actions={
-        <Button variant="cta" size="lg" onClick={openCreate}>
+        <Button size="lg" onClick={openCreate}>
           <Plus aria-hidden="true" />
           Add address
         </Button>

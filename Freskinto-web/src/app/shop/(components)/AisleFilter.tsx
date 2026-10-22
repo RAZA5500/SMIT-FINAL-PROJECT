@@ -8,19 +8,16 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Flex, Stack } from "@/components/ui/flex";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Text } from "@/components/ui/typography";
-import { aisleNumber } from "@/components/shared/AisleTag";
 import type { CategoryNode } from "@/components/customer/shop/category-tree";
 import { useAisles } from "@/components/customer/shop/use-aisles";
 import { cn } from "@/lib/utils";
 
 function AisleRow({
-  number,
   label,
   active,
   child = false,
   onSelect,
 }: {
-  number?: string;
   label: string;
   active: boolean;
   child?: boolean;
@@ -33,16 +30,11 @@ function AisleRow({
       aria-pressed={active}
       onClick={onSelect}
       className={cn(
-        "h-9 w-full min-w-0 justify-start gap-2.5 rounded-xl px-2.5 font-normal",
+        "h-8 w-full min-w-0 justify-start px-2.5 font-normal text-muted-foreground hover:text-foreground",
         child && "pl-3",
-        active && "bg-primary font-semibold text-primary-foreground hover:bg-primary/90",
+        active && "bg-muted font-medium text-foreground",
       )}
     >
-      {number && (
-        <Text as="span" tone="inherit" family="mono" weight="semibold" className={cn("text-fs-11", active ? "text-lime" : "text-primary")}>
-          {number}
-        </Text>
-      )}
       <Text as="span" tone="inherit" className="truncate">
         {label}
       </Text>
@@ -52,28 +44,24 @@ function AisleRow({
 
 function AisleGroup({
   aisle,
-  index,
   selected,
   onSelect,
 }: {
   aisle: CategoryNode;
-  index: number;
   selected: string | null;
   onSelect: (id: string | null) => void;
 }) {
   const containsSelected = aisle.children.some((child) => child.id === selected);
   const [open, setOpen] = useState(containsSelected || aisle.id === selected);
-  const number = aisleNumber(index);
 
   if (aisle.children.length === 0) {
-    return <AisleRow number={number} label={aisle.name} active={selected === aisle.id} onSelect={() => onSelect(aisle.id)} />;
+    return <AisleRow label={aisle.name} active={selected === aisle.id} onSelect={() => onSelect(aisle.id)} />;
   }
 
   return (
     <Collapsible open={open} onOpenChange={setOpen}>
       <Flex align="center" gap="1">
         <AisleRow
-          number={number}
           label={aisle.name}
           active={selected === aisle.id}
           onSelect={() => {
@@ -88,7 +76,7 @@ function AisleGroup({
               variant="ghost"
               size="icon-sm"
               aria-label={open ? `Collapse ${aisle.name}` : `Expand ${aisle.name}`}
-              className="shrink-0 rounded-full text-muted-foreground"
+              className="shrink-0 text-muted-foreground"
             />
           }
         >
@@ -96,7 +84,7 @@ function AisleGroup({
         </CollapsibleTrigger>
       </Flex>
       <CollapsibleContent>
-        <Stack gap="0.5" className="my-1 ml-5 border-l-2 border-border pl-2">
+        <Stack gap="0.5" className="my-1 ml-3 border-l border-border pl-2">
           {aisle.children.map((child) => (
             <AisleRow key={child.id} child label={child.name} active={selected === child.id} onSelect={() => onSelect(child.id)} />
           ))}
@@ -136,10 +124,10 @@ export function AisleFilter({ selected, onSelect }: { selected: string | null; o
   return (
     <Stack gap="0.5">
       <AisleRow label="All products" active={selected === null} onSelect={() => onSelect(null)} />
-      {aisles.map((aisle, index) => (
+      {aisles.map((aisle) => (
         // key mein selected — doosri category select hone par expand state naye sire se
         <Box key={`${aisle.id}-${selected ?? ""}`}>
-          <AisleGroup aisle={aisle} index={index} selected={selected} onSelect={onSelect} />
+          <AisleGroup aisle={aisle} selected={selected} onSelect={onSelect} />
         </Box>
       ))}
     </Stack>

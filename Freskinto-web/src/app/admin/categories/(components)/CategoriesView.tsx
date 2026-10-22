@@ -14,7 +14,7 @@ import { Pagination } from "@/components/shared/Pagination";
 import { SearchInput } from "@/components/shared/SearchInput";
 import { StandardDestructiveModal } from "@/components/shared/StandardDestructiveModal";
 import { ACTIVE_STATUS_OPTIONS, ADMIN_PAGE_SIZE, LOOKUP_LIMIT } from "@/constants/filters";
-import { categoryTheme, TONE_CLASSES } from "@/lib/merchandising";
+import { categoryTheme, TILE_CLASSES } from "@/lib/merchandising";
 import { cn } from "@/lib/utils";
 import { useDeleteCategory, useUpdateCategory } from "@/services/categories/mutations";
 import { useGetAdminCategories } from "@/services/categories/queries";
@@ -23,9 +23,7 @@ import { CategoryFormDialog } from "./CategoryFormDialog";
 import { CategoryTableSkeleton } from "./CategoryTableSkeleton";
 
 function CategoryName({ category }: { category: ICategory }) {
-  const theme = categoryTheme(category.name);
-  const tone = TONE_CLASSES[theme.tone];
-  const Icon = theme.icon;
+  const Icon = categoryTheme(category.name).icon;
   return (
     <Flex align="center" gap="3">
       <Flex
@@ -33,7 +31,7 @@ function CategoryName({ category }: { category: ICategory }) {
         align="center"
         justify="center"
         aria-hidden="true"
-        className={cn("size-10 shrink-0 rounded-xl [&_svg]:size-5", tone.tile, tone.icon)}
+        className={cn("size-9 shrink-0 rounded-md [&_svg]:size-4", TILE_CLASSES.chip)}
       >
         <Icon />
       </Flex>
@@ -144,7 +142,7 @@ export function CategoriesView() {
       title="Categories"
       description="Organise the shop into aisles. Products can only be added to active categories without sub-categories."
       actions={
-        <Button className="rounded-full" onClick={() => openForm(null)}>
+        <Button onClick={() => openForm(null)}>
           <Plus aria-hidden="true" />
           New category
         </Button>

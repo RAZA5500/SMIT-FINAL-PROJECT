@@ -55,7 +55,7 @@ export function ChipGroup<T extends string | null>({
         <ToggleGroupItem key={option.label} value={keyOf(option.value)} className="shrink-0">
           {option.label}
           {option.count !== undefined && (
-            <Badge variant="secondary" className="h-5 px-1.5 tabular-nums group-aria-pressed/toggle:bg-primary-foreground/20 group-aria-pressed/toggle:text-primary-foreground">
+            <Badge variant="secondary" className="h-5 px-1.5 tabular-nums group-aria-pressed/toggle:bg-background">
               {option.count}
             </Badge>
           )}

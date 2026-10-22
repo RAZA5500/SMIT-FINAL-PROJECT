@@ -24,13 +24,13 @@ export function ErrorState({
   return (
     <Empty
       role="alert"
-      className={cn("gap-5 border-2 border-dashed border-destructive/30 bg-card/60 px-6 py-14", className)}
+      className={cn("gap-5 border border-dashed border-border px-6 py-14", className)}
     >
       <EmptyHeader className="gap-3">
-        <EmptyMedia className="mb-1 size-16 rotate-6 rounded-2xl bg-destructive-soft text-destructive [&_svg]:size-7">
+        <EmptyMedia className="mb-1 size-11 rounded-lg bg-destructive-soft text-destructive [&_svg]:size-5">
           <CloudOff aria-hidden="true" />
         </EmptyMedia>
-        <EmptyTitle className="font-heading text-xl font-bold">{title}</EmptyTitle>
+        <EmptyTitle className="text-base font-semibold">{title}</EmptyTitle>
         <EmptyDescription>{message}</EmptyDescription>
       </EmptyHeader>
       {(action || onRetry) && (

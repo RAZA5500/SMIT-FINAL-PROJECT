@@ -55,7 +55,7 @@ export function UploadDropzone({
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
         className={cn(
-          "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-input bg-muted/60 px-4 py-8 text-center font-normal transition-colors hover:border-primary hover:bg-plum-soft",
+          "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-input px-4 py-8 text-center font-normal transition-colors hover:bg-muted/50",
           "focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/25",
           dragging && "border-primary bg-background",
         )}
@@ -65,7 +65,7 @@ export function UploadDropzone({
           align="center"
           justify="center"
           aria-hidden="true"
-          className="size-12 rounded-2xl bg-lime text-lime-foreground [&_svg]:size-5"
+          className="size-10 rounded-md bg-muted text-muted-foreground [&_svg]:size-5"
         >
           <ImageUp aria-hidden="true" />
         </Flex>

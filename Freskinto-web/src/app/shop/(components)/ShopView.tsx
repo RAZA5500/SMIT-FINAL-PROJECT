@@ -12,7 +12,7 @@ import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "@/com
 import { ProductGridSkeleton } from "@/components/customer/product/ProductCardSkeleton";
 import { ProductListing } from "@/components/customer/ProductListing";
 import { findCategory, findParent } from "@/components/customer/shop/category-tree";
-import { aisleIndexOf, useAisles } from "@/components/customer/shop/use-aisles";
+import { useAisles } from "@/components/customer/shop/use-aisles";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { Pagination } from "@/components/shared/Pagination";
 import { SHOP_PAGE_SIZE } from "@/constants/filters";
@@ -59,7 +59,6 @@ export function ShopView() {
 
   const category = findCategory(aisles, shop.category);
   const parent = findParent(aisles, shop.category);
-  const aisleIndex = aisleIndexOf(aisles, shop.category);
 
   const goToPage = (page: number) => {
     shop.update({ page });
@@ -72,7 +71,7 @@ export function ShopView() {
       title="No products match your filters"
       message="Try a different search, widen the price range or browse another aisle."
       action={
-        <Button variant="cta" onClick={shop.clear}>
+        <Button onClick={shop.clear}>
           Clear all filters
         </Button>
       }
@@ -85,7 +84,6 @@ export function ShopView() {
         shop={shop}
         category={category}
         parent={parent}
-        aisleIndex={aisleIndex}
         totalCount={data?.meta.total}
       />
 
@@ -94,7 +92,7 @@ export function ShopView() {
       <Flex align="start" gap="8">
         <Card
           render={<Box as="aside" aria-label="Filters" />}
-          className="sticky top-32 hidden max-h-[calc(100dvh-9rem)] w-72 shrink-0 overflow-y-auto rounded-3xl border-2 px-5 py-1 shadow-none scrollbar-thin lg:flex"
+          className="sticky top-24 hidden max-h-[calc(100dvh-7rem)] w-64 shrink-0 overflow-y-auto px-4 py-1 scrollbar-thin lg:flex"
         >
           <ShopFilters shop={shop} />
         </Card>
@@ -142,7 +140,7 @@ export function ShopView() {
               limit={data.meta.limit}
               onPageChange={goToPage}
               itemLabel="products"
-              className="border-t-2 border-dashed border-input pt-6"
+              className="border-t pt-6"
             />
           )}
         </Stack>
@@ -163,7 +161,7 @@ export function ShopView() {
             <ShopFilters shop={shop} />
           </Stack>
           <SheetFooter>
-            <Button size="xl" variant="cta" className="w-full" onClick={() => setFiltersOpen(false)}>
+            <Button size="xl" className="w-full" onClick={() => setFiltersOpen(false)}>
               {data ? `Show ${pluralize(data.meta.total, "product")}` : "Show products"}
             </Button>
           </SheetFooter>

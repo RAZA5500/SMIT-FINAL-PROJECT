@@ -4,26 +4,25 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 /* ---------------------------------------------------------------------------
-   Heading — Bricolage Grotesque display (admin par Inter, `[data-surface=admin]`)
+   Heading — Inter throughout; weight and tight tracking carry the hierarchy
 --------------------------------------------------------------------------- */
 
-const headingVariants = cva("font-heading text-balance", {
+const headingVariants = cva("text-balance", {
   variants: {
     size: {
-      hero: "text-fs-40 font-extrabold tracking-tighter sm:text-fs-56 xl:text-fs-72",
-      display: "text-4xl leading-none font-extrabold tracking-tighter sm:text-5xl",
-      "1": "text-3xl leading-tight font-bold tracking-tight sm:text-4xl",
-      "2": "text-2xl leading-tight font-bold tracking-tight sm:text-3xl",
-      "3": "text-xl leading-snug font-semibold tracking-tight",
-      "4": "text-lg leading-snug font-semibold tracking-tight",
-      "5": "text-base leading-snug font-semibold",
+      hero: "text-4xl leading-tight font-semibold tracking-tight sm:text-5xl lg:text-6xl",
+      display: "text-3xl leading-tight font-semibold tracking-tight sm:text-4xl",
+      "1": "text-2xl leading-tight font-semibold tracking-tight sm:text-3xl",
+      "2": "text-xl leading-snug font-semibold tracking-tight sm:text-2xl",
+      "3": "text-lg leading-snug font-semibold tracking-tight",
+      "4": "text-base leading-snug font-semibold",
+      "5": "text-sm leading-snug font-semibold",
     },
     tone: {
       default: "text-foreground",
       inherit: "",
       muted: "text-muted-foreground",
       primary: "text-primary",
-      night: "text-night-foreground",
     },
   },
   defaultVariants: {
@@ -74,7 +73,7 @@ const textVariants = cva("", {
       lead: "text-base leading-relaxed text-muted-foreground sm:text-lg",
       small: "text-xs leading-normal",
       label: "text-sm leading-none font-medium",
-      eyebrow: "text-fs-11 leading-none font-bold tracking-widest uppercase",
+      eyebrow: "text-xs leading-none font-medium",
       code: "font-mono text-xs tracking-tight",
     },
     size: {
@@ -94,21 +93,15 @@ const textVariants = cva("", {
       destructive: "text-destructive",
       success: "text-success-ink",
       warning: "text-warning-ink",
-      tangerine: "text-tangerine-ink",
-      lime: "text-lime-ink",
-      night: "text-night-foreground",
-      "night-muted": "text-night-muted",
     },
     weight: {
       normal: "font-normal",
       medium: "font-medium",
       semibold: "font-semibold",
       bold: "font-bold",
-      extrabold: "font-extrabold",
     },
     family: {
       sans: "font-sans",
-      heading: "font-heading",
       mono: "font-mono",
     },
     numeric: {

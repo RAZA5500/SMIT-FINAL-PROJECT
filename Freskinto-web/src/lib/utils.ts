@@ -9,9 +9,9 @@ import { extendTailwindMerge } from "tailwind-merge";
 const twMerge = extendTailwindMerge({
   extend: {
     theme: {
-      text: ["fs-11", "fs-12", "fs-13", "fs-15", "fs-40", "fs-56", "fs-72"],
-      shadow: ["soft", "lift", "glow", "pop", "pop-sm"],
-      animate: ["fade-up", "bump", "marquee", "float", "float-slow", "pop", "wiggle"],
+      text: ["fs-11", "fs-12", "fs-13", "fs-15"],
+      shadow: ["soft"],
+      animate: ["fade-up", "bump"],
       spacing: ["header"],
       container: ["page", "form"],
     },

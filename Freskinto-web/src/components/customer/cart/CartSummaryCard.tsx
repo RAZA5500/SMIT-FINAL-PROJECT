@@ -35,12 +35,12 @@ export function CartSummaryCard({
   className,
 }: CartSummaryCardProps) {
   return (
-    <Card render={<Box as="section" aria-label={title} />} size="lg" className={cn("rounded-3xl border-2", className)}>
+    <Card render={<Box as="section" aria-label={title} />} size="lg" className={cn("rounded-xl border", className)}>
       <CardHeader>
         <Flex align="center" gap="3">
           <LogoMark size="sm" />
           <Stack>
-            <CardTitle render={<Box as="span" />} className="text-xl font-bold">
+            <CardTitle render={<Box as="span" />} className="text-xl font-semibold">
               {title}
             </CardTitle>
             <CardDescription className="text-fs-12">
@@ -55,7 +55,7 @@ export function CartSummaryCard({
           <Stack
             as="ul"
             gap="2.5"
-            className="scrollbar-thin max-h-64 overflow-y-auto border-y border-dashed border-input py-4 pr-1 text-sm"
+            className="scrollbar-thin max-h-64 overflow-y-auto border-y py-4 pr-1 text-sm"
           >
               {cart.items.map((item) => (
                 <Flex as="li" key={item.id} align="baseline" justify="between" gap="3">
@@ -83,7 +83,7 @@ export function CartSummaryCard({
 
         {children && <Stack gap="2.5">{children}</Stack>}
 
-        <Stack as="ul" gap="2" className="rounded-2xl bg-lime-soft p-3.5 text-fs-13 text-lime-ink">
+        <Stack as="ul" gap="2" className="rounded-lg bg-muted/60 p-3 text-fs-13 text-muted-foreground">
           <Flex as="li" align="center" gap="2">
             <Truck aria-hidden="true" className="size-4 shrink-0" />
             Free delivery on every order — no minimum spend

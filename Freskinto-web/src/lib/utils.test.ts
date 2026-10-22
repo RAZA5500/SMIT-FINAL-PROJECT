@@ -28,11 +28,11 @@ describe("cn()", () => {
 
   it("knows the custom design tokens", () => {
     // font-size token + colour must not cancel each other
-    expect(cn("text-fs-40", "text-muted-foreground")).toBe("text-fs-40 text-muted-foreground");
+    expect(cn("text-fs-13", "text-muted-foreground")).toBe("text-fs-13 text-muted-foreground");
     // two font-size tokens → last wins
-    expect(cn("text-fs-13", "text-fs-40")).toBe("text-fs-40");
-    // custom shadow tokens conflict with each other and the default scale
-    expect(cn("shadow-soft", "shadow-lift")).toBe("shadow-lift");
-    expect(cn("shadow-lg", "shadow-pop")).toBe("shadow-pop");
+    expect(cn("text-fs-13", "text-fs-15")).toBe("text-fs-15");
+    // custom shadow token conflicts with the default scale
+    expect(cn("shadow-soft", "shadow-md")).toBe("shadow-md");
+    expect(cn("shadow-lg", "shadow-soft")).toBe("shadow-soft");
   });
 });

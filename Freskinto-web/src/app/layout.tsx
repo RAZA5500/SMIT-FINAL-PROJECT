@@ -15,14 +15,6 @@ const inter = localFont({
   display: "swap",
 });
 
-/* Display headings — Bricolage Grotesque (SIL OFL 1.1) */
-const bricolage = localFont({
-  src: "./fonts/bricolage-grotesque-latin.woff2",
-  variable: "--font-bricolage",
-  weight: "200 800",
-  display: "swap",
-});
-
 const jetbrains = localFont({
   src: "./fonts/jetbrains-mono-latin.woff2",
   variable: "--font-jetbrains",
@@ -42,8 +34,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f7f5fa" },
-    { media: "(prefers-color-scheme: dark)", color: "#130d1a" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
   ],
 };
 
@@ -57,7 +49,7 @@ export default function RootLayout({
     <html
       lang="en-GB"
       data-scroll-behavior="smooth"
-      className={cn(inter.variable, bricolage.variable, jetbrains.variable)}
+      className={cn(inter.variable, jetbrains.variable)}
       suppressHydrationWarning
     >
       <body className={cn("flex min-h-dvh flex-col")} suppressHydrationWarning>

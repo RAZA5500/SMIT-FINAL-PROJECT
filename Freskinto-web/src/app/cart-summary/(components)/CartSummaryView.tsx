@@ -25,8 +25,8 @@ export function CartSummaryView() {
   if (isLoading) {
     content = (
       <Grid aria-label="Loading" aria-busy="true" align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
-        <Skeleton className="h-96 rounded-3xl lg:col-span-7" />
-        <Skeleton className="h-96 rounded-3xl lg:col-span-5" />
+        <Skeleton className="h-96 rounded-xl lg:col-span-7" />
+        <Skeleton className="h-96 rounded-xl lg:col-span-5" />
       </Grid>
     );
   } else if (isError) {
@@ -40,7 +40,7 @@ export function CartSummaryView() {
         title="Your basket is empty"
         message="Browse fresh produce and everyday essentials to build your order."
         action={
-          <ButtonLink href={shopUrl()} variant="cta" size="lg">
+          <ButtonLink href={shopUrl()} size="lg">
             Browse products
           </ButtonLink>
         }
@@ -50,9 +50,9 @@ export function CartSummaryView() {
     const hasIssues = cartHasIssues(items);
     content = (
       <Grid align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
-        <Card render={<Box as="section" aria-label="Items" />} size="lg" className="rounded-3xl border-2 lg:col-span-7">
+        <Card render={<Box as="section" aria-label="Items" />} size="lg" className="rounded-xl border lg:col-span-7">
           <CardHeader>
-            <CardTitle render={<Box as="span" />} className="text-xl font-bold">
+            <CardTitle render={<Box as="span" />} className="text-xl font-semibold">
               {pluralize(items.length, "product")}
             </CardTitle>
           </CardHeader>
@@ -72,16 +72,16 @@ export function CartSummaryView() {
 
         <CartSummaryCard cart={cart} className="lg:sticky lg:top-28 lg:col-span-5">
           {hasIssues ? (
-            <ButtonLink href={customerRoutes.cart} variant="cta" size="xl" className="w-full">
+            <ButtonLink href={customerRoutes.cart} size="xl" className="w-full">
               Fix items in basket
             </ButtonLink>
           ) : (
-            <ButtonLink href={customerRoutes.checkout} variant="cta" size="xl" className="w-full">
+            <ButtonLink href={customerRoutes.checkout} size="xl" className="w-full">
               Proceed to checkout
               <ArrowRight aria-hidden="true" />
             </ButtonLink>
           )}
-          <ButtonLink href={customerRoutes.cart} variant="outline" className="w-full rounded-full border-2">
+          <ButtonLink href={customerRoutes.cart} variant="outline" className="w-full border">
             Edit items in basket
           </ButtonLink>
         </CartSummaryCard>

@@ -35,7 +35,7 @@ export function useSearchHotkey(onOpen: () => void) {
 export function SearchTrigger({ onOpen, variant = "bar", className }: SearchTriggerProps) {
   if (variant === "icon") {
     return (
-      <Button variant="ghost" size="icon" aria-label="Search products" onClick={onOpen} className={cn("rounded-full", className)}>
+      <Button variant="ghost" size="icon" aria-label="Search products" onClick={onOpen} className={className}>
         <Search aria-hidden="true" className="size-5" />
       </Button>
     );
@@ -47,17 +47,17 @@ export function SearchTrigger({ onOpen, variant = "bar", className }: SearchTrig
       onClick={onOpen}
       aria-label="Search products"
       className={cn(
-        "h-11 w-full justify-start gap-3 rounded-full border-2 border-border bg-muted/60 pr-2 pl-4 font-normal text-muted-foreground shadow-none hover:border-primary hover:bg-card",
+        "w-full justify-start gap-2 bg-muted/50 pr-1.5 pl-3 font-normal text-muted-foreground hover:bg-muted hover:text-muted-foreground",
         className,
       )}
     >
-      <Search aria-hidden="true" className="size-4 text-primary" />
+      <Search aria-hidden="true" />
       <Text as="span" tone="inherit" className="flex-1 truncate text-left">
-        Search apples, milk, chicken…
+        Search products…
       </Text>
       <Flex as="span" align="center" gap="1" aria-hidden="true" className="hidden lg:flex">
-        <Kbd className="bg-card">⌘</Kbd>
-        <Kbd className="bg-card">K</Kbd>
+        <Kbd className="border bg-background">⌘</Kbd>
+        <Kbd className="border bg-background">K</Kbd>
       </Flex>
     </Button>
   );

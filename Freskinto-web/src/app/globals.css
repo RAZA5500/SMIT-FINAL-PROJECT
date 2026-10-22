@@ -6,176 +6,139 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ---------------------------------------------------------------------------
-   Freskinto design tokens — "Produce Pop"
-   Aubergine (primary) × Tangerine (CTA) × Lime (highlight), soft lilac paper.
-   - Storefront: bold Bricolage Grotesque display type, sticker badges, "pop"
-     cards that lift onto an ink offset shadow, deep aubergine "night" blocks.
-   - Admin: same tokens, calmer density (Inter headings via [data-surface]).
-   - Components semantic classes use karte hain (bg-primary, bg-tangerine,
-     text-lime-ink ...) — kabhi raw hex nahi.
+   Freskinto design tokens — clean & minimal
+   White surfaces, near-black text, thin zinc-grey borders and one accent
+   colour: indigo. No loud brand colours, no offset shadows, no stickers.
+   - Status colours (success / warning / info / destructive) sirf status ke liye.
+   - Product photos ek hi halki grey "tile" par baithti hain (dono themes mein roshan).
+   - Components semantic classes use karte hain (bg-primary, text-muted-foreground,
+     border-border ...) — kabhi raw hex nahi.
 --------------------------------------------------------------------------- */
 :root {
-  --radius: 0.875rem;
+  --radius: 0.625rem;
 
-  /* Surfaces — lilac paper, white cards */
-  --background: #f7f5fa;
-  --foreground: #1d1428;
+  /* Surfaces */
+  --background: #ffffff;
+  --foreground: #09090b;
   --card: #ffffff;
-  --card-foreground: #1d1428;
+  --card-foreground: #09090b;
   --popover: #ffffff;
-  --popover-foreground: #1d1428;
-  --workspace: #f2eff7;
+  --popover-foreground: #09090b;
+  /* Admin canvas / subtle page bands */
+  --workspace: #fafafa;
 
-  /* Core shadcn roles */
-  --primary: #5b2a86;
+  /* Core shadcn roles — indigo is the only accent */
+  --primary: #4f46e5;
   --primary-foreground: #ffffff;
-  --secondary: #efebf4;
-  --secondary-foreground: #1d1428;
-  --muted: #efebf4;
-  --muted-foreground: #675e74;
-  --accent: #efe7f8;
-  --accent-foreground: #3f1b60;
-  --destructive: #d4313a;
-  --border: #e5dfec;
-  --input: #d6cee0;
-  --ring: #7c4dbb;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #6b6b74;
+  --accent: #eef2ff;
+  --accent-foreground: #3730a3;
+  --destructive: #dc2626;
+  --border: #e4e4e7;
+  --input: #d4d4d8;
+  --ring: #4f46e5;
 
-  /* Brand */
-  --plum-soft: #efe7f8;
-  --plum-strong: #3f1b60;
-  --tangerine: #ff7a3d;
-  --tangerine-foreground: #1d1428;
-  --tangerine-soft: #ffeee4;
-  --tangerine-ink: #a8400e;
-  --lime: #c6f36b;
-  --lime-foreground: #1d1428;
-  --lime-soft: #effbd6;
-  --lime-ink: #3d5c0f;
-  /* "Night" — storefront ke dark blocks (hero, footer, promo) dono themes mein */
-  --night: #1c0f2b;
-  --night-foreground: #f6f0fb;
-  --night-muted: #b9a8cc;
-  --night-border: rgb(255 255 255 / 0.12);
-
-  /* Status */
-  --destructive-soft: #fdeced;
-  --destructive-ink: #9b1c24;
-  --success: #1f8a52;
-  --success-soft: #e6f6ec;
-  --success-ink: #13623b;
+  /* Status — soft surface + AA ink */
+  --destructive-soft: #fef2f2;
+  --destructive-ink: #b91c1c;
+  --success: #16a34a;
+  --success-soft: #f0fdf4;
+  --success-ink: #15803d;
   --warning: #d97706;
-  --warning-soft: #fff3dc;
-  --warning-ink: #8a4b06;
+  --warning-soft: #fffbeb;
+  --warning-ink: #b45309;
   --info: #2563eb;
-  --info-soft: #e8effd;
+  --info-soft: #eff6ff;
   --info-ink: #1d4ed8;
-  --neutral-soft: #efebf4;
-  --neutral-ink: #4d4459;
+  --neutral-soft: #f4f4f5;
+  --neutral-ink: #3f3f46;
 
-  /* Product wells — pastel tiles jin par packshots multiply hote hain (dono themes mein roshan) */
-  --tile-lilac: #f1ebfa;
-  --tile-peach: #fff0e6;
-  --tile-mint: #e9f8ee;
-  --tile-butter: #fdf6dc;
-  --tile-sky: #e8f2fd;
-  --tile-rose: #fdecef;
-  /* Tiles dono themes mein roshan rehti hain — un par ink bhi hamesha gehri (.dark override nahi) */
-  --ink: #1d1428;
-  --tile-ink-plum: #5b2a86;
-  --tile-ink-tangerine: #a8400e;
-  --tile-ink-lime: #3d5c0f;
-  --tile-ink-butter: #8a4b06;
-  --tile-ink-sky: #1d4ed8;
-  --tile-ink-rose: #9b1c24;
+  /* Product photo well — packshots is par multiply hote hain, is liye dono themes mein roshan */
+  --tile: #f4f4f5;
+  --tile-ink: #52525b;
 
   /* Charts — chart-1 single-series bars (dataviz validator: OKLCH L band + 3:1 vs card) */
-  --chart-1: #7c4dbb;
-  --chart-2: #ff7a3d;
-  --chart-3: #7aa51b;
-  --chart-4: #2f80ed;
-  --chart-5: #e0457b;
+  --chart-1: #4f46e5;
+  --chart-2: #0ea5e9;
+  --chart-3: #10b981;
+  --chart-4: #f59e0b;
+  --chart-5: #f43f5e;
 
-  /* Admin sidebar — night aubergine */
-  --sidebar: #1c0f2b;
-  --sidebar-foreground: #f1eaf8;
-  --sidebar-primary: #c6f36b;
-  --sidebar-primary-foreground: #1d1428;
-  --sidebar-accent: rgb(255 255 255 / 0.08);
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: rgb(255 255 255 / 0.1);
-  --sidebar-ring: #c6f36b;
+  /* Admin sidebar — light, indigo active item */
+  --sidebar: #fafafa;
+  --sidebar-foreground: #18181b;
+  --sidebar-primary: #4f46e5;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f0f0f2;
+  --sidebar-accent-foreground: #09090b;
+  --sidebar-border: #e4e4e7;
+  --sidebar-ring: #4f46e5;
 
-  --glass-bg: rgb(255 255 255 / 0.78);
-  --pop-shadow-color: #1d1428;
-
-  --heading-font: var(--font-bricolage), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --glass-bg: rgb(255 255 255 / 0.85);
 }
 
 .dark {
-  --background: #130d1a;
-  --foreground: #f3eef8;
-  --card: #1b1424;
-  --card-foreground: #f3eef8;
-  --popover: #201829;
-  --popover-foreground: #f3eef8;
-  --workspace: #17111f;
+  --background: #09090b;
+  --foreground: #fafafa;
+  --card: #111113;
+  --card-foreground: #fafafa;
+  --popover: #18181b;
+  --popover-foreground: #fafafa;
+  --workspace: #0c0c0e;
 
-  --primary: #c4a2f5;
-  --primary-foreground: #1d1428;
-  --secondary: #261d31;
-  --secondary-foreground: #f3eef8;
-  --muted: #241b2e;
-  --muted-foreground: #a99db8;
-  --accent: #2c2140;
-  --accent-foreground: #e6d6fb;
-  --destructive: #ff6b72;
-  --border: #30263c;
-  --input: #3b2f49;
-  --ring: #b48cf0;
+  --primary: #818cf8;
+  --primary-foreground: #0b0b1a;
+  --secondary: #1c1c1f;
+  --secondary-foreground: #fafafa;
+  --muted: #1c1c1f;
+  --muted-foreground: #a1a1aa;
+  --accent: #1e1b4b;
+  --accent-foreground: #c7d2fe;
+  --destructive: #f87171;
+  --border: #27272a;
+  --input: #3f3f46;
+  --ring: #818cf8;
 
-  --plum-soft: #2c2140;
-  --plum-strong: #e6d6fb;
-  --tangerine-soft: #3a2117;
-  --tangerine-ink: #ff9a66;
-  --lime-soft: #26311a;
-  --lime-ink: #c6f36b;
-  --night: #0d0813;
-  --night-border: rgb(255 255 255 / 0.1);
+  --destructive-soft: #2a1214;
+  --destructive-ink: #fca5a5;
+  --success: #4ade80;
+  --success-soft: #0f2418;
+  --success-ink: #86efac;
+  --warning: #fbbf24;
+  --warning-soft: #2a1f0a;
+  --warning-ink: #fcd34d;
+  --info: #60a5fa;
+  --info-soft: #0f1a2e;
+  --info-ink: #93c5fd;
+  --neutral-soft: #1c1c1f;
+  --neutral-ink: #d4d4d8;
 
-  --destructive-soft: #3a1a1f;
-  --destructive-ink: #ff8f94;
-  --success: #5fd394;
-  --success-soft: #16301f;
-  --success-ink: #7be0a9;
-  --warning: #f8b34a;
-  --warning-soft: #33250f;
-  --warning-ink: #fac773;
-  --info: #7aa7ff;
-  --info-soft: #172338;
-  --info-ink: #9dbdff;
-  --neutral-soft: #261d31;
-  --neutral-ink: #cfc4dc;
+  /* Halki si dimmer taake dark mode mein chakachaundh na ho */
+  --tile: #e9e9ec;
 
-  --chart-1: #9a72de;
-  --chart-2: #ff7a3d;
-  --chart-3: #c6f36b;
-  --chart-4: #7aa7ff;
-  --chart-5: #ff7aa8;
+  --chart-1: #7c83f5;
+  --chart-2: #38bdf8;
+  --chart-3: #34d399;
+  --chart-4: #fbbf24;
+  --chart-5: #fb7185;
 
-  --sidebar: #0d0813;
-  --sidebar-border: rgb(255 255 255 / 0.08);
+  --sidebar: #0c0c0e;
+  --sidebar-foreground: #e4e4e7;
+  --sidebar-primary: #818cf8;
+  --sidebar-primary-foreground: #0b0b1a;
+  --sidebar-accent: #1c1c1f;
+  --sidebar-accent-foreground: #fafafa;
+  --sidebar-border: #27272a;
+  --sidebar-ring: #818cf8;
 
-  --glass-bg: rgb(27 20 36 / 0.78);
-  --pop-shadow-color: #b48cf0;
-}
-
-[data-surface="admin"] {
-  --heading-font: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --glass-bg: rgb(9 9 11 / 0.8);
 }
 
 @theme inline {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-bricolage), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --color-background: var(--background);
@@ -198,21 +161,6 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  --color-plum-soft: var(--plum-soft);
-  --color-plum-strong: var(--plum-strong);
-  --color-tangerine: var(--tangerine);
-  --color-tangerine-foreground: var(--tangerine-foreground);
-  --color-tangerine-soft: var(--tangerine-soft);
-  --color-tangerine-ink: var(--tangerine-ink);
-  --color-lime: var(--lime);
-  --color-lime-foreground: var(--lime-foreground);
-  --color-lime-soft: var(--lime-soft);
-  --color-lime-ink: var(--lime-ink);
-  --color-night: var(--night);
-  --color-night-foreground: var(--night-foreground);
-  --color-night-muted: var(--night-muted);
-  --color-night-border: var(--night-border);
-
   --color-destructive-soft: var(--destructive-soft);
   --color-destructive-ink: var(--destructive-ink);
   --color-success: var(--success);
@@ -227,19 +175,8 @@
   --color-neutral-soft: var(--neutral-soft);
   --color-neutral-ink: var(--neutral-ink);
 
-  --color-tile-lilac: var(--tile-lilac);
-  --color-tile-peach: var(--tile-peach);
-  --color-tile-mint: var(--tile-mint);
-  --color-tile-butter: var(--tile-butter);
-  --color-tile-sky: var(--tile-sky);
-  --color-tile-rose: var(--tile-rose);
-  --color-ink: var(--ink);
-  --color-tile-ink-plum: var(--tile-ink-plum);
-  --color-tile-ink-tangerine: var(--tile-ink-tangerine);
-  --color-tile-ink-lime: var(--tile-ink-lime);
-  --color-tile-ink-butter: var(--tile-ink-butter);
-  --color-tile-ink-sky: var(--tile-ink-sky);
-  --color-tile-ink-rose: var(--tile-ink-rose);
+  --color-tile: var(--tile);
+  --color-tile-ink: var(--tile-ink);
 
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
@@ -248,7 +185,6 @@
   --color-chart-5: var(--chart-5);
 
   --color-glass: var(--glass-bg);
-  --color-pop: var(--pop-shadow-color);
 
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
@@ -259,21 +195,17 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --radius-sm: calc(var(--radius) * 0.5);
-  --radius-md: calc(var(--radius) * 0.75);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.25);
-  --radius-2xl: calc(var(--radius) * 1.5);
-  --radius-3xl: calc(var(--radius) * 2);
-  --radius-4xl: calc(var(--radius) * 2.5);
-
-  /* "Pop" — ink offset shadow (storefront cards/CTAs hover par is par uthte hain) */
-  --shadow-pop: 4px 4px 0 0 var(--pop-shadow-color);
-  --shadow-pop-sm: 2px 2px 0 0 var(--pop-shadow-color);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
 @theme {
-  /* Display sizes ka leading tight — text-fs-* */
+  /* Odd steps the default scale lacks — text-fs-* */
   --text-fs-11: 0.6875rem;
   --text-fs-11--line-height: 1rem;
   --text-fs-12: 0.75rem;
@@ -282,36 +214,24 @@
   --text-fs-13--line-height: 1.25rem;
   --text-fs-15: 0.9375rem;
   --text-fs-15--line-height: 1.5rem;
-  --text-fs-40: 2.5rem;
-  --text-fs-40--line-height: 1.05;
-  --text-fs-56: 3.5rem;
-  --text-fs-56--line-height: 1;
-  --text-fs-72: 4.5rem;
-  --text-fs-72--line-height: 0.95;
 
   /* Layout tokens */
-  --spacing-header: 5.5rem;
-  --container-page: 84rem;
+  --spacing-header: 4rem;
+  --container-page: 80rem;
   --container-form: 28rem;
 
   --breakpoint-xs: 26rem;
 
-  --shadow-soft: 0 1px 2px rgb(29 20 40 / 0.05), 0 8px 24px -12px rgb(29 20 40 / 0.12);
-  --shadow-lift: 0 6px 16px rgb(29 20 40 / 0.08), 0 22px 40px -16px rgb(29 20 40 / 0.22);
-  --shadow-glow: 0 10px 30px -8px rgb(255 122 61 / 0.55);
+  /* Sirf ek halki parchhai — hover / floating surfaces */
+  --shadow-soft: 0 1px 2px rgb(9 9 11 / 0.04), 0 4px 16px -8px rgb(9 9 11 / 0.1);
 
-  --animate-fade-up: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-  --animate-bump: bump 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  --animate-marquee: marquee 38s linear infinite;
-  --animate-float: float 6s ease-in-out infinite;
-  --animate-float-slow: float 9s ease-in-out infinite;
-  --animate-pop: pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  --animate-wiggle: wiggle 0.5s ease-in-out;
+  --animate-fade-up: fade-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-bump: bump 0.3s ease-out;
 
   @keyframes fade-up {
     from {
       opacity: 0;
-      transform: translateY(18px);
+      transform: translateY(8px);
     }
     to {
       opacity: 1;
@@ -324,53 +244,10 @@
       transform: scale(1);
     }
     40% {
-      transform: scale(1.3);
+      transform: scale(1.15);
     }
     100% {
       transform: scale(1);
-    }
-  }
-
-  @keyframes pop {
-    from {
-      opacity: 0;
-      transform: scale(0.8);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  @keyframes marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
-  }
-
-  @keyframes float {
-    0%,
-    100% {
-      translate: 0 0;
-    }
-    50% {
-      translate: 0 -10px;
-    }
-  }
-
-  @keyframes wiggle {
-    0%,
-    100% {
-      rotate: 0deg;
-    }
-    25% {
-      rotate: -6deg;
-    }
-    75% {
-      rotate: 6deg;
     }
   }
 }
@@ -403,8 +280,7 @@
   h2,
   h3,
   h4 {
-    font-family: var(--heading-font);
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
     text-wrap: balance;
   }
 
@@ -414,8 +290,8 @@
   }
 
   ::selection {
-    background-color: var(--lime);
-    color: var(--lime-foreground);
+    background-color: var(--accent);
+    color: var(--accent-foreground);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -437,34 +313,14 @@
    Semantic utilities
 --------------------------------------------------------------------------- */
 
-@utility font-heading {
-  font-family: var(--heading-font);
-}
-
-/* Floating header / overlay surfaces */
+/* Sticky header / floating bars — halka frosted white */
 @utility glass {
   background-color: var(--glass-bg);
-  -webkit-backdrop-filter: blur(18px) saturate(170%);
-  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  backdrop-filter: blur(12px) saturate(160%);
 }
 
-/* Highlighter marker behind a word — "fresh" in lime */
-@utility marker {
-  background-image: linear-gradient(transparent 12%, var(--lime) 12%, var(--lime) 88%, transparent 88%);
-  color: var(--lime-foreground);
-  padding-inline: 0.18em;
-  border-radius: 0.2em;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
-}
-
-/* Subtle dot grid (dark blocks par currentColor se) */
-@utility texture-dots {
-  background-image: radial-gradient(currentColor 1px, transparent 1px);
-  background-size: 22px 22px;
-}
-
-/* Packshots card ke tile mein ghul jayen */
+/* Packshots photo well ke grey mein ghul jayen */
 @utility blend-packshot {
   mix-blend-mode: multiply;
 }
@@ -490,25 +346,4 @@
 @utility scrollbar-thin {
   scrollbar-width: thin;
   scrollbar-color: var(--input) transparent;
-}
-
-/* Marquee ke kinaare dhundle */
-@utility mask-fade-x {
-  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-}
-
-/* "Pop" interaction — hover par card ink shadow par uthta hai */
-@utility pop-hover {
-  transition:
-    translate 160ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 160ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 160ms ease;
-
-  &:hover,
-  &:has(:focus-visible) {
-    translate: -3px -3px;
-    box-shadow: var(--shadow-pop);
-    border-color: var(--foreground);
-  }
 }

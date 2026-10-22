@@ -2,19 +2,18 @@ import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
-/** Notices: white card with a coloured left edge; errors get a soft destructive surface */
+/** Notices: plain bordered box; the icon carries the status colour, errors get a soft red surface */
 const alertVariants = cva(
-  "group/alert relative flex w-full items-start gap-3 rounded-xl border border-l-4 px-4 py-3 text-left text-sm [&>svg]:mt-0.5 [&>svg]:shrink-0 [&>svg:not([class*='size-'])]:size-4",
+  "group/alert relative flex w-full items-start gap-3 rounded-lg border px-4 py-3 text-left text-sm [&>svg]:mt-0.5 [&>svg]:shrink-0 [&>svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        default: "border-border border-l-foreground/25 bg-card text-card-foreground",
-        brand: "border-border border-l-primary bg-card text-card-foreground [&>svg]:text-primary",
-        success: "border-border border-l-success bg-card text-card-foreground [&>svg]:text-success",
-        warning: "border-border border-l-warning bg-warning-soft text-warning-ink [&>svg]:text-warning",
-        info: "border-border border-l-info bg-card text-card-foreground [&>svg]:text-info",
-        destructive:
-          "border-destructive/20 border-l-destructive bg-destructive-soft text-destructive-ink [&>svg]:text-destructive",
+        default: "border-border bg-card text-card-foreground [&>svg]:text-muted-foreground",
+        brand: "border-border bg-card text-card-foreground [&>svg]:text-primary",
+        success: "border-border bg-card text-card-foreground [&>svg]:text-success",
+        warning: "border-warning/30 bg-warning-soft text-warning-ink [&>svg]:text-warning",
+        info: "border-border bg-card text-card-foreground [&>svg]:text-info",
+        destructive: "border-destructive/25 bg-destructive-soft text-destructive-ink [&>svg]:text-destructive",
       },
     },
     defaultVariants: {

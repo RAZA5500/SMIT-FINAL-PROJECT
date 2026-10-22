@@ -30,7 +30,7 @@ function AlertDialogOverlay({
     <AlertDialogPrimitive.Backdrop
       data-slot="alert-dialog-overlay"
       className={cn(
-        "fixed inset-0 isolate z-50 bg-night/55 duration-150 supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
+        "fixed inset-0 isolate z-50 bg-black/40 duration-150 supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
         className
       )}
       {...props}
@@ -57,7 +57,7 @@ function AlertDialogContent({
             data-slot="alert-dialog-content"
             data-size={size}
             className={cn(
-              "group/alert-dialog-content relative flex w-full flex-col overflow-hidden rounded-2xl border border-border bg-popover text-popover-foreground shadow-lift duration-150 outline-none data-[size=default]:max-w-md data-[size=sm]:max-w-xs data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+              "group/alert-dialog-content relative flex w-full flex-col overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-lg duration-150 outline-none data-[size=default]:max-w-md data-[size=sm]:max-w-xs data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
               className
             )}
             {...props}
@@ -148,7 +148,7 @@ function AlertDialogTitle({
     <AlertDialogPrimitive.Title
       data-slot="alert-dialog-title"
       className={cn(
-        "font-heading text-xl leading-tight font-semibold tracking-tight",
+        "text-xl leading-tight font-semibold tracking-tight",
         className
       )}
       {...props}

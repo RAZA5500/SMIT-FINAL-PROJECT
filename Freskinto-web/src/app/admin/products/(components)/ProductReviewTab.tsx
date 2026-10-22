@@ -12,7 +12,7 @@ import type { ProductFormInput } from "@/modules/zod/product.model";
 
 export function ReviewItem({ label, value }: { label: string; value?: ReactNode }) {
   return (
-    <Box className="rounded-2xl border border-border bg-muted/60 p-3">
+    <Box className="rounded-xl border border-border bg-muted/60 p-3">
       <Text tone="muted" className="text-xs">
         {label}
       </Text>

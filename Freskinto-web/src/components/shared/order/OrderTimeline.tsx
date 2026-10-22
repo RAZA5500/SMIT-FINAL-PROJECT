@@ -20,7 +20,7 @@ interface OrderTimelineProps {
   className?: string;
 }
 
-/** Vertical order tracking: har step ka timestamp, agla step "Up next" (pulsing tangerine) */
+/** Vertical order tracking: har step ka timestamp, agla step "Up next" (indigo outline) */
 export function OrderTimeline({ steps, cancelledAt, className }: OrderTimelineProps) {
   const cancelled = Boolean(cancelledAt);
   const visible = cancelled ? steps.filter((step) => step.at) : steps;
@@ -40,7 +40,7 @@ export function OrderTimeline({ steps, cancelledAt, className }: OrderTimelinePr
                 as="span"
                 aria-hidden="true"
                 className={cn(
-                  "absolute top-11 bottom-1 left-5 w-0.5 -translate-x-1/2 rounded-full",
+                  "absolute top-10 bottom-0 left-4 w-px -translate-x-1/2",
                   done ? "bg-primary" : "bg-border",
                 )}
               />
@@ -50,21 +50,21 @@ export function OrderTimeline({ steps, cancelledAt, className }: OrderTimelinePr
               align="center"
               justify="center"
               className={cn(
-                "relative z-10 size-10 shrink-0 rounded-full [&_svg]:size-5",
+                "relative z-10 size-8 shrink-0 rounded-full [&_svg]:size-4",
                 done && "bg-primary text-primary-foreground",
-                isNext && "border-2 border-pop bg-tangerine text-tangerine-foreground shadow-pop-sm",
-                !done && !isNext && "border border-border bg-card text-muted-foreground",
+                isNext && "border border-primary bg-background text-primary",
+                !done && !isNext && "border border-border bg-background text-muted-foreground",
               )}
             >
               <Icon aria-hidden="true" />
             </Flex>
-            <Stack gap="0.5" className="pt-1.5">
+            <Stack gap="0.5" className="pt-1">
               <Flex wrap align="center" gap="2">
-                <Text weight="semibold" tone={done || isNext ? "default" : "muted"}>
+                <Text weight="medium" tone={done || isNext ? "default" : "muted"}>
                   {step.label}
                 </Text>
                 {isNext && (
-                  <Badge variant="lime" className="h-5 animate-pulse px-2 text-fs-11">
+                  <Badge variant="brand">
                     Up next
                   </Badge>
                 )}
@@ -82,12 +82,12 @@ export function OrderTimeline({ steps, cancelledAt, className }: OrderTimelinePr
             as="span"
             align="center"
             justify="center"
-            className="relative z-10 size-10 shrink-0 rounded-full bg-destructive text-white dark:text-background [&_svg]:size-5"
+            className="relative z-10 size-8 shrink-0 rounded-full bg-destructive-soft text-destructive [&_svg]:size-4"
           >
             <CircleX aria-hidden="true" />
           </Flex>
-          <Stack gap="0.5" className="pt-1.5">
-            <Text weight="semibold" tone="destructive">
+          <Stack gap="0.5" className="pt-1">
+            <Text weight="medium" tone="destructive">
               Cancelled
             </Text>
             <Text tone="muted" numeric className="text-fs-13">

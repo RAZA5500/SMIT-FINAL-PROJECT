@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Flex } from "@/components/ui/flex";
-import { productVisual, TONE_CLASSES } from "@/lib/merchandising";
+import { productVisual, TILE_CLASSES } from "@/lib/merchandising";
 import { cn } from "@/lib/utils";
 
 interface ProductImageProps {
@@ -19,7 +19,7 @@ interface ProductImageProps {
 }
 
 /**
- * Product visual: demo packshot (shot on white, multiply-blended onto a pastel well)
+ * Product visual: demo packshot (shot on white, multiply-blended onto a light grey well)
  * ya — jab koi photo fit na ho — category icon. Default square.
  */
 export function ProductImage({
@@ -33,14 +33,13 @@ export function ProductImage({
   muted = false,
 }: ProductImageProps) {
   const { image, theme } = productVisual(name, categoryName);
-  const tone = TONE_CLASSES[theme.tone];
   const Icon = theme.icon;
 
   return (
     <Flex
       align="center"
       justify="center"
-      className={cn("relative isolate aspect-square overflow-hidden", tone.tile, muted && "grayscale", className)}
+      className={cn("relative isolate aspect-square overflow-hidden", TILE_CLASSES.tile, muted && "grayscale", className)}
     >
       {image ? (
         <Image
@@ -53,7 +52,7 @@ export function ProductImage({
         />
       ) : (
         <Icon
-          className={cn("size-2/5", tone.icon, muted && "opacity-50")}
+          className={cn("size-1/3", TILE_CLASSES.icon, muted && "opacity-50")}
           strokeWidth={1.3}
           role={alt ? "img" : undefined}
           aria-label={alt || undefined}

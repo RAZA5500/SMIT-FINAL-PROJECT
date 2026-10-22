@@ -20,7 +20,7 @@ export function PasswordField(props: Omit<InputFieldProps, "type" | "leftIcon" |
           aria-label={visible ? "Hide password" : "Show password"}
           aria-pressed={visible}
           onClick={() => setVisible((value) => !value)}
-          className={cn("rounded-full text-muted-foreground hover:text-foreground")}
+          className={cn("text-muted-foreground hover:text-foreground")}
         >
           {visible ? <EyeOff aria-hidden="true" /> : <Eye aria-hidden="true" />}
         </InputGroupButton>

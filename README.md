@@ -118,26 +118,25 @@ The admin profile shows the signed-in admin's real details; editing and password
   generator with the `@prisma/adapter-pg` driver adapter.
 
 **Web**
-- The UI is branded **Freskinto** and was redesigned on 2026-10-22 as **"Produce Pop"**: deep aubergine "night"
-  blocks (hero, footer, admin sidebar), a tangerine CTA that lifts onto an ink offset shadow, lime highlights
-  (marker-pen headline word, sticker badges, free-delivery strip) on a soft lilac paper. Interactive pieces: a ⌘K / Ctrl+K
-  command palette with live product search (storefront and admin), an "Aisles" mega menu, a self-advancing product
-  spotlight carousel, swipeable shelves in tabs, product quick view, an aisles bento grid, a "build your market box"
-  picker, accordions for filters/FAQ, a floating phone tab bar and a light/dark theme toggle. The admin uses the
-  shadcn `Sidebar` (icon-collapse with ⌘B, sheet on phones) and an Overview dashboard with live counts and an
-  orders-by-status chart (with a table view).
+- The UI is branded **Freskinto** and uses a clean, minimal look (redesigned 2026-10-22): white surfaces,
+  near-black text, thin zinc-grey borders and one accent colour, indigo. Flat cards with no heavy shadows. The home
+  page has three sections: a hero with live search, "Shop by aisle" and a tabbed "Popular right now" shelf.
+  Interactive pieces: a ⌘K / Ctrl+K command palette with live product search (storefront and admin), an "Aisles"
+  dropdown menu, swipeable product shelves in tabs, product quick view, accordion filters, a phone tab bar and a
+  light/dark theme toggle. The admin uses the shadcn `Sidebar` (icon-collapse with ⌘B, sheet on phones) and an
+  Overview dashboard with live counts and an orders-by-status chart (with a table view).
 - shadcn/ui is the Base UI flavour (`base-nova`) with its tokens mapped onto the Freskinto design tokens in
-  `Freskinto-web/src/app/globals.css` (light and `.dark` sets, all text pairs WCAG AA): aubergine `#5b2a86` primary,
-  tangerine `#ff7a3d` CTA (ink text), lime `#c6f36b` highlight; red for errors, amber for pending. Bricolage Grotesque
-  (display) + Inter (text) + JetBrains Mono (codes, SKUs), self-hosted with `next/font/local`. Dark mode is
-  class-based (`.dark` on `<html>`, chosen with the theme toggle and remembered in `localStorage`); product wells
-  stay light in both themes so the packshots blend correctly. Customer copy uses UK English ("basket").
+  `Freskinto-web/src/app/globals.css` (light and `.dark` sets, all text pairs WCAG AA): indigo `#4f46e5` primary
+  (`#818cf8` in dark mode), zinc greys for text, borders and surfaces; green, amber and red only for status.
+  Inter (text and headings) + JetBrains Mono (codes, SKUs), self-hosted with `next/font/local`. Dark mode is
+  class-based (`.dark` on `<html>`, chosen with the theme toggle and remembered in `localStorage`); product photo
+  wells stay light grey in both themes so the packshots blend correctly. Customer copy uses UK English ("basket").
 - No raw HTML elements in pages or feature components — enforced by ESLint (`no-restricted-syntax` in
   `Freskinto-web/eslint.config.mjs`): they compose shadcn/ui components and the layout/type primitives in
   `components/ui` (`Box`, `Flex`/`Stack`, `Grid`, `Container`, `Heading`, `Text`, `Form`), and every `className`
   goes through `cn()`. Only `components/ui` and the root layout (`<html>`/`<body>`) render HTML tags.
 - The home page shows only real data and real store rules: no invented discounts, vouchers, "was" prices, live
-  order feeds or ratings — the market box adds each item at its shelf price and totals come from the server.
+  order feeds or ratings; totals always come from the server.
 - Login: the Google button was removed (no external identity provider in scope); "Remember me" stores the
   session in `localStorage`, otherwise in `sessionStorage`.
 - Removed the unused `AuthModal` and the `/admin/categories/create` page — categories are created and edited in a

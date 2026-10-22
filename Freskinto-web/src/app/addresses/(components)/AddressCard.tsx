@@ -25,7 +25,7 @@ interface AddressCardProps {
   onDelete: () => void;
 }
 
-/** Address book entry — default ko aubergine ring, lime house tile aur sticker badge */
+/** Address book entry — default address gets an indigo border and a "Default" badge */
 export function AddressCard({ address, settingDefault, onEdit, onSetDefault, onDelete }: AddressCardProps) {
   const Icon = address.isDefault ? Home : MapPin;
 
@@ -33,8 +33,8 @@ export function AddressCard({ address, settingDefault, onEdit, onSetDefault, onD
     <Card
       render={<Box as="article" />}
       className={cn(
-        "pop-hover h-full gap-3 rounded-3xl border-2 shadow-none has-data-[slot=card-footer]:pb-0",
-        address.isDefault && "border-primary",
+        "h-full gap-3 transition-colors hover:border-foreground/15 has-data-[slot=card-footer]:pb-0",
+        address.isDefault && "border-primary/50 hover:border-primary/50",
       )}
     >
       <CardHeader className="flex-row items-start justify-between gap-3">
@@ -43,8 +43,8 @@ export function AddressCard({ address, settingDefault, onEdit, onSetDefault, onD
           justify="center"
           aria-hidden="true"
           className={cn(
-            "size-12 rounded-2xl [&_svg]:size-5",
-            address.isDefault ? "-rotate-6 bg-lime text-lime-foreground" : "bg-plum-soft text-primary",
+            "size-9 rounded-md [&_svg]:size-4",
+            address.isDefault ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground",
           )}
         >
           <Icon />
@@ -56,7 +56,7 @@ export function AddressCard({ address, settingDefault, onEdit, onSetDefault, onD
                 variant="ghost"
                 size="icon-sm"
                 aria-label={`Actions for ${address.addressLine}`}
-                className="rounded-full text-muted-foreground"
+                className="text-muted-foreground"
               />
             }
           >
@@ -84,28 +84,28 @@ export function AddressCard({ address, settingDefault, onEdit, onSetDefault, onD
 
       <CardContent className="flex-1">
         <Stack as="address" gap="0.5" className="not-italic">
-          <Text weight="bold" className="text-base">
+          <Text weight="medium" className="text-base">
             {address.addressLine}
           </Text>
           <Text tone="muted">
             {address.city}, {address.county}
           </Text>
-          <Text tone="muted" family="mono" className="tracking-wide uppercase">
+          <Text tone="muted" className="uppercase">
             {address.postcode}
           </Text>
         </Stack>
       </CardContent>
 
-      <CardFooter className="justify-between gap-2 border-t-2 border-dashed border-input py-3">
+      <CardFooter className="justify-between gap-2 border-t py-3">
         {address.isDefault ? (
-          <Badge variant="sticker">Default address</Badge>
+          <Badge variant="brand">Default</Badge>
         ) : (
-          <Button variant="outline" size="sm" className="rounded-full" disabled={settingDefault} onClick={onSetDefault}>
+          <Button variant="outline" size="sm" disabled={settingDefault} onClick={onSetDefault}>
             <Star aria-hidden="true" />
             Set as default
           </Button>
         )}
-        <Button variant="ghost" size="sm" className="rounded-full" onClick={onEdit}>
+        <Button variant="ghost" size="sm" onClick={onEdit}>
           <Pencil aria-hidden="true" />
           Edit
         </Button>

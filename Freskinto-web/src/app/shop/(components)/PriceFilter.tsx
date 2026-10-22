@@ -58,10 +58,10 @@ export function PriceFilter({ min, max, ceiling, onCommit }: PriceFilterProps) {
 
       <Stack gap="3">
         <Flex justify="between">
-          <Text as="span" family="mono" weight="bold" className="rounded-md bg-plum-soft px-2 py-0.5 text-fs-12 text-accent-foreground">
+          <Text as="span" weight="medium" numeric className="rounded-md bg-muted px-2 py-0.5 text-fs-12">
             {formatMoney(range[0])}
           </Text>
-          <Text as="span" family="mono" weight="bold" className="rounded-md bg-plum-soft px-2 py-0.5 text-fs-12 text-accent-foreground">
+          <Text as="span" weight="medium" numeric className="rounded-md bg-muted px-2 py-0.5 text-fs-12">
             {range[1] >= ceiling ? `${formatMoney(ceiling)}+` : formatMoney(range[1])}
           </Text>
         </Flex>

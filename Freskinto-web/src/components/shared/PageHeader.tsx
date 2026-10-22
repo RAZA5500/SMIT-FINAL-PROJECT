@@ -14,7 +14,7 @@ interface PageHeaderProps {
   actions?: ReactNode;
   /** Breadcrumbs ya back link — sab se upar */
   breadcrumbs?: ReactNode;
-  /** `page`: storefront ka bada display title · `compact`: admin workspace */
+  /** `page`: storefront title · `compact`: admin workspace */
   size?: "page" | "compact";
   className?: string;
 }
@@ -34,17 +34,17 @@ export function PageHeader({
     <Stack gap="4" className={cn(className)}>
       {breadcrumbs}
       <Flex wrap align="end" justify="between" gap="4">
-        <Stack gap="2" className="min-w-0">
+        <Stack gap="1.5" className="min-w-0">
           {eyebrow && (
-            <Text as="div" variant="eyebrow" tone="primary">
+            <Text as="div" variant="eyebrow" tone="muted">
               {eyebrow}
             </Text>
           )}
-          <Heading size={size === "page" ? "display" : "2"} className={cn(size === "compact" && "sm:text-2xl")}>
+          <Heading size={size === "page" ? "1" : "2"}>
             {title}
           </Heading>
           {description && (
-            <Text as="div" tone="muted" className={cn("max-w-2xl", size === "page" ? "text-base" : "text-sm")}>
+            <Text as="div" tone="muted" className="max-w-2xl">
               {description}
             </Text>
           )}

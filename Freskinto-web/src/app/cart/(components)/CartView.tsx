@@ -48,7 +48,7 @@ export function CartView() {
         title="Your basket is empty"
         message="Fresh produce, poultry and everyday essentials are waiting — and delivery is always free."
         action={
-          <ButtonLink href={shopUrl()} variant="cta" size="lg">
+          <ButtonLink href={shopUrl()} size="lg">
             Start shopping
             <ArrowRight aria-hidden="true" />
           </ButtonLink>
@@ -86,12 +86,12 @@ function FilledBasket({ cart, onClear }: { cart: ICart; onClear: () => void }) {
   const hasIssues = cartHasIssues(cart.items);
 
   const checkoutAction = hasIssues ? (
-    <Button variant="cta" size="xl" disabled className="w-full">
+    <Button size="xl" disabled className="w-full">
       Checkout
       <ArrowRight aria-hidden="true" />
     </Button>
   ) : (
-    <ButtonLink href={customerRoutes.checkout} variant="cta" size="xl" className="w-full">
+    <ButtonLink href={customerRoutes.checkout} size="xl" className="w-full">
       Checkout
       <ArrowRight aria-hidden="true" />
     </ButtonLink>
@@ -100,16 +100,16 @@ function FilledBasket({ cart, onClear }: { cart: ICart; onClear: () => void }) {
   return (
     <>
       <Grid align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
-        <Card render={<Box as="section" aria-label="Basket items" />} className="gap-0 rounded-3xl border-2 py-0 lg:col-span-8">
+        <Card render={<Box as="section" aria-label="Basket items" />} className="gap-0 rounded-xl border py-0 lg:col-span-8">
           <CardHeader className="border-b border-border py-4">
-            <CardTitle render={<Box as="span" />} className="text-xl font-bold">
+            <CardTitle render={<Box as="span" />} className="text-xl font-semibold">
               {pluralize(cart.items.length, "product")}
             </CardTitle>
             <CardAction className="top-3">
               <Button
                 variant="ghost"
                 size="sm"
-                className="rounded-full text-muted-foreground hover:bg-destructive-soft hover:text-destructive"
+                className="text-muted-foreground hover:bg-destructive-soft hover:text-destructive"
                 onClick={onClear}
               >
                 <Trash2 aria-hidden="true" />
@@ -139,17 +139,17 @@ function FilledBasket({ cart, onClear }: { cart: ICart; onClear: () => void }) {
 
         <CartSummaryCard cart={cart} className="lg:sticky lg:top-28 lg:col-span-4">
           {checkoutAction}
-          <ButtonLink href={customerRoutes.cartSummary} variant="outline" className="w-full rounded-full border-2">
+          <ButtonLink href={customerRoutes.cartSummary} variant="outline" className="w-full border">
             Review order summary
           </ButtonLink>
-          <ButtonLink href={shopUrl()} variant="ghost" className="w-full rounded-full">
+          <ButtonLink href={shopUrl()} variant="ghost" className="w-full">
             Continue shopping
           </ButtonLink>
         </CartSummaryCard>
       </Grid>
 
       {/* Phone: checkout hamesha nazar mein — floating tab bar ke upar */}
-      <Box className="glass fixed inset-x-3 bottom-24 z-30 rounded-3xl border border-border/70 px-4 py-3 shadow-lift lg:hidden">
+      <Box className="glass fixed inset-x-3 bottom-24 z-30 rounded-xl border border-border/70 px-4 py-3 shadow-soft lg:hidden">
         <Flex align="center" gap="3">
           <Stack gap="0.5">
             <Text as="span" tone="muted" className="text-fs-12">
@@ -194,19 +194,19 @@ function SuggestedProducts({ excludeIds }: { excludeIds: string[] }) {
 function CartViewSkeleton() {
   return (
     <Grid aria-label="Loading" aria-busy="true" align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
-      <Card className="gap-5 rounded-3xl border-2 p-5 lg:col-span-8">
+      <Card className="gap-5 rounded-xl border p-5 lg:col-span-8">
         {Array.from({ length: 3 }, (_, i) => (
           <Flex key={i} gap="4">
-            <Skeleton className="size-24 rounded-2xl" />
+            <Skeleton className="size-24 rounded-xl" />
             <Stack gap="2" className="flex-1">
               <Skeleton className="h-4 w-3/5" />
               <Skeleton className="h-3 w-1/4" />
-              <Skeleton className="h-10 w-32 rounded-full" />
+              <Skeleton className="h-10 w-32" />
             </Stack>
           </Flex>
         ))}
       </Card>
-      <Skeleton className="h-96 w-full rounded-3xl lg:col-span-4" />
+      <Skeleton className="h-96 w-full rounded-xl lg:col-span-4" />
     </Grid>
   );
 }

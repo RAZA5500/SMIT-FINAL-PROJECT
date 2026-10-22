@@ -20,27 +20,19 @@ const OUTCOMES: Record<MockPaymentFormValues["outcome"], { label: string; hint: 
 /** Decorative test card (no real card data anywhere — the gateway is a mock) */
 function TestCardFace() {
   return (
-    <Stack
-      aria-hidden="true"
-      gap="6"
-      className="relative w-full max-w-xs -rotate-2 overflow-hidden rounded-2xl bg-night p-5 text-night-foreground shadow-lift transition-transform hover:rotate-0"
-    >
-      <Box className="absolute -top-10 -right-10 size-32 rounded-full bg-primary/50 blur-2xl" />
-      <Flex align="center" justify="between" className="relative">
-        <Text as="span" family="heading" weight="extrabold" tone="inherit" className="text-lg">
-          {STORE.name.toLowerCase()}
-          <Text as="span" tone="inherit" className="text-tangerine">
-            .
-          </Text>
+    <Stack aria-hidden="true" gap="6" className="w-full max-w-xs rounded-xl border bg-muted/40 p-5">
+      <Flex align="center" justify="between">
+        <Text as="span" weight="semibold" className="text-base">
+          {STORE.name}
         </Text>
-        <Nfc className="size-5 text-night-muted" />
+        <Nfc className="size-5 text-muted-foreground" />
       </Flex>
-      <Box className="relative h-7 w-10 rounded-md bg-lime" />
-      <Stack gap="1.5" className="relative">
-        <Text as="span" tone="inherit" family="mono" className="tracking-widest">
+      <Box className="h-7 w-10 rounded-md border bg-background" />
+      <Stack gap="1.5">
+        <Text as="span" family="mono" className="tracking-widest">
           4242 4242 4242 4242
         </Text>
-        <Flex justify="between" className="text-fs-11 font-semibold tracking-wider text-night-muted uppercase">
+        <Flex justify="between" className="text-muted-foreground">
           <Text as="span" tone="inherit" className="text-fs-11">
             Test card
           </Text>

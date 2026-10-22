@@ -29,7 +29,7 @@ function TotalRow({ label, value, valueClassName }: { label: string; value: stri
   );
 }
 
-/** Server ke totals (client kuch calculate nahi karta) — Free shipping lime highlight */
+/** Server ke totals (client kuch calculate nahi karta) — free delivery green mein */
 export function OrderTotals({
   subtotal,
   shippingCost,
@@ -51,14 +51,14 @@ export function OrderTotals({
       <TotalRow
         label={shippingLabel}
         value={free ? "Free" : formatMoney(shippingCost)}
-        valueClassName={cn(free && "rounded-full bg-lime px-2 font-bold text-lime-foreground")}
+        valueClassName={cn(free && "text-success-ink")}
       />
       <Separator className="my-1.5" />
       <Flex align="baseline" justify="between" gap="4">
-        <Text as="dt" weight="bold">
+        <Text as="dt" weight="semibold">
           Total
         </Text>
-        <Text as="dd" family="heading" weight="extrabold" numeric className="text-3xl tracking-tight">
+        <Text as="dd" weight="semibold" numeric className="text-xl tracking-tight">
           {formatMoney(total)}
         </Text>
       </Flex>

@@ -88,8 +88,8 @@ export function CustomersView() {
                   <Avatar className={cn("size-9")}>
                     <AvatarFallback
                       className={cn(
-                        "text-xs font-semibold",
-                        customer.isActive ? "bg-lime font-bold text-lime-foreground" : "bg-muted text-muted-foreground",
+                        "text-xs",
+                        !customer.isActive && "bg-muted text-muted-foreground",
                       )}
                     >
                       {initials(customer.name)}

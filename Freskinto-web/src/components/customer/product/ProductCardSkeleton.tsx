@@ -8,15 +8,15 @@ import { PRODUCT_GRID_CLASS } from "./product-grid";
 /** ProductCard ka same-size placeholder — layout shift nahi */
 export function ProductCardSkeleton() {
   return (
-    <Card className="h-full gap-0 rounded-3xl border-2 py-0 shadow-none">
-      <Box className="p-2">
-        <Skeleton className="aspect-square w-full rounded-2xl" />
+    <Card className="h-full gap-0 py-0">
+      <Box className="p-2 pb-0">
+        <Skeleton className="aspect-square w-full rounded-lg" />
       </Box>
-      <Stack gap="3" className="flex-1 px-3.5 pt-1 pb-3.5 sm:px-4 sm:pb-4">
+      <Stack gap="3" className="flex-1 p-3 sm:p-4">
         <Skeleton className="h-3 w-1/3" />
-        <Skeleton className="h-5 w-4/5" />
-        <Skeleton className="h-7 w-1/4" />
-        <Skeleton className="h-10 w-full rounded-full" />
+        <Skeleton className="h-10 w-4/5" />
+        <Skeleton className="h-5 w-1/4" />
+        <Skeleton className="h-9 w-full" />
       </Stack>
     </Card>
   );

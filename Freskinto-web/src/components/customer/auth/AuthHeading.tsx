@@ -8,14 +8,14 @@ interface AuthHeadingProps {
   subtitle: string;
 }
 
-/** Auth form ke upar kicker + display headline + ek line — page.tsx sirf compose karta hai */
+/** Auth form ke upar kicker + headline + ek line — page.tsx sirf compose karta hai */
 export function AuthHeading({ eyebrow, title, subtitle }: AuthHeadingProps) {
   return (
-    <Stack gap="3">
-      <Text variant="eyebrow" tone="primary">
+    <Stack gap="2">
+      <Text variant="eyebrow" tone="muted">
         {eyebrow}
       </Text>
-      <Heading size="display">{title}</Heading>
+      <Heading size="1">{title}</Heading>
       <Text tone="muted" className="sm:text-base">
         {subtitle}
       </Text>

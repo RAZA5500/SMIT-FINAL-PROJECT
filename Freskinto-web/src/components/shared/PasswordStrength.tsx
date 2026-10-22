@@ -16,8 +16,8 @@ const LEVELS = [
   { label: "Too short", bar: "bg-destructive" },
   { label: "Weak", bar: "bg-destructive" },
   { label: "Fair", bar: "bg-warning" },
-  { label: "Good", bar: "bg-tangerine" },
-  { label: "Strong", bar: "bg-lime" },
+  { label: "Good", bar: "bg-primary" },
+  { label: "Strong", bar: "bg-success" },
 ] as const;
 
 /** Live password feedback — sirf dikhawa, asli validation Zod schema karta hai */
@@ -28,18 +28,18 @@ export function PasswordStrength({ password, className }: { password: string; cl
   const level = LEVELS[password.length < 8 ? 0 : passed];
 
   return (
-    <Stack gap="3" className={cn("rounded-xl border border-border bg-muted/50 p-3.5", className)}>
+    <Stack gap="3" className={cn("rounded-lg border border-border bg-muted/40 p-3", className)}>
       <Flex align="center" gap="3">
         <Flex aria-hidden="true" gap="1.5" className="flex-1">
           {RULES.map((rule, index) => (
             <Box
               as="span"
               key={rule.key}
-              className={cn("h-1.5 flex-1 rounded-full bg-border transition-colors", index < passed && level.bar)}
+              className={cn("h-1 flex-1 rounded-full bg-border transition-colors", index < passed && level.bar)}
             />
           ))}
         </Flex>
-        <Text aria-live="polite" weight="semibold" className="w-16 text-right text-fs-12">
+        <Text aria-live="polite" weight="medium" className="w-16 text-right text-fs-12">
           {level.label}
         </Text>
       </Flex>

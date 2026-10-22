@@ -37,9 +37,9 @@ import { initials } from "@/lib/utils";
 import { useAuthStore } from "@/stores/auth-store";
 
 const ACTIVE_ITEM =
-  "h-10 rounded-xl px-3 data-active:bg-sidebar-primary data-active:font-semibold data-active:text-sidebar-primary-foreground";
+  "h-9 px-2.5 data-active:bg-sidebar-accent data-active:font-medium data-active:text-sidebar-accent-foreground data-active:[&>svg]:text-sidebar-primary";
 
-/** shadcn Sidebar — night aubergine rail, lime active pill, icon-collapse (⌘B) aur phone par sheet */
+/** shadcn Sidebar — light grey rail, indigo active item, icon-collapse (⌘B) aur phone par sheet */
 export function AppSidebar() {
   const pathname = usePathname();
   const user = useAuthStore((state) => state.user);
@@ -59,7 +59,7 @@ export function AppSidebar() {
               render={<Link href={adminRoutes.home} onClick={closeOnMobile} aria-label="Freskinto admin home" />}
               className="hover:bg-transparent group-data-[collapsible=icon]:justify-center"
             >
-              <Logo size="sm" inverse className="group-data-[collapsible=icon]:[&>span:last-child]:hidden" />
+              <Logo size="sm" className="group-data-[collapsible=icon]:[&>span:last-child]:hidden" />
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -69,7 +69,7 @@ export function AppSidebar() {
       <SidebarContent className="py-2">
         {ADMIN_NAV.map((group) => (
           <SidebarGroup key={group.label}>
-            <SidebarGroupLabel className="text-fs-11 font-bold tracking-widest text-sidebar-foreground/55 uppercase">
+            <SidebarGroupLabel className="text-xs text-sidebar-foreground/60">
               {group.label}
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -110,7 +110,7 @@ export function AppSidebar() {
             <SidebarMenuButton
               tooltip="View storefront"
               render={<Link href={publicRoutes.shop} onClick={closeOnMobile} />}
-              className="h-10 rounded-xl px-3 text-sidebar-foreground/75"
+              className="h-9 px-2.5 text-sidebar-foreground/75"
             >
               <ExternalLink aria-hidden="true" />
               <Text as="span" tone="inherit">
@@ -127,12 +127,12 @@ export function AppSidebar() {
                       size="lg"
                       tooltip={user.name}
                       aria-label="Account menu"
-                      className="rounded-xl px-2 data-popup-open:bg-sidebar-accent"
+                      className="px-2 data-popup-open:bg-sidebar-accent"
                     />
                   }
                 >
                   <Avatar size="sm" className="size-8 shrink-0">
-                    <AvatarFallback className="bg-lime font-bold text-lime-foreground">{initials(user.name)}</AvatarFallback>
+                    <AvatarFallback className="text-xs">{initials(user.name)}</AvatarFallback>
                   </Avatar>
                   <Stack as="span" className="min-w-0 flex-1">
                     <Text as="span" tone="inherit" weight="semibold" className="truncate">

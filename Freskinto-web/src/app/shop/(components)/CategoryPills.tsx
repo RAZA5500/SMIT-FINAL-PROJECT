@@ -12,7 +12,7 @@ interface CategoryPillsProps {
 
 /**
  * Sticky aisle pills: upar top-level aisles, neeche (agar aisle chuni ho) uski sub-aisles.
- * Phone par header ke saath chhup-nikalta hai, isliye wahan top-0.
+ * Sticky header ke theek neeche chipakte hain; desktop par sidebar ki aisle list kaafi hai.
  */
 export function CategoryPills({ aisles, selected, onSelect }: CategoryPillsProps) {
   const current = findCategory(aisles, selected);
@@ -23,7 +23,7 @@ export function CategoryPills({ aisles, selected, onSelect }: CategoryPillsProps
     <Stack
       id="aisles"
       gap="1"
-      className="sticky top-0 z-30 -mx-4 border-b border-border/60 bg-background/85 px-4 py-2 backdrop-blur-md sm:-mx-6 sm:px-6 lg:top-header lg:-mx-8 lg:px-8"
+      className="glass sticky top-header z-30 -mx-4 border-b px-4 py-2 sm:-mx-6 sm:px-6 lg:hidden"
     >
       <ChipGroup<string | null>
         aria-label="Aisles"

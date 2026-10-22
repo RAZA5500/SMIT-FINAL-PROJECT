@@ -23,7 +23,7 @@ import { Price } from "@/components/shared/Price";
 import { ProductImage } from "@/components/shared/ProductImage";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useTheme } from "@/hooks/useTheme";
-import { categoryTheme, TONE_CLASSES } from "@/lib/merchandising";
+import { categoryTheme, TILE_CLASSES } from "@/lib/merchandising";
 import { customerRoutes, publicRoutes, shopUrl } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
 import { useGetProducts } from "@/services/products/queries";
@@ -143,9 +143,9 @@ function SearchPaletteBody({ onClose }: { onClose: () => void }) {
                   key={term}
                   value={`popular:${term}`}
                   onSelect={() => setValue(term)}
-                  className="w-auto rounded-full! border border-border px-3! py-1.5! data-[selected=true]:border-primary"
+                  className="w-auto rounded-md! border border-border px-2.5! py-1! data-[selected=true]:border-input"
                 >
-                  <TrendingUp aria-hidden="true" className="text-tangerine" />
+                  <TrendingUp aria-hidden="true" className="text-muted-foreground" />
                   {term}
                 </CommandItem>
               ))}
@@ -156,8 +156,7 @@ function SearchPaletteBody({ onClose }: { onClose: () => void }) {
         {matchingAisles.length > 0 && (
           <CommandGroup heading="Aisles">
             {matchingAisles.map((aisle) => {
-              const visual = categoryTheme(aisle.name);
-              const Icon = visual.icon;
+              const Icon = categoryTheme(aisle.name).icon;
               return (
                 <CommandItem
                   key={aisle.id}
@@ -169,7 +168,7 @@ function SearchPaletteBody({ onClose }: { onClose: () => void }) {
                     align="center"
                     justify="center"
                     aria-hidden="true"
-                    className={cn("size-8 rounded-lg", TONE_CLASSES[visual.tone].chip)}
+                    className={cn("size-7 rounded-md", TILE_CLASSES.chip)}
                   >
                     <Icon />
                   </Flex>

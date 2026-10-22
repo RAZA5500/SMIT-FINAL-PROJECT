@@ -81,7 +81,7 @@ function AddToBasket({ product }: { product: IProduct }) {
           onIncrease={() => setQuantity((q) => Math.min(product.maximumOrderQuantity, q + 1))}
           className="w-full sm:w-40"
         />
-        <LoadingButton variant="cta" size="xl" className="flex-1" isLoading={addItem.isPending} loadingText="Adding…" onClick={add}>
+        <LoadingButton size="lg" className="h-11 flex-1" isLoading={addItem.isPending} loadingText="Adding…" onClick={add}>
           <ShoppingBasket aria-hidden="true" />
           Add to basket
         </LoadingButton>
@@ -98,8 +98,8 @@ function InBasket({ item }: { item: ICartItem }) {
   const { quantity, atMinimum, canIncrease, increase, decrease, isRemoving } = useCartItemQuantity(item);
 
   return (
-    <Stack gap="3" className="animate-pop rounded-3xl border-2 border-primary/30 bg-plum-soft p-4">
-      <Text weight="semibold" className="text-accent-foreground">
+    <Stack gap="3" className="animate-fade-up rounded-lg border bg-muted/40 p-4">
+      <Text weight="medium">
         In your basket ·{" "}
         <Text as="span" tone="inherit" numeric>
           {formatMoney(item.lineTotal)}
@@ -119,7 +119,7 @@ function InBasket({ item }: { item: ICartItem }) {
           onIncrease={increase}
           className="w-full sm:w-44"
         />
-        <Button size="xl" variant="outline" className="flex-1 rounded-full border-2" onClick={() => setCartOpen(true)}>
+        <Button size="lg" variant="outline" className="h-11 flex-1" onClick={() => setCartOpen(true)}>
           View basket
         </Button>
       </Flex>

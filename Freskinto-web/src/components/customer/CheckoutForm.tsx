@@ -46,7 +46,7 @@ const TAB_META: Record<CheckoutTab, { label: string; icon: LucideIcon }> = {
 const DELIVERY_OPTIONS = [
   { value: "DELIVERY" as const, title: "Home delivery", description: "Delivered to your door", icon: <Truck aria-hidden="true" /> },
   { value: "PICKUP" as const, title: "Click & collect", description: "Pick a time that suits you", icon: <Store aria-hidden="true" /> },
-].map((option) => ({ ...option, aside: <Badge variant="lime">Free</Badge> }));
+].map((option) => ({ ...option, aside: <Badge variant="brand">Free</Badge> }));
 
 /** Form values → API payload: sirf delivery type ke mutabiq fields (FLOW-MD 08 §10) */
 function toOrderPayload(values: CheckoutFormValues): ICreateOrderPayload {
@@ -64,10 +64,10 @@ function Panel({ hidden, title, children }: { hidden: boolean; title: string; ch
     <Card
       render={<Box as="section" aria-label={title} hidden={hidden} />}
       size="lg"
-      className="animate-fade-up rounded-3xl border-2"
+      className="animate-fade-up rounded-xl border"
     >
       <CardHeader>
-        <CardTitle render={<Heading as="h2" size="3" />} className="text-2xl font-bold">
+        <CardTitle render={<Heading as="h2" size="3" />} className="text-2xl font-semibold">
           {title}
         </CardTitle>
       </CardHeader>
@@ -168,8 +168,8 @@ export function CheckoutForm({ addresses, blocked = false }: CheckoutFormProps) 
                   onClick={() => void wizard.goTo(key)}
                   aria-current={active ? "step" : undefined}
                   className={cn(
-                    "h-auto w-full justify-start gap-2.5 rounded-2xl border-2 p-3 text-left",
-                    active && "border-primary bg-plum-soft hover:bg-plum-soft",
+                    "h-auto w-full justify-start gap-2.5 rounded-xl border p-3 text-left",
+                    active && "border-primary bg-accent hover:bg-accent",
                   )}
                 >
                   <Flex
@@ -179,7 +179,7 @@ export function CheckoutForm({ addresses, blocked = false }: CheckoutFormProps) 
                     className={cn(
                       "size-9 shrink-0 rounded-full [&_svg]:size-4",
                       active
-                        ? "border-2 border-pop bg-tangerine text-tangerine-foreground"
+                        ? "border border-primary bg-background text-primary"
                         : done
                           ? "bg-primary text-primary-foreground"
                           : "bg-muted text-muted-foreground",
@@ -191,11 +191,11 @@ export function CheckoutForm({ addresses, blocked = false }: CheckoutFormProps) 
                     <Text as="span" variant="eyebrow" tone="muted">
                       Step {index + 1}
                     </Text>
-                    <Text as="span" weight="bold">
+                    <Text as="span" weight="semibold">
                       {label}
                     </Text>
                   </Stack>
-                  <Text as="span" weight="bold" className="sm:hidden">
+                  <Text as="span" weight="semibold" className="sm:hidden">
                     {label}
                   </Text>
                 </Button>
@@ -269,18 +269,18 @@ export function CheckoutForm({ addresses, blocked = false }: CheckoutFormProps) 
         {wizard.isFirst ? (
           <Box />
         ) : (
-          <Button type="button" variant="outline" size="lg" className="rounded-full" onClick={() => void wizard.previous()}>
+          <Button type="button" variant="outline" size="lg" onClick={() => void wizard.previous()}>
             <ArrowLeft aria-hidden="true" />
             Back
           </Button>
         )}
         {wizard.isLast ? (
-          <LoadingButton type="submit" variant="cta" size="xl" isLoading={isSubmitting} disabled={blocked}>
+          <LoadingButton type="submit" size="xl" isLoading={isSubmitting} disabled={blocked}>
             Continue to payment
             <ArrowRight aria-hidden="true" />
           </LoadingButton>
         ) : (
-          <Button type="button" variant="cta" size="xl" onClick={() => void wizard.next()}>
+          <Button type="button" size="xl" onClick={() => void wizard.next()}>
             Continue
             <ArrowRight aria-hidden="true" />
           </Button>

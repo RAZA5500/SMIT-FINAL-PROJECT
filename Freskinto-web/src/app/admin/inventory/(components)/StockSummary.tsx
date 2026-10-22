@@ -7,7 +7,7 @@ import type { StockStatus } from "@/constants/enums";
 import { useGetInventory } from "@/services/inventory/queries";
 
 const TILES: { status: StockStatus | null; label: string; hint: string; icon: LucideIcon; tone: string }[] = [
-  { status: null, label: "Tracked products", hint: "All inventory rows", icon: Boxes, tone: "bg-plum-soft text-primary" },
+  { status: null, label: "Tracked products", hint: "All inventory rows", icon: Boxes, tone: "bg-muted text-muted-foreground" },
   { status: "LOW_STOCK", label: "Low stock", hint: "At or below threshold", icon: TriangleAlert, tone: "bg-warning-soft text-warning-ink" },
   { status: "OUT_OF_STOCK", label: "Out of stock", hint: "Can't be ordered", icon: PackageX, tone: "bg-destructive-soft text-destructive" },
 ];

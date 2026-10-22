@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import { Box } from "@/components/ui/box";
 
 /** "01", "02" … — top-level categories ka order hi aisle number hai (sirf dikhawa) */
 export function aisleNumber(index: number): string {
@@ -14,11 +13,10 @@ interface AisleTagProps {
   className?: string;
 }
 
-/** Hanging-sign label: "● AISLE 03 · DAIRY" */
+/** Small aisle label: "Aisle 03 · Dairy" */
 export function AisleTag({ index, label, className }: AisleTagProps) {
   return (
-    <Badge variant="brand" className={className}>
-      <Box as="span" aria-hidden="true" className="size-1.5 rounded-full bg-tangerine" />
+    <Badge variant="secondary" className={className}>
       {index === undefined ? "Aisle" : `Aisle ${aisleNumber(index)}`}
       {label && ` · ${label}`}
     </Badge>

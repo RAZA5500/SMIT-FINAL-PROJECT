@@ -46,10 +46,10 @@ export function AddressFormDialog({ open, onOpenChange, address }: AddressFormDi
       description="Saved addresses appear at checkout for one-tap delivery."
       footer={
         <>
-          <Button variant="outline" className="rounded-full" onClick={() => onOpenChange(false)} disabled={isPending}>
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isPending}>
             Cancel
           </Button>
-          <LoadingButton type="submit" form={FORM_ID} variant="cta" isLoading={isPending}>
+          <LoadingButton type="submit" form={FORM_ID} isLoading={isPending}>
             {address ? "Save changes" : "Save address"}
           </LoadingButton>
         </>

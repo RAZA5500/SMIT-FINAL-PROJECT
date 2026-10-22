@@ -28,7 +28,7 @@ export default function RootError({
         onRetry={unstable_retry}
         className="max-w-xl"
       />
-      <ButtonLink href={publicRoutes.shop} variant="outline" className="rounded-full">
+      <ButtonLink href={publicRoutes.shop} variant="outline">
         Back to the shop
       </ButtonLink>
     </Stack>

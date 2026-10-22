@@ -28,10 +28,10 @@ export function CheckoutSteps({ current }: { current: 0 | 1 | 2 }) {
                 align="center"
                 justify="center"
                 className={cn(
-                  "size-8 shrink-0 rounded-full text-fs-12 font-bold transition-colors",
+                  "size-7 shrink-0 rounded-full text-fs-12 font-medium transition-colors",
                   done && "bg-primary text-primary-foreground",
-                  active && "border-2 border-pop bg-tangerine text-tangerine-foreground shadow-pop-sm",
-                  !done && !active && "border border-input bg-card text-muted-foreground",
+                  active && "border border-primary bg-background text-primary",
+                  !done && !active && "border border-border bg-background text-muted-foreground",
                 )}
               >
                 {done ? <Check aria-hidden="true" className="size-4" /> : index + 1}

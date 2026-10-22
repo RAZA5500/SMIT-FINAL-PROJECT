@@ -38,7 +38,7 @@ export function OrdersView() {
     content = (
       <Stack aria-label="Loading" aria-busy="true" gap="4">
         {Array.from({ length: 3 }, (_, i) => (
-          <Skeleton key={i} className="h-44 w-full rounded-3xl" />
+          <Skeleton key={i} className="h-44 w-full rounded-xl" />
         ))}
       </Stack>
     );
@@ -56,7 +56,7 @@ export function OrdersView() {
         title="No orders yet"
         message="When you place an order, you can track it here from basket to doorstep."
         action={
-          <ButtonLink href={shopUrl()} variant="cta" size="lg">
+          <ButtonLink href={shopUrl()} size="lg">
             Start shopping
           </ButtonLink>
         }

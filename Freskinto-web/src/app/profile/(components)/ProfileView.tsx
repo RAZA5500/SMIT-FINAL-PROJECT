@@ -47,35 +47,29 @@ export function ProfileView() {
       <Grid align="start" gap="6" className="lg:grid-cols-12">
         <Card
           render={<Box as="section" aria-label="Account summary" />}
-          className="items-center gap-5 overflow-hidden rounded-3xl border-2 pt-0 text-center shadow-none lg:col-span-5"
+          className="items-center gap-5 pt-8 text-center lg:col-span-5"
         >
-          <Box className="relative h-28 w-full overflow-hidden bg-night">
-            <Box aria-hidden="true" className="texture-dots absolute inset-0 text-night-foreground/10" />
-            <Box aria-hidden="true" className="absolute -top-10 -right-6 size-40 rounded-full bg-primary/50 blur-2xl" />
-          </Box>
-          <Avatar size="xl" className="-mt-20 size-28 border-4 border-card">
-            <AvatarFallback className="bg-lime font-heading text-4xl font-extrabold text-lime-foreground">
-              {initials(user?.name)}
-            </AvatarFallback>
+          <Avatar size="xl" className="size-20">
+            <AvatarFallback className="text-2xl">{initials(user?.name)}</AvatarFallback>
           </Avatar>
           <CardContent className="flex w-full flex-col items-center gap-5">
             <Stack align="center" gap="1">
-              <Heading as="h2" size="2">
+              <Heading as="h2" size="3">
                 {user?.name ?? "Customer"}
               </Heading>
               <Text tone="muted">{user?.email ?? "—"}</Text>
             </Stack>
             <Flex wrap align="center" justify="center" gap="2">
-              <Badge variant="brand">Customer</Badge>
+              <Badge variant="secondary">Customer</Badge>
               {user && <StatusBadge status={user.isActive ? "ACTIVE" : "INACTIVE"} />}
             </Flex>
 
-            <Grid as="dl" cols="2" className="w-full divide-x-2 divide-border rounded-2xl border-2 border-border bg-muted/40">
+            <Grid as="dl" cols="2" className="w-full divide-x divide-border rounded-lg border border-border">
               <Stack gap="0.5" className="px-4 py-3">
                 <Text as="dt" tone="muted" className="text-fs-12">
                   Orders
                 </Text>
-                <Text as="dd" family="heading" weight="extrabold" numeric className="text-3xl">
+                <Text as="dd" weight="semibold" numeric className="text-xl">
                   {user?.totalOrders ?? 0}
                 </Text>
               </Stack>
@@ -83,13 +77,13 @@ export function ProfileView() {
                 <Text as="dt" tone="muted" className="text-fs-12">
                   Total spent
                 </Text>
-                <Text as="dd" family="heading" weight="extrabold" numeric className="text-3xl">
+                <Text as="dd" weight="semibold" numeric className="text-xl">
                   {formatMoney(user?.totalSpent ?? 0)}
                 </Text>
               </Stack>
             </Grid>
 
-            <Button variant="destructive-outline" className="w-full rounded-full" onClick={logout}>
+            <Button variant="destructive-outline" className="w-full" onClick={logout}>
               <LogOut aria-hidden="true" />
               Sign out
             </Button>
@@ -144,17 +138,17 @@ export function ProfileView() {
                   <ButtonLink
                     href={href}
                     variant="outline"
-                    className="group/short h-auto w-full flex-col items-start gap-2 rounded-2xl border-2 p-4 text-left whitespace-normal hover:border-primary hover:bg-plum-soft"
+                    className="h-auto w-full flex-col items-start gap-2 p-4 text-left whitespace-normal hover:bg-muted/50"
                   >
                     <Flex
                       as="span"
                       align="center"
                       justify="center"
-                      className="size-10 rounded-xl bg-plum-soft text-primary transition-transform group-hover/short:-rotate-6 group-hover/short:bg-lime group-hover/short:text-lime-foreground"
+                      className="size-8 rounded-md bg-muted text-muted-foreground"
                     >
                       <Icon aria-hidden="true" className="size-4" />
                     </Flex>
-                    <Text as="span" weight="bold">
+                    <Text as="span" weight="medium">
                       {title}
                     </Text>
                     <Text as="span" tone="muted" weight="normal" className="text-fs-12">

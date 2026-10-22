@@ -52,7 +52,7 @@ export function OrderDetailView({ id }: { id: string }) {
   const [payOpen, setPayOpen] = useState(false);
 
   const backLink = (
-    <ButtonLink href={customerRoutes.orders} variant="outline" className="rounded-full border-2">
+    <ButtonLink href={customerRoutes.orders} variant="outline" className="border">
       <ArrowLeft aria-hidden="true" />
       All orders
     </ButtonLink>
@@ -62,8 +62,8 @@ export function OrderDetailView({ id }: { id: string }) {
     return (
       <CustomerPage title="Order details" breadcrumbs={[BREADCRUMB_ORDERS, { label: "Order" }]}>
         <Grid aria-label="Loading" aria-busy="true" align="start" gap="6" className="lg:grid-cols-12">
-          <Skeleton className="h-80 w-full rounded-3xl lg:col-span-8" />
-          <Skeleton className="h-80 w-full rounded-3xl lg:col-span-4" />
+          <Skeleton className="h-80 w-full rounded-xl lg:col-span-8" />
+          <Skeleton className="h-80 w-full rounded-xl lg:col-span-4" />
         </Grid>
       </CustomerPage>
     );
@@ -103,7 +103,7 @@ export function OrderDetailView({ id }: { id: string }) {
       breadcrumbs={[BREADCRUMB_ORDERS, { label: order.orderNumber }]}
       actions={
         canCancel && (
-          <Button variant="destructive-outline" className="rounded-full" onClick={() => setCancelOpen(true)}>
+          <Button variant="destructive-outline" onClick={() => setCancelOpen(true)}>
             <XCircle aria-hidden="true" />
             Cancel order
           </Button>

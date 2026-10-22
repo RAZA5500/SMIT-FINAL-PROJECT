@@ -3,9 +3,9 @@ import { cn, formatMoney } from "@/lib/utils";
 
 const PRICE_SIZES = {
   sm: "text-sm",
-  md: "text-lg",
-  lg: "text-2xl",
-  xl: "text-4xl",
+  md: "text-base",
+  lg: "text-xl",
+  xl: "text-3xl",
 } as const;
 
 interface PriceProps {
@@ -16,13 +16,12 @@ interface PriceProps {
   className?: string;
 }
 
-/** Inline price — chunky display figures, tabular so updating totals don't jiggle */
+/** Inline price — semibold, tabular so updating totals don't jiggle */
 export function Price({ amount, size = "md", tone = "default", className }: PriceProps) {
   return (
     <Text
       as="span"
-      family="heading"
-      weight="extrabold"
+      weight="semibold"
       numeric
       tone={tone === "brand" ? "primary" : "default"}
       className={cn("leading-none tracking-tight", PRICE_SIZES[size], className)}

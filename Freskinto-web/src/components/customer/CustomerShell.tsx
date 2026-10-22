@@ -14,7 +14,7 @@ interface CustomerShellProps {
   variant?: "default" | "checkout";
 }
 
-/** Storefront chrome: ticker + floating header → content → night footer, slide-over basket aur phone tab bar */
+/** Storefront chrome: sticky header → content → light footer, slide-over basket aur phone tab bar */
 export function CustomerShell({ children, requireAuth = false, variant = "default" }: CustomerShellProps) {
   const checkout = variant === "checkout";
 

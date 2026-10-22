@@ -33,10 +33,10 @@ export function CheckoutView() {
     content = (
       <Grid aria-label="Loading" aria-busy="true" align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
         <Stack gap="5" className="lg:col-span-7">
-          <Skeleton className="h-20 w-full rounded-2xl" />
-          <Skeleton className="h-80 w-full rounded-3xl" />
+          <Skeleton className="h-20 w-full rounded-xl" />
+          <Skeleton className="h-80 w-full rounded-xl" />
         </Stack>
-        <Skeleton className="h-96 w-full rounded-3xl lg:col-span-5" />
+        <Skeleton className="h-96 w-full rounded-xl lg:col-span-5" />
       </Grid>
     );
   } else if (failed) {
@@ -50,7 +50,7 @@ export function CheckoutView() {
         title="Your basket is empty"
         message="Add a few products to your basket before checking out."
         action={
-          <ButtonLink href={shopUrl()} variant="cta" size="lg">
+          <ButtonLink href={shopUrl()} size="lg">
             Browse products
           </ButtonLink>
         }

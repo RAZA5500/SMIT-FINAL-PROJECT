@@ -26,13 +26,13 @@ export function ShopFilters({ shop }: { shop: ShopParamsApi }) {
   return (
     <Accordion multiple defaultValue={SECTIONS}>
       <AccordionItem value="aisles">
-        <AccordionTrigger className="py-4 text-fs-11 font-bold tracking-widest uppercase hover:no-underline">Aisles</AccordionTrigger>
+        <AccordionTrigger className="py-3.5 text-sm font-medium hover:no-underline">Aisles</AccordionTrigger>
         <AccordionContent className="pb-4">
           <AisleFilter selected={shop.category} onSelect={(category) => shop.update({ category })} />
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="price">
-        <AccordionTrigger className="py-4 text-fs-11 font-bold tracking-widest uppercase hover:no-underline">Price</AccordionTrigger>
+        <AccordionTrigger className="py-3.5 text-sm font-medium hover:no-underline">Price</AccordionTrigger>
         <AccordionContent className="pb-4">
           {/* key — URL ya ceiling badle to slider naye sire se */}
           <PriceFilter
@@ -45,7 +45,7 @@ export function ShopFilters({ shop }: { shop: ShopParamsApi }) {
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="availability">
-        <AccordionTrigger className="py-4 text-fs-11 font-bold tracking-widest uppercase hover:no-underline">
+        <AccordionTrigger className="py-3.5 text-sm font-medium hover:no-underline">
           Availability
         </AccordionTrigger>
         <AccordionContent className="pb-4">

@@ -54,12 +54,12 @@ function RecentOrders() {
   const orders = data?.data ?? [];
 
   return (
-    <Card className="gap-3 rounded-3xl">
+    <Card className="gap-3">
       <CardHeader>
-        <CardTitle className="text-lg font-bold">Latest orders</CardTitle>
+        <CardTitle>Latest orders</CardTitle>
         <CardDescription>The newest {RECENT_LIMIT} — open one to move it along.</CardDescription>
         <CardAction>
-          <ButtonLink href={adminRoutes.orders} variant="ghost" size="sm" className="rounded-full text-primary">
+          <ButtonLink href={adminRoutes.orders} variant="ghost" size="sm">
             All orders
             <ArrowRight aria-hidden="true" />
           </ButtonLink>
@@ -69,7 +69,7 @@ function RecentOrders() {
         {isLoading ? (
           <Stack gap="2">
             {Array.from({ length: 4 }, (_, i) => (
-              <Skeleton key={i} className="h-14 w-full rounded-2xl" />
+              <Skeleton key={i} className="h-14 w-full rounded-lg" />
             ))}
           </Stack>
         ) : orders.length === 0 ? (
@@ -81,11 +81,11 @@ function RecentOrders() {
                 key={order.id}
                 role="listitem"
                 render={<Link href={adminRoutes.orderDetail(order.id)} />}
-                className="rounded-2xl px-2.5"
+                className="rounded-lg px-2.5"
               >
                 <ItemMedia>
                   <Avatar className="size-9">
-                    <AvatarFallback className="bg-plum-soft text-xs font-semibold text-primary">
+                    <AvatarFallback className="text-xs">
                       {initials(order.customer.name)}
                     </AvatarFallback>
                   </Avatar>
@@ -97,7 +97,7 @@ function RecentOrders() {
                   </ItemDescription>
                 </ItemContent>
                 <ItemActions className="flex-col items-end gap-1">
-                  <Text as="span" weight="bold" numeric>
+                  <Text as="span" weight="semibold" numeric>
                     {formatMoney(order.total)}
                   </Text>
                   <StatusBadge status={order.status} className="h-5 text-fs-11" />
@@ -118,12 +118,12 @@ function StockAlerts() {
   const isLoading = low.isLoading || out.isLoading;
 
   return (
-    <Card className="gap-3 rounded-3xl">
+    <Card className="gap-3">
       <CardHeader>
-        <CardTitle className="text-lg font-bold">Stock alerts</CardTitle>
+        <CardTitle>Stock alerts</CardTitle>
         <CardDescription>Sold out first, then running low.</CardDescription>
         <CardAction>
-          <ButtonLink href={adminRoutes.inventory} variant="ghost" size="sm" className="rounded-full text-primary">
+          <ButtonLink href={adminRoutes.inventory} variant="ghost" size="sm">
             Inventory
             <ArrowRight aria-hidden="true" />
           </ButtonLink>
@@ -133,7 +133,7 @@ function StockAlerts() {
         {isLoading ? (
           <Stack gap="2">
             {Array.from({ length: 4 }, (_, i) => (
-              <Skeleton key={i} className="h-14 w-full rounded-2xl" />
+              <Skeleton key={i} className="h-14 w-full rounded-lg" />
             ))}
           </Stack>
         ) : rows.length === 0 ? (
@@ -144,8 +144,8 @@ function StockAlerts() {
               const scale = Math.max(1, inventory.lowStockThreshold * 3);
               const value = Math.min(100, Math.round((inventory.qtyOnHand / scale) * 100));
               return (
-                <Item key={inventory.id} role="listitem" className="rounded-2xl px-2.5">
-                  <ItemMedia className="overflow-hidden rounded-xl">
+                <Item key={inventory.id} role="listitem" className="rounded-lg px-2.5">
+                  <ItemMedia className="overflow-hidden rounded-md">
                     <ProductImage name={inventory.product.name} sizes="40px" className="size-10" imageClassName="p-1" />
                   </ItemMedia>
                   <ItemContent className="min-w-0 gap-1.5">
@@ -162,7 +162,7 @@ function StockAlerts() {
                     />
                   </ItemContent>
                   <ItemActions className="flex-col items-end gap-1">
-                    <Text as="span" weight="bold" numeric>
+                    <Text as="span" weight="semibold" numeric>
                       {inventory.qtyOnHand} left
                     </Text>
                     <StatusBadge status={inventory.stockStatus} className="h-5 text-fs-11" />
@@ -195,11 +195,11 @@ export function AdminOverviewView() {
       description="Here's how the market is doing right now."
       actions={
         <>
-          <ButtonLink href={adminRoutes.categories} variant="outline" className="rounded-full">
+          <ButtonLink href={adminRoutes.categories} variant="outline">
             <FolderTree aria-hidden="true" />
             Categories
           </ButtonLink>
-          <ButtonLink href={adminRoutes.productNew} className="rounded-full">
+          <ButtonLink href={adminRoutes.productNew}>
             <PackagePlus aria-hidden="true" />
             New product
           </ButtonLink>
@@ -207,16 +207,16 @@ export function AdminOverviewView() {
       }
     >
       <Grid gap="4" className="sm:grid-cols-2 xl:grid-cols-4">
-        <Link href={adminRoutes.orders} className="rounded-3xl outline-none focus-visible:ring-3 focus-visible:ring-ring/40">
-          <StatTile label="All orders" value={countsLoading ? undefined : totalOrders} hint={`${toPrepare ?? 0} waiting to be prepared`} icon={ReceiptText} tone="bg-lime text-lime-foreground" isLoading={countsLoading} />
+        <Link href={adminRoutes.orders} className="rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/40">
+          <StatTile label="All orders" value={countsLoading ? undefined : totalOrders} hint={`${toPrepare ?? 0} waiting to be prepared`} icon={ReceiptText} isLoading={countsLoading} />
         </Link>
-        <Link href={adminRoutes.orders} className="rounded-3xl outline-none focus-visible:ring-3 focus-visible:ring-ring/40">
+        <Link href={adminRoutes.orders} className="rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/40">
           <StatTile label="Awaiting payment" value={awaiting} hint="Released if not paid in time" icon={Clock} tone="bg-warning-soft text-warning-ink" isLoading={countsLoading} />
         </Link>
-        <Link href={adminRoutes.customers} className="rounded-3xl outline-none focus-visible:ring-3 focus-visible:ring-ring/40">
-          <StatTile label="Customers" value={customers.data?.meta.total} hint="Accounts in the store" icon={Users} tone="bg-plum-soft text-primary" isLoading={customers.isLoading} />
+        <Link href={adminRoutes.customers} className="rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/40">
+          <StatTile label="Customers" value={customers.data?.meta.total} hint="Accounts in the store" icon={Users} isLoading={customers.isLoading} />
         </Link>
-        <Link href={adminRoutes.inventory} className="rounded-3xl outline-none focus-visible:ring-3 focus-visible:ring-ring/40">
+        <Link href={adminRoutes.inventory} className="rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/40">
           <StatTile
             label="Stock alerts"
             value={lowStock.isLoading || outOfStock.isLoading ? undefined : (lowStock.data?.meta.total ?? 0) + (outOfStock.data?.meta.total ?? 0)}

@@ -21,14 +21,14 @@ export function SectionCard({ title, description, icon, action, children, classN
     <Card render={<Box as="section" />} className={cn("gap-0 py-0", className)}>
       <CardHeader className="border-b border-border py-4">
         <CardTitle render={<Box as="span" />}>
-          <Flex as="span" align="center" gap="2" className="font-heading text-lg font-bold">
+          <Flex as="span" align="center" gap="2" className="text-base font-semibold">
             {icon && (
               <Flex
                 as="span"
                 align="center"
                 justify="center"
                 aria-hidden="true"
-                className="size-7 rounded-lg bg-plum-soft text-primary [&_svg]:size-4"
+                className="size-7 rounded-md bg-muted text-muted-foreground [&_svg]:size-4"
               >
                 {icon}
               </Flex>

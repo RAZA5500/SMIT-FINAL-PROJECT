@@ -26,18 +26,17 @@ describe("ShopHeader", () => {
         shop={shop}
         category={undefined}
         parent={undefined}
-        aisleIndex={undefined}
         totalCount={34}
       />,
     );
 
-    expect(screen.getByRole("heading", { name: "Market Catalogue" })).toBeInTheDocument();
-    expect(screen.getByText("Showing 34 fresh items")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "All products" })).toBeInTheDocument();
+    expect(screen.getByText("34 products")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "All" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Under £5" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Under £10" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /In Stock Only/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Price: Low to High/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /In stock only/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Price: low to high/i })).toBeInTheDocument();
   });
 
   it("triggers shop.update when quick filters are clicked", async () => {
@@ -50,7 +49,6 @@ describe("ShopHeader", () => {
         shop={shop}
         category={undefined}
         parent={undefined}
-        aisleIndex={undefined}
         totalCount={34}
       />,
     );
@@ -64,11 +62,11 @@ describe("ShopHeader", () => {
     expect(update).toHaveBeenCalledWith({ min: null, max: 10 });
 
     // Click "In Stock Only"
-    await user.click(screen.getByRole("button", { name: /In Stock Only/i }));
+    await user.click(screen.getByRole("button", { name: /In stock only/i }));
     expect(update).toHaveBeenCalledWith({ inStock: true });
 
     // Click "Price: Low to High"
-    await user.click(screen.getByRole("button", { name: /Price: Low to High/i }));
+    await user.click(screen.getByRole("button", { name: /Price: low to high/i }));
     expect(update).toHaveBeenCalledWith({ sort: "price_asc" });
   });
 
@@ -81,7 +79,6 @@ describe("ShopHeader", () => {
         shop={shop}
         category={mockCat}
         parent={undefined}
-        aisleIndex={1}
         totalCount={12}
       />,
     );

@@ -43,7 +43,7 @@ export function CartLine({ item, compact = false, onNavigate, className }: CartL
         tabIndex={-1}
         aria-hidden="true"
         render={<Link href={publicRoutes.product(item.productId)} onClick={onNavigate} />}
-        className="h-auto shrink-0 self-start overflow-hidden rounded-2xl border border-border p-0 hover:bg-transparent"
+        className="h-auto shrink-0 self-start overflow-hidden rounded-xl border border-border p-0 hover:bg-transparent"
       >
         <ProductImage
           name={item.name}
@@ -92,7 +92,7 @@ export function CartLine({ item, compact = false, onNavigate, className }: CartL
             <Button
               variant="ghost"
               size="sm"
-              className="rounded-full text-muted-foreground hover:bg-destructive-soft hover:text-destructive"
+              className="text-muted-foreground hover:bg-destructive-soft hover:text-destructive"
               disabled={isRemoving}
               onClick={() => setConfirmOpen(true)}
             >

@@ -27,20 +27,20 @@ export function ProductPreview({ name, categoryName, price, minimumOrderQuantity
   const minQty = Number(minimumOrderQuantity);
 
   return (
-    <Card className="rounded-3xl">
+    <Card className="rounded-xl">
       <CardHeader>
         <CardTitle className={cn("font-sans text-base")}>Shop preview</CardTitle>
         <CardDescription>How customers will see it on the shelf.</CardDescription>
         <CardAction>
-          <Badge variant="lime">
+          <Badge variant="brand">
             <Sparkles aria-hidden="true" />
             Live
           </Badge>
         </CardAction>
       </CardHeader>
       <CardContent className={cn("flex flex-col gap-3")}>
-        <Card aria-hidden="true" className="mx-auto w-full max-w-60 gap-0 rounded-3xl border-2 py-0 shadow-none">
-          <ProductImage name={displayName} categoryName={categoryName} sizes="240px" className="m-2 rounded-2xl" />
+        <Card aria-hidden="true" className="mx-auto w-full max-w-60 gap-0 rounded-xl border py-0 shadow-none">
+          <ProductImage name={displayName} categoryName={categoryName} sizes="240px" className="m-2 rounded-xl" />
           <Stack gap="3" className="p-3.5 pt-1.5">
             <Stack gap="1">
               <Text as="span" variant="eyebrow" tone="muted" className="truncate">
@@ -60,7 +60,7 @@ export function ProductPreview({ name, categoryName, price, minimumOrderQuantity
               variant="outline"
               size="sm"
               tabIndex={-1}
-              className={cn("pointer-events-none w-full rounded-full border-2 border-foreground/80 font-bold")}
+              className={cn("pointer-events-none w-full border border-foreground/80 font-semibold")}
             >
               <Plus data-icon="inline-start" aria-hidden="true" />
               Add to basket

@@ -56,7 +56,7 @@ export function AddressSelector({ addresses, mode, onModeChange, control, regist
                   icon: address.isDefault ? <Home aria-hidden="true" /> : <MapPin aria-hidden="true" />,
                   title: address.addressLine,
                   description: `${address.city}, ${address.county} · ${address.postcode}`,
-                  aside: address.isDefault && <Badge variant="tag">Default</Badge>,
+                  aside: address.isDefault && <Badge variant="secondary">Default</Badge>,
                 })),
                 {
                   value: NEW_ADDRESS,
@@ -72,7 +72,7 @@ export function AddressSelector({ addresses, mode, onModeChange, control, regist
       {mode === "saved" && <FieldMessage id="addressId" error={errors.addressId?.message} />}
 
       {mode === "new" && (
-        <Grid gap="4" className="animate-fade-up rounded-2xl border-2 border-dashed border-input bg-muted/50 p-4 sm:grid-cols-2 sm:p-5">
+        <Grid gap="4" className="animate-fade-up rounded-lg border bg-muted/30 p-4 sm:grid-cols-2 sm:p-5">
           <InputField
             id="shippingAddress.addressLine"
             label="Address"

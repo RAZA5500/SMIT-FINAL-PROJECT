@@ -58,7 +58,7 @@ const COLUMNS: AdminColumn<IOrderSummary>[] = [
     cell: (order) => (
       <Flex align="center" gap="2.5">
         <Avatar size="sm" className="size-8">
-          <AvatarFallback className="bg-plum-soft font-semibold text-primary">{initials(order.customer.name)}</AvatarFallback>
+          <AvatarFallback className="text-xs">{initials(order.customer.name)}</AvatarFallback>
         </Avatar>
         <Stack gap="0.5" className="min-w-0">
           <Text weight="medium" className="truncate">
@@ -106,7 +106,7 @@ const COLUMNS: AdminColumn<IOrderSummary>[] = [
         variant="ghost"
         size="sm"
         aria-label={`View order ${order.orderNumber}`}
-        className="rounded-full text-primary"
+        className="text-primary"
       >
         View
         <ArrowRight aria-hidden="true" />
@@ -118,8 +118,8 @@ const COLUMNS: AdminColumn<IOrderSummary>[] = [
 /** Kaam ki queue — har tile ka count `meta.total` (limit 1) se; click = status filter */
 const QUEUE: { status: OrderStatus; label: string; hint: string; icon: LucideIcon; tone: string }[] = [
   { status: "PENDING", label: "Awaiting payment", hint: "Released if unpaid", icon: Clock, tone: "bg-warning-soft text-warning-ink" },
-  { status: "CONFIRMED", label: "To prepare", hint: "Paid & confirmed", icon: CircleCheck, tone: "bg-lime text-lime-foreground" },
-  { status: "PROCESSING", label: "Being packed", hint: "Picking in progress", icon: PackageCheck, tone: "bg-plum-soft text-primary" },
+  { status: "CONFIRMED", label: "To prepare", hint: "Paid & confirmed", icon: CircleCheck, tone: "bg-muted text-muted-foreground" },
+  { status: "PROCESSING", label: "Being packed", hint: "Picking in progress", icon: PackageCheck, tone: "bg-muted text-muted-foreground" },
 ];
 
 function QueueTile({ tile, active, onSelect }: { tile: (typeof QUEUE)[number]; active: boolean; onSelect: () => void }) {

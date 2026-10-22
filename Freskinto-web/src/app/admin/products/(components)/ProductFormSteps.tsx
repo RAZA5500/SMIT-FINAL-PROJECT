@@ -37,8 +37,8 @@ export function ProductFormSteps({ current, onSelect }: ProductFormStepsProps) {
               aria-current={active ? "step" : undefined}
               onClick={() => onSelect(step)}
               className={cn(
-                "h-auto w-full justify-start gap-2.5 rounded-2xl px-3 py-2.5",
-                active && "border-primary bg-plum-soft ring-1 ring-primary hover:border-primary hover:bg-plum-soft",
+                "h-auto w-full justify-start gap-2.5 px-3 py-2.5",
+                active && "border-primary/60 bg-accent/50 hover:bg-accent/50",
               )}
             >
               <Flex
@@ -46,9 +46,9 @@ export function ProductFormSteps({ current, onSelect }: ProductFormStepsProps) {
                 align="center"
                 justify="center"
                 className={cn(
-                  "size-7 shrink-0 rounded-full font-mono text-xs",
+                  "size-6 shrink-0 rounded-full text-xs",
                   active
-                    ? "bg-tangerine text-tangerine-foreground"
+                    ? "border border-primary bg-background text-primary"
                     : done
                       ? "bg-primary text-primary-foreground"
                       : "bg-muted text-muted-foreground",
@@ -56,7 +56,7 @@ export function ProductFormSteps({ current, onSelect }: ProductFormStepsProps) {
               >
                 {done ? <Check aria-hidden="true" className="size-3.5" /> : index + 1}
               </Flex>
-              <Text as="span" weight="semibold" className="truncate">
+              <Text as="span" weight="medium" className="truncate">
                 {TAB_LABELS[step]}
               </Text>
             </Button>

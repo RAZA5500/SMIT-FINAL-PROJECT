@@ -133,7 +133,7 @@ export function AdminDataTable<T>({
     <Card
       render={<Box as="section" />}
       aria-busy={isFetching || undefined}
-      className={cn("relative gap-0 rounded-3xl py-0", className)}
+      className={cn("relative gap-0 rounded-xl py-0", className)}
     >
       {/* Subtle isFetching indicator */}
       <Box
@@ -143,7 +143,7 @@ export function AdminDataTable<T>({
           isFetching && !isLoading ? "opacity-100" : "opacity-0",
         )}
       >
-        <Box className="h-full w-1/3 animate-pulse bg-tangerine" />
+        <Box className="h-full w-1/3 animate-pulse bg-primary" />
       </Box>
 
       {toolbar && (

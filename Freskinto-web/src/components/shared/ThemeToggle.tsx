@@ -21,7 +21,7 @@ export function ThemeToggle({ className }: { className?: string }) {
             size="icon"
             aria-label={label}
             onClick={toggleTheme}
-            className={cn("relative rounded-full", className)}
+            className={cn("relative", className)}
           />
         }
       >

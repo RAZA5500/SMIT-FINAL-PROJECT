@@ -18,14 +18,13 @@ export default function NotFound() {
         <Box aria-hidden="true" className="relative">
           <Text
             as="span"
-            family="heading"
-            weight="extrabold"
+            weight="semibold"
             tone="inherit"
-            className="block text-fs-72 tracking-tighter text-primary sm:text-[10rem] sm:leading-none"
+            className="block text-6xl tracking-tighter text-primary sm:text-[10rem] sm:leading-none"
           >
             404
           </Text>
-          <Badge variant="sticker" className="absolute -top-2 -right-6">
+          <Badge variant="brand" className="absolute -top-2 -right-6">
             Sold out!
           </Badge>
         </Box>
@@ -37,10 +36,10 @@ export default function NotFound() {
         </Text>
       </Stack>
       <Flex wrap justify="center" gap="3">
-        <ButtonLink href={publicRoutes.shop} variant="cta" size="xl">
+        <ButtonLink href={publicRoutes.shop} size="xl">
           Back to the shop
         </ButtonLink>
-        <ButtonLink href={customerRoutes.orders} variant="outline" size="xl" className="rounded-full border-2">
+        <ButtonLink href={customerRoutes.orders} variant="outline" size="xl" className="border">
           My orders
         </ButtonLink>
       </Flex>

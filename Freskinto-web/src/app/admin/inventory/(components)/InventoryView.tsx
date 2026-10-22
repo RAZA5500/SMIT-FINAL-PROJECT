@@ -38,7 +38,7 @@ function StockMeter({ inventory }: { inventory: IInventory }) {
   const value = Math.min(100, Math.round((inventory.qtyOnHand / scale) * 100));
   return (
     <Flex align="center" gap="3">
-      <Text as="span" weight="bold" numeric className="w-10 text-right text-base">
+      <Text as="span" weight="semibold" numeric className="w-10 text-right text-base">
         {inventory.qtyOnHand}
       </Text>
       <Progress

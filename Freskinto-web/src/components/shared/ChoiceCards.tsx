@@ -33,8 +33,8 @@ interface ChoiceCardsProps<T extends string> {
 }
 
 /**
- * Radio group as big tappable cards. Checked card gets an aubergine ring and a lilac wash, aur
- * icon tile lime ho jati hai — selection ek nazar mein samajh aati hai.
+ * Radio group as big tappable cards. Checked card gets an indigo border and a faint indigo wash —
+ * selection ek nazar mein samajh aati hai.
  */
 export function ChoiceCards<T extends string>({
   id,
@@ -65,7 +65,7 @@ export function ChoiceCards<T extends string>({
             key={option.value}
             htmlFor={optionId}
             className={cn(
-              "group/choice flex cursor-pointer items-center gap-3 rounded-2xl border-2 border-border bg-card p-4 font-normal transition-all hover:border-foreground/30 has-data-checked:border-primary has-data-checked:bg-plum-soft has-disabled:cursor-not-allowed has-disabled:opacity-60",
+              "group/choice flex cursor-pointer items-center gap-3 rounded-lg border border-border bg-card p-4 font-normal transition-colors hover:bg-muted/40 has-data-checked:border-primary has-data-checked:bg-accent/50 has-disabled:cursor-not-allowed has-disabled:opacity-60",
               optionClassName,
             )}
           >
@@ -75,7 +75,7 @@ export function ChoiceCards<T extends string>({
                 aria-hidden="true"
                 align="center"
                 justify="center"
-                className="size-11 shrink-0 rounded-xl bg-muted text-primary transition-colors group-has-data-checked/choice:bg-lime group-has-data-checked/choice:text-lime-foreground [&_svg]:size-5"
+                className="size-9 shrink-0 rounded-md bg-muted text-muted-foreground transition-colors group-has-data-checked/choice:bg-background group-has-data-checked/choice:text-primary [&_svg]:size-4"
               >
                 {option.icon}
               </Flex>

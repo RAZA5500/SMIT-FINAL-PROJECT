@@ -122,7 +122,7 @@ export function CheckoutPaymentView() {
         title="Nothing to pay for yet"
         message="Start from checkout to choose delivery or collection."
         action={
-          <ButtonLink href={customerRoutes.checkout} variant="cta" size="lg">
+          <ButtonLink href={customerRoutes.checkout} size="lg">
             Go to checkout
           </ButtonLink>
         }
@@ -132,10 +132,10 @@ export function CheckoutPaymentView() {
     content = (
       <Grid aria-label="Loading" aria-busy="true" align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
         <Stack gap="5" className="lg:col-span-7">
-          <Skeleton className="h-36 w-full rounded-3xl" />
-          <Skeleton className="h-72 w-full rounded-3xl" />
+          <Skeleton className="h-36 w-full rounded-xl" />
+          <Skeleton className="h-72 w-full rounded-xl" />
         </Stack>
-        <Skeleton className="h-96 w-full rounded-3xl lg:col-span-5" />
+        <Skeleton className="h-96 w-full rounded-xl lg:col-span-5" />
       </Grid>
     );
   } else if (isError) {
@@ -148,10 +148,10 @@ export function CheckoutPaymentView() {
         message="If you already placed this order, you can find it in your orders."
         action={
           <>
-            <ButtonLink href={customerRoutes.orders} variant="cta" size="lg">
+            <ButtonLink href={customerRoutes.orders} size="lg">
               My orders
             </ButtonLink>
-            <ButtonLink href={publicRoutes.shop} variant="outline" size="lg" className="rounded-full">
+            <ButtonLink href={publicRoutes.shop} variant="outline" size="lg">
               Browse products
             </ButtonLink>
           </>
@@ -163,9 +163,9 @@ export function CheckoutPaymentView() {
       <Grid align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
         <Stack gap="5" className="lg:col-span-7">
           <DeliveryDetails intent={intent} />
-          <Card render={<Box as="section" aria-label="Payment" />} size="lg" className="rounded-3xl border-2">
+          <Card render={<Box as="section" aria-label="Payment" />} size="lg" className="rounded-xl border">
             <CardHeader>
-              <CardTitle render={<Box as="span" />} className="flex items-center gap-2 text-xl font-bold">
+              <CardTitle render={<Box as="span" />} className="flex items-center gap-2 text-xl font-semibold">
                 <CreditCard aria-hidden="true" className="size-5 text-primary" />
                 Payment
               </CardTitle>
@@ -194,7 +194,7 @@ export function CheckoutPaymentView() {
           <LoadingButton
             type="submit"
             form={PAYMENT_FORM_ID}
-            variant="cta"
+           
             size="xl"
             className="w-full"
             isLoading={isBusy}
@@ -207,7 +207,7 @@ export function CheckoutPaymentView() {
             href={customerRoutes.checkout}
             variant="ghost"
             aria-disabled={isBusy || undefined}
-            className={cn("w-full rounded-full", isBusy && "pointer-events-none opacity-50")}
+            className={cn("w-full", isBusy && "pointer-events-none opacity-50")}
           >
             <ArrowLeft aria-hidden="true" />
             Back to delivery details

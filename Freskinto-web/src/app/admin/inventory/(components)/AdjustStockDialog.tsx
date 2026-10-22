@@ -83,7 +83,7 @@ function AdjustStockForm({
 
   return (
     <Stack gap="5">
-      <Item variant="outline" className="flex-nowrap rounded-2xl bg-muted/50 p-3">
+      <Item variant="outline" className="flex-nowrap rounded-xl bg-muted/50 p-3">
         <ItemMedia className="overflow-hidden rounded-lg">
           <ProductImage name={inventory.product.name} sizes="44px" className="size-11" imageClassName="p-1" />
         </ItemMedia>

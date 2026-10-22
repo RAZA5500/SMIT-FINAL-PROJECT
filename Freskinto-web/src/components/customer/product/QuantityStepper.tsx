@@ -7,19 +7,19 @@ import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 
 const SIZES = {
-  sm: { root: "h-10 p-0.5", button: "size-9", value: "min-w-7 text-sm" },
-  md: { root: "h-11 p-0.5", button: "size-10", value: "min-w-8 text-base" },
-  lg: { root: "h-12 p-1", button: "size-10", value: "min-w-10 text-lg" },
+  sm: { root: "h-9 p-0.5", button: "size-8", value: "min-w-7 text-sm" },
+  md: { root: "h-10 p-0.5", button: "size-9", value: "min-w-8 text-sm" },
+  lg: { root: "h-11 p-0.5", button: "size-10", value: "min-w-10 text-base" },
 } as const;
 
 const VARIANTS = {
-  // In-basket state on product cards — aubergine pill
+  // In-basket state on product cards — the indigo action colour
   solid: {
-    root: "bg-primary text-primary-foreground shadow-soft",
+    root: "bg-primary text-primary-foreground",
     button: "text-primary-foreground hover:bg-primary-foreground/15 hover:text-primary-foreground disabled:opacity-40",
   },
   outline: {
-    root: "border-2 border-border bg-card text-foreground",
+    root: "border border-border bg-background text-foreground",
     button: "hover:bg-muted disabled:opacity-35",
   },
 } as const;
@@ -41,7 +41,7 @@ interface QuantityStepperProps {
   className?: string;
 }
 
-/** − qty + pill. Quantity live region mein (screen readers ko nayi value sunai de) */
+/** − qty + control. Quantity live region mein (screen readers ko nayi value sunai de) */
 export function QuantityStepper({
   quantity,
   label,
@@ -67,7 +67,7 @@ export function QuantityStepper({
       justify="between"
       role="group"
       aria-label={`Quantity of ${label}`}
-      className={cn("rounded-full", s.root, v.root, className)}
+      className={cn("rounded-lg", s.root, v.root, className)}
     >
       <Button
         variant="ghost"
@@ -75,7 +75,7 @@ export function QuantityStepper({
         aria-label={removes ? `Remove ${label} from basket` : `Decrease quantity of ${label}`}
         disabled={disabled || (!removes && !canDecrease)}
         onClick={onDecrease}
-        className={cn("rounded-full", s.button, v.button)}
+        className={cn("rounded-md", s.button, v.button)}
       >
         {removes ? <Trash2 aria-hidden="true" /> : <Minus aria-hidden="true" />}
       </Button>
@@ -83,8 +83,7 @@ export function QuantityStepper({
         as="span"
         aria-live="polite"
         tone="inherit"
-        family="heading"
-        weight="extrabold"
+        weight="semibold"
         numeric
         className={cn("text-center", s.value)}
       >
@@ -96,7 +95,7 @@ export function QuantityStepper({
         aria-label={`Increase quantity of ${label}`}
         disabled={disabled || !canIncrease}
         onClick={onIncrease}
-        className={cn("rounded-full", s.button, v.button)}
+        className={cn("rounded-md", s.button, v.button)}
       >
         <Plus aria-hidden="true" />
       </Button>

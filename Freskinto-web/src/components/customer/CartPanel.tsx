@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, PartyPopper, ShoppingBasket } from "lucide-react";
+import { ArrowRight, ShoppingBasket, Truck } from "lucide-react";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { Alert, AlertBody } from "@/components/ui/alert";
@@ -57,7 +57,7 @@ function CartPanelBody({ onClose }: { onClose: () => void }) {
         title="Sign in to start your basket"
         message="Your basket is saved to your account, so it's there on every device."
         action={
-          <ButtonLink href={loginUrl(pathname)} variant="cta" onClick={onClose}>
+          <ButtonLink href={loginUrl(pathname)} onClick={onClose}>
             Sign in
           </ButtonLink>
         }
@@ -82,7 +82,7 @@ function CartPanelBody({ onClose }: { onClose: () => void }) {
         title="Your basket is empty"
         message="Fresh produce, poultry and everyday essentials are a tap away."
         action={
-          <ButtonLink href={publicRoutes.shop} variant="cta" onClick={onClose}>
+          <ButtonLink href={publicRoutes.shop} onClick={onClose}>
             Start shopping
             <ArrowRight aria-hidden="true" />
           </ButtonLink>
@@ -105,7 +105,7 @@ function CartPanelBody({ onClose }: { onClose: () => void }) {
   return (
     <>
       <SheetHeader className="border-b border-border">
-        <SheetTitle className="text-2xl font-extrabold">Your basket</SheetTitle>
+        <SheetTitle>Your basket</SheetTitle>
         <SheetDescription>
           {items.length > 0
             ? `${pluralize(cart?.itemCount ?? 0, "item")} · ${formatMoney(cart?.subtotal ?? 0)}`
@@ -114,9 +114,9 @@ function CartPanelBody({ onClose }: { onClose: () => void }) {
       </SheetHeader>
 
       {items.length > 0 && (
-        <Flex align="center" gap="2" className="bg-lime px-5 py-2.5 text-lime-foreground">
-          <PartyPopper aria-hidden="true" className="size-4 shrink-0" />
-          <Text as="span" variant="eyebrow" tone="inherit">
+        <Flex align="center" gap="2" className="border-b bg-muted/50 px-5 py-2.5 text-muted-foreground">
+          <Truck aria-hidden="true" className="size-4 shrink-0" />
+          <Text as="span" tone="inherit" className="text-fs-13">
             Free delivery unlocked — on every order
           </Text>
         </Flex>
@@ -132,10 +132,10 @@ function CartPanelBody({ onClose }: { onClose: () => void }) {
             <Text as="span" tone="muted">
               Total
             </Text>
-            <Price amount={cart?.grandTotal ?? 0} size="xl" />
+            <Price amount={cart?.grandTotal ?? 0} size="lg" />
           </Flex>
           {canCheckout ? (
-            <ButtonLink href={customerRoutes.checkout} onClick={onClose} size="xl" variant="cta" className="w-full">
+            <ButtonLink href={customerRoutes.checkout} onClick={onClose} size="lg" className="w-full">
               Checkout
               <ArrowRight aria-hidden="true" />
             </ButtonLink>
@@ -144,7 +144,7 @@ function CartPanelBody({ onClose }: { onClose: () => void }) {
               <AlertBody>Some items need attention before you can check out.</AlertBody>
             </Alert>
           )}
-          <ButtonLink href={customerRoutes.cart} onClick={onClose} variant="ghost" className="w-full rounded-full">
+          <ButtonLink href={customerRoutes.cart} onClick={onClose} variant="ghost" className="w-full">
             View full basket
           </ButtonLink>
         </SheetFooter>
@@ -158,11 +158,11 @@ function CartLinesSkeleton() {
     <Stack aria-label="Loading" aria-busy="true" gap="5" className="py-5">
       {Array.from({ length: 3 }, (_, i) => (
         <Flex key={i} gap="3">
-          <Skeleton className="size-16 rounded-2xl" />
+          <Skeleton className="size-16 rounded-lg" />
           <Stack gap="2" className="flex-1">
             <Skeleton className="h-4 w-3/4" />
             <Skeleton className="h-3 w-1/3" />
-            <Skeleton className="h-10 w-28 rounded-full" />
+            <Skeleton className="h-9 w-28" />
           </Stack>
         </Flex>
       ))}

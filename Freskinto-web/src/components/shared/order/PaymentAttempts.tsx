@@ -26,7 +26,7 @@ export function PaymentAttempts({ payments }: { payments: PaymentAttempt[] }) {
         <Item key={payment.id} role="listitem" variant="muted" className="flex-col items-stretch gap-2 rounded-xl p-3.5">
           <ItemHeader>
             <StatusBadge status={payment.status} />
-            <Text as="span" weight="bold" numeric>
+            <Text as="span" weight="semibold" numeric>
               {formatMoney(payment.amount)}
             </Text>
           </ItemHeader>

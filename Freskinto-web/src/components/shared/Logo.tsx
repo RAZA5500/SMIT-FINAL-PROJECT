@@ -1,18 +1,18 @@
-import { Citrus } from "lucide-react";
+import { Leaf } from "lucide-react";
 import { Flex } from "@/components/ui/flex";
 import { Text } from "@/components/ui/typography";
 import { STORE } from "@/constants/store";
 import { cn } from "@/lib/utils";
 
 const SIZES = {
-  sm: { mark: "size-8 rounded-lg [&_svg]:size-4", word: "text-xl" },
-  md: { mark: "size-10 rounded-xl [&_svg]:size-5", word: "text-2xl" },
-  lg: { mark: "size-14 rounded-2xl [&_svg]:size-7", word: "text-4xl" },
+  sm: { mark: "size-7 rounded-md [&_svg]:size-4", word: "text-base" },
+  md: { mark: "size-8 rounded-lg [&_svg]:size-4.5", word: "text-lg" },
+  lg: { mark: "size-11 rounded-xl [&_svg]:size-6", word: "text-2xl" },
 } as const;
 
 type LogoSize = keyof typeof SIZES;
 
-/** Freskinto mark — tilted lime tile with a citrus slice, ink edge (sticker look) */
+/** Freskinto mark — a leaf on a plain indigo square */
 export function LogoMark({ size = "md", className }: { size?: LogoSize; className?: string }) {
   return (
     <Flex
@@ -21,13 +21,9 @@ export function LogoMark({ size = "md", className }: { size?: LogoSize; classNam
       align="center"
       justify="center"
       aria-hidden="true"
-      className={cn(
-        "shrink-0 -rotate-6 border-2 border-pop bg-lime text-lime-foreground shadow-pop-sm transition-transform group-hover/logo:rotate-6",
-        SIZES[size].mark,
-        className,
-      )}
+      className={cn("shrink-0 bg-primary text-primary-foreground", SIZES[size].mark, className)}
     >
-      <Citrus strokeWidth={2.4} />
+      <Leaf strokeWidth={2.25} />
     </Flex>
   );
 }
@@ -36,31 +32,17 @@ interface LogoProps {
   size?: LogoSize;
   /** Sirf mark (collapsed sidebar, chhoti jagah) */
   markOnly?: boolean;
-  /** Night (dark) background par wordmark roshan */
-  inverse?: boolean;
   className?: string;
 }
 
-/** Mark + chunky Bricolage wordmark with a tangerine dot */
-export function Logo({ size = "md", markOnly = false, inverse = false, className }: LogoProps) {
+/** Mark + wordmark */
+export function Logo({ size = "md", markOnly = false, className }: LogoProps) {
   return (
-    <Flex as="span" inline align="center" gap="2.5" className={cn("group/logo", className)}>
+    <Flex as="span" inline align="center" gap="2" className={className}>
       <LogoMark size={size} />
       {!markOnly && (
-        <Text
-          as="span"
-          family="heading"
-          weight="extrabold"
-          className={cn(
-            "leading-none tracking-tighter",
-            inverse ? "text-night-foreground" : "text-foreground",
-            SIZES[size].word,
-          )}
-        >
-          {STORE.name.toLowerCase()}
-          <Text as="span" tone="inherit" aria-hidden="true" className="text-tangerine">
-            .
-          </Text>
+        <Text as="span" weight="semibold" className={cn("leading-none tracking-tight text-foreground", SIZES[size].word)}>
+          {STORE.name}
         </Text>
       )}
     </Flex>

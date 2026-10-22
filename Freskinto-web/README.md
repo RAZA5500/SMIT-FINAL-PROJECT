@@ -21,6 +21,6 @@ UI rules:
   root layout renders `<html>` and `<body>`.
 - **Every `className` goes through `cn()`** from `@/lib/utils` (tailwind-merge, aware of the custom shadow and
   animation tokens).
-- Design tokens ("Produce Pop": aubergine `#5b2a86`, tangerine `#ff7a3d`, lime `#c6f36b` on lilac paper, with a
-  `.dark` set; Bricolage Grotesque / Inter / JetBrains Mono) live in `src/app/globals.css`; brand name and support
-  email in `src/constants/store.ts`. The theme toggle (`hooks/useTheme.ts`) puts `.dark` on `<html>`.
+- Design tokens (clean & minimal: white surfaces, zinc-grey text and borders, one indigo `#4f46e5` accent, with a
+  `.dark` set; Inter / JetBrains Mono) live in `src/app/globals.css`; brand name and support email in
+  `src/constants/store.ts`. The theme toggle (`hooks/useTheme.ts`) puts `.dark` on `<html>`.

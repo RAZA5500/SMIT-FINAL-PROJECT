@@ -15,7 +15,7 @@ function Card({
     props: mergeProps<"div">(
       {
         className: cn(
-          "group/card flex flex-col gap-5 overflow-hidden rounded-2xl border border-border bg-card py-5 text-sm text-card-foreground shadow-soft has-data-[slot=card-footer]:pb-0 data-[size=lg]:gap-6 data-[size=lg]:py-6 data-[size=sm]:gap-4 data-[size=sm]:py-4",
+          "group/card flex flex-col gap-5 overflow-hidden rounded-xl border border-border bg-card py-5 text-sm text-card-foreground has-data-[slot=card-footer]:pb-0 data-[size=lg]:gap-6 data-[size=lg]:py-6 data-[size=sm]:gap-4 data-[size=sm]:py-4",
           className
         ),
       },
@@ -45,7 +45,7 @@ function CardTitle({ className, render, ...props }: useRender.ComponentProps<"di
     props: mergeProps<"div">(
       {
         className: cn(
-          "font-heading text-lg leading-snug font-semibold tracking-tight group-data-[size=sm]/card:text-base",
+          "text-lg leading-snug font-semibold tracking-tight group-data-[size=sm]/card:text-base",
           className
         ),
       },

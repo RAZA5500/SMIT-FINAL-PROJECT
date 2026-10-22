@@ -50,7 +50,7 @@ export function ProductViewModal({ product, open, onOpenChange }: ProductViewMod
                 href={publicRoutes.product(product.id)}
                 variant="outline"
                 size="sm"
-                className="rounded-full"
+               
                 onClick={() => onOpenChange(false)}
               >
                 <ExternalLink data-icon="inline-start" aria-hidden="true" />
@@ -59,7 +59,7 @@ export function ProductViewModal({ product, open, onOpenChange }: ProductViewMod
             )}
             <Button
               size="sm"
-              className="rounded-full"
+             
               onClick={() => {
                 onOpenChange(false);
                 router.push(adminRoutes.productEdit(product.id));
@@ -78,7 +78,7 @@ export function ProductViewModal({ product, open, onOpenChange }: ProductViewMod
             name={product.name}
             categoryName={product.category.name}
             sizes="96px"
-            className="size-24 shrink-0 rounded-2xl border border-border"
+            className="size-24 shrink-0 rounded-xl border border-border"
             imageClassName="p-2"
           />
           <Stack gap="1.5" className="min-w-0 flex-1">
@@ -92,7 +92,7 @@ export function ProductViewModal({ product, open, onOpenChange }: ProductViewMod
                 </Text>
               )}
             </Flex>
-            <Text weight="bold" className="truncate text-lg">
+            <Text weight="semibold" className="truncate text-lg">
               {product.name}
             </Text>
             <Text tone="muted" family="mono" className="text-fs-12">

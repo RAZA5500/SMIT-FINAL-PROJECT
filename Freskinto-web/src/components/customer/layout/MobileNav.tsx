@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, LogIn, LogOut, Moon, ShoppingBasket, UserPlus } from "lucide-react";
+import { LayoutDashboard, LogIn, LogOut, Moon, ShoppingBag, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -19,7 +19,7 @@ import { CUSTOMER_NAV } from "@/constants/navigation";
 import { STORE } from "@/constants/store";
 import { useLogout } from "@/hooks/useLogout";
 import { useTheme } from "@/hooks/useTheme";
-import { categoryTheme, TONE_CLASSES } from "@/lib/merchandising";
+import { categoryTheme, TILE_CLASSES } from "@/lib/merchandising";
 import { adminRoutes, customerRoutes, publicRoutes, shopUrl } from "@/lib/routes/routes";
 import { cn, initials } from "@/lib/utils";
 import { useAuthStore } from "@/stores/auth-store";
@@ -31,7 +31,7 @@ interface MobileNavProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const LINK_CLASS = "h-12 w-full justify-start gap-3 rounded-xl px-4 text-base font-medium";
+const LINK_CLASS = "h-11 w-full justify-start gap-3 px-3 text-base font-normal";
 
 /** Phone ka menu drawer — account block, links, aisles accordion, sign in/out */
 export function MobileNav({ open, onOpenChange }: MobileNavProps) {
@@ -67,9 +67,9 @@ export function MobileNav({ open, onOpenChange }: MobileNavProps) {
         </SheetHeader>
 
         {signedIn && user && (
-          <Flex align="center" gap="3" className="border-b border-border bg-plum-soft px-5 py-4">
+          <Flex align="center" gap="3" className="border-b border-border px-5 py-4">
             <Avatar size="lg">
-              <AvatarFallback className="bg-primary font-bold text-primary-foreground">{initials(user.name)}</AvatarFallback>
+              <AvatarFallback>{initials(user.name)}</AvatarFallback>
             </Avatar>
             <Stack className="min-w-0">
               <Text weight="semibold" className="truncate">
@@ -97,7 +97,7 @@ export function MobileNav({ open, onOpenChange }: MobileNavProps) {
                       setCartOpen(true);
                     }}
                   >
-                    <ShoppingBasket aria-hidden="true" />
+                    <ShoppingBag aria-hidden="true" />
                     Basket
                   </Button>
                 );
@@ -108,7 +108,7 @@ export function MobileNav({ open, onOpenChange }: MobileNavProps) {
                   variant="ghost"
                   nativeButton={false}
                   render={<Link href={href} onClick={close} aria-current={active ? "page" : undefined} />}
-                  className={cn(LINK_CLASS, active && "bg-plum-soft text-accent-foreground")}
+                  className={cn(LINK_CLASS, active && "bg-muted font-medium")}
                 >
                   <Icon aria-hidden="true" />
                   {label}
@@ -117,27 +117,26 @@ export function MobileNav({ open, onOpenChange }: MobileNavProps) {
             })}
 
             {aisles.length > 0 && (
-              <Accordion className="mt-2 rounded-xl border border-border px-1">
+              <Accordion className="mt-2 rounded-lg border border-border px-1">
                 <AccordionItem value="aisles">
-                  <AccordionTrigger className="px-3 py-3 text-base hover:no-underline">Browse aisles</AccordionTrigger>
+                  <AccordionTrigger className="px-2 py-3 text-base font-normal hover:no-underline">Browse aisles</AccordionTrigger>
                   <AccordionContent className="flex flex-col gap-1 px-1 pb-2 [&_a]:no-underline">
                     {aisles.map((aisle) => {
-                      const visual = categoryTheme(aisle.name);
-                      const Icon = visual.icon;
+                      const Icon = categoryTheme(aisle.name).icon;
                       return (
                         <Button
                           key={aisle.id}
                           variant="ghost"
                           nativeButton={false}
                           render={<Link href={shopUrl({ category: aisle.id })} onClick={close} />}
-                          className="h-11 justify-start gap-3 rounded-lg px-2 font-medium"
+                          className="h-10 justify-start gap-3 px-2 font-normal"
                         >
                           <Flex
                             as="span"
                             align="center"
                             justify="center"
                             aria-hidden="true"
-                            className={cn("size-8 rounded-lg", TONE_CLASSES[visual.tone].chip)}
+                            className={cn("size-7 rounded-md", TILE_CLASSES.chip)}
                           >
                             <Icon />
                           </Flex>
@@ -150,10 +149,10 @@ export function MobileNav({ open, onOpenChange }: MobileNavProps) {
               </Accordion>
             )}
 
-            <Flex align="center" justify="between" gap="3" className="mt-2 rounded-xl border border-border px-4 py-3">
+            <Flex align="center" justify="between" gap="3" className="mt-2 rounded-lg border border-border px-3 py-3">
               <Flex as="span" align="center" gap="3">
                 <Moon aria-hidden="true" className="size-4" />
-                <Label htmlFor="mobile-dark-mode" className="text-base">
+                <Label htmlFor="mobile-dark-mode" className="text-base font-normal">
                   Dark mode
                 </Label>
               </Flex>
@@ -165,7 +164,7 @@ export function MobileNav({ open, onOpenChange }: MobileNavProps) {
             </Flex>
 
             {signedIn && user?.role === "ADMIN" && (
-              <ButtonLink href={adminRoutes.orders} variant="soft" size="lg" className="mt-2 w-full" onClick={close}>
+              <ButtonLink href={adminRoutes.orders} variant="secondary" size="lg" className="mt-2 w-full" onClick={close}>
                 <LayoutDashboard aria-hidden="true" />
                 Admin workspace
               </ButtonLink>
@@ -188,11 +187,11 @@ export function MobileNav({ open, onOpenChange }: MobileNavProps) {
             </Button>
           ) : (
             <Box className="grid gap-2">
-              <ButtonLink href={publicRoutes.login} variant="cta" size="lg" onClick={close}>
+              <ButtonLink href={publicRoutes.login} size="lg" onClick={close}>
                 <LogIn aria-hidden="true" />
                 Sign in
               </ButtonLink>
-              <ButtonLink href={publicRoutes.register} variant="outline" size="lg" className="rounded-full" onClick={close}>
+              <ButtonLink href={publicRoutes.register} variant="outline" size="lg" onClick={close}>
                 <UserPlus aria-hidden="true" />
                 Create an account
               </ButtonLink>

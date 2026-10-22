@@ -26,10 +26,7 @@ export function ProductQuickView({ product, className }: { product: IProduct; cl
             variant="outline"
             size="icon-sm"
             aria-label={`Quick view ${product.name}`}
-            className={cn(
-              "rounded-full border-border/80 bg-card/90 backdrop-blur transition-all hover:bg-lime hover:text-lime-foreground",
-              className,
-            )}
+            className={cn("bg-background/90 backdrop-blur transition-opacity", className)}
           />
         }
       >
@@ -44,11 +41,12 @@ export function ProductQuickView({ product, className }: { product: IProduct; cl
             sizes="(min-width: 768px) 380px, 100vw"
             muted={product.stockStatus === "OUT_OF_STOCK"}
             imageClassName="p-10"
+            className="max-md:aspect-video"
           />
           <Stack gap="5" className="p-6 sm:p-8">
             <Stack gap="2">
-              <Badge variant="brand">{product.category.name}</Badge>
-              <DialogTitle className="text-3xl font-extrabold tracking-tight">{product.name}</DialogTitle>
+              <Badge variant="secondary">{product.category.name}</Badge>
+              <DialogTitle className="text-2xl">{product.name}</DialogTitle>
               <DialogDescription>
                 <Text as="span" tone="inherit" family="mono" className="text-fs-12">
                   SKU {product.sku}
@@ -56,7 +54,7 @@ export function ProductQuickView({ product, className }: { product: IProduct; cl
               </DialogDescription>
             </Stack>
             <Flex wrap align="center" gap="3">
-              <Price amount={product.price} size="xl" tone="brand" />
+              <Price amount={product.price} size="xl" />
               <StatusBadge status={product.stockStatus} />
             </Flex>
             <Text tone="muted" className="text-fs-13">
@@ -66,7 +64,7 @@ export function ProductQuickView({ product, className }: { product: IProduct; cl
             </Text>
             <Stack gap="2.5" className="mt-auto">
               <ProductCartControl product={product} size="md" />
-              <ButtonLink href={publicRoutes.product(product.id)} variant="ghost" className="rounded-full">
+              <ButtonLink href={publicRoutes.product(product.id)} variant="ghost">
                 See full details
                 <ArrowUpRight aria-hidden="true" />
               </ButtonLink>

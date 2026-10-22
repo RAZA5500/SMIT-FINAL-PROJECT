@@ -22,8 +22,7 @@ export function SortSelect({ id, shop }: { id: string; shop: ShopParamsApi }) {
       options={SHOP_SORT_OPTIONS}
       value={shop.sort ?? "newest"}
       onValueChange={(sort) => shop.update({ sort: sort === "newest" ? null : sort })}
-      containerClassName="w-full sm:w-52"
-      className="h-11 rounded-full"
+      containerClassName="w-full sm:w-48"
     />
   );
 }
@@ -41,7 +40,7 @@ export function ShopToolbar({ shop, categoryName, layout, onLayoutChange, onOpen
   return (
     <Stack gap="3">
       <Flex wrap align="center" gap="3">
-        <Button variant="outline" className="h-11 rounded-full border-2 lg:hidden" onClick={onOpenFilters}>
+        <Button variant="outline" className="lg:hidden" onClick={onOpenFilters}>
           <SlidersHorizontal aria-hidden="true" />
           Filters
         </Button>
@@ -51,7 +50,6 @@ export function ShopToolbar({ shop, categoryName, layout, onLayoutChange, onOpen
             onValueChange={(q) => shop.update({ q }, { replace: true })}
             placeholder="Search this shop…"
             aria-label="Search products in the shop"
-            className="h-11 rounded-full border-2"
           />
         </Box>
         <Flex align="center" gap="2" className="ml-auto hidden sm:flex">
@@ -61,19 +59,19 @@ export function ShopToolbar({ shop, categoryName, layout, onLayoutChange, onOpen
             spacing={0}
             value={[layout]}
             onValueChange={(next) => next[0] && onLayoutChange(next[0] as ProductLayout)}
-            className="rounded-full border-2 border-border bg-card p-0.5"
+            className="rounded-lg border border-border p-0.5"
           >
             <ToggleGroupItem
               value="grid"
               aria-label="Grid view"
-              className="size-9 rounded-full! px-0 aria-pressed:bg-primary aria-pressed:text-primary-foreground"
+              className="size-8 px-0 aria-pressed:bg-muted aria-pressed:text-foreground"
             >
               <LayoutGrid aria-hidden="true" />
             </ToggleGroupItem>
             <ToggleGroupItem
               value="list"
               aria-label="List view"
-              className="size-9 rounded-full! px-0 aria-pressed:bg-primary aria-pressed:text-primary-foreground"
+              className="size-8 px-0 aria-pressed:bg-muted aria-pressed:text-foreground"
             >
               <List aria-hidden="true" />
             </ToggleGroupItem>

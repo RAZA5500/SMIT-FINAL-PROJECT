@@ -35,13 +35,13 @@ export function ActiveFilters({ shop, categoryName }: { shop: ShopParamsApi; cat
           variant="secondary"
           size="sm"
           onClick={chip.remove}
-          className="group/chip animate-pop rounded-full bg-plum-soft pr-2 pl-3 text-accent-foreground hover:bg-destructive-soft hover:text-destructive-ink"
+          className="animate-fade-up pr-2 pl-2.5 font-normal"
         >
           {chip.label}
           <Text as="span" className="sr-only">
             — remove filter
           </Text>
-          <X aria-hidden="true" className="size-3.5 transition-transform group-hover/chip:rotate-90" />
+          <X aria-hidden="true" className="size-3.5 text-muted-foreground" />
         </Button>
       ))}
       <Button type="button" variant="link" size="sm" onClick={shop.clear} className="px-1.5">

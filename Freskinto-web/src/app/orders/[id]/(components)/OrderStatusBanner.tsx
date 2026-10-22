@@ -83,14 +83,14 @@ export function OrderStatusBanner({ order, now, canPay, onPay }: OrderStatusBann
 
   return (
     // role="status" nahi — countdown har second badalta hai, screen reader shor na kare
-    <Alert variant={tone} role="note" className="flex-wrap items-center rounded-2xl border-2 border-l-8 py-4 sm:flex-nowrap">
+    <Alert variant={tone} role="note" className="flex-wrap items-center rounded-xl border border-l-8 py-4 sm:flex-nowrap">
       <Icon aria-hidden="true" className="size-6" />
       <AlertBody>
-        <AlertTitle className="numeric font-heading text-lg">{title}</AlertTitle>
+        <AlertTitle className="numeric text-lg">{title}</AlertTitle>
         <AlertDescription>{text}</AlertDescription>
       </AlertBody>
       {canPay && (
-        <Button variant="cta" onClick={onPay} className="w-full sm:w-auto">
+        <Button onClick={onPay} className="w-full sm:w-auto">
           <CreditCard aria-hidden="true" />
           Pay now
         </Button>

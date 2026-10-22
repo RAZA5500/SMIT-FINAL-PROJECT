@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { Apple, ShoppingBasket, Snowflake, SprayCan } from "lucide-react";
 import { categoryTheme, isNewProduct, productPackshot } from "./merchandising";
 
 /** Sirf file ka naam — path badle to test na toote */
@@ -24,11 +25,11 @@ describe("productPackshot", () => {
 });
 
 describe("categoryTheme", () => {
-  it("maps aisles to a tint and falls back to the basket", () => {
-    expect(categoryTheme("Fresh Fruits").tone).toBe("red");
-    expect(categoryTheme("Frozen").tone).toBe("cyan");
-    expect(categoryTheme("Household cleaning").tone).toBe("violet");
-    expect(categoryTheme(undefined).tone).toBe("green");
+  it("maps aisles to an icon and falls back to the basket", () => {
+    expect(categoryTheme("Fresh Fruits").icon).toBe(Apple);
+    expect(categoryTheme("Frozen").icon).toBe(Snowflake);
+    expect(categoryTheme("Household cleaning").icon).toBe(SprayCan);
+    expect(categoryTheme(undefined).icon).toBe(ShoppingBasket);
   });
 });
 

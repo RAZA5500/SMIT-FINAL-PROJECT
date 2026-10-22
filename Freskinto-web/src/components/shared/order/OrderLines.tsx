@@ -39,7 +39,7 @@ export function OrderLines({ lines, className }: { lines: OrderLine[]; className
             </ItemDescription>
           </ItemContent>
           <ItemActions>
-            <Text as="span" weight="bold" numeric>
+            <Text as="span" weight="semibold" numeric>
               {formatMoney(line.subtotal)}
             </Text>
           </ItemActions>

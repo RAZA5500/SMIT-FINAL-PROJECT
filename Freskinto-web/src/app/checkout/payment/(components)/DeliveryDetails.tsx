@@ -21,14 +21,14 @@ export function DeliveryDetails({ intent }: { intent: ICreateOrderPayload }) {
   const TypeIcon = pickup ? Store : Truck;
 
   return (
-    <Card render={<Box as="section" aria-label="Delivery details" />} size="lg" className="rounded-3xl border-2">
+    <Card render={<Box as="section" aria-label="Delivery details" />} size="lg" className="rounded-xl border">
       <CardHeader>
-        <CardTitle render={<Box as="span" />} className="flex items-center gap-2 text-xl font-bold">
+        <CardTitle render={<Box as="span" />} className="flex items-center gap-2 text-xl font-semibold">
           <TypeIcon aria-hidden="true" className="size-5 text-primary" />
           {DELIVERY_TYPE_LABELS[intent.deliveryType]}
         </CardTitle>
         <CardAction>
-          <ButtonLink href={customerRoutes.checkout} variant="ghost" size="sm" className="rounded-full text-primary">
+          <ButtonLink href={customerRoutes.checkout} variant="ghost" size="sm" className="text-primary">
             Change
           </ButtonLink>
         </CardAction>
