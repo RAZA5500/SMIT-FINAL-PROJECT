@@ -1,171 +1,110 @@
 "use client";
 
-import { Clock, FlaskConical, Mail, RotateCcw, Store, Truck } from "lucide-react";
-import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
-import { Box } from "@/components/ui/box";
-import { Container } from "@/components/ui/container";
-import { Flex, Stack } from "@/components/ui/flex";
-import { Grid } from "@/components/ui/grid";
-import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
-import { Separator } from "@/components/ui/separator";
-import { Text } from "@/components/ui/typography";
+import { Mail } from "lucide-react";
+import Link from "next/link";
 import { Logo } from "@/components/shared/Logo";
-import { TextLink } from "@/components/shared/TextLink";
 import { STORE } from "@/constants/store";
 import { customerRoutes, publicRoutes, shopUrl } from "@/lib/routes/routes";
-import { cn } from "@/lib/utils";
-import { useAuthStore } from "@/stores/auth-store";
 import { useAisles } from "../shop/use-aisles";
-import { isCheckoutPath } from "./checkout-path";
 
-const YEAR = new Date().getFullYear();
+const FOOTER_AISLE_LIMIT = 6;
 
-/** Store ke asli rules (FLOW-MD 01): free shipping, pickup slot, 5 min payment window, cancel before packing */
-const PROMISES = [
-  { icon: Truck, title: "Free delivery", text: "On every order, no minimum spend." },
-  { icon: Store, title: "Click & collect", text: "Pick a collection time at checkout." },
-  { icon: Clock, title: "Quick to confirm", text: `Pay within ${STORE.paymentWindowMinutes} minutes to lock it in.` },
-  { icon: RotateCcw, title: "Changed your mind?", text: "Cancel any time before we start packing." },
-];
+const COLUMN_TITLE = "text-fs-11 font-semibold tracking-widest text-brand-green-vivid uppercase";
+const FOOTER_LINK =
+  "text-sm text-white/75 underline-offset-4 transition-colors outline-none hover:text-white hover:underline focus-visible:text-white focus-visible:underline";
 
-function FooterColumn({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <Stack gap="4">
-      <Text as="div" variant="eyebrow" className={cn("text-foreground")}>
-        {title}
-      </Text>
-      <Stack as="ul" gap="2.5">
-        {children}
-      </Stack>
-    </Stack>
-  );
-}
-
-function FooterLink({ href, children }: { href: string; children: ReactNode }) {
-  return (
-    <Box as="li">
-      <TextLink href={href} tone="muted" className={cn("font-normal")}>
-        {children}
-      </TextLink>
-    </Box>
-  );
-}
-
-export function SiteFooter() {
-  const pathname = usePathname();
-  const token = useAuthStore((state) => state.token);
-  const user = useAuthStore((state) => state.user);
+/** Editorial footer — deep forest block, serif tagline; checkout par compact */
+export function SiteFooter({ compact = false }: { compact?: boolean }) {
   const { aisles } = useAisles();
 
-  if (isCheckoutPath(pathname)) {
+  if (compact) {
     return (
-      <Box as="footer" className={cn("border-t bg-background py-6")}>
-        <Container>
-          <Text variant="small" tone="muted" className={cn("text-center")}>
-            © {YEAR} {STORE.name} · Need help?{" "}
-            <TextLink href={`mailto:${STORE.supportEmail}`}>{STORE.supportEmail}</TextLink>
-          </Text>
-        </Container>
-      </Box>
+      <footer className="page-container py-8 text-center text-fs-13 text-muted-foreground">
+        Need help with your order?{" "}
+        <a href={`mailto:${STORE.supportEmail}`} className="font-medium text-brand-green underline-offset-4 hover:underline">
+          {STORE.supportEmail}
+        </a>
+      </footer>
     );
   }
 
-  const isCustomer = Boolean(token) && user?.role === "CUSTOMER";
-
   return (
-    <Box as="footer" className={cn("mt-auto border-t bg-muted")}>
-      <Container>
-        <Grid as="ul" gap="2" className={cn("py-8 sm:grid-cols-2 lg:grid-cols-4")}>
-          {PROMISES.map(({ icon: Icon, title, text }) => (
-            <Box as="li" key={title}>
-              <Item className={cn("px-0")}>
-                <ItemMedia className={cn("size-11 rounded-xl border border-primary/20 bg-icon-green text-brand-green [&_svg]:size-5")}>
-                  <Icon aria-hidden="true" />
-                </ItemMedia>
-                <ItemContent>
-                  <ItemTitle className={cn("font-semibold")}>{title}</ItemTitle>
-                  <ItemDescription>{text}</ItemDescription>
-                </ItemContent>
-              </Item>
-            </Box>
-          ))}
-        </Grid>
+    <footer className="mt-20 bg-brand-green-forest text-white">
+      <div className="page-container grid gap-12 py-14 md:grid-cols-12">
+        <div className="flex flex-col gap-5 md:col-span-5">
+          <Logo size="lg" inverse />
+          <p className="max-w-sm font-display text-fs-24 leading-snug text-white/85 italic">{STORE.tagline}</p>
+          <a
+            href={`mailto:${STORE.supportEmail}`}
+            className="inline-flex w-fit items-center gap-2 text-sm text-white/75 transition-colors hover:text-white"
+          >
+            <Mail aria-hidden="true" className="size-4" />
+            {STORE.supportEmail}
+          </a>
+        </div>
 
-        <Separator />
-
-        <Grid gap="10" className={cn("py-12 md:grid-cols-12")}>
-          <Stack gap="4" className={cn("md:col-span-5")}>
-            <TextLink href={publicRoutes.home} aria-label={`${STORE.name} home`} className={cn("w-fit")}>
-              <Logo />
-            </TextLink>
-            <Text tone="muted" className={cn("max-w-sm")}>
-              Your neighbourhood market, online. Fresh produce, poultry, dairy and everyday essentials — delivered
-              free or ready to collect.
-            </Text>
-            <TextLink href={`mailto:${STORE.supportEmail}`} className={cn("inline-flex w-fit items-center gap-2")}>
-              <Mail aria-hidden="true" className={cn("size-4")} />
-              {STORE.supportEmail}
-            </TextLink>
-          </Stack>
-
-          <Grid as="nav" aria-label="Footer" gap="8" className={cn("grid-cols-2 md:col-span-7 md:grid-cols-3")}>
-            <FooterColumn title="Shop">
-              <FooterLink href={shopUrl()}>All products</FooterLink>
-              {aisles.slice(0, 5).map((aisle) => (
-                <FooterLink key={aisle.id} href={shopUrl({ category: aisle.id })}>
+        <nav aria-label="Aisles" className="flex flex-col gap-4 md:col-span-3">
+          <h2 className={COLUMN_TITLE}>Aisles</h2>
+          <ul className="flex flex-col gap-2.5">
+            <li>
+              <Link href={shopUrl()} className={FOOTER_LINK}>
+                All products
+              </Link>
+            </li>
+            {aisles.slice(0, FOOTER_AISLE_LIMIT).map((aisle) => (
+              <li key={aisle.id}>
+                <Link href={shopUrl({ category: aisle.id })} className={FOOTER_LINK}>
                   {aisle.name}
-                </FooterLink>
-              ))}
-            </FooterColumn>
-            <FooterColumn title="Account">
-              {isCustomer ? (
-                <>
-                  <FooterLink href={customerRoutes.orders}>My orders</FooterLink>
-                  <FooterLink href={customerRoutes.addresses}>Addresses</FooterLink>
-                  <FooterLink href={customerRoutes.cart}>Basket</FooterLink>
-                </>
-              ) : (
-                <>
-                  <FooterLink href={publicRoutes.login}>Sign in</FooterLink>
-                  <FooterLink href={publicRoutes.register}>Create an account</FooterLink>
-                </>
-              )}
-            </FooterColumn>
-            <FooterColumn title="Help">
-              <FooterLink href={`${publicRoutes.home}#how-it-works`}>How it works</FooterLink>
-              <FooterLink href={`mailto:${STORE.supportEmail}`}>Contact us</FooterLink>
-            </FooterColumn>
-          </Grid>
-        </Grid>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-        <Text
-          as="div"
-          aria-hidden="true"
-          weight="bold"
-          className={cn(
-            "font-heading overflow-hidden pb-2 text-center text-7xl font-black leading-none tracking-tighter text-foreground/5 select-none sm:text-9xl",
-          )}
-        >
-          {STORE.name}
-        </Text>
+        <nav aria-label="Account" className="flex flex-col gap-4 md:col-span-2">
+          <h2 className={COLUMN_TITLE}>Account</h2>
+          <ul className="flex flex-col gap-2.5">
+            <li>
+              <Link href={customerRoutes.orders} className={FOOTER_LINK}>
+                My orders
+              </Link>
+            </li>
+            <li>
+              <Link href={customerRoutes.addresses} className={FOOTER_LINK}>
+                Addresses
+              </Link>
+            </li>
+            <li>
+              <Link href={customerRoutes.profile} className={FOOTER_LINK}>
+                Profile
+              </Link>
+            </li>
+            <li>
+              <Link href={publicRoutes.login} className={FOOTER_LINK}>
+                Sign in
+              </Link>
+            </li>
+          </ul>
+        </nav>
 
-        <Separator />
+        <div className="flex flex-col gap-4 md:col-span-2">
+          <h2 className={COLUMN_TITLE}>Good to know</h2>
+          <ul className="flex flex-col gap-2.5 text-sm text-white/75">
+            <li>Free delivery on every order</li>
+            <li>Click &amp; collect in 1 hour</li>
+            <li>Pay within {STORE.paymentWindowMinutes} minutes</li>
+          </ul>
+        </div>
+      </div>
 
-        <Flex
-          direction="col"
-          gap="2"
-          className={cn("py-5 pb-24 sm:flex-row sm:items-center sm:justify-between md:pb-5")}
-        >
-          <Text variant="small" tone="muted">
-            © {YEAR} {STORE.name}. Prices in GBP.
-          </Text>
-          <Text variant="small" tone="muted" className={cn("flex items-center gap-1.5")}>
-            <FlaskConical aria-hidden="true" className={cn("size-3.5 shrink-0")} />
-            Demo store — checkout uses a test payment gateway; no real cards are charged.
-          </Text>
-        </Flex>
-      </Container>
-    </Box>
+      <div className="border-t border-white/10">
+        <div className="page-container flex flex-col items-start justify-between gap-2 py-5 text-fs-12 text-white/60 sm:flex-row sm:items-center">
+          <p>
+            © {new Date().getFullYear()} {STORE.name}. All rights reserved.
+          </p>
+          <p>Demo store — payments are simulated, no real card is charged.</p>
+        </div>
+      </div>
+    </footer>
   );
 }

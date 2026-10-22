@@ -1,85 +1,80 @@
 "use client";
 
-import { House, LayoutGrid, Package, ShoppingBasket, UserRound, type LucideIcon } from "lucide-react";
+import { Package, ShoppingBasket, Store, UserRound, type LucideIcon } from "lucide-react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
-import { Box } from "@/components/ui/box";
-import { Button } from "@/components/ui/button";
-import { Grid } from "@/components/ui/grid";
-import { Text } from "@/components/ui/typography";
-import { ButtonLink } from "@/components/shared/ButtonLink";
-import { pluralize } from "@/lib/format";
 import { customerRoutes, publicRoutes } from "@/lib/routes/routes";
-import { cn } from "@/lib/utils";
+import { cn, pluralize } from "@/lib/utils";
 import { useGetCart } from "@/services/cart/queries";
-import { useUiStore } from "@/stores/ui-store";
-import { isCheckoutPath } from "./checkout-path";
+import { useAuthStore } from "@/stores/auth-store";
+import { useShopStore } from "@/stores/shop-store";
 
-const TAB_CLASS = "h-auto flex-col gap-1 rounded-none py-2 text-xs font-medium hover:bg-transparent";
+const TAB_CLASS =
+  "flex flex-col items-center justify-center gap-1 py-2.5 text-fs-11 font-medium outline-none transition-colors focus-visible:bg-muted";
 
 function TabLink({ href, icon: Icon, label, active }: { href: string; icon: LucideIcon; label: string; active: boolean }) {
   return (
-    <ButtonLink
+    <Link
       href={href}
-      variant="ghost"
       aria-current={active ? "page" : undefined}
-      className={cn(TAB_CLASS, active ? "text-brand-green hover:text-brand-green font-semibold" : "text-muted-foreground")}
+      className={cn(TAB_CLASS, active ? "font-semibold text-brand-green" : "text-muted-foreground")}
     >
-      <Icon aria-hidden="true" strokeWidth={active ? 2.4 : 2} className={cn("size-5")} />
+      <Icon aria-hidden="true" strokeWidth={active ? 2.4 : 2} className="size-5" />
       {label}
-    </ButtonLink>
+    </Link>
   );
 }
 
-/** Phone par app jaisa bottom navigation — basket hamesha ek tap door */
+/** Phone par app jaisa bottom navigation — basket hamesha ek tap door (lg se upar hidden) */
 export function MobileTabBar() {
   const pathname = usePathname();
-  const setCartOpen = useUiStore((state) => state.setCartOpen);
-  const setMenuOpen = useUiStore((state) => state.setMenuOpen);
+  const setCartOpen = useShopStore((state) => state.setCartOpen);
+  const token = useAuthStore((state) => state.token);
   const { data: cart } = useGetCart();
   const count = cart?.itemCount ?? 0;
 
-  // Checkout band rehta hai (header/footer bhi checkout mode mein) — bahar jaane ke raste nahi
-  if (isCheckoutPath(pathname)) return null;
-
   return (
-    <Box
-      as="nav"
+    <nav
       aria-label="Quick navigation"
-      className={cn("fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 pb-safe backdrop-blur md:hidden")}
+      className="pb-safe fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 backdrop-blur lg:hidden"
     >
-      <Grid cols="5">
-        <TabLink href={publicRoutes.home} icon={House} label="Home" active={pathname === publicRoutes.home} />
-        <TabLink href={publicRoutes.shop} icon={LayoutGrid} label="Shop" active={pathname === publicRoutes.shop} />
-        <Button
-          variant="ghost"
+      <div className="grid grid-cols-4">
+        <TabLink
+          href={publicRoutes.shop}
+          icon={Store}
+          label="Shop"
+          active={pathname.startsWith(publicRoutes.shop) || pathname.startsWith("/products")}
+        />
+        <button
+          type="button"
           onClick={() => setCartOpen(true)}
           aria-label={`Basket, ${pluralize(count, "item")}`}
           className={cn(TAB_CLASS, "text-muted-foreground")}
         >
-          <Box as="span" className={cn("relative inline-flex")}>
-            <ShoppingBasket aria-hidden="true" className={cn("size-5")} />
+          <span className="relative inline-flex">
+            <ShoppingBasket aria-hidden="true" className="size-5" />
             {count > 0 && (
-              <Badge key={count} className={cn("absolute -top-2 -right-3 h-4.5 min-w-4.5 animate-bump px-1 tabular-nums")}>
+              <Badge key={count} variant="sale" className="absolute -top-2 -right-3 h-4 min-w-4 animate-bump px-1 text-fs-11 tabular-nums">
                 {count}
               </Badge>
             )}
-          </Box>
-          <Text as="span" variant="small" weight="medium">
-            Basket
-          </Text>
-        </Button>
+          </span>
+          Basket
+        </button>
         <TabLink
           href={customerRoutes.orders}
           icon={Package}
           label="Orders"
           active={pathname.startsWith(customerRoutes.orders)}
         />
-        <Button variant="ghost" onClick={() => setMenuOpen(true)} className={cn(TAB_CLASS, "text-muted-foreground")}>
-          <UserRound aria-hidden="true" className={cn("size-5")} />
-          Account
-        </Button>
-      </Grid>
-    </Box>
+        <TabLink
+          href={token ? customerRoutes.profile : publicRoutes.login}
+          icon={UserRound}
+          label={token ? "Account" : "Sign in"}
+          active={pathname.startsWith(customerRoutes.profile) || pathname.startsWith(customerRoutes.addresses)}
+        />
+      </div>
+    </nav>
   );
 }

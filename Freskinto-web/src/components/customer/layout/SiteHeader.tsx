@@ -1,111 +1,144 @@
 "use client";
 
 import { ArrowLeft, Lock, Menu } from "lucide-react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Suspense } from "react";
-import { Box } from "@/components/ui/box";
+import { Suspense, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Container } from "@/components/ui/container";
-import { Flex } from "@/components/ui/flex";
-import { Text } from "@/components/ui/typography";
 import { ButtonLink } from "@/components/shared/ButtonLink";
 import { Logo } from "@/components/shared/Logo";
-import { TextLink } from "@/components/shared/TextLink";
 import { STORE } from "@/constants/store";
 import { useHideOnScroll } from "@/hooks/useHideOnScroll";
 import { customerRoutes, publicRoutes } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
-import { useUiStore } from "@/stores/ui-store";
+import { useAuthStore } from "@/stores/auth-store";
 import { AccountMenu } from "./AccountMenu";
-import { AislesMenu } from "./AislesMenu";
 import { BasketButton } from "./BasketButton";
-import { isCheckoutPath } from "./checkout-path";
 import { HeaderSearch, HeaderSearchFallback } from "./HeaderSearch";
-import { UtilityBar } from "./UtilityBar";
+import { MobileNav } from "./MobileNav";
 
 function SkipLink() {
   return (
-    <ButtonLink
+    <a
       href="#content"
-      size="sm"
-      className={cn("sr-only z-50 focus:not-sr-only focus:fixed focus:top-3 focus:left-3")}
+      className="sr-only z-50 rounded-full bg-brand-green-forest px-4 py-2 text-sm font-semibold text-white focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
     >
       Skip to content
-    </ButtonLink>
+    </a>
   );
 }
 
 function HomeLink() {
   return (
-    <TextLink href={publicRoutes.home} aria-label={`${STORE.name} home`} className={cn("shrink-0")}>
-      <Logo />
-    </TextLink>
+    <Link
+      href={publicRoutes.home}
+      aria-label={`${STORE.name} home`}
+      className="shrink-0 rounded-full outline-none focus-visible:ring-3 focus-visible:ring-ring/40"
+    >
+      <Logo size="md" />
+    </Link>
   );
 }
 
-export function SiteHeader() {
+function NavLink({ href, label, active }: { href: string; label: string; active: boolean }) {
+  return (
+    <Link
+      href={href}
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        "rounded-full px-4 py-2 text-sm font-medium transition-colors outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/40",
+        active ? "bg-brand-soft text-brand-green-dark" : "text-foreground/80",
+      )}
+    >
+      {label}
+    </Link>
+  );
+}
+
+/** Floating glassmorphic navigation — shop pages ke liye; checkout par distraction-free variant */
+export function SiteHeader({ variant = "default" }: { variant?: "default" | "checkout" }) {
+  return variant === "checkout" ? <CheckoutHeader /> : <MarketHeader />;
+}
+
+function MarketHeader() {
   const pathname = usePathname();
   const hidden = useHideOnScroll();
-  const setMenuOpen = useUiStore((state) => state.setMenuOpen);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const hasHydrated = useAuthStore((state) => state._hasHydrated);
+  const isCustomer = useAuthStore((state) => state.user?.role === "CUSTOMER");
 
-  if (isCheckoutPath(pathname)) return <CheckoutHeader />;
+  const onShop = pathname.startsWith(publicRoutes.shop) || pathname.startsWith("/products");
+  const onOrders = pathname.startsWith(customerRoutes.orders);
 
   return (
-    <>
+    <header
+      className={cn(
+        "sticky top-0 z-40 px-3 pt-3 transition-transform duration-300 sm:px-4 lg:px-6",
+        hidden && "max-lg:-translate-y-full",
+      )}
+    >
       <SkipLink />
-      <UtilityBar />
-      <Box
-        as="header"
-        className={cn(
-          "sticky top-0 z-40 border-b bg-background/90 backdrop-blur-md transition-transform duration-300",
-          hidden && "max-md:-translate-y-full",
-        )}
-      >
-        <Container className={cn("flex flex-wrap items-center gap-x-2 gap-y-3 py-3 md:flex-nowrap md:gap-4")}>
-          <Button
-            variant="ghost"
-            size="icon"
-            className={cn("-ml-2 md:hidden")}
-            aria-label="Open menu"
-            onClick={() => setMenuOpen(true)}
-          >
-            <Menu aria-hidden="true" className={cn("size-5")} />
-          </Button>
-          <HomeLink />
-          <AislesMenu className={cn("hidden md:flex")} />
-          <Box className={cn("order-last basis-full md:order-none md:max-w-2xl md:flex-1 md:basis-auto")}>
-            <Suspense fallback={<HeaderSearchFallback />}>
-              <HeaderSearch />
-            </Suspense>
-          </Box>
-          <Flex align="center" gap="1" className={cn("ml-auto sm:gap-2")}>
-            <AccountMenu />
-            <BasketButton />
-          </Flex>
-        </Container>
-      </Box>
-    </>
+      <div className="glass mx-auto flex h-14 max-w-page items-center gap-2 rounded-full border border-border/70 px-2 shadow-float sm:h-16 sm:gap-3 sm:px-3 lg:gap-5 lg:px-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-full lg:hidden"
+          aria-label="Open menu"
+          onClick={() => setMenuOpen(true)}
+        >
+          <Menu aria-hidden="true" className="size-5" />
+        </Button>
+        <HomeLink />
+
+        <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
+          <NavLink href={publicRoutes.shop} label="Shop" active={onShop} />
+          {hasHydrated && isCustomer && <NavLink href={customerRoutes.orders} label="Orders" active={onOrders} />}
+        </nav>
+
+        <div className="hidden min-w-0 flex-1 md:block lg:max-w-xl lg:flex-1">
+          <Suspense fallback={<HeaderSearchFallback />}>
+            <HeaderSearch />
+          </Suspense>
+        </div>
+
+        <div className="ml-auto flex items-center gap-1 sm:gap-2">
+          <AccountMenu />
+          <BasketButton />
+        </div>
+      </div>
+
+      <div className="mx-auto mt-2 max-w-page md:hidden">
+        <Suspense fallback={<HeaderSearchFallback />}>
+          <HeaderSearch />
+        </Suspense>
+      </div>
+
+      <MobileNav open={menuOpen} onOpenChange={setMenuOpen} />
+    </header>
   );
 }
 
 /** Checkout par distraction-free header — sirf logo, "Secure checkout" aur basket par wapsi */
 function CheckoutHeader() {
   return (
-    <Box as="header" className={cn("border-b bg-background")}>
+    <header className="px-3 pt-3 sm:px-4 lg:px-6">
       <SkipLink />
-      <Container className={cn("flex h-16 items-center justify-between gap-4")}>
+      <div className="glass mx-auto flex h-14 max-w-page items-center justify-between gap-4 rounded-full border border-border/70 px-3 shadow-float sm:h-16 sm:px-4">
         <HomeLink />
-        <Flex align="center" gap="2" className={cn("hidden sm:flex")}>
-          <Lock aria-hidden="true" className={cn("size-4 text-brand-green")} />
-          <Text as="span" variant="small" tone="muted" className={cn("text-xs font-semibold tracking-wider uppercase")}>
-            Secure checkout
-          </Text>
-        </Flex>
-        <ButtonLink href={customerRoutes.cart} variant="ghost" size="sm" className={cn("text-brand-green hover:text-brand-green-dark")}>
-          <ArrowLeft data-icon="inline-start" aria-hidden="true" />
+        <p className="hidden items-center gap-2 text-fs-12 font-semibold tracking-wider text-muted-foreground uppercase sm:flex">
+          <Lock aria-hidden="true" className="size-4 text-brand-green" />
+          Secure checkout
+        </p>
+        <ButtonLink
+          href={customerRoutes.cart}
+          variant="ghost"
+          size="sm"
+          className="rounded-full text-brand-green hover:text-brand-green-dark"
+        >
+          <ArrowLeft aria-hidden="true" />
           Back to basket
         </ButtonLink>
-      </Container>
-    </Box>
+      </div>
+    </header>
   );
 }
