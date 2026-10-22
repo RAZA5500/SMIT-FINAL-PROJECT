@@ -1,13 +1,16 @@
 $ bun run test
 $ vitest run
 
- RUN  v5.0.5 D:/SMIT_FINAL-PROJECT/student-web
+ RUN  v5.0.5 D:/SMIT_FINAL-PROJECT/Freskinto-web
 
 
  Test Files  13 passed (13)
       Tests  60 passed (60)
-   Start at  21:23:47
-   Duration  10.09s (environment 43%, tests 20%, setup 17%, import 17%, transform 2%)
+   Start at  18:59:21
+   Duration  6.20s (environment 53%, tests 17%, setup 16%, import 10%, transform 3%)
+
+    Isolate  13 workers spawned · ~1.78s startup each (spawn + environment, per file)
+             at least ~324ms faster with isolate: false — reuses workers across files instead of one per file
 
 
 $ bun run lint

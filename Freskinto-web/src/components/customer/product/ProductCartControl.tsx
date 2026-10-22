@@ -45,7 +45,7 @@ export function ProductCartControl({ product, size = "sm", className }: ProductC
   const addItem = useAddCartItem({ silent: true });
 
   const line = cart?.items.find((item) => item.productId === product.id);
-  if (line) return <BasketLineStepper item={line} size={size} className={className} />;
+  if (line) return <BasketLineStepper item={line} size={size} className={cn(className)} />;
 
   const button = BUTTON_SIZE[size];
 

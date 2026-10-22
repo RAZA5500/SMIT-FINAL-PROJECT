@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "student-api",
+      "name": "freskinto-api",
       "dependencies": {
         "@nestjs/common": "^11.2.7",
         "@nestjs/config": "^4.0.4",

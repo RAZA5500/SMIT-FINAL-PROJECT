@@ -36,12 +36,12 @@ export function HeaderSearch({ className }: { className?: string }) {
   const pathname = usePathname();
   const params = useSearchParams();
   const urlQuery = pathname === publicRoutes.shop ? (params.get("q") ?? "") : "";
-  return <HeaderSearchForm key={urlQuery} initialQuery={urlQuery} className={className} />;
+  return <HeaderSearchForm key={urlQuery} initialQuery={urlQuery} className={cn(className)} />;
 }
 
 /** Suspense fallback / static shell — same size, no suggestions */
 export function HeaderSearchFallback({ className }: { className?: string }) {
-  return <HeaderSearchForm initialQuery="" className={className} />;
+  return <HeaderSearchForm initialQuery="" className={cn(className)} />;
 }
 
 /**

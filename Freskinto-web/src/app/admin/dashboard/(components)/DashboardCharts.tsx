@@ -34,7 +34,7 @@ export function RevenueChart({ className }: { className?: string }) {
 
   return (
     <ChartCard
-      className={className}
+      className={cn(className)}
       title="Revenue"
       subtitle={`${PERIOD_LABEL}, by day`}
       chart={
@@ -99,7 +99,7 @@ export function AisleSalesChart({ className }: { className?: string }) {
 
   return (
     <ChartCard
-      className={className}
+      className={cn(className)}
       title="Sales by aisle"
       subtitle={PERIOD_LABEL}
       chart={

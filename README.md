@@ -6,10 +6,14 @@ and checked against the acceptance checklist ([`notes/acceptance-checklist.md`](
 
 | Folder | What | Stack |
 |---|---|---|
-| `student-api/` | REST API (`/v1`) | NestJS 11, Prisma 7 + PostgreSQL 17, JWT, class-validator, Jest + Supertest |
-| `student-web/` | Storefront + admin panel | Next.js 16 (App Router), TanStack Query, Zustand, React Hook Form + Zod, Tailwind v4 + shadcn/ui (Base UI), Vitest + MSW |
+| `Freskinto-api/` | REST API (`/v1`) | NestJS 11, Prisma 7 + PostgreSQL 17, JWT, class-validator, Jest + Supertest |
+| `Freskinto-web/` | Storefront + admin panel | Next.js 16 (App Router), TanStack Query, Zustand, React Hook Form + Zod, Tailwind v4 + shadcn/ui (Base UI), Vitest + MSW |
 | `docker-compose.yml` | Local PostgreSQL (port **5433**) + `onlinemart_test` database | Docker |
 | `notes/` | Phase 1–2 notes (requirements, architecture), acceptance checklist, test/build evidence | Markdown |
+
+The app folders were called `student-api/` and `student-web/` until 2026-10-22 (package names are now
+`freskinto-api` and `freskinto-web`); run logs in `notes/evidence/` recorded before that date still use the old
+names.
 
 ## Prerequisites
 
@@ -24,7 +28,7 @@ and checked against the acceptance checklist ([`notes/acceptance-checklist.md`](
 docker compose up -d
 
 # 2. API
-cd student-api
+cd Freskinto-api
 cp .env.example .env        # then fill in the secrets (see below)
 bun install                 # also runs `prisma generate`
 bun run db:deploy           # apply migrations (during schema work: bun run db:migrate)
@@ -32,13 +36,13 @@ bun run db:seed             # creates the single ADMIN from ADMIN_EMAIL / ADMIN_
 bun run start:dev           # http://localhost:4000/v1  (Swagger: http://localhost:4000/v1/docs)
 
 # 3. Web
-cd ../student-web
+cd ../Freskinto-web
 cp .env.example .env.local  # NEXT_PUBLIC_BASE_URL=http://localhost:4000/v1
 bun install
 bun run dev                 # http://localhost:3000
 ```
 
-`student-api/.env` values:
+`Freskinto-api/.env` values:
 
 | Variable | Notes |
 |---|---|
@@ -55,7 +59,7 @@ created. If your volume is older than that script, create it once with
 
 ### Accounts
 
-- **Admin:** the credentials are whatever you put in `student-api/.env` as `ADMIN_EMAIL` / `ADMIN_PASSWORD`;
+- **Admin:** the credentials are whatever you put in `Freskinto-api/.env` as `ADMIN_EMAIL` / `ADMIN_PASSWORD`;
   `bun run db:seed` creates that user. Exactly one ADMIN can exist (enforced by a database index), and the seed
   skips if one is already there. Admins land on `/admin/dashboard`.
 - **Customers:** register at `/register` (always created as CUSTOMER). Customers land on `/shop`.
@@ -63,7 +67,7 @@ created. If your volume is older than that script, create it once with
 
 ## Tests and quality gates
 
-| | API (`student-api`) | Web (`student-web`) |
+| | API (`Freskinto-api`) | Web (`Freskinto-web`) |
 |---|---|---|
 | Unit / component tests | `bun run test` (Jest, mocked DB) | `bun run test` (Vitest + Testing Library + MSW) |
 | Integration / e2e | `bun run test:e2e` (Supertest against the real `onlinemart_test` DB, run in band) | — |
@@ -114,21 +118,28 @@ The admin profile shows the signed-in admin's real details; editing and password
   generator with the `@prisma/adapter-pg` driver adapter.
 
 **Web**
-- The UI is branded **Freskinto**. shadcn/ui is the Base UI flavour (`base-nova`) with its tokens mapped onto the
-  Freskinto design tokens in `student-web/src/app/globals.css`: **mostly white with fresh green accents** — pure white
-  pages, cards, header and admin sidebar; light grey for quiet panels (hero, footer, tiles, chips); emerald green
-  `#047857` only for actions and accents (buttons, prices, badges, links, active states). No tinted panels or large
-  coloured blocks. Red is kept for errors and low-stock urgency; amber for pending. Bricolage Grotesque headings + Inter text, self-hosted with `next/font/local`. Dark
-  mode is class-based only (`@custom-variant dark`) so the OS theme doesn't restyle the light design. Customer copy
-  uses UK English ("basket").
+- The UI is branded **Freskinto** and was rebuilt from scratch on 2026-10-22 around a "market hall" idea: numbered
+  aisle signs for top-level categories, shelf-edge price labels, till-receipt order and basket summaries (perforated
+  edge + barcode) and a ruled-notepad shopping list on the auth screens. The admin is an inset stone-grey sidebar
+  around a white workspace, with a ⌘K / Ctrl+K command palette.
+- shadcn/ui is the Base UI flavour (`base-nova`) with its tokens mapped onto the Freskinto design tokens in
+  `Freskinto-web/src/app/globals.css`: **mostly white with fresh green accents** — white pages and cards, light
+  stone grey for quiet panels, emerald `#047857` only for actions and accents (buttons, prices, badges, links, active
+  states). Red is kept for errors and low-stock urgency; amber for pending. Fraunces (serif headings) + Inter (text)
+  + JetBrains Mono (receipts, codes, labels), self-hosted with `next/font/local`. Dark mode is class-based only
+  (`@custom-variant dark`) so the OS theme doesn't restyle the light design. Customer copy uses UK English
+  ("basket").
+- No raw HTML elements in pages or feature components: they compose shadcn/ui components and the layout/type
+  primitives in `components/ui` (`Box`, `Flex`/`Stack`, `Grid`, `Container`, `Heading`, `Text`, `Form`,
+  `Receipt`), and every `className` goes through `cn()`. Only the root layout renders `<html>`/`<body>`.
 - Login: the Google button was removed (no external identity provider in scope); "Remember me" stores the
   session in `localStorage`, otherwise in `sessionStorage`.
 - Removed the unused `AuthModal` and the `/admin/categories/create` page — categories are created and edited in a
   dialog.
 - Products have no images or descriptions in scope. The storefront pairs product names with demo packshots by
-  keyword (`student-web/src/lib/merchandising.ts`, photos in `public/images/products`) and shows the category icon
+  keyword (`Freskinto-web/src/lib/merchandising.ts`, photos in `public/images/products`) and shows the category icon
   when nothing fits, so a photo never misrepresents a product; the admin product form previews which photo will be
-  used. Purely presentational — no data changes. The product form has three tabs (Basic, Price & Limits, Review);
+  used. Purely presentational — no data changes. The product form has three steps (Basics, Price & limits, Review);
   stock is managed on the Inventory page.
 - Added a product page `/products/[id]` (not in the student page list) with a related-products rail. Shop filters
   live in the URL (`/shop?q=&category=&sort=&min=&max=&page=`) so header search suggestions, category links and
@@ -136,10 +147,10 @@ The admin profile shows the signed-in admin's real details; editing and password
   navigation (header, footer, tab bar) to stay enclosed.
 - Customers never see category product counts: the API's `productCount` also counts inactive products, so the
   storefront shows sub-aisle names instead, and aisle shelves use their own product query's total.
-- Components inside Suspense boundaries that render query data (header category bar, shop view) wait for
-  hydration (`hooks/useHydrated.ts`), because data fetched by already-hydrated components would otherwise make the
-  first client render differ from the server HTML.
-- The admin dashboard is a sample-data screen; its single-series charts use the brand red and every chart has a
+- Components inside Suspense boundaries that render query data (the shop view) wait for hydration
+  (`hooks/useHydrated.ts`), because data fetched by already-hydrated components would otherwise make the first
+  client render differ from the server HTML.
+- The admin dashboard is a sample-data screen; its single-series charts use the brand green and every chart has a
   table view.
 - Shop sort options are the API whitelist (`newest`, `price_asc`, `price_desc`, `name_asc`); "Name Z→A" was
   dropped. Home "Just landed" shows the newest products (there is no popularity data).

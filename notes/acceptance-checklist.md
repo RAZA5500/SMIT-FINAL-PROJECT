@@ -1,8 +1,11 @@
 # Acceptance checklist — evidence (FLOW-MD 14)
 
-Status as of 20 Oct 2026. Evidence files live in [`notes/evidence/`](evidence). e2e test names refer to
-`student-api/test/*.e2e-spec.ts` (run: [`api-e2e-tests.txt`](evidence/api-e2e-tests.txt), 95/95 passing); unit
-tests to `student-api/src/**/*.spec.ts` ([`api-unit-tests.txt`](evidence/api-unit-tests.txt), 185/185).
+Status as of 22 Oct 2026. Evidence files live in [`notes/evidence/`](evidence). e2e test names refer to
+`Freskinto-api/test/*.e2e-spec.ts` (run: [`api-e2e-tests.txt`](evidence/api-e2e-tests.txt), 95/95 passing); unit
+tests to `Freskinto-api/src/**/*.spec.ts` ([`api-unit-tests.txt`](evidence/api-unit-tests.txt), 185/185).
+The app folders were renamed from `student-api`/`student-web` on 22 Oct 2026. The API e2e run and the phase 16–19
+run logs are from 20 Oct and still show the old names (Docker was not running on 22 Oct, so e2e was not re-run);
+unit tests, lint, typecheck and build were re-run in the renamed folders.
 
 ## A. Business rules
 
@@ -29,7 +32,7 @@ tests to `student-api/src/**/*.spec.ts` ([`api-unit-tests.txt`](evidence/api-uni
 
 | Item | Status | Evidence |
 |---|---|---|
-| DTO / Controller / Service / Db service / Types / Mappers per module | ✅ | `student-api/src/modules/*/{dto,types,mappers}` + `*.controller.ts`, `*.service.ts`, `*.db.service.ts` |
+| DTO / Controller / Service / Db service / Types / Mappers per module | ✅ | `Freskinto-api/src/modules/*/{dto,types,mappers}` + `*.controller.ts`, `*.service.ts`, `*.db.service.ts` |
 | No business logic or Prisma in controllers | ✅ | controllers only map HTTP → service calls |
 | One `DatabaseService`, no other PrismaClient | ✅ | `src/database/database.service.ts` is the only client in the app (the standalone `prisma/seed.ts` script opens its own short-lived client) |
 | Payment gateway behind an interface | ✅ | `src/infrastructure/payment/payment-gateway.ts` (`PAYMENT_GATEWAY` token, mock implementation) |
@@ -53,7 +56,7 @@ tests to `student-api/src/**/*.spec.ts` ([`api-unit-tests.txt`](evidence/api-uni
 | IDOR: another user's order/address/cart item → 404 | ✅ | addresses/cart/orders e2e ownership tests; phase 17 run (8/8 → 404) |
 | `passwordHash` in no response | ✅ | auth e2e: "never returns the hash", "/auth/me … without passwordHash" |
 | Webhook signature verified; invalid → 400 | ✅ | payments e2e: "invalid signature → 400 and nothing changes" |
-| `.env` not committed; `.env.example` placeholders | ✅ | `.gitignore`; `git ls-files` only lists `student-api/.env.example` and `student-web/.env.example` |
+| `.env` not committed; `.env.example` placeholders | ✅ | `.gitignore`; `git ls-files` only lists `Freskinto-api/.env.example` and `Freskinto-web/.env.example` |
 
 ## E. Reliability, duplicates, concurrency
 
@@ -71,29 +74,30 @@ tests to `student-api/src/**/*.spec.ts` ([`api-unit-tests.txt`](evidence/api-uni
 | Folder structure per 07; pages compose | ✅ | `page.tsx` files render a view from their `(components)/` folder; `services/<domain>`, `modules/zod`, `components/{ui,shared,admin,customer}` |
 | All forms Zod + RHF; cross-field rules | ✅ | 11 in-scope forms use `zodResolver` (register confirm, checkout DELIVERY/PICKUP, product max ≥ min, adjustment sign, cancel OTHER note); schema tests in `schemas.test.ts` |
 | `services/<domain>` hooks; no direct `fetch` | ✅ | only `lib/networking/request.ts` calls `fetch` |
-| Loading (skeleton) / error / empty / success on every list | ✅ | every list/detail view; `FreshDealsSection.test.tsx` (MSW 500 → ErrorState, empty → EmptyState); API stopped → no blank pages ([`phase16-ui-states.md`](evidence/phase16-ui-states.md)) |
+| Loading (skeleton) / error / empty / success on every list | ✅ | every list/detail view; `NewArrivals.test.tsx` (MSW 500 → ErrorState, empty → EmptyState); API stopped → no blank pages ([`phase16-ui-states.md`](evidence/phase16-ui-states.md)) |
 | Submit buttons disabled while pending; checkout key stable in `useRef` | ✅ / deviation | `LoadingButton` everywhere; `ProductCard.test.tsx` double click → 1 request; browser double-click on Pay → 1 `POST /orders`. No idempotency key by decision (see README) — a `useRef` guard + cart clear protect checkout |
 | Correct query invalidation after mutations | ✅ | invalidation per 08 §9 in `services/*/mutations.ts`; `ProductCard.test.tsx` add → `["cart"]` refetch |
 | AuthGuard: customer can't see admin pages; 401 → logout | ✅ | `AuthGuard.test.tsx`, `request.test.ts`; browser: customer → `/admin/categories` → `/shop` |
-| shadcn/ui primitives + shared components; no duplicate UI patterns | ✅ | `components/ui` (Base UI shadcn) + `components/shared` (Pagination, ConfirmDialog, StatusBadge, …) |
-| Tailwind: no arbitrary spacing | ✅ | `grep` for `p-[…]`, `m-[…]`, `gap-[…]` etc. in `student-web/src` → app code has only the commented safe-area exception (`pb-[env(safe-area-inset-bottom)]` in `MobileTabBar.tsx`); the rest are inside vendored shadcn/ui primitives (`components/ui/input-group.tsx`, `sidebar.tsx`, `toggle-group.tsx`) |
+| shadcn/ui primitives + shared components; no duplicate UI patterns | ✅ | `components/ui` (Base UI shadcn + layout/type primitives `Box`, `Flex`/`Stack`, `Grid`, `Container`, `Heading`, `Text`, `Form`, `Receipt`) + `components/shared` (Pagination, ConfirmDialog, StatusBadge, …) |
+| No raw HTML outside `components/ui`; every `className` through `cn()` | ✅ | `grep` for intrinsic JSX tags (`<div`, `<span`, `<p`, `<button`, `<a `, `<img`, …) in `Freskinto-web/src/app` and `components/{shared,customer,admin}` → 0 (only the root layout's `<html>`/`<body>`); `grep` for a `className` string literal or a `className={…}` not starting with `cn(` → 0 |
+| Tailwind: no arbitrary spacing | ✅ | `grep` for `p-[…]`, `m-[…]`, `gap-[…]`, `w-[…]` etc. in `Freskinto-web/src` outside `components/ui` → 0 (phone safe-area padding is the `pb-safe` utility in `globals.css`); the rest are inside vendored shadcn/ui primitives |
 
 ## G. Code quality
 
 | Item | Status | Evidence |
 |---|---|---|
-| No source file over 1000 lines | ✅ | largest: `components/ui/sidebar.tsx` 724 (vendored shadcn/ui), `orders.e2e-spec.ts` 408, `components/ui/chart.tsx` 372, `ProductForm.tsx` 336 |
+| No source file over 1000 lines | ✅ | largest: `components/ui/sidebar.tsx` 723 (vendored shadcn/ui), `orders.e2e-spec.ts` 408, `components/ui/chart.tsx` 372, `catalog.e2e-spec.ts` 360, `ProductForm.tsx` 305 |
 | `lint` and `typecheck` clean | ✅ | [`api-lint-typecheck-build.txt`](evidence/api-lint-typecheck-build.txt), [`web-tests-lint-typecheck.txt`](evidence/web-tests-lint-typecheck.txt) |
 
 ## H. Tests and build
 
 | Item | Status | Evidence |
 |---|---|---|
-| `student-api`: `bun run test` | ✅ | [`api-unit-tests.txt`](evidence/api-unit-tests.txt) — 18 suites, 185 tests |
-| `student-api`: `bun run test:e2e` (real Postgres) | ✅ | [`api-e2e-tests.txt`](evidence/api-e2e-tests.txt) — 8 suites, 95 tests |
-| `student-api`: `bun run build` | ✅ | [`api-lint-typecheck-build.txt`](evidence/api-lint-typecheck-build.txt) |
-| `student-web`: `bun run build` | ✅ | [`web-build.txt`](evidence/web-build.txt) |
-| `student-web`: `bun run test` | ✅ | [`web-tests-lint-typecheck.txt`](evidence/web-tests-lint-typecheck.txt) — 13 files, 60 tests |
+| `Freskinto-api`: `bun run test` | ✅ | [`api-unit-tests.txt`](evidence/api-unit-tests.txt) — 18 suites, 185 tests |
+| `Freskinto-api`: `bun run test:e2e` (real Postgres) | ✅ | [`api-e2e-tests.txt`](evidence/api-e2e-tests.txt) — 8 suites, 95 tests (20 Oct run, before the folder rename) |
+| `Freskinto-api`: `bun run build` | ✅ | [`api-lint-typecheck-build.txt`](evidence/api-lint-typecheck-build.txt) |
+| `Freskinto-web`: `bun run build` | ✅ | [`web-build.txt`](evidence/web-build.txt) |
+| `Freskinto-web`: `bun run test` | ✅ | [`web-tests-lint-typecheck.txt`](evidence/web-tests-lint-typecheck.txt) — 13 files, 60 tests |
 | 4 critical E2E flows | ✅ | [`phase19-critical-flows.md`](evidence/phase19-critical-flows.md) + `critical-flows.e2e-spec.ts` |
 
 ## I. Documentation

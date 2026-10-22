@@ -6,8 +6,8 @@
 
 ```mermaid
 flowchart LR
-  B[Browser] -->|pages| SW[student-web: Next.js 16]
-  B -->|Bearer JWT, JSON — NEXT_PUBLIC_BASE_URL| SA[student-api: NestJS 11]
+  B[Browser] -->|pages| SW[Freskinto-web: Next.js 16]
+  B -->|Bearer JWT, JSON — NEXT_PUBLIC_BASE_URL| SA[Freskinto-api: NestJS 11]
   SA -->|Prisma 7 + adapter-pg| PG[(PostgreSQL — docker-compose)]
   SA --> MG[MockPaymentGateway — infrastructure/payment]
   MG -.signed webhook event x-signature.-> SA
@@ -18,7 +18,7 @@ flowchart LR
 - Authentication poori tarah backend ka kaam: bcrypt hash/verify + JWT issue/verify. Frontend sirf token store karke `Authorization: Bearer` bhejta hai.
 - Koi Redis/queue nahi — background kaam `@nestjs/schedule` cron se.
 
-## 2. Backend modules (`student-api/src`)
+## 2. Backend modules (`Freskinto-api/src`)
 
 | Module / folder | Zimmedari |
 |---|---|
@@ -61,12 +61,12 @@ Rules: controller mein business logic / Prisma nahi; Prisma sirf `*.db.service.t
 | Refund | Cancel commit ke baad `RefundService`; fail ho to refund-retry cron (har 5 min) |
 | Payment timeout | Cron har minute — `PENDING` + `paymentExpiresAt < now` |
 
-## 3. Frontend (`student-web/src`)
+## 3. Frontend (`Freskinto-web/src`)
 
 | Folder | Kaam |
 |---|---|
 | `app/` | Routes — `page.tsx` sirf compose karta hai, `(components)/` mein page ke components |
-| `components/ui` | shadcn primitives |
+| `components/ui` | shadcn primitives + layout/type primitives (`Box`, `Flex`/`Stack`, `Grid`, `Container`, `Heading`, `Text`, `Form`, `Receipt`) — sirf yahan raw HTML tags; baqi sab inhi ko compose karta hai, har `className` `cn()` se |
 | `components/shared` | `InputField`, `Pagination`, `EmptyState`, `ErrorState`, `StatusBadge`, `AuthGuard`, ... |
 | `components/admin`, `components/customer` | Scope-specific components |
 | `services/<domain>/` | `index.ts` (API calls), `types.ts`, `queries.ts`, `mutations.ts` |
@@ -113,7 +113,7 @@ stateDiagram-v2
 
 ```mermaid
 sequenceDiagram
-  participant W as student-web (checkout/payment)
+  participant W as Freskinto-web (checkout/payment)
   participant API as OrderCreationService
   participant DB as PostgreSQL (1 transaction)
   participant P as PaymentsService

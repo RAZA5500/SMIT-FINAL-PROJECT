@@ -1,4 +1,4 @@
-/** Backend enums (UPPER_SNAKE) — student-api/prisma/schema.prisma ke mutabiq */
+/** Backend enums (UPPER_SNAKE) — Freskinto-api/prisma/schema.prisma ke mutabiq */
 
 export const ORDER_STATUSES = [
   "PENDING",

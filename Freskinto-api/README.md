@@ -1,7 +1,7 @@
-# student-api
+# Freskinto API
 
-NestJS 11 REST API (`/v1`) for OnlineMart. Setup, environment variables, scripts and deviations are documented in
-the [root README](../README.md).
+NestJS 11 REST API (`/v1`) for Freskinto (the OnlineMart project). Setup, environment variables, scripts and
+deviations are documented in the [root README](../README.md).
 
 ```bash
 cp .env.example .env    # fill in JWT_SECRET (32+ chars), PAYMENT_WEBHOOK_SECRET, ADMIN_*
