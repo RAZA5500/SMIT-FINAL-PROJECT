@@ -5,7 +5,7 @@ import { server } from "@/test/msw-server";
 import { TEST_API } from "@/test/render";
 import { useAuthStore } from "@/stores/auth-store";
 import type { IUser } from "@/services/auth/types";
-import { ApiError, extractApiMessage, NETWORK_ERROR_MESSAGE, request } from "./request";
+import { ApiError, extractApiMessage, NETWORK_ERROR_MESSAGE, request, withQuery } from "./api";
 
 const URL = `${TEST_API}/things`;
 
@@ -19,6 +19,15 @@ describe("extractApiMessage", () => {
     expect(extractApiMessage({ errors: [{ message: "A" }, "B"] })).toBe("A, B");
     expect(extractApiMessage({ error: "Bad Request" }, "fallback")).toBe("fallback");
     expect(extractApiMessage({ error: "Payment Required" })).toBe("Payment Required");
+  });
+});
+
+describe("withQuery()", () => {
+  it("keeps only defined values", () => {
+    expect(withQuery("/x", { q: "milk", page: 2, empty: "", none: undefined, nil: null })).toBe(
+      "/x?q=milk&page=2",
+    );
+    expect(withQuery("/x", {})).toBe("/x");
   });
 });
 

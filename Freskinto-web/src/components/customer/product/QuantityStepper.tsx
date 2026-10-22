@@ -2,8 +2,6 @@
 
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Flex } from "@/components/ui/flex";
-import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 
 const SIZES = {
@@ -13,13 +11,13 @@ const SIZES = {
 } as const;
 
 const VARIANTS = {
-  // In-basket state on product cards — solid emerald pill
+  // In-basket state on product cards — deep forest pill
   solid: {
-    root: "bg-primary text-primary-foreground shadow-xs",
-    button: "text-primary-foreground hover:bg-white/15 hover:text-primary-foreground disabled:opacity-40",
+    root: "bg-brand-green-forest text-white shadow-soft",
+    button: "text-white hover:bg-white/15 hover:text-white disabled:opacity-40",
   },
   outline: {
-    root: "border border-input bg-background text-foreground",
+    root: "border border-input bg-card text-foreground",
     button: "hover:bg-muted disabled:opacity-35",
   },
 } as const;
@@ -61,13 +59,10 @@ export function QuantityStepper({
   const removes = removeAtMinimum && atMinimum;
 
   return (
-    <Flex
+    <div
       role="group"
       aria-label={`Quantity of ${label}`}
-      inline
-      align="center"
-      justify="between"
-      className={cn("rounded-full", s.root, v.root, className)}
+      className={cn("inline-flex items-center justify-between rounded-full", s.root, v.root, className)}
     >
       <Button
         variant="ghost"
@@ -75,23 +70,23 @@ export function QuantityStepper({
         aria-label={removes ? `Remove ${label} from basket` : `Decrease quantity of ${label}`}
         disabled={disabled || (!removes && !canDecrease)}
         onClick={onDecrease}
-        className={cn(s.button, v.button)}
+        className={cn("rounded-full", s.button, v.button)}
       >
         {removes ? <Trash2 aria-hidden="true" /> : <Minus aria-hidden="true" />}
       </Button>
-      <Text as="span" weight="semibold" numeric aria-live="polite" className={cn("text-center", s.value)}>
+      <span aria-live="polite" className={cn("numeric text-center font-semibold", s.value)}>
         {quantity}
-      </Text>
+      </span>
       <Button
         variant="ghost"
         size="icon"
         aria-label={`Increase quantity of ${label}`}
         disabled={disabled || !canIncrease}
         onClick={onIncrease}
-        className={cn(s.button, v.button)}
+        className={cn("rounded-full", s.button, v.button)}
       >
         <Plus aria-hidden="true" />
       </Button>
-    </Flex>
+    </div>
   );
 }

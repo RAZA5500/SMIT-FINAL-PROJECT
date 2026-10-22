@@ -3,8 +3,8 @@ import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
 const TONES = {
-  brand: "text-brand hover:text-brand-strong",
-  default: "text-foreground hover:text-brand",
+  brand: "text-brand-green hover:text-brand-green-dark",
+  default: "text-foreground hover:text-brand-green",
   muted: "text-muted-foreground hover:text-foreground",
 } as const;
 
@@ -14,7 +14,7 @@ type TextLinkProps = ComponentProps<typeof Link> & {
   underline?: boolean;
 };
 
-/** Inline text link (Next `Link`) — paragraphs, footers, "Forgot password?" */
+/** Inline text link (Next `Link`) — paragraphs, footers, "Create an account" */
 export function TextLink({ tone = "brand", underline = false, className, ...props }: TextLinkProps) {
   return (
     <Link

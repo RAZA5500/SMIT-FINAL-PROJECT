@@ -69,11 +69,30 @@ interface ToneClasses {
   chip: string;
 }
 
-/** Mostly-white palette: har aisle ka ek hi light grey tint — photos aur icons farq batate hain */
-const BRAND_TONE: ToneClasses = { tile: "bg-brand-soft", icon: "text-brand", chip: "bg-brand-soft text-brand" };
+/** Aisle tile tokens (globals.css) — har tone ek warm well par: sage, butter, clay, sky, rose, stone */
+const TILES = {
+  sage: { tile: "bg-tile-sage", icon: "text-brand-green-dark", chip: "bg-tile-sage text-brand-green-dark" },
+  butter: { tile: "bg-tile-butter", icon: "text-saffron-ink", chip: "bg-tile-butter text-saffron-ink" },
+  clay: { tile: "bg-tile-clay", icon: "text-brand-orange", chip: "bg-tile-clay text-brand-orange" },
+  sky: { tile: "bg-tile-sky", icon: "text-info-ink", chip: "bg-tile-sky text-info-ink" },
+  rose: { tile: "bg-tile-rose", icon: "text-tomato-ink", chip: "bg-tile-rose text-tomato-ink" },
+  stone: { tile: "bg-tile-stone", icon: "text-neutral-ink", chip: "bg-tile-stone text-neutral-ink" },
+} satisfies Record<string, ToneClasses>;
 
-/** Tone naam category data mein rehte hain, taake kabhi alag tints wapas chahiye hon to sirf yahan badlein */
-export const TONE_CLASSES = Object.fromEntries(TONES.map((tone) => [tone, BRAND_TONE])) as Record<Tone, ToneClasses>;
+/** Tone naam category data mein rehte hain; yahan har tone ka tile tay hota hai */
+export const TONE_CLASSES: Record<Tone, ToneClasses> = {
+  green: TILES.sage,
+  teal: TILES.sage,
+  amber: TILES.butter,
+  yellow: TILES.butter,
+  orange: TILES.clay,
+  sky: TILES.sky,
+  cyan: TILES.sky,
+  red: TILES.rose,
+  rose: TILES.rose,
+  violet: TILES.stone,
+  stone: TILES.stone,
+};
 
 export interface CategoryTheme {
   tone: Tone;

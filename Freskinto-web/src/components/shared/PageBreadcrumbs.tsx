@@ -26,14 +26,14 @@ interface PageBreadcrumbsProps {
 export function PageBreadcrumbs({ items, root, className }: PageBreadcrumbsProps) {
   const all = root ? [root, ...items] : items;
   return (
-    <Breadcrumb className={cn(className)}>
+    <Breadcrumb className={className}>
       <BreadcrumbList>
         {all.map((crumb, index) => {
           const last = index === all.length - 1;
           return (
             <Fragment key={`${crumb.label}-${index}`}>
               {index > 0 && <BreadcrumbSeparator />}
-              <BreadcrumbItem className={cn("min-w-0")}>
+              <BreadcrumbItem className="min-w-0">
                 {crumb.href && !last ? (
                   <BreadcrumbLink render={<Link href={crumb.href} />}>{crumb.label}</BreadcrumbLink>
                 ) : (

@@ -1,8 +1,6 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Box } from "@/components/ui/box";
-import { Field, FieldContent, FieldDescription, FieldLabel, FieldTitle } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 
@@ -31,8 +29,8 @@ interface ChoiceCardsProps<T extends string> {
 }
 
 /**
- * Radio group as big tappable cards (shadcn Field "choice card" pattern). Checked
- * card gets an emerald border — no tinted fill.
+ * Radio group as big tappable cards. Checked card gets a forest border and a soft
+ * brand wash — selection ek nazar mein samajh aati hai.
  */
 export function ChoiceCards<T extends string>({
   id,
@@ -59,33 +57,29 @@ export function ChoiceCards<T extends string>({
       {options.map((option) => {
         const optionId = `${id}-${option.value}`;
         return (
-          <FieldLabel
+          <label
             key={option.value}
             htmlFor={optionId}
             className={cn(
-              "rounded-2xl! bg-background transition-colors has-data-checked:border-primary has-data-checked:bg-background has-data-checked:ring-1 has-data-checked:ring-primary",
+              "flex cursor-pointer items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-foreground/30 has-data-checked:border-primary has-data-checked:bg-brand-soft/60 has-data-checked:ring-1 has-data-checked:ring-primary has-disabled:cursor-not-allowed has-disabled:opacity-60",
               optionClassName,
             )}
           >
-            <Field orientation="horizontal" data-disabled={option.disabled || undefined} className={cn("items-center! gap-3 p-4!")}>
-              {option.icon && (
-                <Box
-                  aria-hidden="true"
-                  className={cn(
-                    "flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-brand [&_svg]:size-5",
-                  )}
-                >
-                  {option.icon}
-                </Box>
-              )}
-              <FieldContent>
-                <FieldTitle>{option.title}</FieldTitle>
-                {option.description && <FieldDescription>{option.description}</FieldDescription>}
-              </FieldContent>
-              {option.aside}
-              <RadioGroupItem value={option.value} id={optionId} disabled={option.disabled} />
-            </Field>
-          </FieldLabel>
+            {option.icon && (
+              <span
+                aria-hidden="true"
+                className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-brand-green [&_svg]:size-5"
+              >
+                {option.icon}
+              </span>
+            )}
+            <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+              <span className="text-sm font-semibold text-foreground">{option.title}</span>
+              {option.description && <span className="text-fs-13 text-muted-foreground">{option.description}</span>}
+            </span>
+            {option.aside}
+            <RadioGroupItem value={option.value} id={optionId} disabled={option.disabled} />
+          </label>
         );
       })}
     </RadioGroup>

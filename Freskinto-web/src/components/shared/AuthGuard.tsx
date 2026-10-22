@@ -2,11 +2,9 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
-import { Container } from "@/components/ui/container";
-import { ApiError } from "@/lib/networking/request";
+import { ApiError } from "@/lib/api";
 import { homeForRole, loginUrl } from "@/lib/routes/routes";
 import { toastError } from "@/lib/toast";
-import { cn } from "@/lib/utils";
 import { useGetMe } from "@/services/auth/queries";
 import type { UserRole } from "@/services/auth/types";
 import { useAuthStore } from "@/stores/auth-store";
@@ -60,9 +58,9 @@ export function AuthGuard({ expectedRole, children }: AuthGuardProps) {
   // Network / 5xx — transient; user ko bahar nahi nikalte (FLOW-MD 06 §9)
   if (error) {
     return (
-      <Container className={cn("py-16")}>
+      <div className="page-container py-16">
         <ErrorState title="We couldn't verify your session" message={error.message} onRetry={() => void refetch()} />
-      </Container>
+      </div>
     );
   }
 

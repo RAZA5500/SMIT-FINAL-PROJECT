@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -19,19 +20,20 @@ export interface AppModalProps {
   children: ReactNode;
   footer?: ReactNode;
   className?: string;
-  size?: "sm" | "default" | "lg" | "xl";
+  size?: "sm" | "default" | "lg" | "xl" | "2xl";
 }
 
 const SIZE_CLASSES = {
-  sm: "sm:max-w-sm",
-  default: "sm:max-w-md",
-  lg: "sm:max-w-lg",
-  xl: "sm:max-w-xl",
+  sm: "max-w-sm",
+  default: "max-w-md",
+  lg: "max-w-lg",
+  xl: "max-w-2xl",
+  "2xl": "max-w-4xl",
 };
 
 /**
- * Standard project modal wrapper (FLOW-MD 07 §3) with proper accessible title,
- * description, scrolling body, and action footer utilizing `bg-modal-footer`.
+ * Standard project modal (FLOW-MD 07 §3): header zone → scrolling body → action footer
+ * (`bg-modal-footer`). Focus trap + Esc dismissal Base UI Dialog se.
  */
 export function AppModal({
   open,
@@ -51,7 +53,7 @@ export function AppModal({
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
 
-        <div className="py-2">{children}</div>
+        <DialogBody>{children}</DialogBody>
 
         {footer && <DialogFooter>{footer}</DialogFooter>}
       </DialogContent>

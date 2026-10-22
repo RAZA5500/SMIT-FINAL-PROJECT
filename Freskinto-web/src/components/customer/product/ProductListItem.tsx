@@ -1,52 +1,58 @@
 "use client";
 
-import { Box } from "@/components/ui/box";
-import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
-import { ShelfLabel } from "@/components/shared/Price";
+import { Price } from "@/components/shared/Price";
 import { ProductImage } from "@/components/shared/ProductImage";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { TextLink } from "@/components/shared/TextLink";
 import { publicRoutes } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
 import type { IProduct } from "@/services/products/types";
+import { ProductBadges } from "./ProductCard";
 import { ProductCartControl } from "./ProductCartControl";
 
-/** Shop "list" view row — compact, scannable, same basket control as the card */
-export function ProductListItem({ product }: { product: IProduct }) {
+/** Shop ka list layout — ek product ek row, basket control right par */
+export function ProductListItem({ product, className }: { product: IProduct; className?: string }) {
   return (
-    <Item variant="outline" className={cn("relative flex-nowrap gap-4 rounded-2xl bg-card p-3 sm:p-4")}>
-      <ItemMedia className={cn("size-20 shrink-0 overflow-hidden rounded-xl sm:size-24")}>
+    <article
+      className={cn(
+        "group/product relative flex items-center gap-4 rounded-15 border border-border bg-card p-3 shadow-soft transition duration-300 hover:border-brand-green/30 hover:shadow-lift sm:p-4",
+        className,
+      )}
+    >
+      <div className="relative shrink-0">
         <ProductImage
           name={product.name}
           categoryName={product.category.name}
-          sizes="96px"
+          sizes="112px"
           muted={product.stockStatus === "OUT_OF_STOCK"}
-          className={cn("size-full")}
-          imageClassName={cn("p-2")}
+          className="size-24 rounded-xl sm:size-28"
+          imageClassName="p-2"
         />
-      </ItemMedia>
-      <ItemContent className={cn("min-w-0 gap-2")}>
-        <ItemDescription className={cn("truncate text-xs")}>{product.category.name}</ItemDescription>
-        <ItemTitle className={cn("line-clamp-2 text-base font-semibold")}>
+        <ProductBadges product={product} className="absolute top-1.5 left-1.5 scale-90" />
+      </div>
+
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+        <p className="truncate text-fs-11 font-semibold tracking-wider text-muted-foreground uppercase">
+          {product.category.name}
+        </p>
+        <h3 className="line-clamp-2 font-heading text-fs-16 leading-snug font-semibold">
           <TextLink
             href={publicRoutes.product(product.id)}
             tone="default"
-            className={cn("hover:no-underline after:absolute after:inset-0 after:rounded-2xl")}
+            className="after:absolute after:inset-0 after:rounded-15 hover:no-underline focus-visible:ring-0 focus-visible:after:ring-3 focus-visible:after:ring-ring/40"
           >
             {product.name}
           </TextLink>
-        </ItemTitle>
-        {product.stockStatus !== "IN_STOCK" && <StatusBadge status={product.stockStatus} />}
-      </ItemContent>
-      <ItemActions className={cn("shrink-0 flex-col items-end gap-3 sm:flex-row sm:items-center")}>
-        <ShelfLabel
-          amount={product.price}
-          caption={product.minimumOrderQuantity > 1 ? `Min. ${product.minimumOrderQuantity}` : "Each"}
-        />
-        <Box className={cn("relative z-10 w-36 sm:w-40")}>
-          <ProductCartControl product={product} />
-        </Box>
-      </ItemActions>
-    </Item>
+        </h3>
+        <div className="flex flex-wrap items-center gap-2">
+          <Price amount={product.price} size="md" tone="brand" />
+          <StatusBadge status={product.stockStatus} />
+        </div>
+      </div>
+
+      <div className="relative z-10 w-32 shrink-0 sm:w-44">
+        <ProductCartControl product={product} />
+      </div>
+    </article>
   );
 }

@@ -1,7 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { DeleteDialog, StandardDestructiveModal } from "./DeleteDialog";
+import { DeleteDialog } from "./DeleteDialog";
+import { StandardDestructiveModal } from "./StandardDestructiveModal";
 
 describe("Pattern A: DeleteDialog", () => {
   it("renders title, description and calls onConfirm when clicked", async () => {

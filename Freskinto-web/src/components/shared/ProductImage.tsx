@@ -1,6 +1,5 @@
 import Image from "next/image";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { productVisual } from "@/lib/merchandising";
+import { productVisual, TONE_CLASSES } from "@/lib/merchandising";
 import { cn } from "@/lib/utils";
 
 interface ProductImageProps {
@@ -19,8 +18,8 @@ interface ProductImageProps {
 }
 
 /**
- * Product visual: demo packshot (shot on white, multiply-blended onto a stone
- * tile) or — when no photo fits — the category icon. Square by default.
+ * Product visual: demo packshot (shot on white, multiply-blended onto a warm aisle tile)
+ * ya — jab koi photo fit na ho — category icon. Default square.
  */
 export function ProductImage({
   name,
@@ -33,12 +32,17 @@ export function ProductImage({
   muted = false,
 }: ProductImageProps) {
   const { image, theme } = productVisual(name, categoryName);
+  const tone = TONE_CLASSES[theme.tone];
   const Icon = theme.icon;
 
   return (
-    <AspectRatio
-      ratio={1}
-      className={cn("isolate flex items-center justify-center overflow-hidden bg-muted", muted && "grayscale", className)}
+    <div
+      className={cn(
+        "relative isolate flex aspect-square items-center justify-center overflow-hidden",
+        tone.tile,
+        muted && "grayscale",
+        className,
+      )}
     >
       {image ? (
         <Image
@@ -51,13 +55,13 @@ export function ProductImage({
         />
       ) : (
         <Icon
-          className={cn("size-2/5 text-brand", muted && "opacity-50")}
+          className={cn("size-2/5", tone.icon, muted && "opacity-50")}
           strokeWidth={1.3}
           role={alt ? "img" : undefined}
           aria-label={alt || undefined}
           aria-hidden={alt ? undefined : true}
         />
       )}
-    </AspectRatio>
+    </div>
   );
 }

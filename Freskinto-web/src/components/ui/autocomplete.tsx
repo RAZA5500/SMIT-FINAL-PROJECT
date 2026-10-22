@@ -7,8 +7,8 @@ import { cn } from "@/lib/utils"
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group"
 
 /**
- * Free-text input with a suggestion popup (Base UI Autocomplete), styled like
- * the shadcn combobox. The popup anchors to `AutocompleteInputGroup`.
+ * Free-text input with a suggestion popup (Base UI Autocomplete). The popup
+ * anchors to `AutocompleteInputGroup`.
  */
 const Autocomplete = AutocompletePrimitive.Root
 
@@ -36,10 +36,11 @@ function AutocompleteInput({
   )
 }
 
+/* Popup ki width anchor (input group) ki runtime variable se milti hai — fixed px nahi */
 function AutocompleteContent({
   className,
   side = "bottom",
-  sideOffset = 8,
+  sideOffset = 10,
   align = "start",
   alignOffset = 0,
   ...props
@@ -60,7 +61,7 @@ function AutocompleteContent({
         <AutocompletePrimitive.Popup
           data-slot="autocomplete-content"
           className={cn(
-            "w-(--anchor-width) max-w-(--available-width) origin-(--transform-origin) overflow-hidden rounded-2xl bg-popover text-popover-foreground shadow-lift ring-1 ring-border duration-100 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+            "w-(--anchor-width) max-w-(--available-width) origin-(--transform-origin) overflow-hidden rounded-2xl border border-border bg-popover text-popover-foreground shadow-float duration-150 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
             className as string
           )}
           {...props}
@@ -118,27 +119,11 @@ function AutocompleteStatus({
   )
 }
 
-function AutocompleteEmpty({
-  className,
-  ...props
-}: AutocompletePrimitive.Empty.Props) {
-  return (
-    <AutocompletePrimitive.Empty
-      data-slot="autocomplete-empty"
-      className={cn(
-        "px-4 py-3 text-sm text-muted-foreground empty:hidden",
-        className as string
-      )}
-      {...props}
-    />
-  )
-}
-
 function AutocompleteFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="autocomplete-footer"
-      className={cn("border-t bg-muted/60 p-1.5", className)}
+      className={cn("border-t border-border bg-modal-footer p-1.5", className)}
       {...props}
     />
   )
@@ -147,7 +132,6 @@ function AutocompleteFooter({ className, ...props }: React.ComponentProps<"div">
 export {
   Autocomplete,
   AutocompleteContent,
-  AutocompleteEmpty,
   AutocompleteFooter,
   AutocompleteInput,
   AutocompleteInputGroup,

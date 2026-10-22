@@ -1,32 +1,28 @@
 import { Leaf } from "lucide-react";
-import { Box } from "@/components/ui/box";
-import { Flex } from "@/components/ui/flex";
-import { Text } from "@/components/ui/typography";
 import { STORE } from "@/constants/store";
 import { cn } from "@/lib/utils";
 
 const SIZES = {
-  sm: { mark: "size-7 rounded-lg [&_svg]:size-4", word: "text-xl" },
-  md: { mark: "size-9 rounded-xl [&_svg]:size-5", word: "text-2xl" },
-  lg: { mark: "size-11 rounded-2xl [&_svg]:size-6", word: "text-3xl" },
+  sm: { mark: "size-7 rounded-lg [&_svg]:size-4", word: "text-fs-20" },
+  md: { mark: "size-9 rounded-xl [&_svg]:size-5", word: "text-fs-24" },
+  lg: { mark: "size-12 rounded-2xl [&_svg]:size-6", word: "text-fs-32" },
 } as const;
 
 type LogoSize = keyof typeof SIZES;
 
-/** Freskinto leaf mark — brand green leaf */
+/** Freskinto leaf mark — deep forest tile, mint leaf */
 export function LogoMark({ size = "md", className }: { size?: LogoSize; className?: string }) {
   return (
-    <Box
-      as="span"
+    <span
       aria-hidden="true"
       className={cn(
-        "inline-flex shrink-0 -rotate-6 items-center justify-center bg-brand-green text-white shadow-xs",
+        "inline-flex shrink-0 -rotate-6 items-center justify-center bg-brand-green-forest text-brand-green-vivid shadow-soft",
         SIZES[size].mark,
         className,
       )}
     >
-      <Leaf strokeWidth={2.4} />
-    </Box>
+      <Leaf strokeWidth={2.2} />
+    </span>
   );
 }
 
@@ -34,23 +30,30 @@ interface LogoProps {
   size?: LogoSize;
   /** Sirf mark (collapsed sidebar, chhoti jagah) */
   markOnly?: boolean;
+  /** Dark background par wordmark safed */
+  inverse?: boolean;
   className?: string;
 }
 
-/** Mark + clean modern wordmark */
-export function Logo({ size = "md", markOnly = false, className }: LogoProps) {
+/** Mark + serif wordmark with a marigold full stop */
+export function Logo({ size = "md", markOnly = false, inverse = false, className }: LogoProps) {
   return (
-    <Flex as="span" inline align="center" gap="2.5" className={cn(className)}>
-      <LogoMark size={size} />
+    <span className={cn("inline-flex items-center gap-2.5", className)}>
+      <LogoMark size={size} className={inverse ? "bg-brand-green-vivid text-brand-green-forest" : undefined} />
       {!markOnly && (
-        <Text
-          as="span"
-          weight="bold"
-          className={cn("font-bold leading-none tracking-tight text-foreground font-serif", SIZES[size].word)}
+        <span
+          className={cn(
+            "font-display leading-none font-semibold tracking-tight",
+            inverse ? "text-white" : "text-foreground",
+            SIZES[size].word,
+          )}
         >
           {STORE.name}
-        </Text>
+          <span aria-hidden="true" className="text-marigold">
+            .
+          </span>
+        </span>
       )}
-    </Flex>
+    </span>
   );
 }

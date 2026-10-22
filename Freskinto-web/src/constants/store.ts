@@ -6,4 +6,6 @@ export const STORE = {
   currency: "GBP",
   /** Backend `ORDER_PAYMENT_TIMEOUT_MINUTES` (FLOW-MD 01 §17) */
   paymentWindowMinutes: 5,
+  /** Click & collect slots: khulne/band hone ke ghante, kitne din aage, aur pack karne ka waqt */
+  pickup: { openHour: 9, closeHour: 20, daysAhead: 6, leadHours: 1 },
 } as const;

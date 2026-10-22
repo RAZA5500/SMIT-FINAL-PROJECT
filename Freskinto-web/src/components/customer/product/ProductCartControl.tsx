@@ -3,7 +3,6 @@
 import { Plus } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Text } from "@/components/ui/typography";
 import { LoadingButton } from "@/components/shared/LoadingButton";
 import { useCartItemQuantity } from "@/hooks/useCartItemQuantity";
 import { loginUrl } from "@/lib/routes/routes";
@@ -19,10 +18,10 @@ import { QuantityStepper } from "./QuantityStepper";
 type ControlSize = "sm" | "md" | "lg";
 
 /** Button aur stepper ki height barabar — basket mein jaate waqt layout na hile */
-const BUTTON_SIZE: Record<ControlSize, { size: "sm" | "default" | "xl"; className: string }> = {
+const BUTTON_SIZE: Record<ControlSize, { size: "default" | "xl"; className: string }> = {
   sm: { size: "default", className: "h-9" },
   md: { size: "default", className: "" },
-  lg: { size: "xl", className: "h-12" },
+  lg: { size: "xl", className: "" },
 };
 
 interface ProductCartControlProps {
@@ -33,7 +32,8 @@ interface ProductCartControlProps {
 
 /**
  * "Add to basket" → basket mein aate hi live stepper (cart line se). Pehli dafa
- * `minimumOrderQuantity` add hoti hai (FLOW-MD 01 §13); +/- debounced PATCH.
+ * `minimumOrderQuantity` add hoti hai (FLOW-MD 01 §13); +/- debounced PATCH, UI foran
+ * optimistic (shop-store).
  */
 export function ProductCartControl({ product, size = "sm", className }: ProductCartControlProps) {
   const router = useRouter();
@@ -45,7 +45,7 @@ export function ProductCartControl({ product, size = "sm", className }: ProductC
   const addItem = useAddCartItem({ silent: true });
 
   const line = cart?.items.find((item) => item.productId === product.id);
-  if (line) return <BasketLineStepper item={line} size={size} className={cn(className)} />;
+  if (line) return <BasketLineStepper item={line} size={size} className={className} />;
 
   const button = BUTTON_SIZE[size];
 
@@ -74,17 +74,20 @@ export function ProductCartControl({ product, size = "sm", className }: ProductC
 
   return (
     <LoadingButton
+      variant="soft"
       size={button.size}
       isLoading={addItem.isPending}
       loadingText="Adding…"
       onClick={handleAdd}
-      className={cn("w-full", button.className, className)}
+      className={cn(
+        "w-full rounded-full hover:bg-brand-green hover:text-white",
+        button.className,
+        className,
+      )}
     >
-      <Plus data-icon="inline-start" aria-hidden="true" />
+      <Plus aria-hidden="true" />
       Add to basket
-      <Text as="span" className={cn("sr-only")}>
-        : {product.name}
-      </Text>
+      <span className="sr-only">: {product.name}</span>
     </LoadingButton>
   );
 }
@@ -103,7 +106,7 @@ function BasketLineStepper({ item, size, className }: { item: ICartItem; size: C
       disabled={isRemoving}
       onDecrease={decrease}
       onIncrease={increase}
-      className={cn("w-full", className)}
+      className={cn("w-full animate-pop", className)}
     />
   );
 }

@@ -2,16 +2,15 @@
 
 import { CircleAlert, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Flex, Stack } from "@/components/ui/flex";
-import { Text } from "@/components/ui/typography";
+import { DeleteDialog } from "@/components/shared/DeleteDialog";
 import { Price } from "@/components/shared/Price";
 import { ProductImage } from "@/components/shared/ProductImage";
 import { TextLink } from "@/components/shared/TextLink";
 import { useCartItemQuantity } from "@/hooks/useCartItemQuantity";
-import { formatMoney } from "@/lib/format";
 import { publicRoutes } from "@/lib/routes/routes";
-import { cn } from "@/lib/utils";
+import { cn, formatMoney } from "@/lib/utils";
 import type { ICartItem } from "@/services/cart/types";
 import { QuantityStepper } from "../product/QuantityStepper";
 import { cartItemIssue } from "./cart-availability";
@@ -25,52 +24,53 @@ interface CartLineProps {
   className?: string;
 }
 
-/** Basket line — thumbnail, name, unit price, stepper (debounced PATCH), line total, availability issue */
+/**
+ * Basket line — thumbnail, name, unit price, stepper (optimistic UI, debounced PATCH), line total,
+ * availability issue. Hatane se pehle confirmation (Pattern A).
+ */
 export function CartLine({ item, compact = false, onNavigate, className }: CartLineProps) {
   const { quantity, atMinimum, canIncrease, increase, decrease, remove, isRemoving } = useCartItemQuantity(item);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const issue = cartItemIssue(item);
 
   return (
-    <Flex gap="3" className={cn("py-4 sm:gap-4", isRemoving && "opacity-50", className)}>
+    <div className={cn("flex gap-3 py-4 sm:gap-4", isRemoving && "opacity-50", className)}>
       <Link
         href={publicRoutes.product(item.productId)}
         onClick={onNavigate}
         tabIndex={-1}
         aria-hidden="true"
-        className={cn("shrink-0 overflow-hidden rounded-xl border")}
+        className="shrink-0 self-start overflow-hidden rounded-xl border border-border"
       >
         <ProductImage
           name={item.name}
           sizes="96px"
-          className={cn(compact ? "size-16" : "size-20 sm:size-24")}
-          imageClassName={cn("p-1.5")}
+          className={compact ? "size-16" : "size-20 sm:size-24"}
+          imageClassName="p-1.5"
           muted={!item.isAvailable}
         />
       </Link>
 
-      <Stack gap="2" className={cn("min-w-0 flex-1")}>
-        <Flex align="start" justify="between" gap="3">
-          <Stack gap="0.5" className={cn("min-w-0")}>
+      <div className="flex min-w-0 flex-1 flex-col gap-2.5">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex min-w-0 flex-col gap-0.5">
             <TextLink
               href={publicRoutes.product(item.productId)}
               onClick={onNavigate}
               tone="default"
-              className={cn("line-clamp-2 text-sm leading-5 font-semibold")}
+              className="line-clamp-2 text-sm leading-5 font-semibold"
             >
               {item.name}
             </TextLink>
-            <Text variant="small" tone="muted">
-              <Text as="span" numeric>
-                {formatMoney(item.price)}
-              </Text>{" "}
-              each
+            <p className="text-fs-13 text-muted-foreground">
+              <span className="numeric">{formatMoney(item.price)}</span> each
               {item.minimumOrderQuantity > 1 && ` · Min. ${item.minimumOrderQuantity}`}
-            </Text>
-          </Stack>
-          <Price amount={item.lineTotal} size="md" tone="default" className={cn("shrink-0")} />
-        </Flex>
+            </p>
+          </div>
+          <Price amount={item.lineTotal} size="md" className="shrink-0" />
+        </div>
 
-        <Flex align="center" justify="between" gap="2">
+        <div className="flex items-center justify-between gap-2">
           <QuantityStepper
             size="sm"
             label={item.name}
@@ -79,33 +79,44 @@ export function CartLine({ item, compact = false, onNavigate, className }: CartL
             atMinimum={atMinimum}
             canIncrease={canIncrease}
             disabled={isRemoving}
-            onDecrease={decrease}
+            onDecrease={() => (atMinimum ? setConfirmOpen(true) : decrease())}
             onIncrease={increase}
           />
           {!compact && (
             <Button
               variant="ghost"
               size="sm"
-              className={cn("text-muted-foreground hover:text-destructive")}
+              className="text-muted-foreground hover:text-destructive"
               disabled={isRemoving}
-              onClick={remove}
+              onClick={() => setConfirmOpen(true)}
             >
-              <Trash2 data-icon="inline-start" aria-hidden="true" />
+              <Trash2 aria-hidden="true" />
               Remove
-              <Text as="span" className={cn("sr-only")}>
-                {item.name}
-              </Text>
+              <span className="sr-only">{item.name}</span>
             </Button>
           )}
-        </Flex>
+        </div>
 
         {issue && (
-          <Text role="alert" variant="small" tone="destructive" weight="medium" className={cn("flex items-center gap-1.5")}>
-            <CircleAlert aria-hidden="true" className={cn("size-3.5 shrink-0")} />
+          <p role="alert" className="flex items-center gap-1.5 text-fs-13 font-medium text-destructive">
+            <CircleAlert aria-hidden="true" className="size-3.5 shrink-0" />
             {issue}
-          </Text>
+          </p>
         )}
-      </Stack>
-    </Flex>
+      </div>
+
+      <DeleteDialog
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        title="Remove from basket?"
+        description={`${item.name} will be removed from your basket.`}
+        confirmLabel="Remove"
+        isLoading={isRemoving}
+        onConfirm={() => {
+          remove();
+          setConfirmOpen(false);
+        }}
+      />
+    </div>
   );
 }

@@ -1,5 +1,5 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { ApiError } from "@/lib/networking/request";
+import { ApiError } from "@/lib/api";
 import { productService } from "./index";
 import type { IFetchAdminProductsPayload, IFetchProductsPayload } from "./types";
 

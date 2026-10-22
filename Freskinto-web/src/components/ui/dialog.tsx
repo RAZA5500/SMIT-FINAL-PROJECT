@@ -31,7 +31,7 @@ function DialogOverlay({
     <DialogPrimitive.Backdrop
       data-slot="dialog-overlay"
       className={cn(
-        "fixed inset-0 isolate z-50 bg-black/10 duration-100 supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
+        "fixed inset-0 isolate z-50 bg-ink/40 duration-150 supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
         className
       )}
       {...props}
@@ -39,6 +39,10 @@ function DialogOverlay({
   )
 }
 
+/**
+ * Modal shell: scrollable viewport → centred popup. Popup padding-free hai — header,
+ * body aur footer apni apni zone mein (footer `bg-modal-footer`).
+ */
 function DialogContent({
   className,
   children,
@@ -50,32 +54,38 @@ function DialogContent({
   return (
     <DialogPortal>
       <DialogOverlay />
-      <DialogPrimitive.Popup
-        data-slot="dialog-content"
-        className={cn(
-          "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-5 rounded-2xl bg-popover p-6 text-sm text-popover-foreground shadow-lift ring-1 ring-border duration-100 outline-none sm:max-w-md data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
-          className
-        )}
-        {...props}
+      <DialogPrimitive.Viewport
+        data-slot="dialog-viewport"
+        className="fixed inset-0 z-50 overflow-y-auto"
       >
-        {children}
-        {showCloseButton && (
-          <DialogPrimitive.Close
-            data-slot="dialog-close"
-            render={
-              <Button
-                variant="ghost"
-                className="absolute top-3 right-3"
-                size="icon-sm"
-              />
-            }
+        <div className="flex min-h-full items-center justify-center p-4">
+          <DialogPrimitive.Popup
+            data-slot="dialog-content"
+            className={cn(
+              "relative flex w-full max-w-lg flex-col overflow-hidden rounded-15 border border-border bg-popover text-sm text-popover-foreground shadow-lift duration-150 outline-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+              className
+            )}
+            {...props}
           >
-            <XIcon
-            />
-            <span className="sr-only">Close</span>
-          </DialogPrimitive.Close>
-        )}
-      </DialogPrimitive.Popup>
+            {children}
+            {showCloseButton && (
+              <DialogPrimitive.Close
+                data-slot="dialog-close"
+                render={
+                  <Button
+                    variant="ghost"
+                    className="absolute top-4 right-4"
+                    size="icon-sm"
+                    aria-label="Close"
+                  />
+                }
+              >
+                <XIcon aria-hidden="true" />
+              </DialogPrimitive.Close>
+            )}
+          </DialogPrimitive.Popup>
+        </div>
+      </DialogPrimitive.Viewport>
     </DialogPortal>
   )
 }
@@ -84,7 +94,17 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="dialog-header"
-      className={cn("flex flex-col gap-2", className)}
+      className={cn("flex flex-col gap-1.5 px-6 pt-6 pr-14 pb-2", className)}
+      {...props}
+    />
+  )
+}
+
+function DialogBody({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="dialog-body"
+      className={cn("flex flex-col gap-4 px-6 py-4", className)}
       {...props}
     />
   )
@@ -102,7 +122,7 @@ function DialogFooter({
     <div
       data-slot="dialog-footer"
       className={cn(
-        "-mx-6 -mb-6 flex flex-col-reverse gap-2 rounded-b-2xl border-t border-border bg-modal-footer px-6 py-4 sm:flex-row sm:justify-end",
+        "mt-2 flex flex-col-reverse gap-2 border-t border-border bg-modal-footer px-6 py-4 sm:flex-row sm:justify-end",
         className
       )}
       {...props}
@@ -122,7 +142,7 @@ function DialogTitle({ className, ...props }: DialogPrimitive.Title.Props) {
     <DialogPrimitive.Title
       data-slot="dialog-title"
       className={cn(
-        "font-heading text-xl leading-tight font-semibold tracking-tight",
+        "font-heading text-fs-20 leading-tight font-semibold tracking-tight",
         className
       )}
       {...props}
@@ -148,6 +168,7 @@ function DialogDescription({
 
 export {
   Dialog,
+  DialogBody,
   DialogClose,
   DialogContent,
   DialogDescription,

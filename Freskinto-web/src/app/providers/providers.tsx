@@ -6,12 +6,14 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { queryClient } from "@/lib/query-client";
 import { useAuthStore } from "@/stores/auth-store";
+import { useShopStore } from "@/stores/shop-store";
 
 /** Server state (TanStack Query) + toasts + tooltips — poori app ke liye ek jagah */
 export function Providers({ children }: { children: React.ReactNode }) {
-  // Persisted session mount ke baad load — server aur pehle client render ka HTML same rahe
+  // Persisted state mount ke baad load — server aur pehle client render ka HTML same rahe
   useEffect(() => {
     void useAuthStore.persist.rehydrate();
+    void useShopStore.persist.rehydrate();
   }, []);
 
   return (

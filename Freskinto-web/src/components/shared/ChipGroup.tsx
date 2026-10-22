@@ -1,16 +1,14 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 
-/** `null` option (e.g. "All orders") ka toggle value */
+/** `null` option (e.g. "All orders") ka key */
 const ALL = "__all__";
 
 export interface ChipOption<T extends string | null> {
   value: T;
   label: string;
-  /** Optional count badge (e.g. unread) */
+  /** Optional count (e.g. products in aisle) */
   count?: number;
 }
 
@@ -24,9 +22,8 @@ interface ChipGroupProps<T extends string | null> {
 }
 
 /**
- * Single-select filter pills (shadcn ToggleGroup, `chip` variant). A pressed
- * chip can't be cleared by clicking it again — there is always a selection.
- * Phones scroll the row sideways.
+ * Single-select filter pills. Pressed chip dobara click karne se clear nahi hota — hamesha
+ * ek selection rehti hai. Phones par row sideways scroll hoti hai.
  */
 export function ChipGroup<T extends string | null>({
   options,
@@ -36,31 +33,34 @@ export function ChipGroup<T extends string | null>({
   size = "default",
   className,
 }: ChipGroupProps<T>) {
-  const toKey = (option: T) => option ?? ALL;
-
   return (
-    <ToggleGroup
+    <div
+      role="group"
       aria-label={ariaLabel}
-      variant="chip"
-      size={size}
-      spacing={2}
-      value={[toKey(value)]}
-      onValueChange={(next: string[]) => {
-        const picked = options.find((option) => toKey(option.value) === next[0]);
-        if (picked) onValueChange(picked.value);
-      }}
-      className={cn("no-scrollbar relative -mx-1 w-auto max-w-full overflow-x-auto px-1 py-1", className)}
+      className={cn("no-scrollbar -mx-1 flex max-w-full items-center gap-2 overflow-x-auto px-1 py-1", className)}
     >
-      {options.map((option) => (
-        <ToggleGroupItem key={option.label} value={toKey(option.value)} className={cn("shrink-0")}>
-          {option.label}
-          {option.count !== undefined && (
-            <Badge variant="secondary" className={cn("h-5 min-w-5 px-1.5 tabular-nums group-aria-pressed/toggle:bg-primary-foreground/20 group-aria-pressed/toggle:text-primary-foreground")}>
-              {option.count}
-            </Badge>
-          )}
-        </ToggleGroupItem>
-      ))}
-    </ToggleGroup>
+      {options.map((option) => {
+        const pressed = (option.value ?? ALL) === (value ?? ALL);
+        return (
+          <button
+            key={option.label}
+            type="button"
+            aria-pressed={pressed}
+            onClick={() => onValueChange(option.value)}
+            className={cn(
+              "inline-flex shrink-0 items-center gap-2 rounded-full border border-border bg-card font-medium whitespace-nowrap text-foreground transition-colors outline-none hover:border-foreground/30 focus-visible:ring-3 focus-visible:ring-ring/35 aria-pressed:border-transparent aria-pressed:bg-brand-green-forest aria-pressed:text-white",
+              size === "sm" ? "h-8 px-3 text-fs-13" : "h-9 px-4 text-sm",
+            )}
+          >
+            {option.label}
+            {option.count !== undefined && (
+              <span className="rounded-full bg-muted px-1.5 text-xs text-muted-foreground tabular-nums">
+                {option.count}
+              </span>
+            )}
+          </button>
+        );
+      })}
+    </div>
   );
 }

@@ -1,6 +1,4 @@
-import { API_ENDPOINTS } from "@/lib/api";
-import { withQuery } from "@/lib/networking/query";
-import { getAuthToken, request } from "@/lib/networking/request";
+import { API_ENDPOINTS, getAuthToken, request, withQuery } from "@/lib/api";
 import type { IPaginatedResponse } from "@/services/types";
 import type {
   IAddress,

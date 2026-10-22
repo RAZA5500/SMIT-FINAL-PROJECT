@@ -1,7 +1,5 @@
 import { ArrowRight } from "lucide-react";
 import type { ReactNode } from "react";
-import { Flex, Stack } from "@/components/ui/flex";
-import { Heading, Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 import { ButtonLink } from "./ButtonLink";
 
@@ -13,12 +11,12 @@ interface SectionHeadingProps {
   /** "View all" link */
   href?: string;
   hrefLabel?: string;
-  /** Extra controls (e.g. carousel arrows) */
+  /** Extra controls */
   actions?: ReactNode;
   className?: string;
 }
 
-/** Home / rails section ka sar — eyebrow, serif title, "View all" */
+/** Section ka sar — kicker, serif title, "View all" */
 export function SectionHeading({
   id,
   title,
@@ -30,31 +28,23 @@ export function SectionHeading({
   className,
 }: SectionHeadingProps) {
   return (
-    <Flex align="end" justify="between" gap="4" className={cn(className)}>
-      <Stack gap="2" className={cn("min-w-0")}>
-        {eyebrow && (
-          <Text as="div" variant="eyebrow">
-            {eyebrow}
-          </Text>
-        )}
-        <Heading id={id} size="2" family="serif">
+    <div className={cn("flex items-end justify-between gap-4", className)}>
+      <div className="flex min-w-0 flex-col gap-2">
+        {eyebrow && <div className="kicker">{eyebrow}</div>}
+        <h2 id={id} className="font-heading text-fs-24 text-foreground sm:text-fs-32">
           {title}
-        </Heading>
-        {description && (
-          <Text tone="muted" className={cn("sm:text-base")}>
-            {description}
-          </Text>
-        )}
-      </Stack>
-      <Flex align="center" gap="2" className={cn("shrink-0")}>
+        </h2>
+        {description && <p className="text-muted-foreground sm:text-base">{description}</p>}
+      </div>
+      <div className="flex shrink-0 items-center gap-2">
         {href && (
-          <ButtonLink href={href} variant="ghost" size="sm" className={cn("text-brand hover:text-brand-strong")}>
+          <ButtonLink href={href} variant="ghost" size="sm" className="text-brand-green hover:text-brand-green-dark">
             {hrefLabel}
-            <ArrowRight data-icon="inline-end" aria-hidden="true" />
+            <ArrowRight aria-hidden="true" />
           </ButtonLink>
         )}
         {actions}
-      </Flex>
-    </Flex>
+      </div>
+    </div>
   );
 }

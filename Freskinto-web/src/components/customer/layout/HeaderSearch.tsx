@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Search } from "lucide-react";
+import { ArrowRight, LoaderCircle, Search } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import {
@@ -14,12 +14,7 @@ import {
   AutocompleteStatus,
 } from "@/components/ui/autocomplete";
 import { Button } from "@/components/ui/button";
-import { Stack } from "@/components/ui/flex";
-import { Form } from "@/components/ui/form";
 import { InputGroupAddon, InputGroupButton } from "@/components/ui/input-group";
-import { Kbd } from "@/components/ui/kbd";
-import { Spinner } from "@/components/ui/spinner";
-import { Text } from "@/components/ui/typography";
 import { Price } from "@/components/shared/Price";
 import { ProductImage } from "@/components/shared/ProductImage";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -36,17 +31,17 @@ export function HeaderSearch({ className }: { className?: string }) {
   const pathname = usePathname();
   const params = useSearchParams();
   const urlQuery = pathname === publicRoutes.shop ? (params.get("q") ?? "") : "";
-  return <HeaderSearchForm key={urlQuery} initialQuery={urlQuery} className={cn(className)} />;
+  return <HeaderSearchForm key={urlQuery} initialQuery={urlQuery} className={className} />;
 }
 
 /** Suspense fallback / static shell — same size, no suggestions */
 export function HeaderSearchFallback({ className }: { className?: string }) {
-  return <HeaderSearchForm initialQuery="" className={cn(className)} />;
+  return <HeaderSearchForm initialQuery="" className={className} />;
 }
 
 /**
- * Header search: typing shows live product suggestions (Base UI Autocomplete —
- * combobox keyboard + ARIA); Enter/"Search" opens the shop filtered by `q`.
+ * Header search: typing shows live product suggestions (Base UI Autocomplete — combobox keyboard
+ * + ARIA); Enter/"Search" opens the shop filtered by `q`.
  */
 function HeaderSearchForm({ initialQuery, className }: { initialQuery: string; className?: string }) {
   const router = useRouter();
@@ -77,9 +72,9 @@ function HeaderSearchForm({ initialQuery, className }: { initialQuery: string; c
   const hasContent = value.trim().length >= MIN_QUERY && (results.length > 0 || status !== null);
 
   return (
-    <Form
+    <form
       role="search"
-      className={cn("w-full gap-0", className)}
+      className={cn("w-full", className)}
       onSubmit={(event) => {
         event.preventDefault();
         submit();
@@ -96,26 +91,20 @@ function HeaderSearchForm({ initialQuery, className }: { initialQuery: string; c
         itemToStringValue={(product: IProduct) => product.name}
         filter={null}
       >
-        <AutocompleteInputGroup className={cn("h-11 rounded-full bg-muted pr-1 hover:border-input has-[[data-slot=input-group-control]:focus-visible]:bg-background")}>
-          <InputGroupAddon className={cn("pl-4")}>
-            {isFetching && enabled ? <Spinner aria-hidden="true" /> : <Search aria-hidden="true" />}
+        <AutocompleteInputGroup className="h-11 rounded-full border-transparent bg-muted/70 pr-1 shadow-none hover:border-input has-[[data-slot=input-group-control]:focus-visible]:bg-card">
+          <InputGroupAddon className="pl-4">
+            {isFetching && enabled ? (
+              <LoaderCircle aria-hidden="true" className="animate-spin" />
+            ) : (
+              <Search aria-hidden="true" />
+            )}
           </InputGroupAddon>
           <AutocompleteInput aria-label="Search products" placeholder="Search apples, milk, chicken…" />
-          <InputGroupAddon align="inline-end" className={cn("gap-2 pr-0")}>
-            <Kbd className={cn("hidden bg-background lg:inline-flex")}>Enter</Kbd>
-            <InputGroupButton
-              type="submit"
-              size="sm"
-              variant="default"
-              className={cn("h-9 rounded-full px-4")}
-            >
-              <Text as="span" className={cn("hidden font-semibold sm:inline")}>
-                Search
-              </Text>
-              <ArrowRight aria-hidden="true" className={cn("sm:hidden")} />
-              <Text as="span" className={cn("sr-only sm:hidden")}>
-                Search
-              </Text>
+          <InputGroupAddon align="inline-end" className="pr-0">
+            <InputGroupButton type="submit" size="sm" variant="default" className="h-9 rounded-full px-4">
+              <span className="hidden font-semibold sm:inline">Search</span>
+              <ArrowRight aria-hidden="true" className="sm:hidden" />
+              <span className="sr-only sm:hidden">Search</span>
             </InputGroupButton>
           </InputGroupAddon>
         </AutocompleteInputGroup>
@@ -129,18 +118,14 @@ function HeaderSearchForm({ initialQuery, className }: { initialQuery: string; c
                   name={product.name}
                   categoryName={product.category.name}
                   sizes="44px"
-                  className={cn("size-11 shrink-0 rounded-lg")}
-                  imageClassName={cn("p-1")}
+                  className="size-11 shrink-0 rounded-lg"
+                  imageClassName="p-1"
                 />
-                <Stack gap="0.5" className={cn("min-w-0 flex-1")}>
-                  <Text as="span" weight="medium" className={cn("truncate")}>
-                    {product.name}
-                  </Text>
-                  <Text as="span" variant="small" tone="muted" className={cn("truncate")}>
-                    {product.category.name}
-                  </Text>
-                </Stack>
-                <Price amount={product.price} size="sm" />
+                <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                  <span className="truncate font-medium">{product.name}</span>
+                  <span className="truncate text-fs-12 text-muted-foreground">{product.category.name}</span>
+                </span>
+                <Price amount={product.price} size="sm" tone="brand" />
               </AutocompleteItem>
             )}
           </AutocompleteList>
@@ -151,15 +136,15 @@ function HeaderSearchForm({ initialQuery, className }: { initialQuery: string; c
                 type="button"
                 variant="ghost"
                 onClick={submit}
-                className={cn("w-full justify-between rounded-xl text-brand hover:text-brand-strong")}
+                className="w-full justify-between rounded-xl text-brand-green hover:text-brand-green-dark"
               >
                 See all {total} results for “{query}”
-                <ArrowRight data-icon="inline-end" aria-hidden="true" />
+                <ArrowRight aria-hidden="true" />
               </Button>
             </AutocompleteFooter>
           )}
         </AutocompleteContent>
       </Autocomplete>
-    </Form>
+    </form>
   );
 }

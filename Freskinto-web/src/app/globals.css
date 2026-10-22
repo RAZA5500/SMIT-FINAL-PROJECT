@@ -2,140 +2,124 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* Dark tokens sirf `.dark` class se — OS theme storefront ka look na badle */
+/* Dark mode nahi hai — yeh line OS theme ko `dark:` classes trigger karne se rokti hai */
 @custom-variant dark (&:is(.dark *));
 
 /* ---------------------------------------------------------------------------
-   Freskinto Design Tokens — "Fresh Editorial Commerce" & "Botanical Grocer":
-   - Surfaces: Warm organic ivory/stone backgrounds with pure crisp white cards.
-   - Primary: Rich botanical emerald/forest green (#147a3e, #09371d) with
-     vivid spring mint (#34d399, #22c55e) and sunlit citrus accents (#ea580c).
-   - Type: Variable Inter for precision UI + Fraunces for editorial warmth.
-   - Status: Semantic emerald, amber, blue, and rich tomato.
-   - Admin: High-density obsidian forest rail (#0b1a10) with crisp white workspace.
+   Freskinto design tokens — "Fresh Editorial Commerce"
+   - Storefront: botanical market & editorial grocer. Warm ivory paper, white
+     cards, stone wells, deep forest greens, serif display type (Fraunces).
+   - Admin: high-density precision workspace. Same palette, quieter surfaces,
+     Inter for headings (set via data-surface="admin").
+   - Components sirf in tokens ke semantic classes use karte hain
+     (bg-brand-green, rounded-15, text-fs-20 ...) — raw hex kabhi nahi.
+   - Toast (sonner) in tokens par chalta hai: popover, border, radius, success,
+     info, warning, destructive. Inki values mat badlo.
 --------------------------------------------------------------------------- */
 :root {
   --radius: 0.75rem;
 
-  --background: #fbfaf7;
+  /* Surfaces */
+  --background: #faf8f3;
   --foreground: #121c15;
   --card: #ffffff;
   --card-foreground: #121c15;
   --popover: #ffffff;
   --popover-foreground: #121c15;
+  --workspace: #f5f6f3;
 
-  --primary: #147a3e;
+  /* Core roles */
+  --primary: #0f6b38;
   --primary-foreground: #ffffff;
   --secondary: #f2eee6;
   --secondary-foreground: #121c15;
   --muted: #f4efe6;
   --muted-foreground: #5a685e;
-  --accent: #eaf6ee;
-  --accent-foreground: #09371d;
+  --accent: #e8f3ea;
+  --accent-foreground: #08331c;
   --destructive: #dc2626;
   --border: #e6e0d4;
   --input: #d8d0c2;
-  --ring: #147a3e;
+  --ring: #0f6b38;
 
-  /* Brand greens & accents from botanical design system */
-  --brand: #147a3e;
-  --brand-green: #147a3e;
-  --brand-green-dark: #0f542e;
-  --brand-green-forest: #09371d;
-  --brand-green-light: #22c55e;
-  --brand-green-vivid: #10b981;
-  --brand-orange: #ea580c;
-  --brand-strong: #0f542e;
-  --brand-soft: #eaf6ee;
+  /* Brand greens */
+  --brand: #0f6b38;
+  --brand-green: #0f6b38;
+  --brand-green-dark: #0a4a28;
+  --brand-green-forest: #08331c;
+  --brand-green-light: #2fa05b;
+  --brand-green-vivid: #6ee7b7;
+  --brand-strong: #0a4a28;
+  --brand-soft: #e8f3ea;
+  --brand-mint: #d3ecd9;
 
+  /* Warm accents — sale, new, highlights */
+  --brand-orange: #c2410c;
+  --marigold: #f5b83d;
   --ink: #121c15;
-  --paper: #fbfaf7;
+  --paper: #faf8f3;
+
+  /* Semantic status */
   --tomato: #dc2626;
   --tomato-soft: #fee2e2;
+  --tomato-ink: #b91c1c;
   --saffron: #d97706;
   --saffron-soft: #fef3c7;
+  --saffron-ink: #92400e;
   --success: #15803d;
+  --success-soft: #dcfce7;
+  --success-ink: #166534;
   --warning: #d97706;
+  --warning-soft: #fef3c7;
+  --warning-ink: #92400e;
   --info: #0284c7;
+  --info-soft: #e0f2fe;
+  --info-ink: #075985;
+  --neutral-soft: #f1ede4;
+  --neutral-ink: #44403c;
 
-  /* Surface tokens */
+  /* Aisle tiles — product / category image wells */
+  --tile-sage: #e3eddf;
+  --tile-butter: #f6ecc9;
+  --tile-clay: #f1dccd;
+  --tile-sky: #dde9ee;
+  --tile-rose: #f3dcdc;
+  --tile-stone: #ebe7de;
+
+  /* Surface helpers */
   --icon-bg-green: #e6f5ea;
   --modal-footer-bg: #f5f1e8;
-  --sea-green-bg: #d7f0df;
-  --order-card-bg: #f9faf8;
-  --inventory-card-bg: #f6f8f2;
-  --info-card-bg: #fbfaf8;
-  --navbar-bg: rgba(251, 250, 247, 0.88);
+  --order-card-bg: #fbfaf6;
+  --glass-bg: rgba(250, 248, 243, 0.78);
+  --navbar-bg: rgba(250, 248, 243, 0.88);
 
-  /* Gradients */
-  --brand-gradient: linear-gradient(135deg, #147a3e 0%, #1e9b52 100%);
-  --gradient-brand-green: linear-gradient(135deg, #22c55e 0%, #0f542e 100%);
-  --gradient-avatar: linear-gradient(135deg, #0f542e 0%, #22c55e 100%);
-  --gradient-hero: linear-gradient(135deg, #09371d 0%, #0d4d29 55%, #147a3e 100%);
-  --gradient-sidebar-logout: linear-gradient(107.57deg, #0f542e 0%, #147a3e 100%);
+  /* Gradients (utilities neeche) */
+  --gradient-brand: linear-gradient(135deg, #0f6b38 0%, #147a3e 55%, #1e9b52 100%);
+  --gradient-forest: linear-gradient(135deg, #08331c 0%, #0a4a28 60%, #0f6b38 100%);
 
-  /* Categorical chart slots */
-  --chart-1: #147a3e;
-  --chart-2: #0284c7;
-  --chart-3: #ea580c;
-  --chart-4: #7c3aed;
-  --chart-5: #d97706;
-
-  /* Admin sidebar: deep botanical forest rail with vivid mint indicators */
+  /* Admin sidebar — deep forest rail */
   --sidebar: #0b1a10;
   --sidebar-foreground: #f0f7f2;
+  --sidebar-muted: rgba(240, 247, 242, 0.62);
   --sidebar-primary: #34d399;
   --sidebar-primary-foreground: #092614;
   --sidebar-accent: rgba(255, 255, 255, 0.08);
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: rgba(255, 255, 255, 0.1);
   --sidebar-ring: #34d399;
+
+  /* Heading font — storefront serif; admin ke liye neeche override */
+  --heading-font: var(--font-fraunces), ui-serif, Georgia, serif;
 }
 
-.dark {
-  --background: #0a140e;
-  --foreground: #eef3ef;
-  --card: #111f16;
-  --card-foreground: #eef3ef;
-  --popover: #111f16;
-  --popover-foreground: #eef3ef;
-  --primary: #34d399;
-  --primary-foreground: #092614;
-  --secondary: #17281d;
-  --secondary-foreground: #eef3ef;
-  --muted: #17281d;
-  --muted-foreground: #9eb0a4;
-  --accent: #1c3325;
-  --accent-foreground: #eef3ef;
-  --destructive: #f87171;
-  --border: rgba(255, 255, 255, 0.12);
-  --input: rgba(255, 255, 255, 0.18);
-  --ring: #34d399;
-  --brand: #34d399;
-  --brand-green: #34d399;
-  --brand-green-dark: #147a3e;
-  --brand-green-forest: #09371d;
-  --brand-green-light: #6ee7b7;
-  --brand-green-vivid: #6ee7b7;
-  --brand-strong: #6ee7b7;
-  --brand-soft: #17281d;
-  --ink: #eef3ef;
-  --paper: #111f16;
-  --tomato-soft: #3a1616;
-  --chart-1: #34d399;
-  --sidebar: #07120a;
-  --sidebar-foreground: #eef3ef;
-  --sidebar-primary: #34d399;
-  --sidebar-primary-foreground: #07120a;
-  --sidebar-accent: #17281d;
-  --sidebar-accent-foreground: #eef3ef;
-  --sidebar-border: rgba(255, 255, 255, 0.12);
+[data-surface="admin"] {
+  --heading-font: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 @theme inline {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-fraunces), Georgia, serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
   --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --color-background: var(--background);
@@ -144,6 +128,7 @@
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
+  --color-workspace: var(--workspace);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
@@ -163,35 +148,48 @@
   --color-brand-green-forest: var(--brand-green-forest);
   --color-brand-green-light: var(--brand-green-light);
   --color-brand-green-vivid: var(--brand-green-vivid);
-  --color-brand-orange: var(--brand-orange);
   --color-brand-strong: var(--brand-strong);
   --color-brand-soft: var(--brand-soft);
+  --color-brand-mint: var(--brand-mint);
+  --color-brand-orange: var(--brand-orange);
+  --color-marigold: var(--marigold);
   --color-ink: var(--ink);
   --color-paper: var(--paper);
+
   --color-tomato: var(--tomato);
   --color-tomato-soft: var(--tomato-soft);
+  --color-tomato-ink: var(--tomato-ink);
   --color-saffron: var(--saffron);
   --color-saffron-soft: var(--saffron-soft);
+  --color-saffron-ink: var(--saffron-ink);
   --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-success-ink: var(--success-ink);
   --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-ink: var(--warning-ink);
   --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-info-ink: var(--info-ink);
+  --color-neutral-soft: var(--neutral-soft);
+  --color-neutral-ink: var(--neutral-ink);
+
+  --color-tile-sage: var(--tile-sage);
+  --color-tile-butter: var(--tile-butter);
+  --color-tile-clay: var(--tile-clay);
+  --color-tile-sky: var(--tile-sky);
+  --color-tile-rose: var(--tile-rose);
+  --color-tile-stone: var(--tile-stone);
 
   --color-icon-bg-green: var(--icon-bg-green);
-  --color-modal-footer-bg: var(--modal-footer-bg);
-  --color-sea-green-bg: var(--sea-green-bg);
-  --color-order-card-bg: var(--order-card-bg);
-  --color-inventory-card-bg: var(--inventory-card-bg);
-  --color-info-card-bg: var(--info-card-bg);
-  --color-navbar-bg: var(--navbar-bg);
-
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
+  --color-modal-footer: var(--modal-footer-bg);
+  --color-order-card: var(--order-card-bg);
+  --color-glass: var(--glass-bg);
+  --color-navbar: var(--navbar-bg);
 
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-muted: var(--sidebar-muted);
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
   --color-sidebar-accent: var(--sidebar-accent);
@@ -209,17 +207,64 @@
 }
 
 @theme {
+  /* Named radius — modals, cards, hero tiles */
+  --radius-15: 0.9375rem;
+
+  /* Type scale — text-fs-* (display sizes ka leading tight) */
+  --text-fs-11: 0.6875rem;
+  --text-fs-11--line-height: 1rem;
+  --text-fs-12: 0.75rem;
+  --text-fs-12--line-height: 1.125rem;
+  --text-fs-13: 0.8125rem;
+  --text-fs-13--line-height: 1.25rem;
+  --text-fs-14: 0.875rem;
+  --text-fs-14--line-height: 1.375rem;
+  --text-fs-15: 0.9375rem;
+  --text-fs-15--line-height: 1.5rem;
+  --text-fs-16: 1rem;
+  --text-fs-16--line-height: 1.5rem;
+  --text-fs-18: 1.125rem;
+  --text-fs-18--line-height: 1.75rem;
+  --text-fs-20: 1.25rem;
+  --text-fs-20--line-height: 1.75rem;
+  --text-fs-24: 1.5rem;
+  --text-fs-24--line-height: 2rem;
+  --text-fs-28: 1.75rem;
+  --text-fs-28--line-height: 2.125rem;
+  --text-fs-32: 2rem;
+  --text-fs-32--line-height: 2.25rem;
+  --text-fs-40: 2.5rem;
+  --text-fs-40--line-height: 1.1;
+  --text-fs-48: 3rem;
+  --text-fs-48--line-height: 1.05;
+  --text-fs-56: 3.5rem;
+  --text-fs-56--line-height: 1.04;
+  --text-fs-64: 4rem;
+  --text-fs-64--line-height: 1.02;
+  --text-fs-80: 5rem;
+  --text-fs-80--line-height: 1;
+
+  /* Layout tokens — sticky offsets, sidebar widths, containers */
+  --spacing-header: 5.5rem;
+  --spacing-navbar: 3.5rem;
+  --spacing-sidebar: 16rem;
+  --spacing-sidebar-rail: 4.5rem;
   --container-page: 82rem;
+  --container-narrow: 44rem;
+  --container-form: 28rem;
+
   --breakpoint-xs: 26rem;
 
-  --shadow-soft: 0 1px 3px rgb(16 24 40 / 0.05), 0 8px 24px -12px rgb(16 24 40 / 0.12);
-  --shadow-lift: 0 2px 6px rgb(16 24 40 / 0.06), 0 20px 40px -20px rgb(16 24 40 / 0.25);
-  --shadow-glow: 0 10px 30px -10px rgb(34 139 34 / 0.4);
+  --shadow-soft: 0 1px 2px rgb(18 28 21 / 0.04), 0 8px 24px -12px rgb(18 28 21 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(18 28 21 / 0.05), 0 18px 40px -16px rgb(18 28 21 / 0.28);
+  --shadow-float: 0 10px 34px -10px rgb(18 28 21 / 0.22), 0 2px 6px rgb(18 28 21 / 0.06);
+  --shadow-glow: 0 10px 30px -10px rgb(15 107 56 / 0.5);
 
   --animate-fade-up: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-bump: bump 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
   --animate-marquee: marquee 42s linear infinite;
   --animate-float: float 7s ease-in-out infinite;
+  --animate-pop: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 
   @keyframes fade-up {
     from {
@@ -240,6 +285,17 @@
       transform: scale(1.25);
     }
     100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: scale(0.7);
+    }
+    to {
+      opacity: 1;
       transform: scale(1);
     }
   }
@@ -275,17 +331,22 @@
   html {
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
     @apply bg-background font-sans text-foreground antialiased;
-    font-feature-settings: "cv11";
+    font-feature-settings: "cv11", "ss01";
   }
 
   h1,
   h2,
-  h3 {
-    @apply font-heading tracking-tight text-balance font-bold;
+  h3,
+  h4 {
+    font-family: var(--heading-font);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
   }
 
   button:not(:disabled),
@@ -295,7 +356,7 @@
 
   ::selection {
     background-color: var(--brand-green);
-    color: #ffffff;
+    color: var(--primary-foreground);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -314,86 +375,76 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Custom utilities & Semantic tokens specified in FLOW-MD
+   Semantic utilities
 --------------------------------------------------------------------------- */
 
-/* FLOW-MD §4 semantic tokens */
-@utility bg-brand-green {
-  background-color: var(--brand-green);
+/* Heading font — storefront serif, admin sans (data-surface se) */
+@utility font-heading {
+  font-family: var(--heading-font);
 }
 
-@utility text-brand-green {
+/* Har page ka content column */
+@utility page-container {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 82rem;
+  padding-inline: 1rem;
+
+  @media (min-width: 40rem) {
+    padding-inline: 1.5rem;
+  }
+
+  @media (min-width: 64rem) {
+    padding-inline: 2rem;
+  }
+}
+
+/* Editorial eyebrow label */
+@utility kicker {
+  font-size: 0.6875rem;
+  line-height: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--brand-green);
 }
 
-@utility border-brand-green {
-  border-color: var(--brand-green);
-}
-
-@utility bg-cta-green {
-  background: var(--gradient-sidebar-logout);
-  background-image: var(--gradient-sidebar-logout);
-}
-
-@utility bg-modal-footer {
-  background-color: var(--modal-footer-bg);
-}
-
-@utility rounded-15 {
-  border-radius: 0.9375rem;
-}
-
-@utility text-fs-20 {
-  font-size: 1.25rem;
-  line-height: 1.75rem;
+/* Floating header / overlay surfaces */
+@utility glass {
+  background-color: var(--glass-bg);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
 }
 
 @utility bg-brand-gradient {
-  background: var(--brand-gradient);
+  background-image: var(--gradient-brand);
 }
 
-@utility text-brand-gradient {
-  background: var(--gradient-sidebar-logout);
-  -webkit-text-fill-color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
+@utility bg-forest-gradient {
+  background-image: var(--gradient-forest);
 }
 
-@utility bg-hero-gradient {
-  background: var(--gradient-hero);
-}
-
-/* Dotted & ruled paper textures */
-@utility bg-dots {
-  background-image: radial-gradient(currentColor 1px, transparent 1px);
-  background-size: 18px 18px;
-}
-
+/* Dotted paper texture */
 @utility texture-dots {
   background-image: radial-gradient(currentColor 1px, transparent 1px);
   background-size: 18px 18px;
 }
 
-@utility texture-ruled {
-  background-image: repeating-linear-gradient(to bottom, transparent, transparent 23px, var(--border) 24px);
-}
-
-/* Packshots blend into cards */
+/* Packshots card ke background mein ghul jayen */
 @utility blend-packshot {
   mix-blend-mode: multiply;
 }
 
-/* Tabular numbers for prices & counts */
+/* Tabular numbers — prices, counts, order numbers */
 @utility numeric {
   font-variant-numeric: tabular-nums;
 }
 
-/* Safe area padding for mobile nav */
+/* Phone ke bottom safe area */
 @utility pb-safe {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* Smooth scrollbar */
 @utility scrollbar-thin {
   scrollbar-width: thin;
   scrollbar-color: var(--input) transparent;

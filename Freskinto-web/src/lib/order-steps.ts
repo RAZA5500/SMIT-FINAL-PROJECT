@@ -1,13 +1,6 @@
-import { CheckCircle2, CreditCard, PackageCheck, ReceiptText, Store, Truck, type LucideIcon } from "lucide-react";
+import { CheckCircle2, CreditCard, PackageCheck, ReceiptText, Store, Truck } from "lucide-react";
+import type { TimelineStep } from "@/components/shared/order/OrderTimeline";
 import type { IOrder } from "@/services/orders/types";
-
-export interface OrderStep {
-  key: string;
-  label: string;
-  icon: LucideIcon;
-  /** Backend timestamp — null = abhi nahi hua */
-  at: string | null;
-}
 
 type StepSource = Pick<
   IOrder,
@@ -15,7 +8,7 @@ type StepSource = Pick<
 >;
 
 /** Har status change ka timestamp backend rakhta hai (FLOW-MD 01 §19) */
-export function orderSteps(order: StepSource): OrderStep[] {
+export function orderSteps(order: StepSource): TimelineStep[] {
   const pickup = order.deliveryType === "PICKUP";
   return [
     { key: "placed", label: "Order placed", icon: ReceiptText, at: order.createdAt },

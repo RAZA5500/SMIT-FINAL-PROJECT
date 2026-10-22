@@ -1,6 +1,6 @@
+import { LoaderCircle } from "lucide-react";
 import type { ComponentProps } from "react";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 
 interface LoadingButtonProps extends ComponentProps<typeof Button> {
   isLoading?: boolean;
@@ -11,7 +11,7 @@ interface LoadingButtonProps extends ComponentProps<typeof Button> {
 export function LoadingButton({ isLoading = false, loadingText, disabled, children, ...props }: LoadingButtonProps) {
   return (
     <Button disabled={disabled || isLoading} aria-busy={isLoading || undefined} {...props}>
-      {isLoading && <Spinner data-icon="inline-start" aria-hidden="true" />}
+      {isLoading && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />}
       {isLoading && loadingText ? loadingText : children}
     </Button>
   );

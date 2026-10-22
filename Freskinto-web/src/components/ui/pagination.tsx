@@ -74,7 +74,7 @@ function PaginationPrevious({
       className={cn("pl-2.5", className)}
       {...props}
     >
-      <ChevronLeftIcon data-icon="inline-start" />
+      <ChevronLeftIcon aria-hidden="true" />
       <span className="hidden sm:block">{text}</span>
     </PaginationButton>
   )
@@ -94,7 +94,7 @@ function PaginationNext({
       {...props}
     >
       <span className="hidden sm:block">{text}</span>
-      <ChevronRightIcon data-icon="inline-end" />
+      <ChevronRightIcon aria-hidden="true" />
     </PaginationButton>
   )
 }

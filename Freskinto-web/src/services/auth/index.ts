@@ -1,5 +1,4 @@
-import { API_ENDPOINTS } from "@/lib/api";
-import { getAuthToken, request } from "@/lib/networking/request";
+import { API_ENDPOINTS, getAuthToken, request } from "@/lib/api";
 import type { ILoginPayload, ILoginResponse, IRegisterPayload, IUser } from "./types";
 
 export const authService = {

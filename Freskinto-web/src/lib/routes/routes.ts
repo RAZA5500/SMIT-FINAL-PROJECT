@@ -6,28 +6,7 @@ export const publicRoutes = {
   product: (id: string) => `/products/${id}`,
   login: "/login",
   register: "/register",
-  forgotPassword: "/forgot-password",
 } as const;
-
-/** Shop ke filters URL mein — header search, category links aur back button sab isi se */
-export interface ShopUrlParams {
-  q?: string;
-  category?: string;
-  sort?: string;
-  min?: number;
-  max?: number;
-  page?: number;
-}
-
-export function shopUrl(params: ShopUrlParams = {}): string {
-  const search = new URLSearchParams();
-  for (const [key, value] of Object.entries(params)) {
-    if (value === undefined || value === null || value === "") continue;
-    search.set(key, String(value));
-  }
-  const query = search.toString();
-  return query ? `${publicRoutes.shop}?${query}` : publicRoutes.shop;
-}
 
 export const customerRoutes = {
   cart: "/cart",
@@ -41,7 +20,7 @@ export const customerRoutes = {
 } as const;
 
 export const adminRoutes = {
-  dashboard: "/admin/dashboard",
+  home: "/admin",
   categories: "/admin/categories",
   products: "/admin/products",
   productNew: "/admin/products/new",
@@ -52,9 +31,30 @@ export const adminRoutes = {
   customers: "/admin/customers",
 } as const;
 
+/** Shop ke filters URL mein — header search, category links aur back button sab isi se */
+export interface ShopUrlParams {
+  q?: string;
+  category?: string;
+  sort?: string;
+  min?: number;
+  max?: number;
+  stock?: string;
+  page?: number;
+}
+
+export function shopUrl(params: ShopUrlParams = {}): string {
+  const search = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value === undefined || value === null || value === "") continue;
+    search.set(key, String(value));
+  }
+  const query = search.toString();
+  return query ? `${publicRoutes.shop}?${query}` : publicRoutes.shop;
+}
+
 /** Login ke baad har role ka apna area (FLOW-MD 01 §4) */
 export function homeForRole(role: "ADMIN" | "CUSTOMER"): string {
-  return role === "ADMIN" ? adminRoutes.dashboard : publicRoutes.shop;
+  return role === "ADMIN" ? adminRoutes.orders : publicRoutes.shop;
 }
 
 /** Login page, wapas aane ke liye redirect param ke saath */
@@ -69,22 +69,3 @@ export function safeRedirect(path: string | null | undefined): string | null {
   if (!path || !path.startsWith("/") || path.startsWith("//")) return null;
   return path;
 }
-
-/**
- * Scope se bahar ke admin screens — sirf static mock UI, backend se connected nahi
- * (user decision: inhein waisa hi rakha gaya hai).
- */
-export const adminMockRoutes = {
-  brands: "/admin/brands",
-  brandNew: "/admin/brands/create",
-  allergens: "/admin/allergens",
-  inventoryTransactions: "/admin/inventory-transactions",
-  coupons: "/admin/coupons",
-  promotions: "/admin/promotions",
-  reviews: "/admin/reviews",
-  testimonials: "/admin/testimonials",
-  orderListing: "/admin/order-listing",
-  settings: "/admin/settings",
-  profile: "/admin/profile",
-  notifications: "/admin/notifications",
-} as const;
