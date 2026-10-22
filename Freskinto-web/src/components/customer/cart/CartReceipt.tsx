@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Badge } from "@/components/ui/badge";
+import { Box } from "@/components/ui/box";
 import { Flex, Stack } from "@/components/ui/flex";
 import {
   Receipt,
@@ -12,7 +13,6 @@ import {
   ReceiptSeparator,
   ReceiptTitle,
 } from "@/components/ui/receipt";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Text } from "@/components/ui/typography";
 import { LogoMark } from "@/components/shared/Logo";
 import { STORE } from "@/constants/store";
@@ -50,8 +50,8 @@ export function CartReceipt({ cart, title = "Order summary", showItems = false, 
 
       {showItems && (
         <>
-          <ScrollArea className={cn("max-h-64")}>
-            <Stack as="ul" gap="2.5" className={cn("pr-3")}>
+          <Box className={cn("scrollbar-thin max-h-64 overflow-y-auto")}>
+            <Stack as="ul" gap="2.5" className={cn("pr-1")}>
               {cart.items.map((item) => (
                 <Flex as="li" key={item.id} align="baseline" justify="between" gap="3">
                   <Text as="span" className={cn("min-w-0")}>
@@ -66,7 +66,7 @@ export function CartReceipt({ cart, title = "Order summary", showItems = false, 
                 </Flex>
               ))}
             </Stack>
-          </ScrollArea>
+          </Box>
           <ReceiptSeparator />
         </>
       )}
