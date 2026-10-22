@@ -97,6 +97,10 @@ describe("HomeView", () => {
       screen.getByRole("heading", { name: /Get £10 off your first neighbourhood shop\./i }),
     ).toBeInTheDocument();
 
+    // 8. Live activity ticker
+    expect(screen.getByText(/Live Feed/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Cold-chain guaranteed/i)[0]).toBeInTheDocument();
+
     expect(screen.getByText("FRESH10")).toBeInTheDocument();
   });
 

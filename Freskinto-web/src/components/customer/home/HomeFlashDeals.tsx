@@ -1,12 +1,11 @@
 "use client";
 
 import { Flame, Sparkles, Timer } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ButtonLink } from "@/components/shared/ButtonLink";
 import { Price } from "@/components/shared/Price";
-import { packshotUrl } from "@/lib/merchandising";
+import { ProductImage } from "@/components/shared/ProductImage";
 import { publicRoutes, shopUrl } from "@/lib/routes/routes";
 import { useGetProducts } from "@/services/products/queries";
 import { ProductCartControl } from "../product/ProductCartControl";
@@ -29,18 +28,42 @@ function getTimeRemaining() {
   };
 }
 
+const DEAL_TABS = [
+  { id: "all", label: "🔥 All Deals" },
+  { id: "veg", label: "🥦 Veg & Fruit" },
+  { id: "bakery", label: "🥖 Bakery & Dairy" },
+  { id: "meat", label: "🥩 Cuts & Poultry" },
+];
+
 export function HomeFlashDeals() {
-  const [timeLeft, setTimeLeft] = useState(getTimeRemaining());
-  const { data: productsData } = useGetProducts({ limit: 4, sortBy: "price_desc" });
+  const [mounted, setMounted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState({ hours: "05", minutes: "42", seconds: "19" });
+  const [activeTab, setActiveTab] = useState("all");
+
+  const { data: productsData } = useGetProducts({ limit: 8, sortBy: "price_desc" });
 
   useEffect(() => {
+    setMounted(true);
+    setTimeLeft(getTimeRemaining());
     const timer = setInterval(() => {
       setTimeLeft(getTimeRemaining());
     }, 1000);
     return () => clearInterval(timer);
   }, []);
 
-  const dealProducts = productsData?.data.slice(0, 4) ?? [];
+  const allDeals = productsData?.data ?? [];
+
+  const filteredDeals = allDeals.filter((product) => {
+    if (activeTab === "all") return true;
+    const cat = product.category.name.toLowerCase();
+    const name = product.name.toLowerCase();
+    if (activeTab === "veg") return cat.includes("veg") || cat.includes("fruit") || name.includes("apple") || name.includes("spinach");
+    if (activeTab === "bakery") return cat.includes("bak") || cat.includes("dairy") || name.includes("milk") || name.includes("bread");
+    if (activeTab === "meat") return cat.includes("meat") || cat.includes("poultry") || name.includes("chicken") || name.includes("beef");
+    return true;
+  });
+
+  const dealProducts = filteredDeals.slice(0, 4);
 
   return (
     <section id="deals" aria-labelledby="deals-heading" className="scroll-mt-header flex flex-col gap-6">
@@ -56,22 +79,40 @@ export function HomeFlashDeals() {
           <p className="text-fs-14 text-muted-foreground">
             Special pricing on market bestsellers — grab before today&apos;s allocation sells out!
           </p>
+
+          {/* Interactive Filter Pills */}
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {DEAL_TABS.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={`rounded-full px-3 py-1 text-fs-11 font-bold transition-all ${
+                  activeTab === tab.id
+                    ? "bg-amber-600 text-white shadow-soft"
+                    : "bg-card border border-amber-200/60 text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Live Interactive Ticking Countdown */}
-        <div className="flex items-center gap-2 rounded-2xl border border-amber-300/40 bg-card p-3 shadow-soft">
+        {/* Live Interactive Ticking Countdown (Hydration-Safe) */}
+        <div className="flex shrink-0 items-center gap-2 rounded-2xl border border-amber-300/40 bg-card p-3 shadow-soft self-start sm:self-auto">
           <Timer aria-hidden="true" className="size-5 text-amber-600" />
           <div className="flex items-center gap-1.5 font-mono text-fs-18 font-bold text-foreground">
             <span className="flex size-9 items-center justify-center rounded-lg bg-muted text-foreground">
-              {timeLeft.hours}
+              {mounted ? timeLeft.hours : "05"}
             </span>
             <span className="text-muted-foreground">:</span>
             <span className="flex size-9 items-center justify-center rounded-lg bg-muted text-foreground">
-              {timeLeft.minutes}
+              {mounted ? timeLeft.minutes : "42"}
             </span>
             <span className="text-muted-foreground">:</span>
             <span className="flex size-9 items-center justify-center rounded-lg bg-muted text-foreground">
-              {timeLeft.seconds}
+              {mounted ? timeLeft.seconds : "19"}
             </span>
           </div>
           <span className="hidden text-fs-12 font-medium text-muted-foreground sm:inline pl-1">
@@ -85,15 +126,6 @@ export function HomeFlashDeals() {
         {dealProducts.map((product, index) => {
           const discountPercent = [25, 20, 15, 30][index % 4];
           const claimedPercent = [82, 65, 91, 74][index % 4];
-          const packshot = packshotUrl(
-            product.name.toLowerCase().includes("chicken")
-              ? "fresh-chicken-breast"
-              : product.name.toLowerCase().includes("bread")
-                ? "whole-wheat-bread-loaf"
-                : product.name.toLowerCase().includes("cheese")
-                  ? "mature-cheddar-cheese"
-                  : "royal-gala-apples",
-          );
 
           return (
             <article
@@ -106,14 +138,13 @@ export function HomeFlashDeals() {
                 <span>SAVE {discountPercent}%</span>
               </div>
 
-              {/* Product Packshot */}
+              {/* Product Packshot using proper ProductImage component */}
               <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-amber-50/50">
-                <Image
-                  src={packshot}
-                  alt={product.name}
-                  fill
+                <ProductImage
+                  name={product.name}
+                  categoryName={product.category.name}
                   sizes="(min-width: 1024px) 250px, 50vw"
-                  className="object-contain p-4 transition-transform duration-300 group-hover:scale-105"
+                  imageClassName="p-4 transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
 
@@ -149,7 +180,7 @@ export function HomeFlashDeals() {
                   </div>
                 </div>
 
-                {/* Add to Basket */}
+                {/* Add to Basket Stepper */}
                 <div className="mt-3 pt-1">
                   <ProductCartControl product={product} />
                 </div>
