@@ -1,28 +1,30 @@
+import type { VariantProps } from "class-variance-authority";
+import { Badge, type badgeVariants } from "@/components/ui/badge";
+import { Box } from "@/components/ui/box";
 import { ORDER_STATUS_LABELS, PAYMENT_STATUS_LABELS, STOCK_STATUS_LABELS } from "@/constants/labels";
 import { cn } from "@/lib/utils";
 
-export type StatusTone = "success" | "warning" | "danger" | "info" | "progress" | "refund" | "neutral";
+export type StatusTone = "success" | "warning" | "danger" | "info" | "brand" | "neutral";
 
-const TONE_CLASSES: Record<StatusTone, { badge: string; dot: string }> = {
-  success: { badge: "bg-emerald-50 text-emerald-800 ring-emerald-600/15", dot: "bg-emerald-500" },
-  warning: { badge: "bg-amber-50 text-amber-800 ring-amber-600/20", dot: "bg-amber-500" },
-  danger: { badge: "bg-red-50 text-red-700 ring-red-600/15", dot: "bg-red-500" },
-  info: { badge: "bg-sky-50 text-sky-800 ring-sky-600/15", dot: "bg-sky-500" },
-  progress: { badge: "bg-violet-50 text-violet-800 ring-violet-600/15", dot: "bg-violet-500" },
-  refund: { badge: "bg-orange-50 text-orange-800 ring-orange-600/20", dot: "bg-orange-500" },
-  neutral: { badge: "bg-stone-100 text-stone-700 ring-stone-500/15", dot: "bg-stone-400" },
+const TONES: Record<StatusTone, { variant: VariantProps<typeof badgeVariants>["variant"]; dot: string }> = {
+  success: { variant: "success", dot: "bg-success" },
+  warning: { variant: "warning", dot: "bg-warning" },
+  danger: { variant: "destructive", dot: "bg-destructive" },
+  info: { variant: "info", dot: "bg-info" },
+  brand: { variant: "outline", dot: "bg-primary" },
+  neutral: { variant: "outline", dot: "bg-muted-foreground/50" },
 };
 
 /** Har status ka tone ek jagah — orders, payments, stock, active/inactive */
 const STATUS_TONES: Record<string, StatusTone> = {
   PENDING: "warning",
   CONFIRMED: "info",
-  PROCESSING: "progress",
-  READY_FOR_PICKUP: "progress",
-  READY_FOR_DELIVERY: "progress",
+  PROCESSING: "brand",
+  READY_FOR_PICKUP: "brand",
+  READY_FOR_DELIVERY: "brand",
   DELIVERED: "success",
   CANCELLED: "danger",
-  REFUND_PENDING: "refund",
+  REFUND_PENDING: "warning",
   UNPAID: "warning",
   PAID: "success",
   FAILED: "danger",
@@ -51,19 +53,16 @@ interface StatusBadgeProps {
   className?: string;
 }
 
+/** Receipt-style status pill: coloured dot + mono uppercase label */
 export function StatusBadge({ status, label, tone: toneOverride, className }: StatusBadgeProps) {
-  const tone = TONE_CLASSES[toneOverride ?? STATUS_TONES[status] ?? "neutral"];
+  const tone = TONES[toneOverride ?? STATUS_TONES[status] ?? "neutral"];
   return (
-    <span
-      data-slot="badge"
-      className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap ring-1 ring-inset",
-        tone.badge,
-        className,
-      )}
+    <Badge
+      variant={tone.variant}
+      className={cn("font-mono text-xs tracking-wide uppercase", className)}
     >
-      <span className={cn("size-1.5 shrink-0 rounded-full", tone.dot)} aria-hidden="true" />
+      <Box as="span" aria-hidden="true" className={cn("size-1.5 shrink-0 rounded-full", tone.dot)} />
       {label ?? STATUS_LABELS[status] ?? status}
-    </span>
+    </Badge>
   );
 }

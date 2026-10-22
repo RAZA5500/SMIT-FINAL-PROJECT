@@ -1,9 +1,10 @@
 "use client";
 
-import { Label } from "@/components/ui/label";
+import { Field, FieldLabel } from "@/components/ui/field";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { FieldMessage } from "./FieldMessage";
+import { describedBy, FieldMessage } from "./FieldMessage";
+import { RequiredMark } from "./RequiredMark";
 
 export interface SelectOption<T extends string = string> {
   value: T;
@@ -18,6 +19,7 @@ export interface SelectFieldProps<T extends string = string> {
   onValueChange: (value: T | null) => void;
   placeholder?: string;
   error?: string;
+  hint?: string;
   required?: boolean;
   disabled?: boolean;
   /** Toolbar filters ke liye chhota trigger */
@@ -34,8 +36,9 @@ export function SelectField<T extends string = string>({
   options,
   value,
   onValueChange,
-  placeholder = "Select...",
+  placeholder = "Select…",
   error,
+  hint,
   required,
   disabled,
   size = "default",
@@ -44,16 +47,12 @@ export function SelectField<T extends string = string>({
   containerClassName,
 }: SelectFieldProps<T>) {
   return (
-    <div className={cn("flex flex-col gap-1.5", containerClassName)}>
+    <Field data-invalid={error ? true : undefined} className={cn(containerClassName)}>
       {label && (
-        <Label htmlFor={id} className="text-foreground">
+        <FieldLabel htmlFor={id}>
           {label}
-          {required && (
-            <span className="text-destructive" aria-hidden="true">
-              *
-            </span>
-          )}
-        </Label>
+          {required && <RequiredMark />}
+        </FieldLabel>
       )}
       <Select
         items={options}
@@ -66,7 +65,7 @@ export function SelectField<T extends string = string>({
           size={size}
           aria-label={label ? undefined : ariaLabel}
           aria-invalid={error ? true : undefined}
-          aria-describedby={error ? `${id}-error` : undefined}
+          aria-describedby={describedBy(id, error, hint)}
           className={cn("w-full", className)}
         >
           <SelectValue placeholder={placeholder} />
@@ -79,7 +78,7 @@ export function SelectField<T extends string = string>({
           ))}
         </SelectContent>
       </Select>
-      <FieldMessage id={id} error={error} />
-    </div>
+      <FieldMessage id={id} error={error} hint={hint} />
+    </Field>
   );
 }

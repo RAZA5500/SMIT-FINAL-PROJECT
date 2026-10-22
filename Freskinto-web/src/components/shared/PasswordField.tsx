@@ -2,9 +2,11 @@
 
 import { Eye, EyeOff, Lock } from "lucide-react";
 import { useState } from "react";
+import { InputGroupButton } from "@/components/ui/input-group";
+import { cn } from "@/lib/utils";
 import { InputField, type InputFieldProps } from "./InputField";
 
-/** Password input + show/hide toggle (aria-label badalta hai) */
+/** Password input + show/hide toggle (aria-label aur aria-pressed badalte hain) */
 export function PasswordField(props: Omit<InputFieldProps, "type" | "leftIcon" | "rightIcon">) {
   const [visible, setVisible] = useState(false);
   return (
@@ -13,15 +15,15 @@ export function PasswordField(props: Omit<InputFieldProps, "type" | "leftIcon" |
       type={visible ? "text" : "password"}
       leftIcon={<Lock aria-hidden="true" />}
       rightIcon={
-        <button
-          type="button"
+        <InputGroupButton
+          size="icon-xs"
           aria-label={visible ? "Hide password" : "Show password"}
           aria-pressed={visible}
           onClick={() => setVisible((value) => !value)}
-          className="flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          className={cn("rounded-full text-muted-foreground hover:text-foreground")}
         >
-          {visible ? <EyeOff className="size-4" aria-hidden="true" /> : <Eye className="size-4" aria-hidden="true" />}
-        </button>
+          {visible ? <EyeOff aria-hidden="true" /> : <Eye aria-hidden="true" />}
+        </InputGroupButton>
       }
     />
   );

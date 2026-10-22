@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Field, FieldContent, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 import { FieldMessage } from "./FieldMessage";
 
@@ -29,23 +30,22 @@ export function CheckboxField({
   className,
 }: CheckboxFieldProps) {
   return (
-    <div className={cn("flex flex-col gap-1.5", className)}>
-      <div className="flex items-start gap-2.5">
-        <Checkbox
-          id={id}
-          checked={checked}
-          onCheckedChange={onCheckedChange}
-          disabled={disabled}
-          className="mt-0.5"
-          aria-invalid={error ? true : undefined}
-          aria-describedby={error ? `${id}-error` : undefined}
-        />
-        <label htmlFor={id} className="flex cursor-pointer flex-col gap-0.5 text-sm text-foreground select-none">
-          <span>{label}</span>
-          {description && <span className="text-xs text-muted-foreground">{description}</span>}
-        </label>
-      </div>
-      <FieldMessage id={id} error={error} />
-    </div>
+    <Field orientation="horizontal" data-invalid={error ? true : undefined} className={cn(className)}>
+      <Checkbox
+        id={id}
+        checked={checked}
+        onCheckedChange={onCheckedChange}
+        disabled={disabled}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? `${id}-error` : undefined}
+      />
+      <FieldContent>
+        <FieldLabel htmlFor={id} className={cn("font-normal")}>
+          {label}
+        </FieldLabel>
+        {description && <FieldDescription>{description}</FieldDescription>}
+        <FieldMessage id={id} error={error} />
+      </FieldContent>
+    </Field>
   );
 }

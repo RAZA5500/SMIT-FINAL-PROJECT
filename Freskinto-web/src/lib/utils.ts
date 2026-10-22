@@ -8,14 +8,13 @@ import { extendTailwindMerge } from "tailwind-merge";
 const twMerge = extendTailwindMerge({
   extend: {
     theme: {
-      shadow: ["soft", "lift", "glow"],
-      animate: ["marquee", "float", "bump", "fade-up"],
-      container: ["page"],
+      shadow: ["soft", "lift"],
+      animate: ["fade-up", "bump", "marquee"],
     },
   },
 });
 
-/** Conditional classes — template literals ki jagah (FLOW-MD 07 §4) */
+/** Har className isi wrapper se — conditional classes template literals ki jagah (FLOW-MD 07 §4) */
 export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
 }

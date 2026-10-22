@@ -1,7 +1,8 @@
-import { Label } from "@/components/ui/label";
+import { Field, FieldLabel } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { FieldMessage } from "./FieldMessage";
+import { describedBy, FieldMessage } from "./FieldMessage";
+import { RequiredMark } from "./RequiredMark";
 
 export interface TextAreaFieldProps extends React.ComponentProps<"textarea"> {
   id: string;
@@ -22,26 +23,22 @@ export function TextAreaField({
   ...props
 }: TextAreaFieldProps) {
   return (
-    <div className={cn("flex flex-col gap-1.5", containerClassName)}>
+    <Field data-invalid={error ? true : undefined} className={cn(containerClassName)}>
       {label && (
-        <Label htmlFor={id} className="text-foreground">
+        <FieldLabel htmlFor={id}>
           {label}
-          {required && (
-            <span className="text-destructive" aria-hidden="true">
-              *
-            </span>
-          )}
-        </Label>
+          {required && <RequiredMark />}
+        </FieldLabel>
       )}
       <Textarea
         id={id}
         required={required}
         aria-invalid={error ? true : undefined}
-        aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined}
-        className={className}
+        aria-describedby={describedBy(id, error, hint)}
+        className={cn(className)}
         {...props}
       />
       <FieldMessage id={id} error={error} hint={hint} />
-    </div>
+    </Field>
   );
 }

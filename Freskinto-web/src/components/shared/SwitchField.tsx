@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { Field, FieldContent, FieldDescription, FieldLabel, FieldTitle } from "@/components/ui/field";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 
@@ -14,15 +15,17 @@ interface SwitchFieldProps {
   className?: string;
 }
 
-/** On/off setting row — label + wazahat left, switch right (poori row clickable label) */
+/** On/off setting row — poori row label hai, switch right par (shadcn choice-card pattern) */
 export function SwitchField({ id, label, description, checked, onCheckedChange, disabled, className }: SwitchFieldProps) {
   return (
-    <div className={cn("flex items-center justify-between gap-4 rounded-xl border bg-card px-4 py-3.5", className)}>
-      <label htmlFor={id} className="flex min-w-0 cursor-pointer flex-col gap-0.5">
-        <span className="text-sm font-medium text-foreground">{label}</span>
-        {description && <span className="text-xs text-muted-foreground">{description}</span>}
-      </label>
-      <Switch id={id} checked={checked} onCheckedChange={onCheckedChange} disabled={disabled} />
-    </div>
+    <FieldLabel htmlFor={id} className={cn("rounded-xl! bg-background has-data-checked:bg-background", className)}>
+      <Field orientation="horizontal" className={cn("p-4!")}>
+        <FieldContent>
+          <FieldTitle>{label}</FieldTitle>
+          {description && <FieldDescription>{description}</FieldDescription>}
+        </FieldContent>
+        <Switch id={id} checked={checked} onCheckedChange={onCheckedChange} disabled={disabled} />
+      </Field>
+    </FieldLabel>
   );
 }

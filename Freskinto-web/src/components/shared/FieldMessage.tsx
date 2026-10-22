@@ -1,19 +1,14 @@
-import { CircleAlert } from "lucide-react";
+import { FieldDescription, FieldError } from "@/components/ui/field";
 
 /** Field ke neeche error (role=alert, `${id}-error`) ya hint (`${id}-hint`) — error ko priority */
 export function FieldMessage({ id, error, hint }: { id: string; error?: string; hint?: string }) {
-  if (error) {
-    return (
-      <p id={`${id}-error`} role="alert" className="flex items-start gap-1.5 text-xs font-medium text-destructive">
-        <CircleAlert className="mt-px size-3.5 shrink-0" aria-hidden="true" />
-        {error}
-      </p>
-    );
-  }
+  if (error) return <FieldError id={`${id}-error`}>{error}</FieldError>;
   if (!hint) return null;
-  return (
-    <p id={`${id}-hint`} className="text-xs text-muted-foreground">
-      {hint}
-    </p>
-  );
+  return <FieldDescription id={`${id}-hint`}>{hint}</FieldDescription>;
+}
+
+/** `aria-describedby` jo FieldMessage ke ids se match kare */
+export function describedBy(id: string, error?: string, hint?: string): string | undefined {
+  if (error) return `${id}-error`;
+  return hint ? `${id}-hint` : undefined;
 }

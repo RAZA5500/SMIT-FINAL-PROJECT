@@ -6,49 +6,50 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ---------------------------------------------------------------------------
-   Freskinto design tokens — mostly white, fresh green accents
-   - Pure white pages, cards, header and admin sidebar; light grey for quiet panels (hero,
-     footer, tiles, chips). No tinted panels and no large coloured blocks.
-   - Freskinto green (emerald #047857) only for actions and accents: buttons, prices, badges,
-     links, active states. Red stays for errors and low-stock urgency.
-   - Status colours (success / warning / info) stay semantic; saffron is for ratings.
+   Freskinto — "market hall" design tokens
+   - White paper and ink text. Fresh emerald (#047857) is the only brand colour:
+     buttons, prices, links and active states — never a large coloured block.
+   - Quiet surfaces (hero tiles, footer, chips) use a light stone grey; no tinted
+     panels. Red stays for errors and low / out-of-stock urgency.
+   - Type: Fraunces (soft serif) for headings, Inter for the interface and
+     JetBrains Mono for receipt details — SKUs, order numbers, aisle numbers.
+   - Signature details: aisle signs, shelf-edge price labels and till receipts.
 --------------------------------------------------------------------------- */
 :root {
-  --radius: 0.75rem;
+  --radius: 0.875rem;
 
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #141413;
   --card: #ffffff;
-  --card-foreground: #171717;
+  --card-foreground: #141413;
   --popover: #ffffff;
-  --popover-foreground: #171717;
+  --popover-foreground: #141413;
   --primary: #047857;
   --primary-foreground: #ffffff;
-  --secondary: #f4f4f5;
-  --secondary-foreground: #171717;
-  --muted: #f5f5f5;
-  --muted-foreground: #6b6b6b;
-  --accent: #f4f4f5;
-  --accent-foreground: #171717;
+  --secondary: #f4f4f1;
+  --secondary-foreground: #141413;
+  --muted: #f5f5f2;
+  --muted-foreground: #63635c;
+  --accent: #f1f1ed;
+  --accent-foreground: #141413;
   --destructive: #b42318;
-  --border: #ebebeb;
-  --input: #dadada;
+  --border: #e6e6e0;
+  --input: #d7d7d0;
   --ring: #047857;
 
   --brand: #047857;
   --brand-strong: #065f46;
-  --brand-soft: #f4f4f5;
-  --tomato: #c81e1e;
-  --tomato-soft: #fdecea;
-  --saffron: #f2b53a;
-  --saffron-soft: #fdf3dc;
-  --cream: #fafafa;
-  --success: #1d8a4d;
-  --warning: #b26b00;
-  --info: #2463c9;
+  --brand-soft: #f4f4f1;
+  --ink: #141413;
+  --paper: #fbfbf9;
+  --tomato: #c8321e;
+  --tomato-soft: #fdeeec;
+  --saffron: #e5a12f;
+  --success: #15803d;
+  --warning: #a16207;
+  --info: #1d4ed8;
 
-  /* Categorical chart slots. Charts only use slot 1 (single series) = brand green; slots 2–5 are
-     the earlier CVD-checked set, kept for multi-series charts */
+  /* Categorical chart slots — single-series charts only use slot 1 (brand) */
   --chart-1: #047857;
   --chart-2: #2a78d6;
   --chart-3: #eb6834;
@@ -56,49 +57,53 @@
   --chart-5: #eda100;
 
   --sidebar: #ffffff;
-  --sidebar-foreground: #171717;
+  --sidebar-foreground: #141413;
   --sidebar-primary: #047857;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f4f4f5;
-  --sidebar-accent-foreground: #171717;
-  --sidebar-border: #ebebeb;
+  --sidebar-accent: #f4f4f1;
+  --sidebar-accent-foreground: #141413;
+  --sidebar-border: #e6e6e0;
   --sidebar-ring: #047857;
 }
 
 .dark {
-  --background: #120d0d;
-  --foreground: #f5f5f5;
-  --card: #1b1414;
-  --card-foreground: #f5f5f5;
-  --popover: #1b1414;
-  --popover-foreground: #f5f5f5;
+  --background: #111110;
+  --foreground: #f4f4f1;
+  --card: #1a1a18;
+  --card-foreground: #f4f4f1;
+  --popover: #1a1a18;
+  --popover-foreground: #f4f4f1;
   --primary: #34d399;
   --primary-foreground: #022c22;
-  --secondary: #2a1a1a;
-  --secondary-foreground: #f5f5f5;
-  --muted: #241a1a;
-  --muted-foreground: #b3a6a6;
-  --accent: #2c1b1b;
-  --accent-foreground: #f5f5f5;
+  --secondary: #242422;
+  --secondary-foreground: #f4f4f1;
+  --muted: #222220;
+  --muted-foreground: #a8a89f;
+  --accent: #262624;
+  --accent-foreground: #f4f4f1;
   --destructive: #ff7b63;
   --border: #ffffff1a;
   --input: #ffffff26;
   --ring: #34d399;
-  --brand-soft: #262626;
+  --brand: #34d399;
+  --brand-strong: #6ee7b7;
+  --brand-soft: #242422;
+  --ink: #f4f4f1;
+  --paper: #1a1a18;
   --tomato-soft: #3a1616;
-  --saffron-soft: #3a2d12;
-  --cream: #171111;
   --chart-1: #34d399;
-  --chart-2: #3987e5;
-  --chart-3: #d95926;
-  --chart-4: #9085e9;
-  --chart-5: #c98500;
+  --sidebar: #161615;
+  --sidebar-foreground: #f4f4f1;
+  --sidebar-accent: #242422;
+  --sidebar-accent-foreground: #f4f4f1;
+  --sidebar-border: #ffffff1a;
 }
 
 @theme inline {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-bricolage), var(--font-inter), ui-sans-serif, sans-serif;
-  --font-display: var(--font-bricolage), var(--font-inter), ui-sans-serif, sans-serif;
+  --font-heading: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -122,11 +127,11 @@
   --color-brand: var(--brand);
   --color-brand-strong: var(--brand-strong);
   --color-brand-soft: var(--brand-soft);
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
   --color-tomato: var(--tomato);
   --color-tomato-soft: var(--tomato-soft);
   --color-saffron: var(--saffron);
-  --color-saffron-soft: var(--saffron-soft);
-  --color-cream: var(--cream);
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-info: var(--info);
@@ -146,44 +151,35 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-xl: calc(var(--radius) * 1.25);
+  --radius-2xl: calc(var(--radius) * 1.5);
+  --radius-3xl: calc(var(--radius) * 2);
+  --radius-4xl: calc(var(--radius) * 2.5);
 }
 
 @theme {
-  --container-page: 84rem;
+  /* `max-w-page` — storefront and admin page width */
+  --container-page: 82rem;
   --breakpoint-xs: 26rem;
 
-  --shadow-soft: 0 1px 2px rgb(23 23 23 / 0.04), 0 8px 24px -12px rgb(23 23 23 / 0.14);
-  --shadow-lift: 0 2px 4px rgb(23 23 23 / 0.04), 0 22px 44px -20px rgb(23 23 23 / 0.3);
-  --shadow-glow: 0 10px 30px -10px rgb(4 120 87 / 0.45);
+  --shadow-soft: 0 1px 2px rgb(20 20 19 / 0.04), 0 10px 28px -16px rgb(20 20 19 / 0.18);
+  --shadow-lift: 0 2px 6px rgb(20 20 19 / 0.05), 0 24px 48px -24px rgb(20 20 19 / 0.32);
 
-  --animate-marquee: marquee 38s linear infinite;
-  --animate-float: float 7s ease-in-out infinite;
-  --animate-bump: bump 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
   --animate-fade-up: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-bump: bump 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-marquee: marquee 42s linear infinite;
 
-  @keyframes marquee {
+  @keyframes fade-up {
     from {
-      transform: translateX(0);
+      opacity: 0;
+      transform: translateY(14px);
     }
     to {
-      transform: translateX(-50%);
-    }
-  }
-
-  @keyframes float {
-    0%,
-    100% {
+      opacity: 1;
       transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-10px);
     }
   }
 
@@ -199,14 +195,12 @@
     }
   }
 
-  @keyframes fade-up {
+  @keyframes marquee {
     from {
-      opacity: 0;
-      transform: translateY(14px);
+      transform: translateX(0);
     }
     to {
-      opacity: 1;
-      transform: translateY(0);
+      transform: translateX(-50%);
     }
   }
 }
@@ -226,13 +220,14 @@
 
   body {
     @apply bg-background font-sans text-foreground antialiased;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    font-feature-settings: "cv11";
   }
 
   h1,
   h2,
   h3 {
     @apply font-heading tracking-tight text-balance;
+    font-variation-settings: "SOFT" 60;
   }
 
   button:not(:disabled),
@@ -261,48 +256,61 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Custom utilities
+   Custom utilities (names avoid `bg-` / `font-` prefixes so tailwind-merge
+   never mistakes them for colours or font families)
 --------------------------------------------------------------------------- */
 
-/* Page width + side padding shared by storefront and admin pages */
-@utility container-page {
-  width: 100%;
-  max-width: var(--container-page);
-  margin-inline: auto;
-  padding-inline: 1rem;
-
-  @variant sm {
-    padding-inline: 1.5rem;
-  }
-
-  @variant lg {
-    padding-inline: 2rem;
-  }
+/* Fraunces "SOFT" axis — rounder, friendlier display serif */
+@utility serif-soft {
+  font-variation-settings: "SOFT" 100;
 }
 
-/* Thin, token-coloured scrollbars for horizontal rails (admin order board) */
-@utility scrollbar-thin {
-  scrollbar-width: thin;
-  scrollbar-color: var(--input) transparent;
+/* Till-receipt perforation on the top and bottom edges */
+@utility receipt-edge {
+  --notch: 6px;
+  --pitch: 18px;
+  -webkit-mask:
+    radial-gradient(circle var(--notch) at 50% 0, #0000 98%, #000) 50% 0 / var(--pitch) 51% repeat-x,
+    radial-gradient(circle var(--notch) at 50% 100%, #0000 98%, #000) 50% 100% / var(--pitch) 51% repeat-x;
+  mask:
+    radial-gradient(circle var(--notch) at 50% 0, #0000 98%, #000) 50% 0 / var(--pitch) 51% repeat-x,
+    radial-gradient(circle var(--notch) at 50% 100%, #0000 98%, #000) 50% 100% / var(--pitch) 51% repeat-x;
 }
 
-/* Decorative dotted texture for brand surfaces (hero, auth panel, promo bands) */
-@utility bg-dots {
+/* Decorative barcode at the foot of a receipt (uses currentColor) */
+@utility barcode {
+  background-image: repeating-linear-gradient(
+    90deg,
+    currentColor 0 2px,
+    transparent 2px 4px,
+    currentColor 4px 5px,
+    transparent 5px 8px,
+    currentColor 8px 11px,
+    transparent 11px 12px,
+    currentColor 12px 13px,
+    transparent 13px 17px
+  );
+}
+
+/* Notepad ruling for the shopping-list card */
+@utility texture-ruled {
+  background-image: linear-gradient(to bottom, transparent calc(100% - 1px), var(--border) 0);
+  background-size: 100% 2.75rem;
+}
+
+/* Shop-floor dot grid for quiet panels (uses currentColor) */
+@utility texture-dots {
   background-image: radial-gradient(currentColor 1px, transparent 1px);
   background-size: 18px 18px;
 }
 
-/* Product packshots are shot on white — multiply lets them sit on tinted tiles */
+/* Packshots are shot on white — multiply lets them sit on grey tiles */
 @utility blend-packshot {
   mix-blend-mode: multiply;
 }
 
-/* Numbers that change in place (prices, totals, counters) don't jiggle */
-@utility numeric {
-  font-variant-numeric: tabular-nums;
-}
-
-/* Outlined display numerals (404) */
-@utility text-outline {
-  -webkit-text-stroke: 2px var(--brand);
+/* Thin, token-coloured scrollbars for horizontal rails and drawers */
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--input) transparent;
 }

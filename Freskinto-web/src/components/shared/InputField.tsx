@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
+import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { cn } from "@/lib/utils";
-import { FieldMessage } from "./FieldMessage";
+import { describedBy, FieldMessage } from "./FieldMessage";
+import { RequiredMark } from "./RequiredMark";
 
 export interface InputFieldProps extends React.ComponentProps<"input"> {
   id: string;
@@ -28,39 +30,32 @@ export function InputField({
   containerClassName,
   ...props
 }: InputFieldProps) {
-  const describedBy = error ? `${id}-error` : hint ? `${id}-hint` : undefined;
+  const controlProps = {
+    id,
+    required,
+    "aria-invalid": error ? true : undefined,
+    "aria-describedby": describedBy(id, error, hint),
+    ...props,
+  };
 
   return (
-    <div className={cn("flex flex-col gap-1.5", containerClassName)}>
+    <Field data-invalid={error ? true : undefined} className={cn(containerClassName)}>
       {label && (
-        <Label htmlFor={id} className="text-foreground">
+        <FieldLabel htmlFor={id}>
           {label}
-          {required && (
-            <span className="text-destructive" aria-hidden="true">
-              *
-            </span>
-          )}
-        </Label>
+          {required && <RequiredMark />}
+        </FieldLabel>
       )}
-      <div className="relative flex items-center">
-        {leftIcon && (
-          <span className="pointer-events-none absolute left-3 flex items-center text-muted-foreground [&_svg]:size-4">
-            {leftIcon}
-          </span>
-        )}
-        <Input
-          id={id}
-          required={required}
-          aria-invalid={error ? true : undefined}
-          aria-describedby={describedBy}
-          className={cn(leftIcon && "pl-9.5", rightIcon && "pr-10", className)}
-          {...props}
-        />
-        {rightIcon && (
-          <span className="absolute right-2 flex items-center text-muted-foreground">{rightIcon}</span>
-        )}
-      </div>
+      {leftIcon || rightIcon ? (
+        <InputGroup>
+          {leftIcon && <InputGroupAddon>{leftIcon}</InputGroupAddon>}
+          <InputGroupInput className={cn(className)} {...controlProps} />
+          {rightIcon && <InputGroupAddon align="inline-end">{rightIcon}</InputGroupAddon>}
+        </InputGroup>
+      ) : (
+        <Input className={cn(className)} {...controlProps} />
+      )}
       <FieldMessage id={id} error={error} hint={hint} />
-    </div>
+    </Field>
   );
 }
