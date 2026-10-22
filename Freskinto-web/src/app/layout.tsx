@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { STORE } from "@/constants/store";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 import { Providers } from "./providers/providers";
@@ -12,27 +13,37 @@ const inter = localFont({
   display: "swap",
 });
 
-const bricolage = localFont({
-  src: "./fonts/bricolage-grotesque-latin.woff2",
-  variable: "--font-bricolage",
-  weight: "200 800",
+const fraunces = localFont({
+  src: [
+    { path: "./fonts/fraunces-latin.woff2", weight: "100 900", style: "normal" },
+    { path: "./fonts/fraunces-italic-latin.woff2", weight: "100 900", style: "italic" },
+  ],
+  variable: "--font-fraunces",
+  display: "swap",
+});
+
+const jetbrains = localFont({
+  src: "./fonts/jetbrains-mono-latin.woff2",
+  variable: "--font-jetbrains",
+  weight: "100 800",
   display: "swap",
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "Freskinto — Fresh groceries, delivered",
-    template: "%s · Freskinto",
+    default: `${STORE.name} — ${STORE.tagline}`,
+    template: `%s · ${STORE.name}`,
   },
   description:
-    "Fresh produce, poultry, dairy and everyday essentials — delivered free to your door or ready to collect.",
-  applicationName: "Freskinto",
+    "Fresh produce, poultry, dairy and everyday essentials from your neighbourhood market — delivered free or ready to collect.",
+  applicationName: STORE.name,
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f5f5f5",
+  themeColor: "#ffffff",
 };
 
+/* Document shell — `<html>`/`<body>` Next.js root layout ki zaroorat hain */
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -42,10 +53,10 @@ export default function RootLayout({
     <html
       lang="en-GB"
       data-scroll-behavior="smooth"
-      className={cn(inter.variable, bricolage.variable)}
+      className={cn(inter.variable, fraunces.variable, jetbrains.variable)}
       suppressHydrationWarning
     >
-      <body className="flex min-h-dvh flex-col" suppressHydrationWarning>
+      <body className={cn("flex min-h-dvh flex-col")} suppressHydrationWarning>
         <Providers>{children}</Providers>
       </body>
     </html>

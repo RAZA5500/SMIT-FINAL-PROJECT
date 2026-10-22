@@ -309,6 +309,11 @@
   mix-blend-mode: multiply;
 }
 
+/* iPhone home indicator ke neeche content na chhupe (fixed bottom bars) */
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
 /* Thin, token-coloured scrollbars for horizontal rails and drawers */
 @utility scrollbar-thin {
   scrollbar-width: thin;
