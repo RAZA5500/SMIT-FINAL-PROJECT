@@ -93,8 +93,8 @@ function CartPanelBody({ onClose }: { onClose: () => void }) {
   } else {
     body = (
       <Stack as="ul" className="divide-y divide-border">
-        {items.map((item) => (
-          <Box as="li" key={item.id}>
+        {items.map((item, index) => (
+          <Box as="li" key={item.id} className="animate-fade-up" style={{ animationDelay: `${index * 50}ms` }}>
             <CartLine item={item} compact onNavigate={onClose} />
           </Box>
         ))}
@@ -105,7 +105,7 @@ function CartPanelBody({ onClose }: { onClose: () => void }) {
   return (
     <>
       <SheetHeader className="border-b border-border">
-        <SheetTitle>Your basket</SheetTitle>
+        <SheetTitle className="font-display text-2xl tracking-[-0.04em]">Your basket</SheetTitle>
         <SheetDescription>
           {items.length > 0
             ? `${pluralize(cart?.itemCount ?? 0, "item")} · ${formatMoney(cart?.subtotal ?? 0)}`
@@ -114,9 +114,9 @@ function CartPanelBody({ onClose }: { onClose: () => void }) {
       </SheetHeader>
 
       {items.length > 0 && (
-        <Flex align="center" gap="2" className="border-b bg-muted/50 px-5 py-2.5 text-muted-foreground">
+        <Flex align="center" gap="2.5" className="mx-4 mt-4 animate-fade-up rounded-2xl bg-fresh-soft px-4 py-3 text-brand-ink">
           <Truck aria-hidden="true" className="size-4 shrink-0" />
-          <Text as="span" tone="inherit" className="text-fs-13">
+          <Text as="span" tone="inherit" weight="semibold" className="text-fs-13">
             Free delivery unlocked — on every order
           </Text>
         </Flex>
@@ -132,10 +132,10 @@ function CartPanelBody({ onClose }: { onClose: () => void }) {
             <Text as="span" tone="muted">
               Total
             </Text>
-            <Price amount={cart?.grandTotal ?? 0} size="lg" />
+            <Price amount={cart?.grandTotal ?? 0} size="xl" />
           </Flex>
           {canCheckout ? (
-            <ButtonLink href={customerRoutes.checkout} onClick={onClose} size="lg" className="w-full">
+            <ButtonLink href={customerRoutes.checkout} onClick={onClose} variant="fresh" size="xl" className="w-full">
               Checkout
               <ArrowRight aria-hidden="true" />
             </ButtonLink>

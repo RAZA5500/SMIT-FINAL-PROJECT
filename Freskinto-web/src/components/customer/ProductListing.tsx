@@ -93,7 +93,7 @@ export function ProductListing({
           className="animate-fade-up"
           style={{ animationDelay: `${Math.min(index, 11) * 40}ms` }}
         >
-          <ProductCard product={product} eager={index < eagerCount} />
+          <ProductCard product={product} eager={index < eagerCount} morph />
         </Box>
       ))}
     </Grid>

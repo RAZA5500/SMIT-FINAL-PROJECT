@@ -6,101 +6,126 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ---------------------------------------------------------------------------
-   Freskinto design tokens — clean & minimal
-   White surfaces, near-black text, thin zinc-grey borders and one accent
-   colour: indigo. No loud brand colours, no offset shadows, no stickers.
-   - Status colours (success / warning / info / destructive) sirf status ke liye.
-   - Product photos ek hi halki grey "tile" par baithti hain (dono themes mein roshan).
-   - Components semantic classes use karte hain (bg-primary, text-muted-foreground,
-     border-border ...) — kabhi raw hex nahi.
+   Freskinto design tokens — "Fresh in Motion"
+   - Calm mist surfaces and deep ink text; colour comes from the food itself: every
+     product floats on an "aura" (its own colour as a soft glow, see lib/merchandising).
+   - One signature gradient (mint → sea → sky) for the moments that matter: main
+     CTAs, the logo, active states and accent words.
+   - Type: Unbounded (display), Instrument Serif italic (accent words), Manrope (text).
+   - Motion: expo-out easing, scroll reveals, a 3D product orbit, view transitions
+     between pages; everything calms down under prefers-reduced-motion.
 --------------------------------------------------------------------------- */
 :root {
-  --radius: 0.625rem;
+  --radius: 1rem;
 
   /* Surfaces */
-  --background: #ffffff;
-  --foreground: #09090b;
+  --background: #f3f6f1;
+  --foreground: #0c1a14;
   --card: #ffffff;
-  --card-foreground: #09090b;
+  --card-foreground: #0c1a14;
   --popover: #ffffff;
-  --popover-foreground: #09090b;
-  /* Admin canvas / subtle page bands */
-  --workspace: #fafafa;
+  --popover-foreground: #0c1a14;
+  --workspace: #eef2ea;
 
-  /* Core shadcn roles — indigo is the only accent */
-  --primary: #4f46e5;
-  --primary-foreground: #ffffff;
-  --secondary: #f4f4f5;
-  --secondary-foreground: #18181b;
-  --muted: #f4f4f5;
-  --muted-foreground: #6b6b74;
-  --accent: #eef2ff;
-  --accent-foreground: #3730a3;
+  /* Core shadcn roles — ink is the default action, the gradient is the hero action */
+  --primary: #0c1a14;
+  --primary-foreground: #f3f6f1;
+  --secondary: #e8ede4;
+  --secondary-foreground: #0c1a14;
+  --muted: #e8ede4;
+  --muted-foreground: #586a60;
+  --accent: #e1f5ea;
+  --accent-foreground: #065f46;
   --destructive: #dc2626;
-  --border: #e4e4e7;
-  --input: #d4d4d8;
-  --ring: #4f46e5;
+  --border: #dfe6da;
+  --input: #cfd9ca;
+  --ring: #14c0b0;
 
-  /* Status — soft surface + AA ink */
+  /* Brand */
+  --brand: #12c08a;
+  --brand-ink: #047857;
+  --brand-soft: #def7ea;
+  --gradient-fresh: linear-gradient(115deg, #22d38a 0%, #14c0b0 48%, #2aa8f2 100%);
+  --gradient-fresh-soft: linear-gradient(115deg, #d9f7e7 0%, #d3f3f0 48%, #d9edfd 100%);
+  /* Gradient text (accent words) — light theme mein gehre stops, bade text ke liye 3:1 se upar */
+  --gradient-text: linear-gradient(115deg, #059669 0%, #0d9488 30%, #0284c7 60%, #059669 100%);
+
+  /* Status */
   --destructive-soft: #fef2f2;
   --destructive-ink: #b91c1c;
   --success: #16a34a;
-  --success-soft: #f0fdf4;
+  --success-soft: #ecfdf3;
   --success-ink: #15803d;
-  --warning: #d97706;
-  --warning-soft: #fffbeb;
+  --warning: #f59e0b;
+  --warning-soft: #fff7e6;
   --warning-ink: #b45309;
   --info: #2563eb;
-  --info-soft: #eff6ff;
+  --info-soft: #eef5ff;
   --info-ink: #1d4ed8;
-  --neutral-soft: #f4f4f5;
-  --neutral-ink: #3f3f46;
+  --neutral-soft: #e8ede4;
+  --neutral-ink: #3b4a42;
 
-  /* Product photo well — packshots is par multiply hote hain, is liye dono themes mein roshan */
-  --tile: #f4f4f5;
-  --tile-ink: #52525b;
+  /* Product stage — soft well a cutout floats in (tinted by --aura in components) */
+  --tile: #f4f7f2;
+  --tile-ink: #586a60;
 
   /* Charts — chart-1 single-series bars (dataviz validator: OKLCH L band + 3:1 vs card) */
-  --chart-1: #4f46e5;
-  --chart-2: #0ea5e9;
-  --chart-3: #10b981;
-  --chart-4: #f59e0b;
-  --chart-5: #f43f5e;
+  --chart-1: #0f9f86;
+  --chart-2: #2aa8f2;
+  --chart-3: #f59e0b;
+  --chart-4: #ff5a4f;
+  --chart-5: #a78bfa;
 
-  /* Admin sidebar — light, indigo active item */
-  --sidebar: #fafafa;
-  --sidebar-foreground: #18181b;
-  --sidebar-primary: #4f46e5;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f0f0f2;
-  --sidebar-accent-foreground: #09090b;
-  --sidebar-border: #e4e4e7;
-  --sidebar-ring: #4f46e5;
+  /* Admin sidebar */
+  --sidebar: #eef2ea;
+  --sidebar-foreground: #1c2b23;
+  --sidebar-primary: #0c1a14;
+  --sidebar-primary-foreground: #f3f6f1;
+  --sidebar-accent: #e1e8dc;
+  --sidebar-accent-foreground: #0c1a14;
+  --sidebar-border: #dfe6da;
+  --sidebar-ring: #14c0b0;
 
-  --glass-bg: rgb(255 255 255 / 0.85);
+  /* Glass + aurora */
+  --glass-bg: rgb(255 255 255 / 0.68);
+  --glass-border: rgb(255 255 255 / 0.75);
+  --glass-shadow: 0 1px 0 rgb(255 255 255 / 0.6) inset, 0 12px 40px -18px rgb(12 26 20 / 0.28);
+  --aurora-1: #b9f2d4;
+  --aurora-2: #bfe6ff;
+  --aurora-3: #ffe0c9;
+  --aurora-4: #e2dcff;
+  --aurora-opacity: 0.55;
+  --product-shadow: drop-shadow(0 22px 18px rgb(12 26 20 / 0.22)) drop-shadow(0 4px 4px rgb(12 26 20 / 0.08));
+  --aura-strength: 42%;
 }
 
 .dark {
-  --background: #09090b;
-  --foreground: #fafafa;
-  --card: #111113;
-  --card-foreground: #fafafa;
-  --popover: #18181b;
-  --popover-foreground: #fafafa;
-  --workspace: #0c0c0e;
+  --background: #060a08;
+  --foreground: #ecf2ee;
+  --card: #0d1411;
+  --card-foreground: #ecf2ee;
+  --popover: #101915;
+  --popover-foreground: #ecf2ee;
+  --workspace: #09100d;
 
-  --primary: #818cf8;
-  --primary-foreground: #0b0b1a;
-  --secondary: #1c1c1f;
-  --secondary-foreground: #fafafa;
-  --muted: #1c1c1f;
-  --muted-foreground: #a1a1aa;
-  --accent: #1e1b4b;
-  --accent-foreground: #c7d2fe;
+  --primary: #ecf2ee;
+  --primary-foreground: #06100b;
+  --secondary: #16201b;
+  --secondary-foreground: #ecf2ee;
+  --muted: #16201b;
+  --muted-foreground: #94a59b;
+  --accent: #0f2a1f;
+  --accent-foreground: #86efac;
   --destructive: #f87171;
-  --border: #27272a;
-  --input: #3f3f46;
-  --ring: #818cf8;
+  --border: #1d2923;
+  --input: #2a3831;
+  --ring: #2dd4bf;
+
+  --brand: #34d399;
+  --brand-ink: #4ade80;
+  --brand-soft: #0f2a1f;
+  --gradient-fresh-soft: linear-gradient(115deg, #0f2a1f 0%, #0d2a29 48%, #0d2233 100%);
+  --gradient-text: linear-gradient(115deg, #12c08a 0%, #14b8a6 30%, #2aa8f2 60%, #12c08a 100%);
 
   --destructive-soft: #2a1214;
   --destructive-ink: #fca5a5;
@@ -113,32 +138,43 @@
   --info: #60a5fa;
   --info-soft: #0f1a2e;
   --info-ink: #93c5fd;
-  --neutral-soft: #1c1c1f;
-  --neutral-ink: #d4d4d8;
+  --neutral-soft: #16201b;
+  --neutral-ink: #cfdbd3;
 
-  /* Halki si dimmer taake dark mode mein chakachaundh na ho */
-  --tile: #e9e9ec;
+  --tile: #121b17;
+  --tile-ink: #94a59b;
 
-  --chart-1: #7c83f5;
+  --chart-1: #13a99a;
   --chart-2: #38bdf8;
-  --chart-3: #34d399;
-  --chart-4: #fbbf24;
-  --chart-5: #fb7185;
+  --chart-3: #fbbf24;
+  --chart-4: #fb7185;
+  --chart-5: #a78bfa;
 
-  --sidebar: #0c0c0e;
-  --sidebar-foreground: #e4e4e7;
-  --sidebar-primary: #818cf8;
-  --sidebar-primary-foreground: #0b0b1a;
-  --sidebar-accent: #1c1c1f;
-  --sidebar-accent-foreground: #fafafa;
-  --sidebar-border: #27272a;
-  --sidebar-ring: #818cf8;
+  --sidebar: #09100d;
+  --sidebar-foreground: #dbe5df;
+  --sidebar-primary: #ecf2ee;
+  --sidebar-primary-foreground: #06100b;
+  --sidebar-accent: #16201b;
+  --sidebar-accent-foreground: #ecf2ee;
+  --sidebar-border: #1d2923;
+  --sidebar-ring: #2dd4bf;
 
-  --glass-bg: rgb(9 9 11 / 0.8);
+  --glass-bg: rgb(13 20 17 / 0.62);
+  --glass-border: rgb(255 255 255 / 0.08);
+  --glass-shadow: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 16px 48px -20px rgb(0 0 0 / 0.8);
+  --aurora-1: #0e5c3d;
+  --aurora-2: #0b3f63;
+  --aurora-3: #4a2a12;
+  --aurora-4: #2c2163;
+  --aurora-opacity: 0.6;
+  --product-shadow: drop-shadow(0 24px 22px rgb(0 0 0 / 0.55)) drop-shadow(0 4px 6px rgb(0 0 0 / 0.35));
+  --aura-strength: 55%;
 }
 
 @theme inline {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-unbounded), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
   --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --color-background: var(--background);
@@ -160,6 +196,10 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  --color-brand: var(--brand);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-soft: var(--brand-soft);
 
   --color-destructive-soft: var(--destructive-soft);
   --color-destructive-ink: var(--destructive-ink);
@@ -185,6 +225,7 @@
   --color-chart-5: var(--chart-5);
 
   --color-glass: var(--glass-bg);
+  --color-glass-border: var(--glass-border);
 
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
@@ -195,13 +236,15 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-xl: calc(var(--radius) * 1.25);
+  --radius-2xl: calc(var(--radius) * 1.5);
+  --radius-3xl: calc(var(--radius) * 1.75);
+  --radius-4xl: calc(var(--radius) * 2.25);
+
+  --shadow-glass: var(--glass-shadow);
 }
 
 @theme {
@@ -215,41 +258,208 @@
   --text-fs-15: 0.9375rem;
   --text-fs-15--line-height: 1.5rem;
 
-  /* Layout tokens */
-  --spacing-header: 4rem;
-  --container-page: 80rem;
+  /* Layout tokens — floating header: 4rem pill + 0.75rem gap */
+  --spacing-header: 5.5rem;
+  --container-page: 82rem;
   --container-form: 28rem;
 
   --breakpoint-xs: 26rem;
 
-  /* Sirf ek halki parchhai — hover / floating surfaces */
-  --shadow-soft: 0 1px 2px rgb(9 9 11 / 0.04), 0 4px 16px -8px rgb(9 9 11 / 0.1);
+  --shadow-soft: 0 1px 2px rgb(12 26 20 / 0.04), 0 8px 24px -12px rgb(12 26 20 / 0.16);
+  --shadow-lift: 0 2px 4px rgb(12 26 20 / 0.04), 0 24px 48px -20px rgb(12 26 20 / 0.32);
+  --shadow-glow: 0 10px 34px -10px rgb(20 192 176 / 0.65);
 
-  --animate-fade-up: fade-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
-  --animate-bump: bump 0.3s ease-out;
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
+
+  --animate-fade-up: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-pop-in: pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-bump: bump 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 9s ease-in-out infinite;
+  --animate-drift: drift 26s ease-in-out infinite alternate;
+  --animate-drift-slow: drift 38s ease-in-out infinite alternate-reverse;
+  --animate-shimmer: shimmer 4s linear infinite;
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-marquee-reverse: marquee 40s linear infinite reverse;
+  --animate-orbit: orbit 60s linear infinite;
+  --animate-orbit-counter: orbit-counter 60s linear infinite;
+  --animate-spin-slow: spin 14s linear infinite;
+  --animate-ping-soft: ping-soft 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+  --animate-drive: drive 4.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  --animate-ring-fill: ring-fill 5s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  --animate-step-glow: step-glow 4s ease-in-out infinite;
+  --animate-confetti: confetti 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-orbit-depth: orbit-depth 48s linear infinite;
 
   @keyframes fade-up {
     from {
       opacity: 0;
-      transform: translateY(8px);
+      translate: 0 16px;
+      filter: blur(6px);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+      translate: 0 0;
+      filter: blur(0);
+    }
+  }
+
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      scale: 0.6;
+    }
+    to {
+      opacity: 1;
+      scale: 1;
     }
   }
 
   @keyframes bump {
     0% {
-      transform: scale(1);
+      scale: 1;
     }
     40% {
-      transform: scale(1.15);
+      scale: 1.28;
     }
     100% {
-      transform: scale(1);
+      scale: 1;
     }
   }
+
+  @keyframes float {
+    0%,
+    100% {
+      translate: 0 0;
+      rotate: 0deg;
+    }
+    50% {
+      translate: 0 -12px;
+      rotate: -2deg;
+    }
+  }
+
+  @keyframes drift {
+    0% {
+      translate: 0 0;
+      scale: 1;
+    }
+    50% {
+      translate: 8vw -6vh;
+      scale: 1.15;
+    }
+    100% {
+      translate: -6vw 8vh;
+      scale: 0.92;
+    }
+  }
+
+  @keyframes shimmer {
+    from {
+      background-position: 0% 50%;
+    }
+    to {
+      background-position: 200% 50%;
+    }
+  }
+
+  @keyframes marquee {
+    from {
+      translate: 0 0;
+    }
+    to {
+      translate: -50% 0;
+    }
+  }
+
+  @keyframes orbit {
+    to {
+      transform: rotateZ(360deg);
+    }
+  }
+
+  @keyframes orbit-counter {
+    to {
+      transform: rotateZ(-360deg);
+    }
+  }
+
+  @keyframes orbit-depth {
+    0%,
+    100% {
+      opacity: 0.55;
+      scale: 0.8;
+    }
+    50% {
+      opacity: 1;
+      scale: 1.12;
+    }
+  }
+
+  @keyframes ping-soft {
+    75%,
+    100% {
+      scale: 2.4;
+      opacity: 0;
+    }
+  }
+
+  @keyframes drive {
+    0% {
+      left: 0%;
+    }
+    45%,
+    55% {
+      left: calc(100% - 2.75rem);
+    }
+    100% {
+      left: 0%;
+    }
+  }
+
+  @keyframes ring-fill {
+    0% {
+      --ring-progress: 0;
+    }
+    70%,
+    100% {
+      --ring-progress: 100;
+    }
+  }
+
+  @keyframes confetti {
+    0% {
+      opacity: 1;
+      transform: translate(-50%, -50%) rotate(0deg) scale(0.4);
+    }
+    70% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y) + 120px)) rotate(var(--r)) scale(1);
+    }
+  }
+
+  @keyframes step-glow {
+    0%,
+    100% {
+      opacity: 0.35;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+}
+
+/* Animatable custom properties (conic progress rings, gradient sweeps) */
+@property --ring-progress {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
 }
 
 /* ---------------------------------------------------------------------------
@@ -273,14 +483,15 @@
 
   body {
     @apply bg-background font-sans text-foreground antialiased;
-    font-feature-settings: "cv11", "ss01";
+    font-feature-settings: "ss01", "cv11";
+    /* Tirchhe ribbons / 3D orbit kabhi sideways scroll na banayein (clip scroll container nahi banata) */
+    overflow-x: clip;
   }
 
   h1,
   h2,
   h3,
   h4 {
-    letter-spacing: -0.02em;
     text-wrap: balance;
   }
 
@@ -290,8 +501,8 @@
   }
 
   ::selection {
-    background-color: var(--accent);
-    color: var(--accent-foreground);
+    background-color: var(--brand);
+    color: #06100b;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -313,16 +524,65 @@
    Semantic utilities
 --------------------------------------------------------------------------- */
 
-/* Sticky header / floating bars — halka frosted white */
+/* Frosted panels — header, drawers, popovers, floating bars */
 @utility glass {
   background-color: var(--glass-bg);
-  -webkit-backdrop-filter: blur(12px) saturate(160%);
-  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  backdrop-filter: blur(18px) saturate(180%);
+  box-shadow: var(--glass-shadow);
 }
 
-/* Packshots photo well ke grey mein ghul jayen */
-@utility blend-packshot {
-  mix-blend-mode: multiply;
+/* The signature gradient as a fill */
+@utility bg-fresh {
+  background-image: var(--gradient-fresh);
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+}
+
+@utility bg-fresh-soft {
+  background-image: var(--gradient-fresh-soft);
+}
+
+/* Gradient text — accent words in headlines (shimmer with animate-shimmer) */
+@utility text-fresh {
+  background-image: var(--gradient-text);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Soft radial glow in the element's --aura colour */
+@utility aura {
+  background-image: radial-gradient(
+    closest-side,
+    color-mix(in oklab, var(--aura, var(--brand)) var(--aura-strength), transparent) 0%,
+    color-mix(in oklab, var(--aura, var(--brand)) calc(var(--aura-strength) * 0.45), transparent) 45%,
+    transparent 100%
+  );
+}
+
+/* Faint aura wash for wells and stages */
+@utility aura-wash {
+  background-color: color-mix(in oklab, var(--aura, var(--brand)) 10%, var(--tile));
+}
+
+/* Background-free packshots float with a soft contact shadow */
+@utility product-float {
+  filter: var(--product-shadow);
+}
+
+/* Film grain over gradients — kills banding, adds texture */
+@utility grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+/* Conic progress ring driven by --ring-progress (0–100) */
+@utility progress-ring {
+  background: conic-gradient(var(--brand) calc(var(--ring-progress) * 1%), color-mix(in oklab, var(--foreground) 10%, transparent) 0);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 7px), #000 calc(100% - 6px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 7px), #000 calc(100% - 6px));
 }
 
 /* Tabular numbers — prices, counts, order numbers */
@@ -346,4 +606,225 @@
 @utility scrollbar-thin {
   scrollbar-width: thin;
   scrollbar-color: var(--input) transparent;
+}
+
+/* Marquee / rail edges fade out */
+@utility mask-fade-x {
+  -webkit-mask-image: linear-gradient(to right, transparent, black 7%, black 93%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 7%, black 93%, transparent);
+}
+
+@utility preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* ---------------------------------------------------------------------------
+   Product orbit (home hero) — a tilted 3D ring. The ring spins, each item spins back
+   and stands upright, so products always face you; preserve-3d sorts front/back
+   around the centre orb. Depth (size, fade) runs on the same clock, phase-shifted
+   per item. The floor glow and path live in their own flat layer behind, so they
+   never slice through the orb. Hover pauses everything; --px/--py (−1…1) tilt the
+   scene with the mouse.
+--------------------------------------------------------------------------- */
+.orbit-stage {
+  perspective: 1600px;
+  perspective-origin: 50% 35%;
+}
+
+.orbit-parallax {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateY(calc(var(--px, 0) * 10deg)) rotateX(calc(var(--py, 0) * -6deg));
+  transition: transform 1.4s var(--ease-out-expo);
+}
+
+.orbit-plane {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--orbit-tilt, 70deg));
+}
+
+/* Khaali wrappers 0×0 — warna unke invisible boxes page ko side mein scroll karwa dete hain */
+.orbit-ring,
+.orbit-counter,
+.orbit-upright {
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+}
+
+.orbit-ring {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.orbit-slot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  transform: rotateZ(var(--angle)) translateY(calc(var(--orbit-radius) * -1)) rotateZ(calc(var(--angle) * -1));
+}
+
+.orbit-upright {
+  transform: rotateX(calc(var(--orbit-tilt, 70deg) * -1));
+}
+
+.orbit-body {
+  width: var(--orbit-item);
+  height: var(--orbit-item);
+  translate: -50% -50%;
+}
+
+.orbit-stage:hover [data-orbit-anim],
+.orbit-stage:has(:focus-visible) [data-orbit-anim] {
+  animation-play-state: paused;
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll reveals — <Reveal> sets data-reveal and, once on screen, data-visible.
+   Content only starts hidden when the init script switched motion on (JS + no
+   reduced-motion), so nothing stays invisible without JavaScript.
+--------------------------------------------------------------------------- */
+[data-motion="on"] [data-reveal] {
+  transition:
+    opacity 0.9s var(--ease-out-expo),
+    translate 0.9s var(--ease-out-expo),
+    scale 0.9s var(--ease-out-expo),
+    filter 0.9s var(--ease-out-expo);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-motion="on"] [data-reveal]:not([data-visible]) {
+  opacity: 0;
+  translate: 0 28px;
+  filter: blur(6px);
+}
+
+[data-motion="on"] [data-reveal="scale"]:not([data-visible]) {
+  translate: 0 14px;
+  scale: 0.94;
+}
+
+[data-motion="on"] [data-reveal="left"]:not([data-visible]) {
+  translate: -36px 0;
+}
+
+[data-motion="on"] [data-reveal="right"]:not([data-visible]) {
+  translate: 36px 0;
+}
+
+[data-motion="on"] [data-reveal="fade"]:not([data-visible]) {
+  translate: 0 0;
+}
+
+/* ---------------------------------------------------------------------------
+   View transitions (Next experimental.viewTransition + React <ViewTransition>)
+--------------------------------------------------------------------------- */
+::view-transition-group(*) {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Pages: old content drifts down and fades, new content rises in */
+::view-transition-old(.page-exit) {
+  animation: 0.22s ease-in both vt-fade-out, 0.22s ease-in both vt-sink;
+}
+
+::view-transition-new(.page-enter) {
+  animation: 0.42s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both vt-fade-in, 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both vt-rise;
+}
+
+/* Product photo morphs from its card into the product page */
+::view-transition-group(.product-morph) {
+  animation-duration: 0.6s;
+}
+
+::view-transition-image-pair(.product-morph) {
+  animation-name: vt-soft-blur;
+}
+
+/* The floating header stays put while pages change underneath */
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+
+::view-transition-old(site-header) {
+  display: none;
+}
+
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+/* Theme switch: the new theme spreads out in a circle from the toggle. Header ka apna group us
+   waqt band — warna woh foran badal jata aur circle ke bahar alag dikhta */
+html.theme-switching [style*="site-header"] {
+  view-transition-name: none !important;
+}
+
+html.theme-switching::view-transition-old(root) {
+  animation: none;
+}
+
+html.theme-switching::view-transition-new(root) {
+  animation: theme-reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes theme-reveal {
+  from {
+    clip-path: circle(0 at var(--theme-x, 50%) var(--theme-y, 0%));
+  }
+  to {
+    clip-path: circle(150% at var(--theme-x, 50%) var(--theme-y, 0%));
+  }
+}
+
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-rise {
+  from {
+    translate: 0 24px;
+    filter: blur(4px);
+  }
+}
+
+@keyframes vt-sink {
+  to {
+    translate: 0 12px;
+  }
+}
+
+@keyframes vt-soft-blur {
+  40% {
+    filter: blur(2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
 }

@@ -89,7 +89,7 @@ customers (activate/deactivate).
 
 Kept as **static mock pages** with sample data (not connected to the API): admin dashboard, brands (and the new
 brand form), allergens, coupons, promotions, reviews, testimonials, notifications, settings, order board, stock
-movements, `/forgot-password` and the home page "What shoppers say" section. In the admin these screens carry a
+movements, `/forgot-password` and the home page "Loved locally" reviews section. In the admin these screens carry a
 **Sample data** label and their action buttons show an "isn't connected yet" notice instead of pretending to save.
 The admin profile shows the signed-in admin's real details; editing and password changes aren't connected.
 
@@ -118,19 +118,30 @@ The admin profile shows the signed-in admin's real details; editing and password
   generator with the `@prisma/adapter-pg` driver adapter.
 
 **Web**
-- The UI is branded **Freskinto** and uses a clean, minimal look (redesigned 2026-10-22): white surfaces,
-  near-black text, thin zinc-grey borders and one accent colour, indigo. Flat cards with no heavy shadows. The home
-  page has three sections: a hero with live search, "Shop by aisle" and a tabbed "Popular right now" shelf.
-  Interactive pieces: a ⌘K / Ctrl+K command palette with live product search (storefront and admin), an "Aisles"
-  dropdown menu, swipeable product shelves in tabs, product quick view, accordion filters, a phone tab bar and a
+- The UI is branded **Freskinto** and uses the "Fresh in Motion" design (redesigned 2026-10-23): a mint-paper
+  background with slowly drifting colour and film grain, white rounded cards, near-black ink text and one signature
+  gradient (green → teal → sky) reserved for forward actions ("Add to basket", "Checkout", "Pay", "Sign in").
+  Headings use Unbounded with Instrument Serif italic accent words; body text is Manrope. Products are
+  background-free cutouts that float over a soft glow in their own colour.
+- Motion: the home hero is a 3D orbit of real products around a glowing orb (mouse parallax, pauses on hover), the
+  hero search types popular searches, aisle ribbons scroll across the page, aisle panels open on hover and sections
+  rise in on scroll. Product cards tilt in 3D; adding to the basket flies the photo into the basket button; the
+  photo morphs from the card into the product page (React `<ViewTransition>` with Next
+  `experimental.viewTransition`); pages cross-fade; the theme toggle spreads the new theme in a circle; the checkout
+  test card tilts (and turns red for "decline"); a fresh payment shows confetti. All of it respects
+  `prefers-reduced-motion`, and nothing is hidden when JavaScript is off.
+- Other interactive pieces: a ⌘K / Ctrl+K command palette with live product search (storefront and admin), an
+  "Aisles" mega menu, tabbed product shelves, product quick view, accordion filters, a floating phone tab bar and a
   light/dark theme toggle. The admin uses the shadcn `Sidebar` (icon-collapse with ⌘B, sheet on phones) and an
-  Overview dashboard with live counts and an orders-by-status chart (with a table view).
+  Overview dashboard with count-up KPI tiles and an orders-by-status chart (with a table view).
 - shadcn/ui is the Base UI flavour (`base-nova`) with its tokens mapped onto the Freskinto design tokens in
-  `Freskinto-web/src/app/globals.css` (light and `.dark` sets, all text pairs WCAG AA): indigo `#4f46e5` primary
-  (`#818cf8` in dark mode), zinc greys for text, borders and surfaces; green, amber and red only for status.
-  Inter (text and headings) + JetBrains Mono (codes, SKUs), self-hosted with `next/font/local`. Dark mode is
-  class-based (`.dark` on `<html>`, chosen with the theme toggle and remembered in `localStorage`); product photo
-  wells stay light grey in both themes so the packshots blend correctly. Customer copy uses UK English ("basket").
+  `Freskinto-web/src/app/globals.css` (light and `.dark` sets, all text pairs WCAG AA): ink `#0c1a14` primary on
+  mint `#f3f6f1` (`#ecf2ee` on `#060a08` in dark mode), brand green `#12c08a` (`#047857` for green text); green,
+  amber and red otherwise only for status. Fonts — Unbounded (display), Manrope (text), Instrument Serif italic
+  (accent words), JetBrains Mono (codes, SKUs) — are self-hosted with `next/font/local`. Dark mode is class-based
+  (`.dark` on `<html>`, chosen with the theme toggle and remembered in `localStorage`). The packshots in
+  `public/images/cutouts` are background-free versions of the demo photos in `public/images/products` (purely
+  presentational; a product with no matching photo shows its aisle icon). Customer copy uses UK English ("basket").
 - No raw HTML elements in pages or feature components — enforced by ESLint (`no-restricted-syntax` in
   `Freskinto-web/eslint.config.mjs`): they compose shadcn/ui components and the layout/type primitives in
   `components/ui` (`Box`, `Flex`/`Stack`, `Grid`, `Container`, `Heading`, `Text`, `Form`), and every `className`

@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // React <ViewTransition> + browser View Transitions on route changes (product photo morphs, page fades)
+    viewTransition: true,
+  },
   images: {
     remotePatterns: [
       {

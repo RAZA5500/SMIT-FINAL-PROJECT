@@ -62,8 +62,8 @@ export function OrderDetailView({ id }: { id: string }) {
     return (
       <CustomerPage title="Order details" breadcrumbs={[BREADCRUMB_ORDERS, { label: "Order" }]}>
         <Grid aria-label="Loading" aria-busy="true" align="start" gap="6" className="lg:grid-cols-12">
-          <Skeleton className="h-80 w-full rounded-xl lg:col-span-8" />
-          <Skeleton className="h-80 w-full rounded-xl lg:col-span-4" />
+          <Skeleton className="h-80 w-full rounded-[1.75rem] lg:col-span-8" />
+          <Skeleton className="h-80 w-full rounded-[1.75rem] lg:col-span-4" />
         </Grid>
       </CustomerPage>
     );

@@ -22,12 +22,15 @@ import { Text } from "@/components/ui/typography";
 import { Price } from "@/components/shared/Price";
 import { ProductImage } from "@/components/shared/ProductImage";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useTypewriter } from "@/hooks/useTypewriter";
 import { publicRoutes, shopUrl } from "@/lib/routes/routes";
 import { useGetProducts } from "@/services/products/queries";
 import type { IProduct } from "@/services/products/types";
 import { POPULAR_SEARCHES } from "../layout/SearchPalette";
 
 const MIN_QUERY = 2;
+/** Placeholder khud likhta hai — asli shop ke products */
+const TYPED = ["Royal Gala apples", "warm bread", "chicken fillets", "fresh milk", "mature cheddar"] as const;
 
 /**
  * Hero ka bara search: typing par live product suggestions (Base UI Autocomplete — combobox
@@ -37,6 +40,8 @@ export function HeroSearch() {
   const router = useRouter();
   const [value, setValue] = useState("");
   const [open, setOpen] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const typed = useTypewriter(TYPED, !focused && value === "");
   const query = useDebounce(value.trim(), 250);
   const enabled = query.length >= MIN_QUERY;
   const { data, isFetching, isError } = useGetProducts({ q: query, limit: 5 }, enabled);
@@ -77,18 +82,20 @@ export function HeroSearch() {
           itemToStringValue={(product: IProduct) => product.name}
           filter={null}
         >
-          <AutocompleteInputGroup className="h-12 rounded-lg bg-background pr-1.5">
-            <InputGroupAddon className="pl-3.5 text-muted-foreground">
+          <AutocompleteInputGroup className="glass h-15 border-glass-border pr-2 has-[[data-slot=input-group-control]:focus-visible]:ring-ring/25">
+            <InputGroupAddon className="pl-5 text-muted-foreground">
               {isFetching && enabled ? <Spinner aria-hidden="true" /> : <Search aria-hidden="true" className="size-5" />}
             </InputGroupAddon>
             <AutocompleteInput
               aria-label="Search grocery items"
-              placeholder="Search apples, bread, chicken, milk…"
-              className="text-base"
+              placeholder={`Search ${typed}`}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              className="text-base font-medium"
             />
             <InputGroupAddon align="inline-end" className="pr-0">
-              <InputGroupButton type="submit" variant="default" className="h-9 rounded-md px-4">
-                <Text as="span" tone="inherit" weight="medium" className="hidden sm:inline">
+              <InputGroupButton type="submit" variant="fresh" className="h-11 rounded-full px-5">
+                <Text as="span" tone="inherit" weight="bold" className="hidden sm:inline">
                   Search
                 </Text>
                 <ArrowRight aria-hidden="true" className="sm:hidden" />
@@ -112,7 +119,7 @@ export function HeroSearch() {
                     name={product.name}
                     categoryName={product.category.name}
                     sizes="44px"
-                    className="size-10 shrink-0 rounded-md"
+                    className="size-11 shrink-0 rounded-xl"
                     imageClassName="p-1"
                   />
                   <Stack as="span" gap="0.5" className="min-w-0 flex-1">
@@ -157,7 +164,7 @@ export function HeroSearch() {
               setValue(term);
               setOpen(true);
             }}
-            className="font-normal text-muted-foreground hover:text-foreground"
+            className="glass border-glass-border font-semibold text-muted-foreground hover:text-foreground"
           >
             {term}
           </Button>

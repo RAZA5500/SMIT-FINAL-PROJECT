@@ -21,7 +21,7 @@ export function OrderCard({ order }: { order: IOrderSummary }) {
   return (
     <Card
       render={<Box as="article" />}
-      className="group/order relative gap-0 py-0 transition-colors hover:border-foreground/15 has-data-[slot=card-footer]:pb-0"
+      className="group/order relative gap-0 rounded-[1.75rem] py-0 transition-[translate,box-shadow,border-color] duration-500 ease-out-expo hover:-translate-y-0.5 hover:border-foreground/15 hover:shadow-lift has-data-[slot=card-footer]:pb-0"
     >
       <CardContent className="flex flex-col gap-5 pt-5">
         <Flex wrap align="start" justify="between" gap="3">
@@ -30,7 +30,7 @@ export function OrderCard({ order }: { order: IOrderSummary }) {
               <TextLink
                 href={customerRoutes.orderDetail(order.id)}
                 tone="default"
-                className="after:absolute after:inset-0 after:rounded-xl hover:no-underline"
+                className="after:absolute after:inset-0 after:rounded-[1.75rem] hover:no-underline"
               >
                 {order.orderNumber}
               </TextLink>

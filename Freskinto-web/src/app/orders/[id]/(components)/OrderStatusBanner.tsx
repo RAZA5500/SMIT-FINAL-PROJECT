@@ -2,10 +2,14 @@ import { CircleCheck, CircleX, Clock, CreditCard, PackageCheck, type LucideIcon 
 import type { VariantProps } from "class-variance-authority";
 import { Alert, AlertBody, AlertDescription, AlertTitle, type alertVariants } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { formatDateTime } from "@/lib/utils";
+import { Confetti } from "@/components/ui/confetti";
+import { cn, formatDateTime } from "@/lib/utils";
 import type { IOrder } from "@/services/orders/types";
 
 type Tone = NonNullable<VariantProps<typeof alertVariants>["variant"]>;
+
+/** Itni der tak "Paid & confirmed" par confetti — payment ke foran baad order page khulte hi */
+const CELEBRATE_FOR_MS = 90_000;
 
 function remaining(expiresAt: string, now: number): string {
   const seconds = Math.max(0, Math.floor((new Date(expiresAt).getTime() - now) / 1000));
@@ -81,16 +85,29 @@ export function OrderStatusBanner({ order, now, canPay, onPay }: OrderStatusBann
       break;
   }
 
+  const justPaid =
+    order.status === "CONFIRMED" &&
+    order.confirmedAt !== null &&
+    now - new Date(order.confirmedAt).getTime() < CELEBRATE_FOR_MS;
+
   return (
     // role="status" nahi — countdown har second badalta hai, screen reader shor na kare
-    <Alert variant={tone} role="note" className="flex-wrap items-center rounded-xl border border-l-8 py-4 sm:flex-nowrap">
-      <Icon aria-hidden="true" className="size-6" />
+    <Alert
+      variant={tone}
+      role="note"
+      className={cn(
+        "flex-wrap items-center gap-4 rounded-[1.75rem] px-5 py-5 sm:flex-nowrap",
+        justPaid && "animate-pop-in border-brand/30 bg-brand-soft/60 dark:bg-brand/10",
+      )}
+    >
+      {justPaid && <Confetti className="top-1/2 left-12 size-0" />}
+      <Icon aria-hidden="true" className="size-7" />
       <AlertBody>
         <AlertTitle className="numeric text-lg">{title}</AlertTitle>
         <AlertDescription>{text}</AlertDescription>
       </AlertBody>
       {canPay && (
-        <Button onClick={onPay} className="w-full sm:w-auto">
+        <Button variant="fresh" onClick={onPay} className="w-full sm:w-auto">
           <CreditCard aria-hidden="true" />
           Pay now
         </Button>

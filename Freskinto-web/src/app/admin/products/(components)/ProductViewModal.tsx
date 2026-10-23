@@ -50,7 +50,6 @@ export function ProductViewModal({ product, open, onOpenChange }: ProductViewMod
                 href={publicRoutes.product(product.id)}
                 variant="outline"
                 size="sm"
-               
                 onClick={() => onOpenChange(false)}
               >
                 <ExternalLink data-icon="inline-start" aria-hidden="true" />
@@ -59,7 +58,6 @@ export function ProductViewModal({ product, open, onOpenChange }: ProductViewMod
             )}
             <Button
               size="sm"
-             
               onClick={() => {
                 onOpenChange(false);
                 router.push(adminRoutes.productEdit(product.id));

@@ -43,13 +43,13 @@ export function CartLine({ item, compact = false, onNavigate, className }: CartL
         tabIndex={-1}
         aria-hidden="true"
         render={<Link href={publicRoutes.product(item.productId)} onClick={onNavigate} />}
-        className="h-auto shrink-0 self-start overflow-hidden rounded-xl border border-border p-0 hover:bg-transparent"
+        className="h-auto shrink-0 self-start overflow-hidden rounded-2xl p-0 hover:bg-transparent active:scale-100"
       >
         <ProductImage
           name={item.name}
           sizes="96px"
-          className={compact ? "size-16" : "size-20 sm:size-24"}
-          imageClassName="p-1.5"
+          className={compact ? "size-18" : "size-20 sm:size-24"}
+          imageClassName="p-[10%]"
           muted={!item.isAvailable}
         />
       </Button>
@@ -61,7 +61,7 @@ export function CartLine({ item, compact = false, onNavigate, className }: CartL
               href={publicRoutes.product(item.productId)}
               onClick={onNavigate}
               tone="default"
-              className="line-clamp-2 text-sm leading-5 font-semibold"
+              className="line-clamp-2 text-sm leading-5 font-bold"
             >
               {item.name}
             </TextLink>

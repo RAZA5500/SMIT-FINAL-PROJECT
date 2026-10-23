@@ -5,6 +5,7 @@ import { useState, type ReactNode } from "react";
 import { Box } from "@/components/ui/box";
 import { Stack } from "@/components/ui/flex";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Text } from "@/components/ui/typography";
 import { CustomerPage } from "@/components/customer/CustomerPage";
 import { ButtonLink } from "@/components/shared/ButtonLink";
 import { ChipGroup, type ChipOption } from "@/components/shared/ChipGroup";
@@ -38,7 +39,7 @@ export function OrdersView() {
     content = (
       <Stack aria-label="Loading" aria-busy="true" gap="4">
         {Array.from({ length: 3 }, (_, i) => (
-          <Skeleton key={i} className="h-44 w-full rounded-xl" />
+          <Skeleton key={i} className="h-44 w-full rounded-[1.75rem]" />
         ))}
       </Stack>
     );
@@ -87,7 +88,14 @@ export function OrdersView() {
   return (
     <CustomerPage
       eyebrow="My account"
-      title="My orders"
+      title={
+        <>
+          My{" "}
+          <Text as="em" variant="accent">
+            orders
+          </Text>
+        </>
+      }
       description="Track, pay for or cancel your orders."
       breadcrumbs={[{ label: "My orders" }]}
     >

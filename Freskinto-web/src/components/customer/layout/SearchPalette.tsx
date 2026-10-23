@@ -17,15 +17,15 @@ import {
 } from "@/components/ui/command";
 import { Flex, Stack } from "@/components/ui/flex";
 import { Kbd } from "@/components/ui/kbd";
+import { AisleBadge } from "@/components/shared/AisleBadge";
 import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/typography";
 import { Price } from "@/components/shared/Price";
 import { ProductImage } from "@/components/shared/ProductImage";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useTheme } from "@/hooks/useTheme";
-import { categoryTheme, TILE_CLASSES } from "@/lib/merchandising";
+
 import { customerRoutes, publicRoutes, shopUrl } from "@/lib/routes/routes";
-import { cn } from "@/lib/utils";
 import { useGetProducts } from "@/services/products/queries";
 import { useShopStore } from "@/stores/shop-store";
 import { useAisles } from "../shop/use-aisles";
@@ -156,22 +156,13 @@ function SearchPaletteBody({ onClose }: { onClose: () => void }) {
         {matchingAisles.length > 0 && (
           <CommandGroup heading="Aisles">
             {matchingAisles.map((aisle) => {
-              const Icon = categoryTheme(aisle.name).icon;
               return (
                 <CommandItem
                   key={aisle.id}
                   value={`aisle:${aisle.id}`}
                   onSelect={() => go(shopUrl({ category: aisle.id }))}
                 >
-                  <Flex
-                    as="span"
-                    align="center"
-                    justify="center"
-                    aria-hidden="true"
-                    className={cn("size-7 rounded-md", TILE_CLASSES.chip)}
-                  >
-                    <Icon />
-                  </Flex>
+                  <AisleBadge name={aisle.name} size="sm" />
                   {aisle.name}
                   {aisle.children.length > 0 && (
                     <Text as="span" tone="muted" className="truncate text-fs-12">
@@ -207,7 +198,7 @@ function SearchPaletteBody({ onClose }: { onClose: () => void }) {
                 <Package aria-hidden="true" />
                 Track my orders
               </CommandItem>
-              <CommandItem value="nav:theme" onSelect={toggleTheme}>
+              <CommandItem value="nav:theme" onSelect={() => toggleTheme()}>
                 {theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
                 {theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
               </CommandItem>

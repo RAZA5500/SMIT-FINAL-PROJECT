@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
+import { Aurora } from "@/components/ui/aurora";
 import { Flex } from "@/components/ui/flex";
 import { AuthGuard } from "@/components/shared/AuthGuard";
 import { CartPanel } from "./CartPanel";
 import { MobileTabBar } from "./layout/MobileTabBar";
+import { PageTransition } from "./layout/PageTransition";
 import { SiteFooter } from "./layout/SiteFooter";
 import { SiteHeader } from "./layout/SiteHeader";
 
@@ -14,16 +16,22 @@ interface CustomerShellProps {
   variant?: "default" | "checkout";
 }
 
-/** Storefront chrome: sticky header → content → light footer, slide-over basket aur phone tab bar */
+/**
+ * Storefront chrome: tairti aurora → floating glass header → content (route change par page
+ * transition) → footer, slide-over basket aur phone ka floating tab bar
+ */
 export function CustomerShell({ children, requireAuth = false, variant = "default" }: CustomerShellProps) {
   const checkout = variant === "checkout";
 
   return (
     <>
+      <Aurora />
       <SiteHeader variant={variant} />
-      <Flex as="main" id="content" direction="col" className="flex-1">
-        {requireAuth ? <AuthGuard expectedRole="CUSTOMER">{children}</AuthGuard> : children}
-      </Flex>
+      <PageTransition>
+        <Flex as="main" id="content" direction="col" className="flex-1">
+          {requireAuth ? <AuthGuard expectedRole="CUSTOMER">{children}</AuthGuard> : children}
+        </Flex>
+      </PageTransition>
       <SiteFooter compact={checkout} />
       {!checkout && <MobileTabBar />}
       <CartPanel />

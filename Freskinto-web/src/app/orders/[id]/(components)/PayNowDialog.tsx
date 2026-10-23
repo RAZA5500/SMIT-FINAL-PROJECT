@@ -50,7 +50,7 @@ export function PayNowDialog({ order, open, onOpenChange }: PayNowDialogProps) {
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isPending}>
             Not now
           </Button>
-          <LoadingButton type="submit" form={FORM_ID} isLoading={isPending} loadingText="Processing payment…">
+          <LoadingButton type="submit" form={FORM_ID} variant="fresh" isLoading={isPending} loadingText="Processing payment…">
             <Lock aria-hidden="true" />
             Pay {formatMoney(order.total)}
           </LoadingButton>

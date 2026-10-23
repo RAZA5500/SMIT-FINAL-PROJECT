@@ -59,7 +59,7 @@ export function AdminCommandPalette({ open, onOpenChange }: AdminCommandPaletteP
               <ExternalLink aria-hidden="true" />
               View storefront
             </CommandItem>
-            <CommandItem value="Toggle theme dark light" onSelect={toggleTheme}>
+            <CommandItem value="Toggle theme dark light" onSelect={() => toggleTheme()}>
               {theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
               {theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
             </CommandItem>

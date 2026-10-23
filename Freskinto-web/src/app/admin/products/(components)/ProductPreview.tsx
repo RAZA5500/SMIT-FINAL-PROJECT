@@ -27,7 +27,7 @@ export function ProductPreview({ name, categoryName, price, minimumOrderQuantity
   const minQty = Number(minimumOrderQuantity);
 
   return (
-    <Card className="rounded-xl">
+    <Card className="rounded-[1.5rem]">
       <CardHeader>
         <CardTitle className={cn("font-sans text-base")}>Shop preview</CardTitle>
         <CardDescription>How customers will see it on the shelf.</CardDescription>
@@ -39,9 +39,9 @@ export function ProductPreview({ name, categoryName, price, minimumOrderQuantity
         </CardAction>
       </CardHeader>
       <CardContent className={cn("flex flex-col gap-3")}>
-        <Card aria-hidden="true" className="mx-auto w-full max-w-60 gap-0 rounded-xl border py-0 shadow-none">
-          <ProductImage name={displayName} categoryName={categoryName} sizes="240px" className="m-2 rounded-xl" />
-          <Stack gap="3" className="p-3.5 pt-1.5">
+        <Card aria-hidden="true" className="mx-auto w-full max-w-60 gap-0 rounded-[1.9rem] p-2 shadow-none">
+          <ProductImage name={displayName} categoryName={categoryName} sizes="240px" className="rounded-[1.4rem]" />
+          <Stack gap="3" className="px-2.5 pt-3.5 pb-2">
             <Stack gap="1">
               <Text as="span" variant="eyebrow" tone="muted" className="truncate">
                 {categoryName || "Category"}

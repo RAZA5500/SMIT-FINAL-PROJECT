@@ -7,11 +7,28 @@ import { cn } from "@/lib/utils";
 import "./globals.css";
 import { Providers } from "./providers/providers";
 
-/* Self-hosted variable fonts (latin) — build bina network ke chalta hai */
-const inter = localFont({
-  src: "./fonts/inter-latin.woff2",
-  variable: "--font-inter",
-  weight: "100 900",
+/* Self-hosted variable fonts (latin, SIL OFL 1.1) — build bina network ke chalta hai */
+const manrope = localFont({
+  src: "./fonts/manrope-latin.woff2",
+  variable: "--font-manrope",
+  weight: "200 800",
+  display: "swap",
+});
+
+/* Display headlines — Unbounded */
+const unbounded = localFont({
+  src: "./fonts/unbounded-latin.woff2",
+  variable: "--font-unbounded",
+  weight: "200 900",
+  display: "swap",
+});
+
+/* Accent words inside headlines — Instrument Serif italic */
+const instrumentSerif = localFont({
+  src: "./fonts/instrument-serif-latin-italic.woff2",
+  variable: "--font-instrument",
+  weight: "400",
+  style: "italic",
   display: "swap",
 });
 
@@ -34,8 +51,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
+    { media: "(prefers-color-scheme: light)", color: "#f3f6f1" },
+    { media: "(prefers-color-scheme: dark)", color: "#060a08" },
   ],
 };
 
@@ -49,7 +66,7 @@ export default function RootLayout({
     <html
       lang="en-GB"
       data-scroll-behavior="smooth"
-      className={cn(inter.variable, jetbrains.variable)}
+      className={cn(manrope.variable, unbounded.variable, instrumentSerif.variable, jetbrains.variable)}
       suppressHydrationWarning
     >
       <body className={cn("flex min-h-dvh flex-col")} suppressHydrationWarning>

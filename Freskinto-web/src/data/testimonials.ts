@@ -1,6 +1,6 @@
 /**
  * Customer testimonials (static content — user decision). Featured ones appear in
- * the home page "What shoppers say" section; the admin Testimonials screen previews
+ * the home page "Loved locally" reviews section; the admin Testimonials screen previews
  * how they would be managed.
  */
 export interface Testimonial {
@@ -11,7 +11,7 @@ export interface Testimonial {
   text: string;
   source: "Email" | "Survey" | "In person";
   date: string;
-  /** Shown in the home page "What shoppers say" section */
+  /** Shown in the home page "Loved locally" reviews section */
   featured: boolean;
 }
 

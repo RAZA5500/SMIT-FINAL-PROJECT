@@ -116,7 +116,7 @@ export function RegisterForm() {
         />
       </FieldGroup>
 
-      <LoadingButton type="submit" size="xl" isLoading={isSubmitting} className="w-full">
+      <LoadingButton type="submit" variant="fresh" size="xl" isLoading={isSubmitting} className="w-full">
         Create account
         {!isSubmitting && <ArrowRight aria-hidden="true" />}
       </LoadingButton>

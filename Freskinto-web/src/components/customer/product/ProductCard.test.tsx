@@ -104,7 +104,7 @@ describe("ProductCard", () => {
 
   it("out of stock → disabled button, no add", () => {
     renderWithProviders(<ProductCard product={{ ...apples, stockStatus: "OUT_OF_STOCK" }} />);
-    expect(screen.getByRole("button", { name: "Out of stock" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Royal Gala Apples is sold out" })).toBeDisabled();
     expect(screen.getByText("Sold out")).toBeInTheDocument();
   });
 

@@ -19,8 +19,8 @@ export function EditProductView({ id }: { id: string }) {
     return (
       <AdminPage title="Edit product">
         <Grid aria-label="Loading" aria-busy="true" gap="6" className="xl:grid-cols-3">
-          <Skeleton className={cn("h-96 w-full rounded-xl xl:col-span-2")} />
-          <Skeleton className={cn("h-96 w-full rounded-xl")} />
+          <Skeleton className={cn("h-96 w-full rounded-[1.5rem] xl:col-span-2")} />
+          <Skeleton className={cn("h-96 w-full rounded-[1.5rem]")} />
         </Grid>
       </AdminPage>
     );

@@ -20,7 +20,7 @@ interface OrderTimelineProps {
   className?: string;
 }
 
-/** Vertical order tracking: har step ka timestamp, agla step "Up next" (indigo outline) */
+/** Vertical order tracking: har step ka timestamp, ho chuke steps gradient mein, agla step "Up next" (green outline) */
 export function OrderTimeline({ steps, cancelledAt, className }: OrderTimelineProps) {
   const cancelled = Boolean(cancelledAt);
   const visible = cancelled ? steps.filter((step) => step.at) : steps;
@@ -41,7 +41,7 @@ export function OrderTimeline({ steps, cancelledAt, className }: OrderTimelinePr
                 aria-hidden="true"
                 className={cn(
                   "absolute top-10 bottom-0 left-4 w-px -translate-x-1/2",
-                  done ? "bg-primary" : "bg-border",
+                  done ? "bg-brand" : "bg-border",
                 )}
               />
             )}
@@ -51,8 +51,8 @@ export function OrderTimeline({ steps, cancelledAt, className }: OrderTimelinePr
               justify="center"
               className={cn(
                 "relative z-10 size-8 shrink-0 rounded-full [&_svg]:size-4",
-                done && "bg-primary text-primary-foreground",
-                isNext && "border border-primary bg-background text-primary",
+                done && "bg-fresh text-[#06100b] shadow-glow",
+                isNext && "border border-brand/50 bg-background text-brand-ink dark:text-brand",
                 !done && !isNext && "border border-border bg-background text-muted-foreground",
               )}
             >

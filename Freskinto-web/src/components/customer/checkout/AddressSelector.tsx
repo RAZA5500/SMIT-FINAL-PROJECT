@@ -72,7 +72,7 @@ export function AddressSelector({ addresses, mode, onModeChange, control, regist
       {mode === "saved" && <FieldMessage id="addressId" error={errors.addressId?.message} />}
 
       {mode === "new" && (
-        <Grid gap="4" className="animate-fade-up rounded-lg border bg-muted/30 p-4 sm:grid-cols-2 sm:p-5">
+        <Grid gap="4" className="animate-fade-up rounded-3xl border bg-muted/30 p-4 sm:grid-cols-2 sm:p-5">
           <InputField
             id="shippingAddress.addressLine"
             label="Address"

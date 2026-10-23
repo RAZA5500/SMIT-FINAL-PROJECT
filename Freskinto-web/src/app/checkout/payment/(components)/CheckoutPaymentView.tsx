@@ -122,7 +122,7 @@ export function CheckoutPaymentView() {
         title="Nothing to pay for yet"
         message="Start from checkout to choose delivery or collection."
         action={
-          <ButtonLink href={customerRoutes.checkout} size="lg">
+          <ButtonLink href={customerRoutes.checkout} variant="fresh" size="lg">
             Go to checkout
           </ButtonLink>
         }
@@ -132,10 +132,10 @@ export function CheckoutPaymentView() {
     content = (
       <Grid aria-label="Loading" aria-busy="true" align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
         <Stack gap="5" className="lg:col-span-7">
-          <Skeleton className="h-36 w-full rounded-xl" />
-          <Skeleton className="h-72 w-full rounded-xl" />
+          <Skeleton className="h-36 w-full rounded-[2rem]" />
+          <Skeleton className="h-72 w-full rounded-[2rem]" />
         </Stack>
-        <Skeleton className="h-96 w-full rounded-xl lg:col-span-5" />
+        <Skeleton className="h-96 w-full rounded-[2rem] lg:col-span-5" />
       </Grid>
     );
   } else if (isError) {
@@ -163,10 +163,10 @@ export function CheckoutPaymentView() {
       <Grid align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
         <Stack gap="5" className="lg:col-span-7">
           <DeliveryDetails intent={intent} />
-          <Card render={<Box as="section" aria-label="Payment" />} size="lg" className="rounded-xl border">
+          <Card render={<Box as="section" aria-label="Payment" />} size="lg" className="rounded-[2rem]">
             <CardHeader>
               <CardTitle render={<Box as="span" />} className="flex items-center gap-2 text-xl font-semibold">
-                <CreditCard aria-hidden="true" className="size-5 text-primary" />
+                <CreditCard aria-hidden="true" className="size-5 text-brand-ink dark:text-brand" />
                 Payment
               </CardTitle>
               <CardDescription>Your order is placed when you pay.</CardDescription>
@@ -190,11 +190,11 @@ export function CheckoutPaymentView() {
           </Card>
         </Stack>
 
-        <CartSummaryCard cart={cart} showItems className="lg:sticky lg:top-6 lg:col-span-5">
+        <CartSummaryCard cart={cart} showItems className="lg:sticky lg:top-28 lg:col-span-5">
           <LoadingButton
             type="submit"
             form={PAYMENT_FORM_ID}
-           
+            variant="fresh"
             size="xl"
             className="w-full"
             isLoading={isBusy}
@@ -221,7 +221,18 @@ export function CheckoutPaymentView() {
     <Container className="flex flex-col gap-8 py-8 sm:py-10">
       <Stack gap="6">
         <CheckoutSteps current={2} />
-        <PageHeader eyebrow="Step 3 of 3" title="Payment" description="Check your order and pay to confirm it." />
+        <PageHeader
+          eyebrow="Step 3 of 3"
+          title={
+            <>
+              Secure{" "}
+              <Text as="em" variant="accent">
+                payment
+              </Text>
+            </>
+          }
+          description="Check your order and pay to confirm it."
+        />
       </Stack>
       {content}
     </Container>

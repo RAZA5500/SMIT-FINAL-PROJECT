@@ -1,6 +1,6 @@
 "use client";
 
-import { ShoppingBasket } from "lucide-react";
+import { CircleCheck, ShoppingBasket } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Alert, AlertBody, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -10,6 +10,7 @@ import { Text } from "@/components/ui/typography";
 import { QuantityStepper } from "@/components/customer/product/QuantityStepper";
 import { LoadingButton } from "@/components/shared/LoadingButton";
 import { useCartItemQuantity } from "@/hooks/useCartItemQuantity";
+import { flyToBasket } from "@/lib/fly-to-basket";
 import { loginUrl } from "@/lib/routes/routes";
 import { toastError, toastSuccess } from "@/lib/toast";
 import { formatMoney } from "@/lib/utils";
@@ -19,6 +20,7 @@ import type { ICartItem } from "@/services/cart/types";
 import type { IProduct } from "@/services/products/types";
 import { useAuthStore } from "@/stores/auth-store";
 import { useShopStore } from "@/stores/shop-store";
+import { PRODUCT_STAGE_SELECTOR } from "./ProductStage";
 
 /**
  * Product page ka buy box: pehle quantity chuno (min..max), phir add. Basket mein aa jaye to wahi
@@ -59,6 +61,7 @@ function AddToBasket({ product }: { product: IProduct }) {
       toastError("Shopping is for customers", "Admin accounts can't add items to a basket.");
       return;
     }
+    flyToBasket(document.querySelector(PRODUCT_STAGE_SELECTOR));
     addItem.mutate(
       { productId: product.id, quantity },
       {
@@ -79,10 +82,17 @@ function AddToBasket({ product }: { product: IProduct }) {
           canIncrease={quantity < product.maximumOrderQuantity}
           onDecrease={() => setQuantity((q) => Math.max(product.minimumOrderQuantity, q - 1))}
           onIncrease={() => setQuantity((q) => Math.min(product.maximumOrderQuantity, q + 1))}
-          className="w-full sm:w-40"
+          className="w-full sm:w-44"
         />
-        <LoadingButton size="lg" className="h-11 flex-1" isLoading={addItem.isPending} loadingText="Adding…" onClick={add}>
-          <ShoppingBasket aria-hidden="true" />
+        <LoadingButton
+          variant="fresh"
+          size="xl"
+          className="w-full sm:w-auto sm:flex-1"
+          isLoading={addItem.isPending}
+          loadingText="Adding…"
+          onClick={add}
+        >
+          <ShoppingBasket aria-hidden="true" className="transition-transform duration-500 ease-spring group-hover/button:-rotate-12" />
           Add to basket
         </LoadingButton>
       </Flex>
@@ -98,13 +108,16 @@ function InBasket({ item }: { item: ICartItem }) {
   const { quantity, atMinimum, canIncrease, increase, decrease, isRemoving } = useCartItemQuantity(item);
 
   return (
-    <Stack gap="3" className="animate-fade-up rounded-lg border bg-muted/40 p-4">
-      <Text weight="medium">
-        In your basket ·{" "}
-        <Text as="span" tone="inherit" numeric>
-          {formatMoney(item.lineTotal)}
+    <Stack gap="3" className="animate-pop-in rounded-[1.75rem] border border-brand/25 bg-brand-soft/60 p-4 dark:bg-brand/10">
+      <Flex align="center" gap="2">
+        <CircleCheck aria-hidden="true" className="size-4.5 text-brand-ink dark:text-brand" />
+        <Text weight="semibold">
+          In your basket ·{" "}
+          <Text as="span" tone="inherit" numeric>
+            {formatMoney(item.lineTotal)}
+          </Text>
         </Text>
-      </Text>
+      </Flex>
       <Flex direction="col" gap="3" className="sm:flex-row">
         <QuantityStepper
           size="lg"
@@ -119,7 +132,7 @@ function InBasket({ item }: { item: ICartItem }) {
           onIncrease={increase}
           className="w-full sm:w-44"
         />
-        <Button size="lg" variant="outline" className="h-11 flex-1" onClick={() => setCartOpen(true)}>
+        <Button size="xl" variant="outline" className="w-full sm:w-auto sm:flex-1" onClick={() => setCartOpen(true)}>
           View basket
         </Button>
       </Flex>

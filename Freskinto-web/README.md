@@ -21,6 +21,10 @@ UI rules:
   root layout renders `<html>` and `<body>`.
 - **Every `className` goes through `cn()`** from `@/lib/utils` (tailwind-merge, aware of the custom shadow and
   animation tokens).
-- Design tokens (clean & minimal: white surfaces, zinc-grey text and borders, one indigo `#4f46e5` accent, with a
-  `.dark` set; Inter / JetBrains Mono) live in `src/app/globals.css`; brand name and support email in
-  `src/constants/store.ts`. The theme toggle (`hooks/useTheme.ts`) puts `.dark` on `<html>`.
+- Design tokens ("Fresh in Motion": mint paper, white cards, ink text, one green → teal → sky gradient for forward
+  actions, with a `.dark` set; Unbounded / Manrope / Instrument Serif / JetBrains Mono) live in
+  `src/app/globals.css`; brand name and support email in `src/constants/store.ts`. The theme toggle
+  (`hooks/useTheme.ts`) puts `.dark` on `<html>` and reveals the new theme in a circle.
+- Motion primitives live in `components/ui` — `Reveal` (scroll reveal), `Tilt` (3D hover tilt), `Marquee`,
+  `NumberTicker`, `Aurora`, `HoverIndicator`, `CircularText`, `Confetti` and a guarded React `ViewTransition`.
+  Content only starts hidden once the init script sets `data-motion="on"` (JavaScript on, no reduced motion).

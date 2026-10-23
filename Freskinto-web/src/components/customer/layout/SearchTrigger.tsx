@@ -47,7 +47,7 @@ export function SearchTrigger({ onOpen, variant = "bar", className }: SearchTrig
       onClick={onOpen}
       aria-label="Search products"
       className={cn(
-        "w-full justify-start gap-2 bg-muted/50 pr-1.5 pl-3 font-normal text-muted-foreground hover:bg-muted hover:text-muted-foreground",
+        "h-11 w-52 justify-start gap-2.5 border-transparent bg-foreground/[0.05] pr-2 pl-4 font-medium text-muted-foreground shadow-none hover:translate-y-0 hover:border-border hover:bg-card hover:text-foreground xl:w-64 dark:bg-foreground/[0.07]",
         className,
       )}
     >
@@ -55,9 +55,9 @@ export function SearchTrigger({ onOpen, variant = "bar", className }: SearchTrig
       <Text as="span" tone="inherit" className="flex-1 truncate text-left">
         Search products…
       </Text>
-      <Flex as="span" align="center" gap="1" aria-hidden="true" className="hidden lg:flex">
-        <Kbd className="border bg-background">⌘</Kbd>
-        <Kbd className="border bg-background">K</Kbd>
+      <Flex as="span" align="center" gap="1" aria-hidden="true" className="hidden xl:flex">
+        <Kbd className="border bg-card">⌘</Kbd>
+        <Kbd className="border bg-card">K</Kbd>
       </Flex>
     </Button>
   );

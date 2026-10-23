@@ -32,7 +32,7 @@ function ReviewSection({
   children: ReactNode;
 }) {
   return (
-    <Stack as="section" gap="3" className="rounded-xl border border-border bg-muted/40 p-4">
+    <Stack as="section" gap="3" className="rounded-3xl border border-border bg-muted/40 p-4">
       <Flex align="center" justify="between" gap="3">
         <Heading as="h3" size="5">
           {title}

@@ -7,20 +7,20 @@ import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 
 const SIZES = {
-  sm: { root: "h-9 p-0.5", button: "size-8", value: "min-w-7 text-sm" },
-  md: { root: "h-10 p-0.5", button: "size-9", value: "min-w-8 text-sm" },
-  lg: { root: "h-11 p-0.5", button: "size-10", value: "min-w-10 text-base" },
+  sm: { root: "h-10 p-1", button: "size-8", value: "min-w-7 text-sm" },
+  md: { root: "h-11 p-1", button: "size-9", value: "min-w-8 text-sm" },
+  lg: { root: "h-13 p-1.5", button: "size-10", value: "min-w-10 text-base" },
 } as const;
 
 const VARIANTS = {
-  // In-basket state on product cards — the indigo action colour
+  // In-basket state on product cards — deep ink pill
   solid: {
-    root: "bg-primary text-primary-foreground",
+    root: "bg-primary text-primary-foreground shadow-[0_10px_24px_-12px_rgb(12_26_20/0.7)]",
     button: "text-primary-foreground hover:bg-primary-foreground/15 hover:text-primary-foreground disabled:opacity-40",
   },
   outline: {
-    root: "border border-border bg-background text-foreground",
-    button: "hover:bg-muted disabled:opacity-35",
+    root: "border border-border bg-card/70 text-foreground backdrop-blur-sm",
+    button: "hover:bg-foreground/[0.06] disabled:opacity-35",
   },
 } as const;
 
@@ -67,7 +67,7 @@ export function QuantityStepper({
       justify="between"
       role="group"
       aria-label={`Quantity of ${label}`}
-      className={cn("rounded-lg", s.root, v.root, className)}
+      className={cn("rounded-full", s.root, v.root, className)}
     >
       <Button
         variant="ghost"
@@ -75,19 +75,15 @@ export function QuantityStepper({
         aria-label={removes ? `Remove ${label} from basket` : `Decrease quantity of ${label}`}
         disabled={disabled || (!removes && !canDecrease)}
         onClick={onDecrease}
-        className={cn("rounded-md", s.button, v.button)}
+        className={cn("rounded-full", s.button, v.button)}
       >
         {removes ? <Trash2 aria-hidden="true" /> : <Minus aria-hidden="true" />}
       </Button>
-      <Text
-        as="span"
-        aria-live="polite"
-        tone="inherit"
-        weight="semibold"
-        numeric
-        className={cn("text-center", s.value)}
-      >
-        {quantity}
+      <Text as="span" aria-live="polite" tone="inherit" weight="bold" numeric className={cn("text-center", s.value)}>
+        {/* key — har nayi quantity halki si "pop" ke saath (live region khud stable rehta hai) */}
+        <Text as="span" key={quantity} tone="inherit" className="inline-block animate-pop-in">
+          {quantity}
+        </Text>
       </Text>
       <Button
         variant="ghost"
@@ -95,7 +91,7 @@ export function QuantityStepper({
         aria-label={`Increase quantity of ${label}`}
         disabled={disabled || !canIncrease}
         onClick={onIncrease}
-        className={cn("rounded-md", s.button, v.button)}
+        className={cn("rounded-full", s.button, v.button)}
       >
         <Plus aria-hidden="true" />
       </Button>

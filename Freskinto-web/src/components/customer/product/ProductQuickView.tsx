@@ -2,6 +2,7 @@
 
 import { ArrowUpRight, Eye } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Flex, Stack } from "@/components/ui/flex";
@@ -26,27 +27,29 @@ export function ProductQuickView({ product, className }: { product: IProduct; cl
             variant="outline"
             size="icon-sm"
             aria-label={`Quick view ${product.name}`}
-            className={cn("bg-background/90 backdrop-blur transition-opacity", className)}
+            className={cn("glass size-9 border-glass-border transition-[opacity,scale,translate]", className)}
           />
         }
       >
         <Eye aria-hidden="true" />
       </DialogTrigger>
       <DialogContent className="max-w-3xl">
-        <Grid className="md:grid-cols-2">
-          <ProductImage
-            name={product.name}
-            categoryName={product.category.name}
-            alt={product.name}
-            sizes="(min-width: 768px) 380px, 100vw"
-            muted={product.stockStatus === "OUT_OF_STOCK"}
-            imageClassName="p-10"
-            className="max-md:aspect-video"
-          />
+        <Grid data-product-card="" className="md:grid-cols-2">
+          <Box data-product-image="">
+            <ProductImage
+              name={product.name}
+              categoryName={product.category.name}
+              alt={product.name}
+              sizes="(min-width: 768px) 380px, 100vw"
+              muted={product.stockStatus === "OUT_OF_STOCK"}
+              imageClassName="animate-float-slow p-[12%]"
+              className="h-full max-md:aspect-video"
+            />
+          </Box>
           <Stack gap="5" className="p-6 sm:p-8">
             <Stack gap="2">
-              <Badge variant="secondary">{product.category.name}</Badge>
-              <DialogTitle className="text-2xl">{product.name}</DialogTitle>
+              <Badge variant="brand">{product.category.name}</Badge>
+              <DialogTitle className="font-display text-2xl tracking-[-0.03em]">{product.name}</DialogTitle>
               <DialogDescription>
                 <Text as="span" tone="inherit" family="mono" className="text-fs-12">
                   SKU {product.sku}

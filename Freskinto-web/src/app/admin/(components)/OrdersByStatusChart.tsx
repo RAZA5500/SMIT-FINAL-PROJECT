@@ -35,7 +35,7 @@ export function OrdersByStatusChart({ counts, isLoading }: OrdersByStatusChartPr
 
   return (
     <Tabs defaultValue="chart" className="gap-0">
-      <Card className="gap-4 rounded-xl">
+      <Card className="gap-4 rounded-[1.5rem]">
         <CardHeader>
           <CardTitle>Orders by status</CardTitle>
           <CardDescription>Every order in the store, grouped by where it is now.</CardDescription>
@@ -52,7 +52,7 @@ export function OrdersByStatusChart({ counts, isLoading }: OrdersByStatusChartPr
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <Skeleton className="h-72 w-full rounded-xl" />
+            <Skeleton className="h-72 w-full rounded-2xl" />
           ) : (
             <>
               <TabsContent value="chart">

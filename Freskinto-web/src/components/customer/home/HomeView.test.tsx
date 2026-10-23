@@ -68,18 +68,19 @@ describe("HomeView", () => {
     useAuthStore.setState({ token: null, user: null, _hasHydrated: true });
   });
 
-  it("renders the three homepage sections: hero, aisles and popular products", async () => {
+  it("renders the hero and every home section with real store data", async () => {
     mockStoreApi();
     renderWithProviders(<HomeView />);
 
-    expect(screen.getByRole("heading", { name: /Fresh groceries, delivered to your door/i })).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/Search apples, bread, chicken, milk/i)).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Shop by aisle" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Popular right now" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: /Fresh food/i })).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: /Search grocery items/i })).toBeInTheDocument();
+    for (const name of [/Walk the\s*aisles/i, /Picked\s*fresh\s*today/i, /Made\s*effortless/i, /Loved\s*locally/i]) {
+      expect(screen.getByRole("heading", { level: 2, name })).toBeInTheDocument();
+    }
 
-    // Aisles grid uses the real categories from the API
+    // Aisle panels come from the real categories
     expect(await screen.findByRole("heading", { name: "Fresh Fruits" })).toBeInTheDocument();
-    // Products shelf shows real products
+    // The shelf shows real products
     expect((await screen.findAllByRole("link", { name: "Royal Gala Apples" })).length).toBeGreaterThan(0);
   });
 

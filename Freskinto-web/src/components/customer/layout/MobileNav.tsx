@@ -1,25 +1,26 @@
 "use client";
 
-import { LayoutDashboard, LogIn, LogOut, Moon, ShoppingBag, UserPlus } from "lucide-react";
+import { ArrowUpRight, LayoutDashboard, LogIn, LogOut, Moon, ShoppingBag, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import type { CSSProperties } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
 import { Flex, Stack } from "@/components/ui/flex";
+import { Grid } from "@/components/ui/grid";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 import { Text } from "@/components/ui/typography";
+import { AisleBadge } from "@/components/shared/AisleBadge";
 import { ButtonLink } from "@/components/shared/ButtonLink";
 import { Logo } from "@/components/shared/Logo";
 import { CUSTOMER_NAV } from "@/constants/navigation";
 import { STORE } from "@/constants/store";
 import { useLogout } from "@/hooks/useLogout";
 import { useTheme } from "@/hooks/useTheme";
-import { categoryTheme, TILE_CLASSES } from "@/lib/merchandising";
 import { adminRoutes, customerRoutes, publicRoutes, shopUrl } from "@/lib/routes/routes";
 import { cn, initials } from "@/lib/utils";
 import { useAuthStore } from "@/stores/auth-store";
@@ -31,9 +32,12 @@ interface MobileNavProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const LINK_CLASS = "h-11 w-full justify-start gap-3 px-3 text-base font-normal";
+const LINK_CLASS =
+  "group/link h-14 w-full animate-fade-up justify-between rounded-2xl px-4 font-display text-xl font-semibold tracking-[-0.03em]";
+/** Har link thoda der se aata hai — drawer khulte hi ek lehar */
+const stagger = (index: number) => ({ animationDelay: `${80 + index * 55}ms` }) as CSSProperties;
 
-/** Phone ka menu drawer — account block, links, aisles accordion, sign in/out */
+/** Phone ka menu drawer — bade display links (lehar mein), account, aisles grid, dark mode, sign in/out */
 export function MobileNav({ open, onOpenChange }: MobileNavProps) {
   const pathname = usePathname();
   const logout = useLogout();
@@ -66,93 +70,92 @@ export function MobileNav({ open, onOpenChange }: MobileNavProps) {
           <SheetDescription>{STORE.tagline}</SheetDescription>
         </SheetHeader>
 
-        {signedIn && user && (
-          <Flex align="center" gap="3" className="border-b border-border px-5 py-4">
-            <Avatar size="lg">
-              <AvatarFallback>{initials(user.name)}</AvatarFallback>
-            </Avatar>
-            <Stack className="min-w-0">
-              <Text weight="semibold" className="truncate">
-                {user.name}
-              </Text>
-              <Text tone="muted" className="truncate text-fs-12">
-                {user.email}
-              </Text>
-            </Stack>
-          </Flex>
-        )}
-
         <ScrollArea className="min-h-0 flex-1">
-          <Stack as="nav" aria-label="Menu" gap="1" className="p-3">
-            {links.map(({ label, href, icon: Icon }) => {
-              const active = pathname === href || pathname.startsWith(`${href}/`);
-              if (href === customerRoutes.cart) {
+          <Stack gap="6" className="p-3 pb-6">
+            {signedIn && user && (
+              <Flex align="center" gap="3" className="animate-fade-up rounded-2xl bg-fresh-soft p-3">
+                <Avatar size="lg">
+                  <AvatarFallback>{initials(user.name)}</AvatarFallback>
+                </Avatar>
+                <Stack className="min-w-0">
+                  <Text weight="bold" className="truncate">
+                    {user.name}
+                  </Text>
+                  <Text tone="muted" className="truncate text-fs-12">
+                    {user.email}
+                  </Text>
+                </Stack>
+              </Flex>
+            )}
+
+            <Stack as="nav" aria-label="Menu" gap="0.5">
+              {links.map(({ label, href }, index) => {
+                const active = pathname === href || pathname.startsWith(`${href}/`);
+                if (href === customerRoutes.cart) {
+                  return (
+                    <Button
+                      key={href}
+                      variant="ghost"
+                      className={LINK_CLASS}
+                      style={stagger(index)}
+                      onClick={() => {
+                        close();
+                        setCartOpen(true);
+                      }}
+                    >
+                      Basket
+                      <ShoppingBag aria-hidden="true" className="size-5 text-muted-foreground" />
+                    </Button>
+                  );
+                }
                 return (
                   <Button
                     key={href}
                     variant="ghost"
-                    className={LINK_CLASS}
-                    onClick={() => {
-                      close();
-                      setCartOpen(true);
-                    }}
+                    nativeButton={false}
+                    style={stagger(index)}
+                    render={<Link href={href} onClick={close} aria-current={active ? "page" : undefined} />}
+                    className={cn(LINK_CLASS, active && "bg-foreground/[0.06]")}
                   >
-                    <ShoppingBag aria-hidden="true" />
-                    Basket
+                    {label}
+                    <ArrowUpRight
+                      aria-hidden="true"
+                      className="size-5 text-muted-foreground transition-transform duration-300 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5"
+                    />
                   </Button>
                 );
-              }
-              return (
-                <Button
-                  key={href}
-                  variant="ghost"
-                  nativeButton={false}
-                  render={<Link href={href} onClick={close} aria-current={active ? "page" : undefined} />}
-                  className={cn(LINK_CLASS, active && "bg-muted font-medium")}
-                >
-                  <Icon aria-hidden="true" />
-                  {label}
-                </Button>
-              );
-            })}
+              })}
+            </Stack>
 
             {aisles.length > 0 && (
-              <Accordion className="mt-2 rounded-lg border border-border px-1">
-                <AccordionItem value="aisles">
-                  <AccordionTrigger className="px-2 py-3 text-base font-normal hover:no-underline">Browse aisles</AccordionTrigger>
-                  <AccordionContent className="flex flex-col gap-1 px-1 pb-2 [&_a]:no-underline">
-                    {aisles.map((aisle) => {
-                      const Icon = categoryTheme(aisle.name).icon;
-                      return (
-                        <Button
-                          key={aisle.id}
-                          variant="ghost"
-                          nativeButton={false}
-                          render={<Link href={shopUrl({ category: aisle.id })} onClick={close} />}
-                          className="h-10 justify-start gap-3 px-2 font-normal"
-                        >
-                          <Flex
-                            as="span"
-                            align="center"
-                            justify="center"
-                            aria-hidden="true"
-                            className={cn("size-7 rounded-md", TILE_CLASSES.chip)}
-                          >
-                            <Icon />
-                          </Flex>
-                          {aisle.name}
-                        </Button>
-                      );
-                    })}
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
+              <Stack gap="2.5" className="px-1">
+                <Text variant="eyebrow" tone="muted" className="px-1">
+                  Aisles
+                </Text>
+                <Grid cols="3" gap="2">
+                  {aisles.map((aisle, index) => (
+                    <Button
+                      key={aisle.id}
+                      variant="ghost"
+                      nativeButton={false}
+                      render={<Link href={shopUrl({ category: aisle.id })} onClick={close} />}
+                      style={stagger(links.length + index)}
+                      className="h-auto animate-fade-up flex-col gap-2 rounded-2xl px-1 py-3 text-xs font-semibold whitespace-normal"
+                    >
+                      <AisleBadge name={aisle.name} size="lg" />
+                      <Text as="span" tone="inherit" className="line-clamp-2 text-center text-xs leading-tight">
+                        {aisle.name}
+                      </Text>
+                    </Button>
+                  ))}
+                </Grid>
+              </Stack>
             )}
 
-            <Flex align="center" justify="between" gap="3" className="mt-2 rounded-lg border border-border px-3 py-3">
+            <Flex align="center" justify="between" gap="3" className="rounded-2xl border border-border px-4 py-3">
               <Flex as="span" align="center" gap="3">
                 <Moon aria-hidden="true" className="size-4" />
-                <Label htmlFor="mobile-dark-mode" className="text-base font-normal">
+                <Label htmlFor="mobile-dark-mode" className="text-base font-medium">
                   Dark mode
                 </Label>
               </Flex>
@@ -164,7 +167,7 @@ export function MobileNav({ open, onOpenChange }: MobileNavProps) {
             </Flex>
 
             {signedIn && user?.role === "ADMIN" && (
-              <ButtonLink href={adminRoutes.orders} variant="secondary" size="lg" className="mt-2 w-full" onClick={close}>
+              <ButtonLink href={adminRoutes.home} variant="secondary" size="lg" className="w-full" onClick={close}>
                 <LayoutDashboard aria-hidden="true" />
                 Admin workspace
               </ButtonLink>
@@ -187,7 +190,7 @@ export function MobileNav({ open, onOpenChange }: MobileNavProps) {
             </Button>
           ) : (
             <Box className="grid gap-2">
-              <ButtonLink href={publicRoutes.login} size="lg" onClick={close}>
+              <ButtonLink href={publicRoutes.login} variant="fresh" size="lg" onClick={close}>
                 <LogIn aria-hidden="true" />
                 Sign in
               </ButtonLink>

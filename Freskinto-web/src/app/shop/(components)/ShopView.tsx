@@ -85,6 +85,7 @@ export function ShopView() {
         category={category}
         parent={parent}
         totalCount={data?.meta.total}
+        products={products}
       />
 
       <CategoryPills aisles={aisles} selected={shop.category} onSelect={(next) => shop.update({ category: next })} />

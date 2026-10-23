@@ -3,7 +3,7 @@ import { mergeProps } from "@base-ui/react/merge-props"
 import { useRender } from "@base-ui/react/use-render"
 import { cn } from "@/lib/utils"
 
-/** Freskinto card: white surface on lilac paper, hairline border, soft aubergine-tinted shadow */
+/** Freskinto card: white surface on mint paper, hairline border, soft green-tinted shadow; big 3xl radius */
 function Card({
   className,
   size = "default",
@@ -15,7 +15,7 @@ function Card({
     props: mergeProps<"div">(
       {
         className: cn(
-          "group/card flex flex-col gap-5 overflow-hidden rounded-xl border border-border bg-card py-5 text-sm text-card-foreground has-data-[slot=card-footer]:pb-0 data-[size=lg]:gap-6 data-[size=lg]:py-6 data-[size=sm]:gap-4 data-[size=sm]:py-4",
+          "group/card flex flex-col gap-5 overflow-hidden rounded-3xl border border-border/70 bg-card py-5 text-sm text-card-foreground shadow-soft has-data-[slot=card-footer]:pb-0 data-[size=lg]:gap-6 data-[size=lg]:py-6 data-[size=sm]:gap-4 data-[size=sm]:py-4 dark:border-white/[0.06] dark:shadow-none",
           className
         ),
       },

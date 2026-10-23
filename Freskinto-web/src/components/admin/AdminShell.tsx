@@ -16,7 +16,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         <AppSidebar />
         <SidebarInset
           id="content"
-          className="min-w-0 bg-background md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:border md:peer-data-[variant=inset]:shadow-none"
+          className="min-w-0 bg-background md:peer-data-[variant=inset]:rounded-3xl md:peer-data-[variant=inset]:border md:peer-data-[variant=inset]:shadow-none"
         >
           <AppNavbar />
           {children}

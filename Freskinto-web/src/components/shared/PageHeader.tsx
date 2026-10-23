@@ -19,7 +19,7 @@ interface PageHeaderProps {
   className?: string;
 }
 
-/** Har page ka sar: breadcrumbs → kicker → title → description, actions right */
+/** Har page ka sar: breadcrumbs → kicker (gradient dot) → bari title → description, actions right */
 export function PageHeader({
   title,
   description,
@@ -30,17 +30,21 @@ export function PageHeader({
   size = "page",
   className,
 }: PageHeaderProps) {
+  const page = size === "page";
   return (
     <Stack gap="4" className={cn(className)}>
       {breadcrumbs}
       <Flex wrap align="end" justify="between" gap="4">
-        <Stack gap="1.5" className="min-w-0">
+        <Stack gap={page ? "2.5" : "1.5"} className={cn("min-w-0", page && "animate-fade-up")}>
           {eyebrow && (
-            <Text as="div" variant="eyebrow" tone="muted">
-              {eyebrow}
-            </Text>
+            <Flex align="center" gap="2">
+              {page && <Box as="span" aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-fresh" />}
+              <Text as="div" variant="eyebrow" tone="muted">
+                {eyebrow}
+              </Text>
+            </Flex>
           )}
-          <Heading size={size === "page" ? "1" : "2"}>
+          <Heading as={page ? "h1" : "h2"} size={page ? "display" : "2"}>
             {title}
           </Heading>
           {description && (

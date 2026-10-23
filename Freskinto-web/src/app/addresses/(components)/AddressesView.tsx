@@ -41,7 +41,7 @@ export function AddressesView() {
     content = (
       <Grid aria-label="Loading" aria-busy="true" gap="4" className="sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 3 }, (_, i) => (
-          <Skeleton key={i} className="h-60 w-full rounded-xl" />
+          <Skeleton key={i} className="h-60 w-full rounded-[1.75rem]" />
         ))}
       </Grid>
     );
@@ -84,13 +84,13 @@ export function AddressesView() {
               type="button"
               variant="outline"
               onClick={openCreate}
-              className="size-full min-h-56 flex-col gap-3 rounded-xl border-dashed text-muted-foreground hover:bg-muted/40 hover:text-foreground"
+              className="size-full min-h-56 flex-col gap-3 rounded-[1.75rem] border-dashed text-muted-foreground hover:bg-muted/40 hover:text-foreground"
             >
               <Flex
                 as="span"
                 align="center"
                 justify="center"
-                className="size-9 rounded-md bg-muted [&_svg]:size-4"
+                className="size-10 rounded-full bg-fresh text-[#06100b] [&_svg]:size-4"
               >
                 <Plus aria-hidden="true" />
               </Flex>
@@ -115,7 +115,14 @@ export function AddressesView() {
   return (
     <CustomerPage
       eyebrow="My account"
-      title="Addresses"
+      title={
+        <>
+          Saved{" "}
+          <Text as="em" variant="accent">
+            addresses
+          </Text>
+        </>
+      }
       description="Manage where we deliver. Your default address is pre-selected at checkout."
       breadcrumbs={[{ label: "Addresses" }]}
       actions={

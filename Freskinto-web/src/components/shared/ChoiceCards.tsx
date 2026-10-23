@@ -33,8 +33,8 @@ interface ChoiceCardsProps<T extends string> {
 }
 
 /**
- * Radio group as big tappable cards. Checked card gets an indigo border and a faint indigo wash —
- * selection ek nazar mein samajh aati hai.
+ * Radio group as big tappable cards. Checked card gets a green border, a faint mint wash and a
+ * gradient icon chip — selection ek nazar mein samajh aati hai.
  */
 export function ChoiceCards<T extends string>({
   id,
@@ -65,7 +65,7 @@ export function ChoiceCards<T extends string>({
             key={option.value}
             htmlFor={optionId}
             className={cn(
-              "group/choice flex cursor-pointer items-center gap-3 rounded-lg border border-border bg-card p-4 font-normal transition-colors hover:bg-muted/40 has-data-checked:border-primary has-data-checked:bg-accent/50 has-disabled:cursor-not-allowed has-disabled:opacity-60",
+              "group/choice flex cursor-pointer items-center gap-3 rounded-2xl border border-border bg-card p-4 font-normal transition-[background-color,border-color,box-shadow] duration-300 hover:bg-muted/40 has-data-checked:border-brand/50 has-data-checked:bg-brand-soft/60 has-data-checked:shadow-[0_0_0_3px_color-mix(in_oklab,var(--brand)_14%,transparent)] has-disabled:cursor-not-allowed has-disabled:opacity-60 dark:has-data-checked:bg-brand/10",
               optionClassName,
             )}
           >
@@ -75,7 +75,7 @@ export function ChoiceCards<T extends string>({
                 aria-hidden="true"
                 align="center"
                 justify="center"
-                className="size-9 shrink-0 rounded-md bg-muted text-muted-foreground transition-colors group-has-data-checked/choice:bg-background group-has-data-checked/choice:text-primary [&_svg]:size-4"
+                className="size-10 shrink-0 rounded-full bg-muted text-muted-foreground transition-colors group-has-data-checked/choice:bg-fresh group-has-data-checked/choice:text-[#06100b] [&_svg]:size-4"
               >
                 {option.icon}
               </Flex>

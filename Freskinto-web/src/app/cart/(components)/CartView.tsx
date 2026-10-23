@@ -48,7 +48,7 @@ export function CartView() {
         title="Your basket is empty"
         message="Fresh produce, poultry and everyday essentials are waiting — and delivery is always free."
         action={
-          <ButtonLink href={shopUrl()} size="lg">
+          <ButtonLink href={shopUrl()} variant="fresh" size="lg">
             Start shopping
             <ArrowRight aria-hidden="true" />
           </ButtonLink>
@@ -61,8 +61,15 @@ export function CartView() {
 
   return (
     <CustomerPage
-      eyebrow="Your basket"
-      title="Basket"
+      eyebrow="Ready when you are"
+      title={
+        <>
+          Your{" "}
+          <Text as="em" variant="accent">
+            basket
+          </Text>
+        </>
+      }
       breadcrumbs={[{ label: "Basket" }]}
       description={items.length > 0 ? `${pluralize(cart?.itemCount ?? 0, "item")} ready for checkout.` : undefined}
     >
@@ -86,12 +93,12 @@ function FilledBasket({ cart, onClear }: { cart: ICart; onClear: () => void }) {
   const hasIssues = cartHasIssues(cart.items);
 
   const checkoutAction = hasIssues ? (
-    <Button size="xl" disabled className="w-full">
+    <Button variant="fresh" size="xl" disabled className="w-full">
       Checkout
       <ArrowRight aria-hidden="true" />
     </Button>
   ) : (
-    <ButtonLink href={customerRoutes.checkout} size="xl" className="w-full">
+    <ButtonLink href={customerRoutes.checkout} variant="fresh" size="xl" className="w-full">
       Checkout
       <ArrowRight aria-hidden="true" />
     </ButtonLink>
@@ -100,7 +107,7 @@ function FilledBasket({ cart, onClear }: { cart: ICart; onClear: () => void }) {
   return (
     <>
       <Grid align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
-        <Card render={<Box as="section" aria-label="Basket items" />} className="gap-0 rounded-xl border py-0 lg:col-span-8">
+        <Card render={<Box as="section" aria-label="Basket items" />} className="gap-0 rounded-[2rem] py-0 lg:col-span-8">
           <CardHeader className="border-b border-border py-4">
             <CardTitle render={<Box as="span" />} className="text-xl font-semibold">
               {pluralize(cart.items.length, "product")}
@@ -139,7 +146,7 @@ function FilledBasket({ cart, onClear }: { cart: ICart; onClear: () => void }) {
 
         <CartSummaryCard cart={cart} className="lg:sticky lg:top-28 lg:col-span-4">
           {checkoutAction}
-          <ButtonLink href={customerRoutes.cartSummary} variant="outline" className="w-full border">
+          <ButtonLink href={customerRoutes.cartSummary} variant="outline" className="w-full">
             Review order summary
           </ButtonLink>
           <ButtonLink href={shopUrl()} variant="ghost" className="w-full">
@@ -149,7 +156,7 @@ function FilledBasket({ cart, onClear }: { cart: ICart; onClear: () => void }) {
       </Grid>
 
       {/* Phone: checkout hamesha nazar mein — floating tab bar ke upar */}
-      <Box className="glass fixed inset-x-3 bottom-24 z-30 rounded-xl border border-border/70 px-4 py-3 shadow-soft lg:hidden">
+      <Box className="glass fixed inset-x-3 bottom-24 z-30 rounded-[1.75rem] border border-glass-border px-4 py-3 shadow-lift lg:hidden">
         <Flex align="center" gap="3">
           <Stack gap="0.5">
             <Text as="span" tone="muted" className="text-fs-12">
@@ -175,7 +182,14 @@ function SuggestedProducts({ excludeIds }: { excludeIds: string[] }) {
     <Stack as="section" aria-label="Suggestions" gap="6" className="pt-6">
       <SectionHeading
         eyebrow="While you're here"
-        title="You might also like"
+        title={
+          <>
+            You might also{" "}
+            <Text as="em" variant="accent">
+              like
+            </Text>
+          </>
+        }
         description="Fresh additions to round off your shop."
         href={shopUrl()}
       />
@@ -194,10 +208,10 @@ function SuggestedProducts({ excludeIds }: { excludeIds: string[] }) {
 function CartViewSkeleton() {
   return (
     <Grid aria-label="Loading" aria-busy="true" align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
-      <Card className="gap-5 rounded-xl border p-5 lg:col-span-8">
+      <Card className="gap-5 rounded-[2rem] p-5 lg:col-span-8">
         {Array.from({ length: 3 }, (_, i) => (
           <Flex key={i} gap="4">
-            <Skeleton className="size-24 rounded-xl" />
+            <Skeleton className="size-24 rounded-2xl" />
             <Stack gap="2" className="flex-1">
               <Skeleton className="h-4 w-3/5" />
               <Skeleton className="h-3 w-1/4" />
@@ -206,7 +220,7 @@ function CartViewSkeleton() {
           </Flex>
         ))}
       </Card>
-      <Skeleton className="h-96 w-full rounded-xl lg:col-span-4" />
+      <Skeleton className="h-96 w-full rounded-[2rem] lg:col-span-4" />
     </Grid>
   );
 }

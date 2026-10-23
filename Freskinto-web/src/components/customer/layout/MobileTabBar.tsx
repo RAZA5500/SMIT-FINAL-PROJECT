@@ -3,11 +3,11 @@
 import { Home, Package, ShoppingBag, Store, UserRound, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
-import { Badge } from "@/components/ui/badge";
 import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
+import { Flex } from "@/components/ui/flex";
 import { Grid } from "@/components/ui/grid";
+import { HoverIndicator } from "@/components/ui/hover-indicator";
 import { Text } from "@/components/ui/typography";
 import { customerRoutes, publicRoutes } from "@/lib/routes/routes";
 import { cn, pluralize } from "@/lib/utils";
@@ -15,32 +15,29 @@ import { useGetCart } from "@/services/cart/queries";
 import { useAuthStore } from "@/stores/auth-store";
 import { useShopStore } from "@/stores/shop-store";
 
-const TAB_CLASS = "relative h-14 flex-col gap-1 rounded-none px-0 text-fs-11 font-medium hover:bg-transparent";
+const TAB_CLASS =
+  "relative z-10 h-14 flex-col gap-0.5 rounded-full px-0 text-fs-11 font-semibold hover:bg-transparent active:scale-90";
 
-function TabIcon({ icon: Icon, children }: { icon: LucideIcon; children?: ReactNode }) {
+function TabLink({ href, icon: Icon, label, active }: { href: string; icon: LucideIcon; label: string; active: boolean }) {
   return (
-    <Box as="span" className="relative">
-      <Icon aria-hidden="true" className="size-5" />
-      {children}
+    <Box data-indicator-item="" className="rounded-full">
+      <Button
+        variant="ghost"
+        nativeButton={false}
+        render={<Link href={href} aria-current={active ? "page" : undefined} />}
+        className={cn(TAB_CLASS, "w-full", active ? "text-[#06100b]" : "text-muted-foreground")}
+      >
+        <Icon aria-hidden="true" className="size-5" strokeWidth={active ? 2.4 : 2} />
+        {label}
+      </Button>
     </Box>
   );
 }
 
-function TabLink({ href, icon, label, active }: { href: string; icon: LucideIcon; label: string; active: boolean }) {
-  return (
-    <Button
-      variant="ghost"
-      nativeButton={false}
-      render={<Link href={href} aria-current={active ? "page" : undefined} />}
-      className={cn(TAB_CLASS, active ? "text-primary hover:text-primary" : "text-muted-foreground")}
-    >
-      <TabIcon icon={icon} />
-      {label}
-    </Button>
-  );
-}
-
-/** Phone par bottom tab bar — hairline border, indigo active tab (lg se upar hidden) */
+/**
+ * Phone par tairti glass tab bar — active tab ke peeche gradient pill slide karti hai, basket ka
+ * count uchhalta hai (lg se upar hidden). `data-basket-target`: udti hui products yahan aati hain.
+ */
 export function MobileTabBar() {
   const pathname = usePathname();
   const setCartOpen = useShopStore((state) => state.setCartOpen);
@@ -49,48 +46,56 @@ export function MobileTabBar() {
   const count = cart?.itemCount ?? 0;
 
   return (
-    <Box as="nav" aria-label="Quick navigation" className="glass pb-safe fixed inset-x-0 bottom-0 z-40 border-t lg:hidden">
-      <Grid cols="5" align="center">
-        <TabLink href={publicRoutes.home} icon={Home} label="Home" active={pathname === publicRoutes.home} />
-        <TabLink
-          href={publicRoutes.shop}
-          icon={Store}
-          label="Shop"
-          active={pathname.startsWith(publicRoutes.shop) || pathname.startsWith("/products")}
-        />
-        <Button
-          variant="ghost"
-          onClick={() => setCartOpen(true)}
-          aria-label={`Basket, ${pluralize(count, "item")}`}
-          className={cn(TAB_CLASS, "text-muted-foreground")}
-        >
-          <TabIcon icon={ShoppingBag}>
-            {count > 0 && (
-              <Badge
-                key={count}
-                className="absolute -top-2 -right-3 h-4.5 min-w-4.5 animate-bump rounded-full px-1 text-fs-11 tabular-nums"
-              >
-                {count}
-              </Badge>
-            )}
-          </TabIcon>
-          <Text as="span" tone="inherit" aria-hidden="true">
-            Basket
-          </Text>
-        </Button>
-        <TabLink
-          href={customerRoutes.orders}
-          icon={Package}
-          label="Orders"
-          active={pathname.startsWith(customerRoutes.orders)}
-        />
-        <TabLink
-          href={token ? customerRoutes.profile : publicRoutes.login}
-          icon={UserRound}
-          label={token ? "Account" : "Sign in"}
-          active={pathname.startsWith(customerRoutes.profile) || pathname.startsWith(customerRoutes.addresses)}
-        />
-      </Grid>
+    <Box as="nav" aria-label="Quick navigation" className="pb-safe fixed inset-x-3 bottom-3 z-40 lg:hidden">
+      <HoverIndicator
+        activeKey={pathname}
+        className="glass rounded-full border border-glass-border p-1"
+        indicatorClassName="bg-fresh shadow-glow"
+      >
+        <Grid cols="5" align="center">
+          <TabLink href={publicRoutes.home} icon={Home} label="Home" active={pathname === publicRoutes.home} />
+          <TabLink
+            href={publicRoutes.shop}
+            icon={Store}
+            label="Shop"
+            active={pathname.startsWith(publicRoutes.shop) || pathname.startsWith("/products")}
+          />
+          <Box className="rounded-full">
+            <Button
+              variant="ghost"
+              data-basket-target=""
+              onClick={() => setCartOpen(true)}
+              aria-label={`Basket, ${pluralize(count, "item")}`}
+              className={cn(TAB_CLASS, "w-full text-muted-foreground")}
+            >
+              <Box as="span" className="relative">
+                <ShoppingBag aria-hidden="true" className="size-5" />
+                {count > 0 && (
+                  <Flex
+                    as="span"
+                    key={count}
+                    align="center"
+                    justify="center"
+                    className="absolute -top-1.5 -right-2.5 h-4.5 min-w-4.5 animate-bump rounded-full bg-[#06100b] px-1 text-[0.625rem] font-bold text-white tabular-nums dark:bg-brand dark:text-[#06100b]"
+                  >
+                    {count}
+                  </Flex>
+                )}
+              </Box>
+              <Text as="span" tone="inherit" aria-hidden="true">
+                Basket
+              </Text>
+            </Button>
+          </Box>
+          <TabLink href={customerRoutes.orders} icon={Package} label="Orders" active={pathname.startsWith(customerRoutes.orders)} />
+          <TabLink
+            href={token ? customerRoutes.profile : publicRoutes.login}
+            icon={UserRound}
+            label={token ? "Account" : "Sign in"}
+            active={pathname.startsWith(customerRoutes.profile) || pathname.startsWith(customerRoutes.addresses)}
+          />
+        </Grid>
+      </HoverIndicator>
     </Box>
   );
 }

@@ -50,7 +50,7 @@ export function AdminFormPage({
       className={cn("pb-0 sm:pb-0 lg:pb-0")}
     >
       <Grid align="start" gap="6" className={cn(aside && "xl:grid-cols-3")}>
-        <Card className={cn("rounded-xl", aside && "xl:col-span-2")}>
+        <Card className={cn("rounded-[1.5rem]", aside && "xl:col-span-2")}>
           <CardContent>
             <Form id={formId} onSubmit={onSubmit ?? ((event) => event.preventDefault())}>
               {children}

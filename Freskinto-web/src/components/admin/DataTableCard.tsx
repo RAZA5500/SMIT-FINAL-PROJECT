@@ -19,7 +19,7 @@ interface DataTableCardProps {
 /** Admin list screens ka card: toolbar → table → pagination */
 export function DataTableCard({ toolbar, children, footer, busy = false, className }: DataTableCardProps) {
   return (
-    <Card aria-busy={busy || undefined} className={cn("min-w-0 gap-0 rounded-xl py-0", className)}>
+    <Card aria-busy={busy || undefined} className={cn("min-w-0 gap-0 rounded-[1.5rem] py-0", className)}>
       {toolbar && (
         <CardHeader className={cn("flex flex-wrap items-center gap-3 border-b py-4")}>{toolbar}</CardHeader>
       )}

@@ -64,7 +64,7 @@ function Panel({ hidden, title, children }: { hidden: boolean; title: string; ch
     <Card
       render={<Box as="section" aria-label={title} hidden={hidden} />}
       size="lg"
-      className="animate-fade-up rounded-xl border"
+      className="animate-fade-up rounded-[2rem]"
     >
       <CardHeader>
         <CardTitle render={<Heading as="h2" size="3" />} className="text-2xl font-semibold">
@@ -168,8 +168,8 @@ export function CheckoutForm({ addresses, blocked = false }: CheckoutFormProps) 
                   onClick={() => void wizard.goTo(key)}
                   aria-current={active ? "step" : undefined}
                   className={cn(
-                    "h-auto w-full justify-start gap-2.5 rounded-xl border p-3 text-left",
-                    active && "border-primary bg-accent hover:bg-accent",
+                    "h-auto w-full justify-start gap-2.5 rounded-2xl p-3 text-left",
+                    active && "border-brand/40 bg-brand-soft/70 hover:bg-brand-soft/70 dark:bg-brand/10 dark:hover:bg-brand/10",
                   )}
                 >
                   <Flex
@@ -179,7 +179,7 @@ export function CheckoutForm({ addresses, blocked = false }: CheckoutFormProps) 
                     className={cn(
                       "size-9 shrink-0 rounded-full [&_svg]:size-4",
                       active
-                        ? "border border-primary bg-background text-primary"
+                        ? "bg-fresh text-[#06100b] shadow-glow"
                         : done
                           ? "bg-primary text-primary-foreground"
                           : "bg-muted text-muted-foreground",
@@ -275,12 +275,12 @@ export function CheckoutForm({ addresses, blocked = false }: CheckoutFormProps) 
           </Button>
         )}
         {wizard.isLast ? (
-          <LoadingButton type="submit" size="xl" isLoading={isSubmitting} disabled={blocked}>
+          <LoadingButton type="submit" variant="fresh" size="xl" isLoading={isSubmitting} disabled={blocked}>
             Continue to payment
             <ArrowRight aria-hidden="true" />
           </LoadingButton>
         ) : (
-          <Button type="button" size="xl" onClick={() => void wizard.next()}>
+          <Button type="button" variant="fresh" size="xl" onClick={() => void wizard.next()}>
             Continue
             <ArrowRight aria-hidden="true" />
           </Button>

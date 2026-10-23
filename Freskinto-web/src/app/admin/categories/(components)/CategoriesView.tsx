@@ -14,8 +14,7 @@ import { Pagination } from "@/components/shared/Pagination";
 import { SearchInput } from "@/components/shared/SearchInput";
 import { StandardDestructiveModal } from "@/components/shared/StandardDestructiveModal";
 import { ACTIVE_STATUS_OPTIONS, ADMIN_PAGE_SIZE, LOOKUP_LIMIT } from "@/constants/filters";
-import { categoryTheme, TILE_CLASSES } from "@/lib/merchandising";
-import { cn } from "@/lib/utils";
+import { AisleBadge } from "@/components/shared/AisleBadge";
 import { useDeleteCategory, useUpdateCategory } from "@/services/categories/mutations";
 import { useGetAdminCategories } from "@/services/categories/queries";
 import type { ICategory } from "@/services/categories/types";
@@ -23,18 +22,9 @@ import { CategoryFormDialog } from "./CategoryFormDialog";
 import { CategoryTableSkeleton } from "./CategoryTableSkeleton";
 
 function CategoryName({ category }: { category: ICategory }) {
-  const Icon = categoryTheme(category.name).icon;
   return (
     <Flex align="center" gap="3">
-      <Flex
-        as="span"
-        align="center"
-        justify="center"
-        aria-hidden="true"
-        className={cn("size-9 shrink-0 rounded-md [&_svg]:size-4", TILE_CLASSES.chip)}
-      >
-        <Icon />
-      </Flex>
+      <AisleBadge name={category.name} size="md" photo={!category.parentId} />
       <Stack gap="0.5" className="min-w-0">
         <Text weight="semibold" className="truncate">
           {category.name}

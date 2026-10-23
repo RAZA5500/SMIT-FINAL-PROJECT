@@ -58,7 +58,7 @@ export function OrderTotals({
         <Text as="dt" weight="semibold">
           Total
         </Text>
-        <Text as="dd" weight="semibold" numeric className="text-xl tracking-tight">
+        <Text as="dd" weight="semibold" numeric className="font-display text-2xl tracking-[-0.04em]">
           {formatMoney(total)}
         </Text>
       </Flex>

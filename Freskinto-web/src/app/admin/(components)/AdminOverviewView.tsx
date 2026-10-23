@@ -207,16 +207,16 @@ export function AdminOverviewView() {
       }
     >
       <Grid gap="4" className="sm:grid-cols-2 xl:grid-cols-4">
-        <Link href={adminRoutes.orders} className="rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/40">
+        <Link href={adminRoutes.orders} className="rounded-[1.5rem] outline-none focus-visible:ring-3 focus-visible:ring-ring/40">
           <StatTile label="All orders" value={countsLoading ? undefined : totalOrders} hint={`${toPrepare ?? 0} waiting to be prepared`} icon={ReceiptText} isLoading={countsLoading} />
         </Link>
-        <Link href={adminRoutes.orders} className="rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/40">
+        <Link href={adminRoutes.orders} className="rounded-[1.5rem] outline-none focus-visible:ring-3 focus-visible:ring-ring/40">
           <StatTile label="Awaiting payment" value={awaiting} hint="Released if not paid in time" icon={Clock} tone="bg-warning-soft text-warning-ink" isLoading={countsLoading} />
         </Link>
-        <Link href={adminRoutes.customers} className="rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/40">
+        <Link href={adminRoutes.customers} className="rounded-[1.5rem] outline-none focus-visible:ring-3 focus-visible:ring-ring/40">
           <StatTile label="Customers" value={customers.data?.meta.total} hint="Accounts in the store" icon={Users} isLoading={customers.isLoading} />
         </Link>
-        <Link href={adminRoutes.inventory} className="rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/40">
+        <Link href={adminRoutes.inventory} className="rounded-[1.5rem] outline-none focus-visible:ring-3 focus-visible:ring-ring/40">
           <StatTile
             label="Stock alerts"
             value={lowStock.isLoading || outOfStock.isLoading ? undefined : (lowStock.data?.meta.total ?? 0) + (outOfStock.data?.meta.total ?? 0)}

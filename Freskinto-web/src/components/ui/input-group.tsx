@@ -14,7 +14,7 @@ function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="input-group"
       role="group"
       className={cn(
-        "group/input-group relative flex h-9 w-full min-w-0 items-center rounded-lg border border-input bg-transparent shadow-xs transition-colors dark:bg-input/30 outline-none has-disabled:bg-muted has-disabled:opacity-60 has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-3 has-[[data-slot=input-group-control]:focus-visible]:ring-ring/20 has-[[data-slot][aria-invalid=true]]:border-destructive has-[[data-slot][aria-invalid=true]]:ring-3 has-[[data-slot][aria-invalid=true]]:ring-destructive/15 has-[>textarea]:h-auto",
+        "group/input-group relative flex h-11 w-full min-w-0 items-center rounded-full border border-input bg-card/70 shadow-xs transition-[background-color,border-color,box-shadow] duration-300 dark:bg-input/30 outline-none has-disabled:bg-muted has-disabled:opacity-60 has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-4 has-[[data-slot=input-group-control]:focus-visible]:ring-ring/20 has-[[data-slot][aria-invalid=true]]:border-destructive has-[[data-slot][aria-invalid=true]]:ring-3 has-[[data-slot][aria-invalid=true]]:ring-destructive/15 has-[>textarea]:h-auto has-[>textarea]:rounded-2xl",
         className
       )}
       {...props}
@@ -62,10 +62,10 @@ function InputGroupAddon({
 const inputGroupButtonVariants = cva("flex items-center gap-2 text-sm shadow-none", {
   variants: {
     size: {
-      xs: "h-6 gap-1 rounded-md px-1.5 [&>svg:not([class*='size-'])]:size-3.5",
-      sm: "h-8 rounded-lg px-3",
-      "icon-xs": "size-6 rounded-md p-0 has-[>svg]:p-0",
-      "icon-sm": "size-8 rounded-lg p-0 has-[>svg]:p-0",
+      xs: "h-7 gap-1 rounded-full px-2.5 [&>svg:not([class*='size-'])]:size-3.5",
+      sm: "h-8 rounded-full px-3.5",
+      "icon-xs": "size-7 rounded-full p-0 has-[>svg]:p-0",
+      "icon-sm": "size-8 rounded-full p-0 has-[>svg]:p-0",
     },
   },
   defaultVariants: {

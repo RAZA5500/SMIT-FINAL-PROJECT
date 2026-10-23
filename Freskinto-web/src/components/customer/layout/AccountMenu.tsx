@@ -34,11 +34,11 @@ export function AccountMenu() {
   const user = useAuthStore((state) => state.user);
 
   // Hydration se pehle khali jagah — "Sign in" flash na ho
-  if (!hasHydrated) return <Box as="span" aria-hidden="true" className="inline-block size-9" />;
+  if (!hasHydrated) return <Box as="span" aria-hidden="true" className="inline-block size-11" />;
 
   if (!token || !user) {
     return (
-      <ButtonLink href={publicRoutes.login} variant="ghost" className="px-2.5">
+      <ButtonLink href={publicRoutes.login} variant="ghost" className="h-11 px-3">
         <UserRound aria-hidden="true" />
         <Text as="span" tone="inherit" weight="medium" className="hidden lg:inline">
           Sign in
@@ -55,9 +55,9 @@ export function AccountMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        render={<Button variant="ghost" aria-label="Account menu" className="gap-2 pr-2.5 pl-1.5" />}
+        render={<Button variant="ghost" aria-label="Account menu" className="h-11 gap-2 pr-3 pl-1.5" />}
       >
-        <Avatar size="sm" className="size-7">
+        <Avatar size="sm" className="size-8">
           <AvatarFallback className="text-fs-11">{initials(user.name)}</AvatarFallback>
         </Avatar>
         <Text as="span" tone="inherit" weight="medium" className="hidden max-w-28 truncate lg:inline">

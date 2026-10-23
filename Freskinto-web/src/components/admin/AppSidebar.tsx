@@ -37,9 +37,9 @@ import { initials } from "@/lib/utils";
 import { useAuthStore } from "@/stores/auth-store";
 
 const ACTIVE_ITEM =
-  "h-9 px-2.5 data-active:bg-sidebar-accent data-active:font-medium data-active:text-sidebar-accent-foreground data-active:[&>svg]:text-sidebar-primary";
+  "h-9 rounded-xl px-2.5 data-active:bg-card data-active:font-semibold data-active:text-sidebar-accent-foreground data-active:shadow-soft data-active:[&>svg]:text-brand-ink dark:data-active:bg-sidebar-accent dark:data-active:shadow-none dark:data-active:[&>svg]:text-brand";
 
-/** shadcn Sidebar — light grey rail, indigo active item, icon-collapse (⌘B) aur phone par sheet */
+/** shadcn Sidebar — sage rail, active item ek uthi hui safed pill (green icon), icon-collapse (⌘B) aur phone par sheet */
 export function AppSidebar() {
   const pathname = usePathname();
   const user = useAuthStore((state) => state.user);

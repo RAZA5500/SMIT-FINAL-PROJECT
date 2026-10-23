@@ -1,8 +1,8 @@
 "use client";
 
 import { ArrowLeft, Clock, PackageCheck, Store, Truck } from "lucide-react";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Box } from "@/components/ui/box";
+import { Card } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -13,9 +13,11 @@ import {
 import { Container } from "@/components/ui/container";
 import { Flex, Stack } from "@/components/ui/flex";
 import { Grid } from "@/components/ui/grid";
+import { Reveal } from "@/components/ui/reveal";
+import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Heading, Text } from "@/components/ui/typography";
-import { ProductBadges, ProductCard } from "@/components/customer/product/ProductCard";
+import { ProductCard } from "@/components/customer/product/ProductCard";
 import { ProductCardSkeleton } from "@/components/customer/product/ProductCardSkeleton";
 import { aisleIndexOf, useAisles } from "@/components/customer/shop/use-aisles";
 import { AisleTag } from "@/components/shared/AisleTag";
@@ -24,7 +26,6 @@ import { EmptyState } from "@/components/shared/EmptyState";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { PageBreadcrumbs } from "@/components/shared/PageBreadcrumbs";
 import { Price } from "@/components/shared/Price";
-import { ProductImage } from "@/components/shared/ProductImage";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { TextLink } from "@/components/shared/TextLink";
@@ -33,6 +34,7 @@ import { ApiError } from "@/lib/api";
 import { publicRoutes, shopUrl } from "@/lib/routes/routes";
 import { useGetProduct, useGetProducts } from "@/services/products/queries";
 import type { IProduct } from "@/services/products/types";
+import { ProductStage } from "./ProductStage";
 import { PurchasePanel } from "./PurchasePanel";
 
 const RELATED_LIMIT = 8;
@@ -95,27 +97,15 @@ function ProductOverview({ product }: { product: IProduct }) {
         ]}
       />
 
-      <Grid gap="8" className="lg:grid-cols-2 lg:gap-14">
-        <Box className="relative">
-          <ProductImage
-            name={product.name}
-            categoryName={product.category.name}
-            alt={product.name}
-            eager
-            sizes="(min-width: 1024px) 680px, 100vw"
-            muted={product.stockStatus === "OUT_OF_STOCK"}
-            className="rounded-xl sm:aspect-4/3"
-            imageClassName="p-10 sm:p-14"
-          />
-          <ProductBadges product={product} className="absolute top-4 left-4" />
-        </Box>
+      <Grid gap="8" className="items-start lg:grid-cols-[1.1fr_1fr] lg:gap-14">
+        <ProductStage product={product} />
 
-        <Stack gap="6" className="lg:py-2">
-          <Stack gap="3">
+        <Stack gap="7" className="lg:py-4">
+          <Stack gap="4" className="animate-fade-up">
             <TextLink href={shopUrl({ category: product.category.id })} className="w-fit hover:no-underline">
               <AisleTag index={aisleIndex} label={product.category.name} />
             </TextLink>
-            <Heading as="h1" size="1">
+            <Heading as="h1" size="display">
               {product.name}
             </Heading>
             <Text tone="muted" family="mono" className="text-fs-12">
@@ -123,34 +113,40 @@ function ProductOverview({ product }: { product: IProduct }) {
             </Text>
           </Stack>
 
-          <Flex wrap align="center" gap="4">
+          <Flex wrap align="center" gap="4" className="animate-fade-up [animation-delay:90ms]">
             <Price amount={product.price} size="xl" />
             <StatusBadge status={product.stockStatus} />
           </Flex>
 
-          <PurchasePanel product={product} />
+          <Separator />
 
-          <Accordion defaultValue={[PERKS[0].title]} className="rounded-lg border border-border px-4">
-            {PERKS.map(({ icon: Icon, title, text }) => (
-              <AccordionItem key={title} value={title}>
-                <AccordionTrigger className="items-center py-3.5 font-medium hover:no-underline">
-                  <Flex as="span" align="center" gap="3">
-                    <Flex
-                      as="span"
-                      align="center"
-                      justify="center"
-                      aria-hidden="true"
-                      className="size-8 rounded-md bg-muted text-muted-foreground"
-                    >
-                      <Icon className="size-4" />
-                    </Flex>
-                    {title}
+          <Box className="animate-fade-up [animation-delay:180ms]">
+            <PurchasePanel product={product} />
+          </Box>
+
+          <Grid gap="3" className="sm:grid-cols-2">
+            {PERKS.map(({ icon: Icon, title, text }, index) => (
+              <Reveal key={title} delay={220 + index * 70} className="h-full">
+                <Card className="h-full flex-row items-start gap-3.5 rounded-3xl p-4 transition-[translate,box-shadow] duration-500 ease-out-expo hover:-translate-y-0.5 hover:shadow-lift">
+                  <Flex
+                    as="span"
+                    align="center"
+                    justify="center"
+                    aria-hidden="true"
+                    className="size-10 shrink-0 rounded-2xl bg-fresh text-[#06100b] shadow-glow"
+                  >
+                    <Icon className="size-4.5" />
                   </Flex>
-                </AccordionTrigger>
-                <AccordionContent className="pl-11 text-muted-foreground">{text}</AccordionContent>
-              </AccordionItem>
+                  <Stack gap="0.5">
+                    <Text weight="bold">{title}</Text>
+                    <Text tone="muted" className="text-fs-13 leading-relaxed">
+                      {text}
+                    </Text>
+                  </Stack>
+                </Card>
+              </Reveal>
             ))}
-          </Accordion>
+          </Grid>
         </Stack>
       </Grid>
     </Stack>
@@ -169,10 +165,20 @@ function RelatedProducts({ product }: { product: IProduct }) {
 
   return (
     <Stack as="section" aria-label="Related products" gap="6">
-      <SectionHeading
-        title={`More from ${product.category.name}`}
-        href={shopUrl({ category: product.category.id })}
-      />
+      <Reveal>
+        <SectionHeading
+          eyebrow="Same aisle"
+          title={
+            <>
+              More from{" "}
+              <Text as="em" variant="accent">
+                {product.category.name}
+              </Text>
+            </>
+          }
+          href={shopUrl({ category: product.category.id })}
+        />
+      </Reveal>
       {isError ? (
         <ErrorState title="Couldn't load products" message={error?.message} onRetry={() => void refetch()} />
       ) : (
@@ -186,12 +192,12 @@ function RelatedProducts({ product }: { product: IProduct }) {
                 ))
               : related?.map((item) => (
                   <CarouselItem key={item.id} className="basis-1/2 pl-3 sm:pl-4 md:basis-1/3 xl:basis-1/4">
-                    <ProductCard product={item} />
+                    <ProductCard product={item} morph />
                   </CarouselItem>
                 ))}
           </CarouselContent>
-          <CarouselPrevious className="-left-4 hidden bg-background shadow-soft md:flex" />
-          <CarouselNext className="-right-4 hidden bg-background shadow-soft md:flex" />
+          <CarouselPrevious className="-left-4 hidden glass md:flex" />
+          <CarouselNext className="-right-4 hidden glass md:flex" />
         </Carousel>
       )}
     </Stack>
@@ -202,14 +208,18 @@ function ProductDetailSkeleton() {
   return (
     <Container aria-label="Loading" aria-busy="true" className="flex flex-col gap-6 py-8 sm:py-10">
       <Skeleton className="h-4 w-64" />
-      <Grid gap="8" className="lg:grid-cols-2 lg:gap-14">
-        <Skeleton className="aspect-square w-full rounded-xl sm:aspect-4/3" />
-        <Stack gap="4" className="lg:py-2">
-          <Skeleton className="h-6 w-36" />
-          <Skeleton className="h-9 w-4/5" />
-          <Skeleton className="h-9 w-28" />
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-40 w-full rounded-lg" />
+      <Grid gap="8" className="lg:grid-cols-[1.1fr_1fr] lg:gap-14">
+        <Skeleton className="aspect-square w-full rounded-[2.5rem] sm:aspect-5/4 lg:aspect-square" />
+        <Stack gap="5" className="lg:py-4">
+          <Skeleton className="h-7 w-40 rounded-full" />
+          <Skeleton className="h-16 w-4/5 rounded-2xl" />
+          <Skeleton className="h-11 w-32 rounded-2xl" />
+          <Skeleton className="h-13 w-full rounded-full" />
+          <Grid gap="3" className="sm:grid-cols-2">
+            {Array.from({ length: 4 }, (_, index) => (
+              <Skeleton key={index} className="h-22 rounded-3xl" />
+            ))}
+          </Grid>
         </Stack>
       </Grid>
     </Container>

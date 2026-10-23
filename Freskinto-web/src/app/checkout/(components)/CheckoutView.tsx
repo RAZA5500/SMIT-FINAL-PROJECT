@@ -7,6 +7,7 @@ import { Container } from "@/components/ui/container";
 import { Stack } from "@/components/ui/flex";
 import { Grid } from "@/components/ui/grid";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Text } from "@/components/ui/typography";
 import { cartHasIssues } from "@/components/customer/cart/cart-availability";
 import { CartSummaryCard } from "@/components/customer/cart/CartSummaryCard";
 import { CheckoutForm } from "@/components/customer/CheckoutForm";
@@ -63,7 +64,7 @@ export function CheckoutView() {
         <Box className="lg:col-span-7">
           <CheckoutForm addresses={addressesQuery.data?.data ?? []} blocked={hasIssues} />
         </Box>
-        <CartSummaryCard cart={cart} showItems className="lg:sticky lg:top-6 lg:col-span-5">
+        <CartSummaryCard cart={cart} showItems className="lg:sticky lg:top-28 lg:col-span-5">
           {hasIssues && (
             <Alert variant="destructive">
               <CircleAlert aria-hidden="true" />
@@ -88,7 +89,14 @@ export function CheckoutView() {
         <CheckoutSteps current={1} />
         <PageHeader
           eyebrow="Step 2 of 3"
-          title="Delivery details"
+          title={
+            <>
+              Delivery{" "}
+              <Text as="em" variant="accent">
+                details
+              </Text>
+            </>
+          }
           description="Choose home delivery or click & collect — both are free."
         />
       </Stack>

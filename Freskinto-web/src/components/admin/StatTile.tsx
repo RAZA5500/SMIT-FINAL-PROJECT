@@ -2,6 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Flex, Stack } from "@/components/ui/flex";
+import { NumberTicker } from "@/components/ui/number-ticker";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
@@ -19,7 +20,7 @@ interface StatTileProps {
   active?: boolean;
 }
 
-/** KPI tile: icon chip, label, number, ek line hint */
+/** KPI tile: icon chip, label, number (0 se ginti), ek line hint */
 export function StatTile({
   label,
   value,
@@ -37,7 +38,7 @@ export function StatTile({
         align="center"
         justify="center"
         aria-hidden="true"
-        className={cn("size-9 shrink-0 rounded-md [&_svg]:size-4", tone)}
+        className={cn("size-10 shrink-0 rounded-2xl [&_svg]:size-4", tone)}
       >
         <Icon />
       </Flex>
@@ -48,8 +49,9 @@ export function StatTile({
         {isLoading ? (
           <Skeleton className="h-7 w-12" />
         ) : (
-          <Text as="span" weight="semibold" numeric className="text-2xl leading-tight tracking-tight">
-            {value ?? "—"}
+          <Text as="span" weight="semibold" numeric className="font-display text-2xl leading-tight tracking-[-0.04em]">
+            {/* Ginti 0 se upar chadhti hai — sirf number par; text values (e.g. "£12.40") waise hi */}
+            {typeof value === "number" ? <NumberTicker value={value} duration={1200} /> : (value ?? "—")}
           </Text>
         )}
         {hint && (
@@ -62,7 +64,7 @@ export function StatTile({
   );
 
   if (!onSelect) {
-    return <Card className="flex-row items-start gap-3 p-4">{body}</Card>;
+    return <Card className="flex-row items-start gap-3 rounded-[1.5rem] p-4">{body}</Card>;
   }
 
   return (
@@ -72,8 +74,8 @@ export function StatTile({
       aria-pressed={active}
       onClick={onSelect}
       className={cn(
-        "h-auto w-full items-start justify-start gap-3 rounded-xl bg-card p-4 font-normal whitespace-normal hover:bg-muted/40",
-        active && "border-primary/60 bg-accent/40 hover:bg-accent/40",
+        "h-auto w-full items-start justify-start gap-3 rounded-[1.5rem] bg-card p-4 font-normal whitespace-normal hover:bg-muted/40",
+        active && "border-brand/50 bg-brand-soft/50 hover:bg-brand-soft/50 dark:bg-brand/10 dark:hover:bg-brand/10",
       )}
     >
       {body}

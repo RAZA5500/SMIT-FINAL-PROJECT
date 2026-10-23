@@ -28,7 +28,7 @@ function SheetOverlay({ className, ...props }: SheetPrimitive.Backdrop.Props) {
     <SheetPrimitive.Backdrop
       data-slot="sheet-overlay"
       className={cn(
-        "fixed inset-0 z-50 bg-black/40 transition-opacity duration-300 data-ending-style:opacity-0 data-starting-style:opacity-0 supports-backdrop-filter:backdrop-blur-xs",
+        "fixed inset-0 z-50 bg-[#06100b]/35 transition-opacity duration-500 data-ending-style:opacity-0 data-starting-style:opacity-0 supports-backdrop-filter:backdrop-blur-xs",
         className
       )}
       {...props}
@@ -57,7 +57,7 @@ function SheetContent({
         data-slot="sheet-content"
         data-side={side}
         className={cn(
-          "fixed z-50 flex flex-col bg-popover bg-clip-padding text-sm text-popover-foreground shadow-lg outline-none transition-transform duration-300 ease-out data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:max-h-5/6 data-[side=bottom]:rounded-t-2xl data-[side=bottom]:border-t data-[side=bottom]:data-ending-style:translate-y-full data-[side=bottom]:data-starting-style:translate-y-full data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-11/12 data-[side=left]:border-r data-[side=left]:data-ending-style:-translate-x-full data-[side=left]:data-starting-style:-translate-x-full data-[side=left]:sm:max-w-sm data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-11/12 data-[side=right]:border-l data-[side=right]:data-ending-style:translate-x-full data-[side=right]:data-starting-style:translate-x-full data-[side=right]:sm:max-w-md data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:max-h-5/6 data-[side=top]:rounded-b-2xl data-[side=top]:border-b data-[side=top]:data-ending-style:-translate-y-full data-[side=top]:data-starting-style:-translate-y-full",
+          "fixed z-50 flex flex-col overflow-hidden border-glass-border bg-popover bg-clip-padding text-sm text-popover-foreground shadow-lift outline-none transition-transform duration-600 ease-out-expo data-ending-style:duration-300 data-ending-style:ease-in data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:max-h-5/6 data-[side=bottom]:rounded-t-[2rem] data-[side=bottom]:border-t data-[side=bottom]:data-ending-style:translate-y-full data-[side=bottom]:data-starting-style:translate-y-full data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-11/12 data-[side=left]:border-r data-[side=left]:sm:inset-y-3 data-[side=left]:sm:left-3 data-[side=left]:sm:h-auto data-[side=left]:sm:rounded-[2rem] data-[side=left]:sm:border data-[side=left]:data-ending-style:-translate-x-[110%] data-[side=left]:data-starting-style:-translate-x-[110%] data-[side=left]:sm:max-w-sm data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-11/12 data-[side=right]:border-l data-[side=right]:sm:inset-y-3 data-[side=right]:sm:right-3 data-[side=right]:sm:h-auto data-[side=right]:sm:rounded-[2rem] data-[side=right]:sm:border data-[side=right]:data-ending-style:translate-x-[110%] data-[side=right]:data-starting-style:translate-x-[110%] data-[side=right]:sm:max-w-md data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:max-h-5/6 data-[side=top]:rounded-b-[2rem] data-[side=top]:border-b data-[side=top]:data-ending-style:-translate-y-full data-[side=top]:data-starting-style:-translate-y-full",
           className
         )}
         {...props}
@@ -98,7 +98,7 @@ function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="sheet-footer"
       className={cn(
-        "mt-auto flex flex-col gap-2 border-t border-border bg-muted/50 p-5",
+        "mt-auto flex flex-col gap-2 border-t border-border bg-muted/40 p-5",
         className
       )}
       {...props}

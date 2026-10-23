@@ -5,6 +5,7 @@ import { Box } from "@/components/ui/box";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Grid } from "@/components/ui/grid";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Text } from "@/components/ui/typography";
 import { CartSummaryCard } from "@/components/customer/cart/CartSummaryCard";
 import { CustomerPage } from "@/components/customer/CustomerPage";
 import { ButtonLink } from "@/components/shared/ButtonLink";
@@ -25,8 +26,8 @@ export function CartSummaryView() {
   if (isLoading) {
     content = (
       <Grid aria-label="Loading" aria-busy="true" align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
-        <Skeleton className="h-96 rounded-xl lg:col-span-7" />
-        <Skeleton className="h-96 rounded-xl lg:col-span-5" />
+        <Skeleton className="h-96 rounded-[2rem] lg:col-span-7" />
+        <Skeleton className="h-96 rounded-[2rem] lg:col-span-5" />
       </Grid>
     );
   } else if (isError) {
@@ -50,7 +51,7 @@ export function CartSummaryView() {
     const hasIssues = cartHasIssues(items);
     content = (
       <Grid align="start" gap="6" className="lg:grid-cols-12 lg:gap-8">
-        <Card render={<Box as="section" aria-label="Items" />} size="lg" className="rounded-xl border lg:col-span-7">
+        <Card render={<Box as="section" aria-label="Items" />} size="lg" className="rounded-[2rem] lg:col-span-7">
           <CardHeader>
             <CardTitle render={<Box as="span" />} className="text-xl font-semibold">
               {pluralize(items.length, "product")}
@@ -92,7 +93,14 @@ export function CartSummaryView() {
   return (
     <CustomerPage
       eyebrow="Review & total"
-      title="Order summary"
+      title={
+        <>
+          Order{" "}
+          <Text as="em" variant="accent">
+            summary
+          </Text>
+        </>
+      }
       description="A line-by-line summary of your selected items before you enter delivery details."
       breadcrumbs={[{ label: "Basket", href: customerRoutes.cart }, { label: "Summary" }]}
     >

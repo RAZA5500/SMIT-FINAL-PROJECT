@@ -96,10 +96,10 @@ export function AdminOrderDetailView({ id }: { id: string }) {
     return (
       <AdminPage title="Order details">
         <Stack aria-label="Loading" aria-busy="true" gap="6">
-          <Skeleton className="h-24 w-full rounded-xl" />
+          <Skeleton className="h-24 w-full rounded-[1.5rem]" />
           <Grid gap="6" className="lg:grid-cols-3">
-            <Skeleton className="h-80 w-full rounded-xl lg:col-span-2" />
-            <Skeleton className="h-80 w-full rounded-xl" />
+            <Skeleton className="h-80 w-full rounded-[1.5rem] lg:col-span-2" />
+            <Skeleton className="h-80 w-full rounded-[1.5rem]" />
           </Grid>
         </Stack>
       </AdminPage>
@@ -173,7 +173,6 @@ export function AdminOrderDetailView({ id }: { id: string }) {
               key={status}
               isLoading={updateStatus.isPending && updateStatus.variables?.payload.status === status}
               disabled={busy}
-             
               onClick={() => updateStatus.mutate({ id: order.id, payload: { status } })}
             >
               Mark as {ORDER_STATUS_LABELS[status]}

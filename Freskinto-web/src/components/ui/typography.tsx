@@ -4,25 +4,26 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 /* ---------------------------------------------------------------------------
-   Heading — Inter throughout; weight and tight tracking carry the hierarchy
+   Heading — Unbounded for display sizes (tight tracking), Manrope bold for the small ones.
+   Accent words inside a heading: <Text as="em" variant="accent">…</Text>
 --------------------------------------------------------------------------- */
 
 const headingVariants = cva("text-balance", {
   variants: {
     size: {
-      hero: "text-4xl leading-tight font-semibold tracking-tight sm:text-5xl lg:text-6xl",
-      display: "text-3xl leading-tight font-semibold tracking-tight sm:text-4xl",
-      "1": "text-2xl leading-tight font-semibold tracking-tight sm:text-3xl",
-      "2": "text-xl leading-snug font-semibold tracking-tight sm:text-2xl",
-      "3": "text-lg leading-snug font-semibold tracking-tight",
-      "4": "text-base leading-snug font-semibold",
-      "5": "text-sm leading-snug font-semibold",
+      hero: "font-display text-[2.6rem] leading-[1.02] font-semibold tracking-[-0.045em] sm:text-6xl lg:text-[5.25rem]",
+      display: "font-display text-4xl leading-[1.04] font-semibold tracking-[-0.04em] sm:text-5xl",
+      "1": "font-display text-3xl leading-[1.08] font-semibold tracking-[-0.035em] sm:text-4xl",
+      "2": "font-display text-2xl leading-tight font-semibold tracking-[-0.03em] sm:text-[1.75rem]",
+      "3": "text-lg leading-snug font-bold tracking-tight",
+      "4": "text-base leading-snug font-bold",
+      "5": "text-sm leading-snug font-bold",
     },
     tone: {
       default: "text-foreground",
       inherit: "",
       muted: "text-muted-foreground",
-      primary: "text-primary",
+      primary: "text-brand-ink",
     },
   },
   defaultVariants: {
@@ -73,7 +74,10 @@ const textVariants = cva("", {
       lead: "text-base leading-relaxed text-muted-foreground sm:text-lg",
       small: "text-xs leading-normal",
       label: "text-sm leading-none font-medium",
-      eyebrow: "text-xs leading-none font-medium",
+      eyebrow: "text-fs-11 leading-none font-bold tracking-[0.18em] uppercase",
+      /* pb/-mb: gradient sirf box ke andar rangta hai — "y", "g" ki dum ke liye jagah, layout wahi */
+      accent:
+        "-mb-[0.14em] inline-block pr-[0.08em] pb-[0.14em] font-serif font-normal tracking-normal italic text-fresh animate-shimmer",
       code: "font-mono text-xs tracking-tight",
     },
     size: {
@@ -89,7 +93,7 @@ const textVariants = cva("", {
       default: "text-foreground",
       inherit: "",
       muted: "text-muted-foreground",
-      primary: "text-primary",
+      primary: "text-brand-ink",
       destructive: "text-destructive",
       success: "text-success-ink",
       warning: "text-warning-ink",

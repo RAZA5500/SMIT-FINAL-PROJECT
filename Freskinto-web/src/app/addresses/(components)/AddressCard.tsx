@@ -25,7 +25,7 @@ interface AddressCardProps {
   onDelete: () => void;
 }
 
-/** Address book entry — default address gets an indigo border and a "Default" badge */
+/** Address book entry — default address gets a green border, a gradient icon chip and a "Default" badge */
 export function AddressCard({ address, settingDefault, onEdit, onSetDefault, onDelete }: AddressCardProps) {
   const Icon = address.isDefault ? Home : MapPin;
 
@@ -34,7 +34,7 @@ export function AddressCard({ address, settingDefault, onEdit, onSetDefault, onD
       render={<Box as="article" />}
       className={cn(
         "h-full gap-3 transition-colors hover:border-foreground/15 has-data-[slot=card-footer]:pb-0",
-        address.isDefault && "border-primary/50 hover:border-primary/50",
+        address.isDefault && "border-brand/50 hover:border-brand/50",
       )}
     >
       <CardHeader className="flex-row items-start justify-between gap-3">
@@ -44,7 +44,7 @@ export function AddressCard({ address, settingDefault, onEdit, onSetDefault, onD
           aria-hidden="true"
           className={cn(
             "size-9 rounded-md [&_svg]:size-4",
-            address.isDefault ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground",
+            address.isDefault ? "bg-fresh text-[#06100b]" : "bg-muted text-muted-foreground",
           )}
         >
           <Icon />

@@ -133,7 +133,7 @@ export function AdminDataTable<T>({
     <Card
       render={<Box as="section" />}
       aria-busy={isFetching || undefined}
-      className={cn("relative gap-0 rounded-xl py-0", className)}
+      className={cn("relative gap-0 rounded-[1.5rem] py-0", className)}
     >
       {/* Subtle isFetching indicator */}
       <Box

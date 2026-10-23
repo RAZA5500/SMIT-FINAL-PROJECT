@@ -40,7 +40,14 @@ export function ProfileView() {
   return (
     <CustomerPage
       eyebrow="My account"
-      title="Profile"
+      title={
+        <>
+          Your{" "}
+          <Text as="em" variant="accent">
+            profile
+          </Text>
+        </>
+      }
       description="Your Freskinto account details and shortcuts."
       breadcrumbs={[{ label: "Profile" }]}
     >
@@ -64,7 +71,7 @@ export function ProfileView() {
               {user && <StatusBadge status={user.isActive ? "ACTIVE" : "INACTIVE"} />}
             </Flex>
 
-            <Grid as="dl" cols="2" className="w-full divide-x divide-border rounded-lg border border-border">
+            <Grid as="dl" cols="2" className="w-full divide-x divide-border rounded-2xl border border-border">
               <Stack gap="0.5" className="px-4 py-3">
                 <Text as="dt" tone="muted" className="text-fs-12">
                   Orders
@@ -144,7 +151,7 @@ export function ProfileView() {
                       as="span"
                       align="center"
                       justify="center"
-                      className="size-8 rounded-md bg-muted text-muted-foreground"
+                      className="size-9 rounded-full bg-brand-soft text-brand-ink dark:bg-brand/15 dark:text-brand"
                     >
                       <Icon aria-hidden="true" className="size-4" />
                     </Flex>
