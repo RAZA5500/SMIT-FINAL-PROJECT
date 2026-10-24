@@ -1,15 +1,16 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Mail, Sparkles } from "lucide-react";
+import { ArrowRight, Check, LayoutDashboard, Mail, ShoppingBasket, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
-import { Flex } from "@/components/ui/flex";
+import { Flex, Stack } from "@/components/ui/flex";
 import { Form } from "@/components/ui/form";
+import { Grid } from "@/components/ui/grid";
 import { Text } from "@/components/ui/typography";
 import { CheckboxField } from "@/components/shared/CheckboxField";
 import { InputField } from "@/components/shared/InputField";
@@ -18,13 +19,19 @@ import { PasswordField } from "@/components/shared/PasswordField";
 import { TextLink } from "@/components/shared/TextLink";
 import { homeForRole, publicRoutes, safeRedirect } from "@/lib/routes/routes";
 import { toastError, toastSuccess } from "@/lib/toast";
-import { scrollToFirstError } from "@/lib/utils";
+import { cn, scrollToFirstError } from "@/lib/utils";
 import { loginSchema, type LoginFormData } from "@/modules/zod/login.model";
 import { useLogin } from "@/services/auth/mutations";
 import type { UserRole } from "@/services/auth/types";
 import { useAuthStore } from "@/stores/auth-store";
 
 const FORM_ID = "login-form";
+
+/** Seed data ke test accounts — click par form bhar dete hain */
+const DEMO_ACCOUNTS = [
+  { label: "Customer Demo", hint: "Shop & check out", icon: ShoppingBasket, email: "ali@test.local", password: "secret123" },
+  { label: "Admin Demo", hint: "Run the store", icon: LayoutDashboard, email: "admin@freskinto.com", password: "Admin@123" },
+];
 
 /** Redirect sirf apne area ke andar; warna role ka home (admin → orders, customer → shop) */
 function destinationFor(role: UserRole, redirectParam: string | null): string {
@@ -59,6 +66,8 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
     defaultValues: { email: "", password: "", rememberMe: false },
   });
 
+  const emailValue = useWatch({ control, name: "email" });
+
   // Pehle se signed in → apna area
   useEffect(() => {
     if (hasHydrated && token && user) router.replace(destinationFor(user.role, redirectTo));
@@ -79,7 +88,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
   };
 
   return (
-    <Form id={FORM_ID} onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))} className="space-y-5">
+    <Form id={FORM_ID} onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))} className="space-y-4">
       <FieldGroup className="gap-4">
         <InputField
           id="email"
@@ -107,7 +116,6 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
               <CheckboxField
                 id="rememberMe"
                 label="Keep me signed in"
-                description="Stay signed in on this device"
                 checked={field.value}
                 onCheckedChange={field.onChange}
               />
@@ -115,7 +123,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
           />
           <TextLink
             href={publicRoutes.forgotPassword}
-            className="text-fs-12 text-muted-foreground hover:text-foreground shrink-0 self-start pt-1"
+            className="text-fs-12 text-muted-foreground hover:text-foreground shrink-0"
           >
             Forgot password?
           </TextLink>
@@ -124,7 +132,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
 
       {/* Quick 1-click test accounts for evaluators & developers */}
       <Box className="rounded-2xl border border-dashed border-border/80 bg-muted/20 p-3">
-        <Flex align="center" justify="between" className="mb-2">
+        <Flex align="center" justify="between" className="mb-2.5">
           <Flex align="center" gap="1.5">
             <Sparkles aria-hidden="true" className="size-3.5 text-brand" />
             <Text as="span" weight="semibold" className="text-[11px] uppercase tracking-wider text-muted-foreground">
@@ -135,32 +143,47 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
             1-click auto fill
           </Text>
         </Flex>
-        <Flex gap="2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setValue("email", "ali@test.local", { shouldValidate: true });
-              setValue("password", "secret123", { shouldValidate: true });
-            }}
-            className="h-7 flex-1 text-fs-12 font-medium"
-          >
-            Customer Demo
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setValue("email", "admin@freskinto.com", { shouldValidate: true });
-              setValue("password", "Admin@123", { shouldValidate: true });
-            }}
-            className="h-7 flex-1 text-fs-12 font-medium"
-          >
-            Admin Demo
-          </Button>
-        </Flex>
+        <Grid gap="2" className="grid-cols-2">
+          {DEMO_ACCOUNTS.map(({ label, hint, icon: Icon, email, password }) => {
+            const selected = emailValue === email;
+            return (
+              <Button
+                key={email}
+                type="button"
+                variant="outline"
+                aria-pressed={selected}
+                onClick={() => {
+                  setValue("email", email, { shouldValidate: true });
+                  setValue("password", password, { shouldValidate: true });
+                }}
+                className={cn(
+                  "group/demo h-auto justify-start gap-2.5 rounded-xl px-2.5 py-2 text-left transition-[border-color,background-color,translate] duration-300 ease-out-expo hover:-translate-y-0.5",
+                  selected && "border-brand/60 bg-brand-soft hover:bg-brand-soft",
+                )}
+              >
+                <Flex
+                  as="span"
+                  align="center"
+                  justify="center"
+                  className={cn(
+                    "size-8 shrink-0 rounded-lg bg-muted text-muted-foreground transition-[color,background-color,rotate] duration-500 ease-spring group-hover/demo:-rotate-6",
+                    selected && "bg-fresh text-[#06100b]",
+                  )}
+                >
+                  {selected ? <Check aria-hidden="true" className="size-4" /> : <Icon aria-hidden="true" className="size-4" />}
+                </Flex>
+                <Stack as="span" gap="0" className="min-w-0">
+                  <Text as="span" weight="semibold" className="text-fs-12">
+                    {label}
+                  </Text>
+                  <Text as="span" tone="muted" className="truncate text-[11px]">
+                    {hint}
+                  </Text>
+                </Stack>
+              </Button>
+            );
+          })}
+        </Grid>
       </Box>
 
       <LoadingButton type="submit" variant="fresh" size="xl" isLoading={isSubmitting} className="w-full shadow-soft">

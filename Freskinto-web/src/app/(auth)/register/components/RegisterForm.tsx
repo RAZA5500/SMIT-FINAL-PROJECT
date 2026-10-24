@@ -57,7 +57,7 @@ export function RegisterForm() {
   };
 
   return (
-    <Form id={FORM_ID} onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))} className="space-y-5">
+    <Form id={FORM_ID} onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))} className="space-y-4">
       <FieldGroup className="gap-4">
         <InputField
           id="fullName"

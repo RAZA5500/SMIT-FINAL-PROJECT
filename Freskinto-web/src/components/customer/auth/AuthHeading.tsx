@@ -12,7 +12,7 @@ interface AuthHeadingProps {
 /** Auth form ke upar live status pill + headline + friendly subtitle */
 export function AuthHeading({ eyebrow, title, subtitle }: AuthHeadingProps) {
   return (
-    <Stack gap="2.5" className="mb-6">
+    <Stack gap="2" className="mb-5">
       <Flex align="center" gap="2">
         <Box as="span" className="relative flex size-2">
           <Box as="span" className="absolute inline-flex size-full animate-ping-soft rounded-full bg-fresh" />
@@ -22,7 +22,7 @@ export function AuthHeading({ eyebrow, title, subtitle }: AuthHeadingProps) {
           {eyebrow}
         </Text>
       </Flex>
-      <Heading size="1" className="font-heading tracking-tight text-fs-24 sm:text-fs-28">
+      <Heading size="1" className="text-[1.625rem] sm:text-[1.875rem]">
         {title}
       </Heading>
       <Text tone="muted" className="text-fs-14 leading-relaxed sm:text-fs-15">

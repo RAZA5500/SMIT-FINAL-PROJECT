@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw/http";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -100,7 +100,7 @@ describe("LoginForm", () => {
     expect(screen.getByLabelText("Password")).toHaveValue("Admin@123");
   });
 
-  it("AuthShell mounts static showcase and excludes 3D HeroOrbit on auth pages", () => {
+  it("AuthShell mounts the mode switch and the storefront preview, without the 3D HeroOrbit", () => {
     const { container } = renderWithProviders(
       <AuthShell>
         <div>Test Auth Children</div>
@@ -110,10 +110,28 @@ describe("LoginForm", () => {
     expect(screen.getByText("Test Auth Children")).toBeInTheDocument();
     expect(screen.getByText("256-bit SSL encrypted")).toBeInTheDocument();
     expect(screen.getByText("100% fresh guarantee")).toBeInTheDocument();
-    // Confirms static packshot exists
-    expect(screen.getByAltText("Farm Fresh Produce")).toBeInTheDocument();
-    // Confirms HeroOrbit circular text / orbit carousel is NOT present
+
+    // Sign in ↔ Create account switch marks the current page
+    const nav = screen.getByRole("navigation", { name: "Account" });
+    expect(within(nav).getByRole("link", { name: "Sign in" })).toHaveAttribute("aria-current", "page");
+    expect(within(nav).getByRole("link", { name: "Create account" })).toHaveAttribute("href", "/register");
+
+    // Right panel is a plain screenshot of the storefront
+    expect(screen.getByRole("img", { name: /home page/i })).toBeInTheDocument();
+
+    // HeroOrbit circular text / orbit carousel is NOT present
     expect(container.querySelector(".animate-spin-orbit")).not.toBeInTheDocument();
+  });
+
+  it("demo account buttons show which account is filled in", async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<LoginForm redirectTo={null} />);
+
+    const customerDemoBtn = screen.getByRole("button", { name: /customer demo/i });
+    expect(customerDemoBtn).toHaveAttribute("aria-pressed", "false");
+    await user.click(customerDemoBtn);
+    expect(customerDemoBtn).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: /admin demo/i })).toHaveAttribute("aria-pressed", "false");
   });
 
   it("renders a link to the forgot password recovery page", () => {
