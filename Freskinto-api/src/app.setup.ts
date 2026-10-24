@@ -14,13 +14,63 @@ export function configureApp(app: INestApplication): void {
 
   app.setGlobalPrefix(config.get('URL_PREFIX', { infer: true }));
   app.use(helmet());
+  const rawOrigins = config.get('CORS_ORIGINS', { infer: true });
+  const allowedOrigins = rawOrigins
+    .split(',')
+    .map((origin) => origin.trim().replace(/\/+$/, ''))
+    .filter(Boolean);
+
   app.enableCors({
-    origin: config
-      .get('CORS_ORIGINS', { infer: true })
-      .split(',')
-      .map((origin) => origin.trim()),
+    origin: (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void,
+    ) => {
+      // Requests without Origin header (curl, mobile apps, server-to-server, health checks)
+      if (!origin) {
+        return callback(null, true);
+      }
+      const isAllowed =
+        allowedOrigins.includes('*') ||
+        allowedOrigins.includes(origin) ||
+        allowedOrigins.some((allowed) => {
+          if (allowed.startsWith('https://*.') || allowed.startsWith('http://*.')) {
+            const expectedProtocol = allowed.startsWith('https://')
+              ? 'https:'
+              : 'http:';
+            const rootDomain = allowed.replace(/^https?:\/\/\*\./, '');
+            try {
+              const originUrl = new URL(origin);
+              return (
+                originUrl.protocol === expectedProtocol &&
+                (originUrl.hostname === rootDomain ||
+                  originUrl.hostname.endsWith(`.${rootDomain}`))
+              );
+            } catch {
+              return false;
+            }
+          }
+          return false;
+        });
+
+      if (isAllowed) {
+        return callback(null, true);
+      }
+      return callback(null, false);
+    },
     credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Accept',
+      'Origin',
+      'X-Requested-With',
+      'traceparent',
+      'baggage',
+      'sentry-trace',
+      'Cache-Control',
+      'Pragma',
+    ],
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
   });
   // whitelist + forbidNonWhitelisted: DTO se bahar ka field → 400 (mass assignment block)
   app.useGlobalPipes(

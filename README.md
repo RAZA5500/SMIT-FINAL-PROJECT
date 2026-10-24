@@ -9,7 +9,11 @@ and checked against the acceptance checklist ([`notes/acceptance-checklist.md`](
 | `Freskinto-api/` | REST API (`/v1`) | NestJS 11, Prisma 7 + PostgreSQL 17, JWT, class-validator, Jest + Supertest |
 | `Freskinto-web/` | Storefront + admin panel | Next.js 16 (App Router), TanStack Query, Zustand, React Hook Form + Zod, Tailwind v4 + shadcn/ui (Base UI), Vitest + MSW |
 | `docker-compose.yml` | Local PostgreSQL (port **5433**) + `onlinemart_test` database | Docker |
+| `render.yaml` | Render Blueprint for backend + PostgreSQL deployment | Render |
+| `DEPLOYMENT.md` | Complete production deployment guide (Render + Vercel) | Docs |
 | `notes/` | Phase 1–2 notes (requirements, architecture), acceptance checklist, test/build evidence | Markdown |
+
+> **Deploying to Production?** Follow our step-by-step guide in [`DEPLOYMENT.md`](DEPLOYMENT.md) to deploy `Freskinto-api` on **Render** (via 1-click Blueprint or manual setup) and `Freskinto-web` on **Vercel**.
 
 The app folders were called `student-api/` and `student-web/` until 2026-10-22 (package names are now
 `freskinto-api` and `freskinto-web`); run logs in `notes/evidence/` recorded before that date still use the old
