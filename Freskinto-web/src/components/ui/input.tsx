@@ -8,7 +8,7 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
       type={type}
       data-slot="input"
       className={cn(
-        "h-11 w-full min-w-0 rounded-full border border-input bg-card/70 px-4 py-1 text-base text-foreground shadow-xs dark:bg-input/30 transition-[color,background-color,border-color,box-shadow] duration-300 outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground/80 focus-visible:border-ring focus-visible:ring-4 focus-visible:ring-ring/20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-muted dark:disabled:bg-muted/60 disabled:opacity-60 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/15 read-only:bg-muted/60 dark:read-only:bg-muted/40 md:text-sm",
+        "h-11 w-full min-w-0 rounded-full border border-input bg-card/70 px-4 py-1 text-base text-foreground shadow-xs dark:bg-input/30 transition-[color,background-color,border-color,box-shadow] duration-300 outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground/80 focus-visible:border-ring focus-visible:ring-4 focus-visible:ring-ring/20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-muted dark:disabled:bg-muted/60 disabled:opacity-60 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/15 read-only:bg-muted/60 dark:read-only:bg-muted/40 dark:[color-scheme:dark] md:text-sm",
         className
       )}
       {...props}

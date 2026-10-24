@@ -549,6 +549,29 @@
     transition: background-color 5000s ease-in-out 0s;
   }
 
+  .dark input:-webkit-autofill,
+  .dark input:-webkit-autofill:hover,
+  .dark input:-webkit-autofill:focus,
+  .dark textarea:-webkit-autofill,
+  .dark textarea:-webkit-autofill:hover,
+  .dark textarea:-webkit-autofill:focus,
+  .dark select:-webkit-autofill,
+  .dark select:-webkit-autofill:hover,
+  .dark select:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--foreground);
+    -webkit-box-shadow: 0 0 0px 1000px #131c17 inset;
+    box-shadow: 0 0 0px 1000px #131c17 inset;
+  }
+
+  /* Seamless autofill for compound input groups */
+  [data-slot="input-group"]:has(input:-webkit-autofill) {
+    background-color: color-mix(in oklab, var(--card) 90%, transparent);
+  }
+
+  .dark [data-slot="input-group"]:has(input:-webkit-autofill) {
+    background-color: #131c17;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;

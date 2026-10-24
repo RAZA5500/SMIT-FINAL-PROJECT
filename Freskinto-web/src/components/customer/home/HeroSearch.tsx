@@ -82,7 +82,7 @@ export function HeroSearch() {
           itemToStringValue={(product: IProduct) => product.name}
           filter={null}
         >
-          <AutocompleteInputGroup className="glass h-15 border-glass-border pr-2 has-[[data-slot=input-group-control]:focus-visible]:ring-ring/25">
+          <AutocompleteInputGroup className="glass dark:bg-glass/80 h-15 border-glass-border pr-2 has-[[data-slot=input-group-control]:focus-visible]:ring-ring/25">
             <InputGroupAddon className="pl-5 text-muted-foreground">
               {isFetching && enabled ? <Spinner aria-hidden="true" /> : <Search aria-hidden="true" className="size-5" />}
             </InputGroupAddon>

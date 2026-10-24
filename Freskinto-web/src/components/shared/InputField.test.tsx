@@ -5,6 +5,8 @@ import { InputField } from "./InputField";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupTextarea } from "@/components/ui/input-group";
 import { Textarea } from "@/components/ui/textarea";
+import { Command, CommandInput } from "@/components/ui/command";
+import { Switch } from "@/components/ui/switch";
 
 describe("InputField", () => {
   it("links the label to the input", () => {
@@ -58,10 +60,47 @@ describe("InputField", () => {
     expect(textarea.className).not.toContain("dark:bg-input/30");
   });
 
-  it("standalone Textarea includes text-foreground and dark-mode tokens", () => {
-    render(<Textarea data-testid="standalone-textarea" />);
-    const textarea = screen.getByTestId("standalone-textarea");
-    expect(textarea.className).toContain("text-foreground");
-    expect(textarea.className).toContain("dark:bg-input/30");
+  it("InputGroup includes overflow-hidden and dark-mode disabled/read-only states", () => {
+    render(
+      <InputGroup data-testid="test-input-group">
+        <Input placeholder="nested" />
+      </InputGroup>
+    );
+    const group = screen.getByTestId("test-input-group");
+    expect(group.className).toContain("overflow-hidden");
+    expect(group.className).toContain("dark:has-disabled:bg-muted/60");
+    expect(group.className).toContain("dark:has-read-only:bg-muted/40");
+  });
+
+  it("standalone Input and Textarea include dark color-scheme and read-only states", () => {
+    render(<Input data-testid="cs-input" />);
+    const input = screen.getByTestId("cs-input");
+    expect(input.className).toContain("dark:[color-scheme:dark]");
+    expect(input.className).toContain("dark:read-only:bg-muted/40");
+
+    render(<Textarea data-testid="cs-textarea" />);
+    const textarea = screen.getByTestId("cs-textarea");
+    expect(textarea.className).toContain("dark:[color-scheme:dark]");
+    expect(textarea.className).toContain("dark:read-only:bg-muted/40");
+  });
+
+  it("CommandInput renders with transparent dark input and text-foreground", () => {
+    render(
+      <Command>
+        <CommandInput placeholder="Search items..." />
+      </Command>
+    );
+    const input = screen.getByPlaceholderText("Search items...");
+    expect(input.className).toContain("bg-transparent");
+    expect(input.className).toContain("dark:bg-transparent");
+    expect(input.className).toContain("text-foreground");
+  });
+
+  it("Switch thumb renders light foreground in dark mode", () => {
+    const { container } = render(<Switch />);
+    const thumb = container.querySelector('[data-slot="switch-thumb"]');
+    expect(thumb).not.toBeNull();
+    expect(thumb?.className).toContain("dark:bg-foreground");
   });
 });
+
