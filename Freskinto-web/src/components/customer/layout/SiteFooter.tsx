@@ -161,7 +161,7 @@ export function SiteFooter({ compact = false }: { compact?: boolean }) {
             © {COPYRIGHT_YEAR} {STORE.name}. All rights reserved.
           </Text>
           <Text tone="inherit" className="text-fs-12">
-            Demo store — payments are simulated, no real card is charged.
+            {/* Demo store — payments are simulated, no real card is charged. */}
           </Text>
         </Flex>
       </Box>

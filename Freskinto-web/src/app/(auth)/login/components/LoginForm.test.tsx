@@ -115,4 +115,11 @@ describe("LoginForm", () => {
     // Confirms HeroOrbit circular text / orbit carousel is NOT present
     expect(container.querySelector(".animate-spin-orbit")).not.toBeInTheDocument();
   });
+
+  it("renders a link to the forgot password recovery page", () => {
+    renderWithProviders(<LoginForm redirectTo={null} />);
+    const forgotLink = screen.getByRole("link", { name: /forgot password\?/i });
+    expect(forgotLink).toBeInTheDocument();
+    expect(forgotLink).toHaveAttribute("href", "/forgot-password");
+  });
 });

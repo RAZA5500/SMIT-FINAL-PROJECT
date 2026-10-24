@@ -3,9 +3,11 @@
 export const publicRoutes = {
   home: "/",
   shop: "/shop",
+  products: "/products",
   product: (id: string) => `/products/${id}`,
   login: "/login",
   register: "/register",
+  forgotPassword: "/forgot-password",
 } as const;
 
 export const customerRoutes = {
@@ -21,6 +23,7 @@ export const customerRoutes = {
 
 export const adminRoutes = {
   home: "/admin",
+  dashboard: "/admin/dashboard",
   categories: "/admin/categories",
   products: "/admin/products",
   productNew: "/admin/products/new",

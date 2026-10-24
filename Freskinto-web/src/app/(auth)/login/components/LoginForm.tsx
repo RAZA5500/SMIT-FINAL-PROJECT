@@ -99,19 +99,27 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
           error={errors.password?.message}
           {...register("password")}
         />
-        <Controller
-          control={control}
-          name="rememberMe"
-          render={({ field }) => (
-            <CheckboxField
-              id="rememberMe"
-              label="Keep me signed in"
-              description="Stay signed in on this device"
-              checked={field.value}
-              onCheckedChange={field.onChange}
-            />
-          )}
-        />
+        <Flex align="center" justify="between" className="pt-0.5">
+          <Controller
+            control={control}
+            name="rememberMe"
+            render={({ field }) => (
+              <CheckboxField
+                id="rememberMe"
+                label="Keep me signed in"
+                description="Stay signed in on this device"
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+            )}
+          />
+          <TextLink
+            href={publicRoutes.forgotPassword}
+            className="text-fs-12 text-muted-foreground hover:text-foreground shrink-0 self-start pt-1"
+          >
+            Forgot password?
+          </TextLink>
+        </Flex>
       </FieldGroup>
 
       {/* Quick 1-click test accounts for evaluators & developers */}
