@@ -67,7 +67,7 @@ export function ProductQuickView({ product, className }: { product: IProduct; cl
             </Text>
             <Stack gap="2.5" className="mt-auto">
               <ProductCartControl product={product} size="md" />
-              <ButtonLink href={publicRoutes.product(product.id)} variant="ghost">
+              <ButtonLink href={publicRoutes.product(product.id)} transitionTypes={["nav-forward"]} variant="ghost">
                 See full details
                 <ArrowUpRight aria-hidden="true" />
               </ButtonLink>

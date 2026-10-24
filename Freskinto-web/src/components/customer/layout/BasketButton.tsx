@@ -23,11 +23,11 @@ export function BasketButton({ className }: { className?: string }) {
       data-basket-target=""
       onClick={() => setCartOpen(true)}
       aria-label={`Open basket, ${pluralize(count, "item")}`}
-      className={cn("h-11 gap-2 pr-1.5 pl-3.5 sm:pl-4", count === 0 && "pr-3.5 sm:pr-4", className)}
+      className={cn("h-11 gap-1.5 pr-1.5 pl-3 sm:pl-3.5", count === 0 && "pr-3 sm:pr-3.5", className)}
     >
       <ShoppingBag aria-hidden="true" className="size-[1.15rem]" />
       <Text as="span" tone="inherit" weight="bold" numeric className="hidden sm:inline">
-        {cart ? formatMoney(cart.subtotal) : "Basket"}
+        {cart && count > 0 ? formatMoney(cart.subtotal) : "Basket"}
       </Text>
       {count > 0 && (
         // key — count badalne par bump animation dobara chale

@@ -39,12 +39,12 @@ interface ShopToolbarProps {
 export function ShopToolbar({ shop, categoryName, layout, onLayoutChange, onOpenFilters }: ShopToolbarProps) {
   return (
     <Stack gap="3">
-      <Flex wrap align="center" gap="3">
+      <Flex wrap align="center" gap="2.5" className="sm:gap-3">
         <Button variant="outline" className="lg:hidden" onClick={onOpenFilters}>
           <SlidersHorizontal aria-hidden="true" />
           Filters
         </Button>
-        <Box className="min-w-0 flex-1 basis-56">
+        <Box className="min-w-0 flex-1 basis-48 sm:basis-56">
           <SearchInput
             value={shop.q}
             onValueChange={(q) => shop.update({ q }, { replace: true })}
@@ -52,26 +52,48 @@ export function ShopToolbar({ shop, categoryName, layout, onLayoutChange, onOpen
             aria-label="Search products in the shop"
           />
         </Box>
+        <ToggleGroup
+          aria-label="Layout"
+          spacing={1}
+          value={[layout]}
+          onValueChange={(next) => next[0] && onLayoutChange(next[0] as ProductLayout)}
+          className="rounded-full border border-border/80 bg-card/60 p-1 shadow-xs backdrop-blur-sm sm:hidden dark:border-white/[0.08]"
+        >
+          <ToggleGroupItem
+            value="grid"
+            aria-label="Grid view"
+            className="size-8 rounded-full px-0 transition-colors aria-pressed:bg-primary aria-pressed:text-primary-foreground"
+          >
+            <LayoutGrid aria-hidden="true" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="list"
+            aria-label="List view"
+            className="size-8 rounded-full px-0 transition-colors aria-pressed:bg-primary aria-pressed:text-primary-foreground"
+          >
+            <List aria-hidden="true" />
+          </ToggleGroupItem>
+        </ToggleGroup>
         <Flex align="center" gap="2" className="ml-auto hidden sm:flex">
           <SortSelect id="shop-sort" shop={shop} />
           <ToggleGroup
             aria-label="Layout"
-            spacing={0}
+            spacing={1}
             value={[layout]}
             onValueChange={(next) => next[0] && onLayoutChange(next[0] as ProductLayout)}
-            className="rounded-lg border border-border p-0.5"
+            className="rounded-full border border-border/80 bg-card/60 p-1 shadow-xs backdrop-blur-sm dark:border-white/[0.08]"
           >
             <ToggleGroupItem
               value="grid"
               aria-label="Grid view"
-              className="size-8 px-0 aria-pressed:bg-muted aria-pressed:text-foreground"
+              className="size-8 rounded-full px-0 transition-colors aria-pressed:bg-primary aria-pressed:text-primary-foreground"
             >
               <LayoutGrid aria-hidden="true" />
             </ToggleGroupItem>
             <ToggleGroupItem
               value="list"
               aria-label="List view"
-              className="size-8 px-0 aria-pressed:bg-muted aria-pressed:text-foreground"
+              className="size-8 rounded-full px-0 transition-colors aria-pressed:bg-primary aria-pressed:text-primary-foreground"
             >
               <List aria-hidden="true" />
             </ToggleGroupItem>

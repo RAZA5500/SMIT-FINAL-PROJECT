@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { Stack } from "@/components/ui/flex";
+import { Box } from "@/components/ui/box";
+import { Flex, Stack } from "@/components/ui/flex";
 import { Heading, Text } from "@/components/ui/typography";
 
 interface AuthHeadingProps {
@@ -8,15 +9,23 @@ interface AuthHeadingProps {
   subtitle: string;
 }
 
-/** Auth form ke upar kicker + headline + ek line — page.tsx sirf compose karta hai */
+/** Auth form ke upar live status pill + headline + friendly subtitle */
 export function AuthHeading({ eyebrow, title, subtitle }: AuthHeadingProps) {
   return (
-    <Stack gap="2">
-      <Text variant="eyebrow" tone="muted">
-        {eyebrow}
-      </Text>
-      <Heading size="1">{title}</Heading>
-      <Text tone="muted" className="sm:text-base">
+    <Stack gap="2.5" className="mb-6">
+      <Flex align="center" gap="2">
+        <Box as="span" className="relative flex size-2">
+          <Box as="span" className="absolute inline-flex size-full animate-ping-soft rounded-full bg-fresh" />
+          <Box as="span" className="relative inline-flex size-2 rounded-full bg-fresh" />
+        </Box>
+        <Text variant="eyebrow" tone="muted" className="text-fs-12 font-semibold tracking-wider uppercase">
+          {eyebrow}
+        </Text>
+      </Flex>
+      <Heading size="1" className="font-heading tracking-tight text-fs-24 sm:text-fs-28">
+        {title}
+      </Heading>
+      <Text tone="muted" className="text-fs-14 leading-relaxed sm:text-fs-15">
         {subtitle}
       </Text>
     </Stack>

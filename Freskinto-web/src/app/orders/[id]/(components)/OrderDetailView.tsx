@@ -52,7 +52,7 @@ export function OrderDetailView({ id }: { id: string }) {
   const [payOpen, setPayOpen] = useState(false);
 
   const backLink = (
-    <ButtonLink href={customerRoutes.orders} variant="outline" className="border">
+    <ButtonLink href={customerRoutes.orders} transitionTypes={["nav-back"]} variant="outline" className="border">
       <ArrowLeft aria-hidden="true" />
       All orders
     </ButtonLink>

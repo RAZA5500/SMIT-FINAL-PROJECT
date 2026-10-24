@@ -47,7 +47,7 @@ export function SearchTrigger({ onOpen, variant = "bar", className }: SearchTrig
       onClick={onOpen}
       aria-label="Search products"
       className={cn(
-        "h-11 w-52 justify-start gap-2.5 border-transparent bg-foreground/[0.05] pr-2 pl-4 font-medium text-muted-foreground shadow-none hover:translate-y-0 hover:border-border hover:bg-card hover:text-foreground xl:w-64 dark:bg-foreground/[0.07]",
+        "h-11 w-48 justify-start gap-1.5 border-transparent bg-foreground/[0.05] pr-2 pl-2.5 font-medium text-muted-foreground shadow-none hover:translate-y-0 hover:border-border hover:bg-card hover:text-foreground xl:w-60 dark:bg-foreground/[0.07]",
         className,
       )}
     >

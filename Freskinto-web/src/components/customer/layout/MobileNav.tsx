@@ -73,7 +73,7 @@ export function MobileNav({ open, onOpenChange }: MobileNavProps) {
         <ScrollArea className="min-h-0 flex-1">
           <Stack gap="6" className="p-3 pb-6">
             {signedIn && user && (
-              <Flex align="center" gap="3" className="animate-fade-up rounded-2xl bg-fresh-soft p-3">
+              <Flex align="center" gap="3" className="animate-fade-up rounded-2xl border border-brand/20 bg-fresh-soft p-3 shadow-xs dark:border-white/10">
                 <Avatar size="lg">
                   <AvatarFallback>{initials(user.name)}</AvatarFallback>
                 </Avatar>

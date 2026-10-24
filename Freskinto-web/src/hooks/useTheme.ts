@@ -27,8 +27,15 @@ interface Origin {
   y: number;
 }
 
+let activeThemeTransitionId = 0;
+
+interface ViewTransitionResult {
+  ready?: Promise<void>;
+  finished: Promise<void>;
+}
+
 type DocumentWithTransitions = Document & {
-  startViewTransition?: (update: () => void) => { finished: Promise<void> };
+  startViewTransition?: (update: () => void) => ViewTransitionResult;
 };
 
 function applyTheme(next: Theme) {
@@ -59,9 +66,45 @@ export function useTheme() {
     root.style.setProperty("--theme-x", `${origin.x}px`);
     root.style.setProperty("--theme-y", `${origin.y}px`);
     root.classList.add("theme-switching");
-    void doc
-      .startViewTransition(() => applyTheme(next))
-      .finished.finally(() => root.classList.remove("theme-switching"));
+
+    const transitionId = ++activeThemeTransitionId;
+    const transition = doc.startViewTransition(() => {
+      applyTheme(next);
+    });
+
+    const { x, y } = origin;
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    if (transition.ready && typeof root.animate === "function") {
+      transition.ready
+        .then(() => {
+          if (activeThemeTransitionId !== transitionId) return;
+
+          root.animate(
+            {
+              clipPath: [
+                `circle(0px at ${x}px ${y}px)`,
+                `circle(${endRadius}px at ${x}px ${y}px)`,
+              ],
+            },
+            {
+              duration: 380,
+              easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+              pseudoElement: "::view-transition-new(root)",
+            }
+          );
+        })
+        .catch(() => {});
+    }
+
+    void transition.finished.finally(() => {
+      if (activeThemeTransitionId === transitionId) {
+        root.classList.remove("theme-switching");
+      }
+    });
   }, []);
 
   const toggleTheme = useCallback(
@@ -71,3 +114,4 @@ export function useTheme() {
 
   return { theme, setTheme, toggleTheme };
 }
+

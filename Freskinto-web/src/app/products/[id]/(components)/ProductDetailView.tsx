@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowLeft, Clock, PackageCheck, Store, Truck } from "lucide-react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Box } from "@/components/ui/box";
 import { Card } from "@/components/ui/card";
 import {
@@ -61,7 +62,7 @@ export function ProductDetailView({ id }: { id: string }) {
             title="This product isn't available"
             message="It may have sold out for good or been removed from the shop."
             action={
-              <ButtonLink href={shopUrl()}>
+              <ButtonLink href={shopUrl()} transitionTypes={["nav-back"]}>
                 <ArrowLeft aria-hidden="true" />
                 Back to the shop
               </ButtonLink>
@@ -147,6 +148,35 @@ function ProductOverview({ product }: { product: IProduct }) {
               </Reveal>
             ))}
           </Grid>
+
+          <Reveal delay={450}>
+            <Accordion className="rounded-[1.75rem] border border-border/80 bg-card/60 p-2 backdrop-blur-sm sm:p-3 dark:border-white/[0.08]">
+              <AccordionItem value="freshness">
+                <AccordionTrigger className="px-3 py-3 text-base">
+                  Freshness &amp; Quality Guarantee
+                </AccordionTrigger>
+                <AccordionContent className="px-3 pb-3 text-muted-foreground leading-relaxed">
+                  Hand-inspected daily for peak ripeness and flavour. Kept chilled in temperature-controlled transit from our market shelves straight to your door.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="storage">
+                <AccordionTrigger className="px-3 py-3 text-base">
+                  Storage &amp; Shelf Life
+                </AccordionTrigger>
+                <AccordionContent className="px-3 pb-3 text-muted-foreground leading-relaxed">
+                  Keep refrigerated or in a cool, dry pantry upon arrival. For the most vibrant taste and texture, best consumed within 3–5 days of delivery.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="delivery">
+                <AccordionTrigger className="px-3 py-3 text-base">
+                  Delivery &amp; Free Returns
+                </AccordionTrigger>
+                <AccordionContent className="px-3 pb-3 text-muted-foreground leading-relaxed">
+                  Zero delivery fee on all orders. Pick a convenient Click &amp; Collect hour at checkout or choose free doorstep delivery. If you&apos;re not delighted, reach out to our team for a no-quibble refund or replacement.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </Reveal>
         </Stack>
       </Grid>
     </Stack>

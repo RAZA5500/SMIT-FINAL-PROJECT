@@ -15,7 +15,7 @@ function Card({
     props: mergeProps<"div">(
       {
         className: cn(
-          "group/card flex flex-col gap-5 overflow-hidden rounded-3xl border border-border/70 bg-card py-5 text-sm text-card-foreground shadow-soft has-data-[slot=card-footer]:pb-0 data-[size=lg]:gap-6 data-[size=lg]:py-6 data-[size=sm]:gap-4 data-[size=sm]:py-4 dark:border-white/[0.06] dark:shadow-none",
+          "group/card flex flex-col gap-5 overflow-hidden rounded-3xl border border-border/70 bg-card py-5 text-sm text-card-foreground shadow-soft has-data-[slot=card-footer]:pb-0 data-[size=lg]:gap-6 data-[size=lg]:py-6 data-[size=sm]:gap-4 data-[size=sm]:py-4 dark:border-white/[0.08] dark:shadow-soft",
           className
         ),
       },

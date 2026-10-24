@@ -3,6 +3,7 @@
 import { ExternalLink, LogOut, MoreVertical } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { CSSProperties } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -39,6 +40,8 @@ import { useAuthStore } from "@/stores/auth-store";
 const ACTIVE_ITEM =
   "h-9 rounded-xl px-2.5 data-active:bg-card data-active:font-semibold data-active:text-sidebar-accent-foreground data-active:shadow-soft data-active:[&>svg]:text-brand-ink dark:data-active:bg-sidebar-accent dark:data-active:shadow-none dark:data-active:[&>svg]:text-brand";
 
+const SIDEBAR_ANCHOR = { viewTransitionName: "admin-sidebar" } as CSSProperties;
+
 /** shadcn Sidebar — sage rail, active item ek uthi hui safed pill (green icon), icon-collapse (⌘B) aur phone par sheet */
 export function AppSidebar() {
   const pathname = usePathname();
@@ -49,7 +52,7 @@ export function AppSidebar() {
   const closeOnMobile = () => isMobile && setOpenMobile(false);
 
   return (
-    <Sidebar variant="inset" collapsible="icon">
+    <Sidebar variant="inset" collapsible="icon" style={SIDEBAR_ANCHOR}>
       <SidebarHeader className="h-16 justify-center px-3">
         <SidebarMenu>
           <SidebarMenuItem>

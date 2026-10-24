@@ -15,7 +15,7 @@ export function InfoRow({ icon, label, children, className }: InfoRowProps) {
     <Item size="xs" className={cn("items-start gap-3 p-0", className)}>
       <ItemMedia
         aria-hidden="true"
-        className="size-9 translate-y-0 rounded-md bg-muted text-muted-foreground group-has-data-[slot=item-description]/item:translate-y-0 [&_svg]:size-4"
+        className="size-9 translate-y-0 rounded-xl bg-muted/80 text-muted-foreground shadow-xs group-has-data-[slot=item-description]/item:translate-y-0 [&_svg]:size-4"
       >
         {icon}
       </ItemMedia>

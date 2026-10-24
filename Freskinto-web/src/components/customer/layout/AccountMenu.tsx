@@ -38,7 +38,7 @@ export function AccountMenu() {
 
   if (!token || !user) {
     return (
-      <ButtonLink href={publicRoutes.login} variant="ghost" className="h-11 px-3">
+      <ButtonLink href={publicRoutes.login} variant="ghost" className="h-11 px-2.5">
         <UserRound aria-hidden="true" />
         <Text as="span" tone="inherit" weight="medium" className="hidden lg:inline">
           Sign in
@@ -55,7 +55,7 @@ export function AccountMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        render={<Button variant="ghost" aria-label="Account menu" className="h-11 gap-2 pr-3 pl-1.5" />}
+        render={<Button variant="ghost" aria-label="Account menu" className="h-11 gap-1.5 pr-2.5 pl-1" />}
       >
         <Avatar size="sm" className="size-8">
           <AvatarFallback className="text-fs-11">{initials(user.name)}</AvatarFallback>

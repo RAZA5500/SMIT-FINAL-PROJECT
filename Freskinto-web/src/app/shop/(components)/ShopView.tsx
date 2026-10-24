@@ -93,7 +93,7 @@ export function ShopView() {
       <Flex align="start" gap="8">
         <Card
           render={<Box as="aside" aria-label="Filters" />}
-          className="sticky top-24 hidden max-h-[calc(100dvh-7rem)] w-64 shrink-0 overflow-y-auto px-4 py-1 scrollbar-thin lg:flex"
+          className="sticky top-16 hidden max-h-[calc(100dvh-4.75rem)] w-64 shrink-0 overflow-y-auto px-4 py-1 scrollbar-thin lg:flex"
         >
           <ShopFilters shop={shop} />
         </Card>

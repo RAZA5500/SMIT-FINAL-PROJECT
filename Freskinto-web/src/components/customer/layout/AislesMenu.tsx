@@ -24,7 +24,7 @@ import { useAuthStore } from "@/stores/auth-store";
 import { useAisles } from "../shop/use-aisles";
 
 const MENU_AISLE_LIMIT = 9;
-const NAV_LINK = "h-10 bg-transparent px-4 font-semibold hover:bg-transparent focus:bg-transparent data-active:bg-transparent data-popup-open:bg-transparent";
+const NAV_LINK = "h-10 bg-transparent px-2.5 font-semibold hover:bg-transparent focus:bg-transparent data-active:bg-transparent data-popup-open:bg-transparent";
 
 /**
  * Desktop primary nav — links ke peeche hover par ek pill slide karti hai (HoverIndicator);
@@ -95,7 +95,7 @@ export function AislesMenu({ pathname, className }: { pathname: string; classNam
               </Grid>
               <NavigationMenuLink
                 render={<Link href={publicRoutes.shop} />}
-                className="group/all mt-2 justify-between rounded-2xl bg-fresh-soft px-4 py-3 font-semibold"
+                className="group/all mt-2 justify-between rounded-2xl bg-fresh-soft px-4 py-3 font-semibold text-brand-ink transition-colors hover:bg-brand-soft dark:text-brand"
               >
                 Browse every product
                 <ArrowRight aria-hidden="true" className="transition-transform duration-300 group-hover/all:translate-x-1" />

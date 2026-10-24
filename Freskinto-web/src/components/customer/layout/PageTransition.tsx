@@ -11,7 +11,20 @@ import { ViewTransition } from "@/components/ui/view-transition";
 export function PageTransition({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   return (
-    <ViewTransition key={pathname} enter="page-enter" exit="page-exit" default="none">
+    <ViewTransition
+      key={pathname}
+      enter={{
+        "nav-forward": "nav-forward",
+        "nav-back": "nav-back",
+        default: "page-enter",
+      }}
+      exit={{
+        "nav-forward": "nav-forward",
+        "nav-back": "nav-back",
+        default: "page-exit",
+      }}
+      default="none"
+    >
       {children}
     </ViewTransition>
   );

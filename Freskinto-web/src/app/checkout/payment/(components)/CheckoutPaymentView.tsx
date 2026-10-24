@@ -122,7 +122,7 @@ export function CheckoutPaymentView() {
         title="Nothing to pay for yet"
         message="Start from checkout to choose delivery or collection."
         action={
-          <ButtonLink href={customerRoutes.checkout} variant="fresh" size="lg">
+          <ButtonLink href={customerRoutes.checkout} transitionTypes={["nav-back"]} variant="fresh" size="lg">
             Go to checkout
           </ButtonLink>
         }
@@ -205,6 +205,7 @@ export function CheckoutPaymentView() {
           </LoadingButton>
           <ButtonLink
             href={customerRoutes.checkout}
+            transitionTypes={["nav-back"]}
             variant="ghost"
             aria-disabled={isBusy || undefined}
             className={cn("w-full", isBusy && "pointer-events-none opacity-50")}

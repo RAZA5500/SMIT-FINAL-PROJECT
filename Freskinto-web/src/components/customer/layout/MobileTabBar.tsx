@@ -3,6 +3,7 @@
 import { Home, Package, ShoppingBag, Store, UserRound, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { CSSProperties } from "react";
 import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
 import { Flex } from "@/components/ui/flex";
@@ -14,6 +15,9 @@ import { cn, pluralize } from "@/lib/utils";
 import { useGetCart } from "@/services/cart/queries";
 import { useAuthStore } from "@/stores/auth-store";
 import { useShopStore } from "@/stores/shop-store";
+
+/** Page transitions mein mobile tab bar apni jagah tiki rehti hai */
+const ANCHOR = { viewTransitionName: "mobile-tab-bar" } as CSSProperties;
 
 const TAB_CLASS =
   "relative z-10 h-14 flex-col gap-0.5 rounded-full px-0 text-fs-11 font-semibold hover:bg-transparent active:scale-90";
@@ -46,7 +50,7 @@ export function MobileTabBar() {
   const count = cart?.itemCount ?? 0;
 
   return (
-    <Box as="nav" aria-label="Quick navigation" className="pb-safe fixed inset-x-3 bottom-3 z-40 lg:hidden">
+    <Box as="nav" aria-label="Quick navigation" style={ANCHOR} className="pb-safe fixed inset-x-3 bottom-3 z-40 lg:hidden">
       <HoverIndicator
         activeKey={pathname}
         className="glass rounded-full border border-glass-border p-1"

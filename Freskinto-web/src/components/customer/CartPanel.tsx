@@ -114,7 +114,7 @@ function CartPanelBody({ onClose }: { onClose: () => void }) {
       </SheetHeader>
 
       {items.length > 0 && (
-        <Flex align="center" gap="2.5" className="mx-4 mt-4 animate-fade-up rounded-2xl bg-fresh-soft px-4 py-3 text-brand-ink">
+        <Flex align="center" gap="2.5" className="mx-4 mt-4 animate-fade-up rounded-2xl border border-brand/20 bg-fresh-soft px-4 py-3 text-brand-ink shadow-xs dark:border-brand/30 dark:text-brand">
           <Truck aria-hidden="true" className="size-4 shrink-0" />
           <Text as="span" tone="inherit" weight="semibold" className="text-fs-13">
             Free delivery unlocked — on every order
@@ -135,7 +135,7 @@ function CartPanelBody({ onClose }: { onClose: () => void }) {
             <Price amount={cart?.grandTotal ?? 0} size="xl" />
           </Flex>
           {canCheckout ? (
-            <ButtonLink href={customerRoutes.checkout} onClick={onClose} variant="fresh" size="xl" className="w-full">
+            <ButtonLink href={customerRoutes.checkout} transitionTypes={["nav-forward"]} onClick={onClose} variant="fresh" size="xl" className="w-full">
               Checkout
               <ArrowRight aria-hidden="true" />
             </ButtonLink>
@@ -144,7 +144,7 @@ function CartPanelBody({ onClose }: { onClose: () => void }) {
               <AlertBody>Some items need attention before you can check out.</AlertBody>
             </Alert>
           )}
-          <ButtonLink href={customerRoutes.cart} onClick={onClose} variant="ghost" className="w-full">
+          <ButtonLink href={customerRoutes.cart} transitionTypes={["nav-forward"]} onClick={onClose} variant="ghost" className="w-full">
             View full basket
           </ButtonLink>
         </SheetFooter>

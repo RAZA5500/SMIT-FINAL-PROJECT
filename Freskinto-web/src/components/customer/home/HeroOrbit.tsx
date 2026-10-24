@@ -3,7 +3,7 @@
 import { Leaf } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import type { CSSProperties, PointerEvent } from "react";
+import { useEffect, useRef, type CSSProperties, type PointerEvent } from "react";
 import { Box } from "@/components/ui/box";
 import { CircularText } from "@/components/ui/circular-text";
 import { Text } from "@/components/ui/typography";
@@ -32,20 +32,81 @@ const DURATION = "48s";
  * poora scene halka jhukta hai; hover/focus par ruk jata hai.
  */
 export function HeroOrbit({ className }: { className?: string }) {
+  const rectRef = useRef<DOMRect | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const cleanupListenerRef = useRef<(() => void) | null>(null);
+
+  const attachListener = () => {
+    if (!cleanupListenerRef.current && typeof window !== "undefined") {
+      const onScroll = () => {
+        rectRef.current = null;
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll, { passive: true });
+      cleanupListenerRef.current = () => {
+        window.removeEventListener("scroll", onScroll);
+        window.removeEventListener("resize", onScroll);
+      };
+    }
+  };
+
+  const detachListener = () => {
+    if (cleanupListenerRef.current) {
+      cleanupListenerRef.current();
+      cleanupListenerRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      detachListener();
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+    };
+  }, []);
+
+  const onPointerEnter = (event: PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType !== "mouse") return;
+    attachListener();
+    rectRef.current = event.currentTarget.getBoundingClientRect();
+  };
+
   const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
     if (event.pointerType !== "mouse") return;
+    if (!rectRef.current) {
+      attachListener();
+      rectRef.current = event.currentTarget.getBoundingClientRect();
+    }
+    const rect = rectRef.current;
+    const clientX = event.clientX;
+    const clientY = event.clientY;
     const element = event.currentTarget;
-    const rect = element.getBoundingClientRect();
-    element.style.setProperty("--px", (((event.clientX - rect.left) / rect.width) * 2 - 1).toFixed(3));
-    element.style.setProperty("--py", (((event.clientY - rect.top) / rect.height) * 2 - 1).toFixed(3));
+
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null;
+      if (!rect || rect.width <= 0 || rect.height <= 0) return;
+      element.style.setProperty("--px", (((clientX - rect.left) / rect.width) * 2 - 1).toFixed(3));
+      element.style.setProperty("--py", (((clientY - rect.top) / rect.height) * 2 - 1).toFixed(3));
+    });
   };
+
   const onPointerLeave = (event: PointerEvent<HTMLDivElement>) => {
+    detachListener();
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+    rectRef.current = null;
     event.currentTarget.style.setProperty("--px", "0");
     event.currentTarget.style.setProperty("--py", "0");
   };
 
   return (
     <Box
+      onPointerEnter={onPointerEnter}
       onPointerMove={onPointerMove}
       onPointerLeave={onPointerLeave}
       className={cn(

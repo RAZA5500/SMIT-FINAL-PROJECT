@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils"
 
 /** Notices: plain bordered box; the icon carries the status colour, errors get a soft red surface */
 const alertVariants = cva(
-  "group/alert relative flex w-full items-start gap-3 rounded-lg border px-4 py-3 text-left text-sm [&>svg]:mt-0.5 [&>svg]:shrink-0 [&>svg:not([class*='size-'])]:size-4",
+  "group/alert relative flex w-full items-start gap-3 rounded-2xl border px-4 py-3 text-left text-sm [&>svg]:mt-0.5 [&>svg]:shrink-0 [&>svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {

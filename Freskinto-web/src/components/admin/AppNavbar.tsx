@@ -2,7 +2,7 @@
 
 import { ExternalLink, Search } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useState, type CSSProperties } from "react";
 import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
 import { Flex } from "@/components/ui/flex";
@@ -17,6 +17,8 @@ import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { activeAdminNavItem, adminSubPageLabel } from "@/constants/navigation";
 import { adminRoutes, publicRoutes } from "@/lib/routes/routes";
 import { AdminCommandPalette } from "./AdminCommandPalette";
+
+const NAVBAR_ANCHOR = { viewTransitionName: "admin-navbar" } as CSSProperties;
 
 /** Admin top bar: sidebar trigger, breadcrumbs, ⌘K palette, theme, storefront link */
 export function AppNavbar() {
@@ -35,9 +37,10 @@ export function AppNavbar() {
   return (
     <Flex
       as="header"
+      style={NAVBAR_ANCHOR}
       align="center"
       gap="3"
-      className="glass sticky top-0 z-30 h-16 shrink-0 border-b border-border px-4 sm:px-6 md:rounded-t-3xl"
+      className="glass sticky top-0 z-30 mt-0 h-14 shrink-0 border-b border-border px-4 pt-0 sm:px-6 md:rounded-t-3xl"
     >
       <SidebarTrigger className="-ml-1" />
       <Separator orientation="vertical" className="data-vertical:h-5 data-vertical:self-center" />

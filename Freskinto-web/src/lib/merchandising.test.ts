@@ -14,6 +14,13 @@ describe("productPackshot", () => {
     expect(shot("Frozen Chicken Nuggets")).toBe("frozen-chicken-nuggets.webp");
     expect(shot("Multigrain Sandwich Bread")).toBe("multigrain-sandwich-bread.webp");
     expect(shot("Sourdough Loaf")).toBe("whole-wheat-bread-loaf.webp");
+    expect(shot("Carrots")).toBe("fresh-carrots.webp");
+    expect(shot("Greek Yogurt")).toBe("greek-yogurt.webp");
+    expect(shot("Free Range Eggs")).toBe("free-range-eggs.webp");
+    expect(shot("Basmati Rice")).toBe("basmati-rice.webp");
+    expect(shot("Fresh Salmon Fillets")).toBe("fresh-salmon-fillets.webp");
+    expect(shot("Fresh Orange Juice")).toBe("fresh-orange-juice.webp");
+    expect(shot("Surface Cleaner Spray")).toBe("surface-cleaner-spray.webp");
   });
 
   it("shows no photo rather than a misleading one", () => {

@@ -74,7 +74,7 @@ export function HomeAisles() {
             return (
               <Card
                 key={aisle.id}
-                render={<Link href={shopUrl({ category: aisle.id })} />}
+                render={<Link href={shopUrl({ category: aisle.id })} transitionTypes={["nav-forward"]} />}
                 onPointerEnter={() => setActive(index)}
                 onFocus={() => setActive(index)}
                 data-open={open || undefined}

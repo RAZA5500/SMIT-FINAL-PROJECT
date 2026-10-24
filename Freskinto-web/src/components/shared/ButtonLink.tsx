@@ -7,14 +7,15 @@ type ButtonLinkProps = Omit<ComponentProps<typeof Button>, "render" | "nativeBut
   prefetch?: boolean;
   replace?: boolean;
   scroll?: boolean;
+  transitionTypes?: string[];
 };
 
 /** shadcn Button jo Next `Link` render karta hai — navigation ke liye button ka look */
-export function ButtonLink({ href, prefetch, replace, scroll, ...props }: ButtonLinkProps) {
+export function ButtonLink({ href, prefetch, replace, scroll, transitionTypes, ...props }: ButtonLinkProps) {
   return (
     <Button
       nativeButton={false}
-      render={<Link href={href} prefetch={prefetch} replace={replace} scroll={scroll} />}
+      render={<Link href={href} prefetch={prefetch} replace={replace} scroll={scroll} transitionTypes={transitionTypes} />}
       {...props}
     />
   );

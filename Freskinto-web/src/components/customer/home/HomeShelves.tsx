@@ -31,7 +31,7 @@ interface Shelf {
 }
 
 /** Ek shelf ka grid — tab badalte hi cards ek lehar mein ubharte hain */
-function ShelfGrid({ shelf }: { shelf: Shelf }) {
+function ShelfGrid({ shelf, active }: { shelf: Shelf; active: boolean }) {
   const { data, isLoading, isError, error, refetch } = useGetProducts({ ...shelf.query, limit: SHELF_SIZE });
   const products = data?.data ?? [];
 
@@ -46,7 +46,7 @@ function ShelfGrid({ shelf }: { shelf: Shelf }) {
         ? Array.from({ length: 4 }, (_, index) => <ProductCardSkeleton key={index} />)
         : products.map((product, index) => (
             <Reveal key={product.id} variant="scale" delay={(index % 4) * 70 + Math.floor(index / 4) * 60}>
-              <ProductCard product={product} eager={index < 2} morph />
+              <ProductCard product={product} eager={index < 2} morph={active} />
             </Reveal>
           ))}
     </Box>
@@ -70,7 +70,13 @@ export function HomeShelves() {
     [aisles],
   );
   const [tab, setTab] = useState("new");
+  const [visitedTabs, setVisitedTabs] = useState<Set<string>>(() => new Set(["new"]));
   const active = shelves.find((shelf) => shelf.id === tab) ?? shelves[0];
+
+  const handleTabChange = (value: string) => {
+    setTab(value);
+    setVisitedTabs((prev) => (prev.has(value) ? prev : new Set(prev).add(value)));
+  };
 
   return (
     <Stack as="section" id="shelves" aria-labelledby="shelves-heading" gap="8" className="scroll-mt-header">
@@ -90,7 +96,7 @@ export function HomeShelves() {
           description="What just arrived, the little bargains and the busiest aisles — straight from the shelf."
         />
       </Reveal>
-      <Tabs value={tab} onValueChange={(value) => setTab(value as string)} className="gap-7">
+      <Tabs value={tab} onValueChange={(value) => handleTabChange(value as string)} className="gap-7">
         <Reveal delay={80}>
           <Flex wrap align="center" justify="between" gap="3">
             {/* Phone par tabs screen ke kinare tak scroll hote hain — beech mein kati hui pill nahi dikhti */}
@@ -109,11 +115,14 @@ export function HomeShelves() {
             </ButtonLink>
           </Flex>
         </Reveal>
-        {shelves.map((shelf) => (
-          <TabsContent key={shelf.id} value={shelf.id}>
-            <ShelfGrid shelf={shelf} />
-          </TabsContent>
-        ))}
+        {shelves.map((shelf) => {
+          const isVisited = visitedTabs.has(shelf.id);
+          return (
+            <TabsContent key={shelf.id} value={shelf.id} keepMounted={isVisited}>
+              {isVisited && <ShelfGrid shelf={shelf} active={shelf.id === tab} />}
+            </TabsContent>
+          );
+        })}
       </Tabs>
     </Stack>
   );

@@ -50,7 +50,10 @@ function CommandDialog({
   return (
     <Dialog {...props}>
       <DialogContent
-        className={cn("max-w-xl overflow-hidden p-0", className)}
+        className={cn(
+          "max-w-xl overflow-hidden p-0 duration-200 data-open:duration-200 data-open:zoom-in-[0.98] data-open:slide-in-from-top-1 data-closed:duration-150 data-closed:zoom-out-[0.98] transform-gpu",
+          className
+        )}
         showCloseButton={showCloseButton}
       >
         <DialogHeader className="sr-only">
@@ -94,7 +97,7 @@ function CommandList({
     <CommandPrimitive.List
       data-slot="command-list"
       className={cn(
-        "no-scrollbar max-h-96 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none",
+        "no-scrollbar max-h-96 scroll-py-1 overflow-x-hidden overflow-y-auto overscroll-contain outline-none",
         className
       )}
       {...props}

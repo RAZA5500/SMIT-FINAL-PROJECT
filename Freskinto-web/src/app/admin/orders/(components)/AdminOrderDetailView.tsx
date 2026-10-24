@@ -86,7 +86,7 @@ export function AdminOrderDetailView({ id }: { id: string }) {
   const [cancelOpen, setCancelOpen] = useState(false);
 
   const backLink = (
-    <ButtonLink href={adminRoutes.orders} variant="outline">
+    <ButtonLink href={adminRoutes.orders} transitionTypes={["nav-back"]} variant="outline">
       <ArrowLeft aria-hidden="true" />
       All orders
     </ButtonLink>
@@ -151,7 +151,7 @@ export function AdminOrderDetailView({ id }: { id: string }) {
           align="center"
           justify="center"
           aria-hidden="true"
-          className="size-10 shrink-0 rounded-md bg-accent text-accent-foreground [&_svg]:size-5"
+          className="size-11 shrink-0 rounded-2xl bg-brand-soft text-brand-ink shadow-xs [&_svg]:size-5 dark:bg-brand/10 dark:text-brand"
         >
           <StepIcon />
         </Flex>

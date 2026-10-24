@@ -17,7 +17,7 @@ const HALF = Math.ceil(FEATURED.length / 2);
 
 function ReviewCard({ review }: { review: Testimonial }) {
   return (
-    <Card className="w-80 shrink-0 gap-4 rounded-[1.75rem] p-6 sm:w-96">
+    <Card className="w-80 shrink-0 gap-4 rounded-[1.75rem] p-6 transition-[translate,box-shadow,border-color] duration-500 ease-out-expo hover:-translate-y-1 hover:border-foreground/15 hover:shadow-lift sm:w-96">
       <Flex align="center" justify="between">
         <Flex gap="0.5" role="img" aria-label={`${review.rating} out of 5 stars`}>
           {Array.from({ length: 5 }, (_, index) => (

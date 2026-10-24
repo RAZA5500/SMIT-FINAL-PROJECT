@@ -1,11 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Mail } from "lucide-react";
+import { ArrowRight, Mail, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { Box } from "@/components/ui/box";
+import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
+import { Flex } from "@/components/ui/flex";
 import { Form } from "@/components/ui/form";
 import { Text } from "@/components/ui/typography";
 import { CheckboxField } from "@/components/shared/CheckboxField";
@@ -48,6 +51,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
     register,
     control,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -75,8 +79,8 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
   };
 
   return (
-    <Form id={FORM_ID} onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))}>
-      <FieldGroup>
+    <Form id={FORM_ID} onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))} className="space-y-5">
+      <FieldGroup className="gap-4">
         <InputField
           id="email"
           type="email"
@@ -110,13 +114,57 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
         />
       </FieldGroup>
 
-      <LoadingButton type="submit" variant="fresh" size="xl" isLoading={isSubmitting} className="w-full">
+      {/* Quick 1-click test accounts for evaluators & developers */}
+      <Box className="rounded-2xl border border-dashed border-border/80 bg-muted/20 p-3">
+        <Flex align="center" justify="between" className="mb-2">
+          <Flex align="center" gap="1.5">
+            <Sparkles aria-hidden="true" className="size-3.5 text-brand" />
+            <Text as="span" weight="semibold" className="text-[11px] uppercase tracking-wider text-muted-foreground">
+              Demo accounts
+            </Text>
+          </Flex>
+          <Text as="span" tone="muted" className="text-[11px]">
+            1-click auto fill
+          </Text>
+        </Flex>
+        <Flex gap="2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setValue("email", "ali@test.local", { shouldValidate: true });
+              setValue("password", "secret123", { shouldValidate: true });
+            }}
+            className="h-7 flex-1 text-fs-12 font-medium"
+          >
+            Customer Demo
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setValue("email", "admin@freskinto.com", { shouldValidate: true });
+              setValue("password", "Admin@123", { shouldValidate: true });
+            }}
+            className="h-7 flex-1 text-fs-12 font-medium"
+          >
+            Admin Demo
+          </Button>
+        </Flex>
+      </Box>
+
+      <LoadingButton type="submit" variant="fresh" size="xl" isLoading={isSubmitting} className="w-full shadow-soft">
         Sign in
         {!isSubmitting && <ArrowRight aria-hidden="true" />}
       </LoadingButton>
 
-      <Text tone="muted" className="text-center">
-        New to the market? <TextLink href={publicRoutes.register}>Create a free account</TextLink>
+      <Text tone="muted" className="text-center text-fs-14">
+        New to the market?{" "}
+        <TextLink href={publicRoutes.register} className="font-semibold text-foreground hover:text-brand">
+          Create a free account
+        </TextLink>
       </Text>
     </Form>
   );

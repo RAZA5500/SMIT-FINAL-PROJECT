@@ -81,7 +81,7 @@ function RecentOrders() {
                 key={order.id}
                 role="listitem"
                 render={<Link href={adminRoutes.orderDetail(order.id)} />}
-                className="rounded-lg px-2.5"
+                className="rounded-xl px-2.5 transition-colors hover:bg-muted/70 hover:shadow-xs"
               >
                 <ItemMedia>
                   <Avatar className="size-9">
@@ -144,8 +144,13 @@ function StockAlerts() {
               const scale = Math.max(1, inventory.lowStockThreshold * 3);
               const value = Math.min(100, Math.round((inventory.qtyOnHand / scale) * 100));
               return (
-                <Item key={inventory.id} role="listitem" className="rounded-lg px-2.5">
-                  <ItemMedia className="overflow-hidden rounded-md">
+                <Item
+                  key={inventory.id}
+                  role="listitem"
+                  render={<Link href={adminRoutes.inventory} />}
+                  className="rounded-xl px-2.5 transition-colors hover:bg-muted/70 hover:shadow-xs"
+                >
+                  <ItemMedia className="overflow-hidden rounded-xl">
                     <ProductImage name={inventory.product.name} sizes="40px" className="size-10" imageClassName="p-1" />
                   </ItemMedia>
                   <ItemContent className="min-w-0 gap-1.5">

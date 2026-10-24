@@ -31,7 +31,7 @@ function DialogOverlay({
     <DialogPrimitive.Backdrop
       data-slot="dialog-overlay"
       className={cn(
-        "fixed inset-0 isolate z-50 bg-[#06100b]/35 duration-300 supports-backdrop-filter:backdrop-blur-sm data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
+        "fixed inset-0 isolate z-50 bg-[#06100b]/35 duration-200 supports-backdrop-filter:backdrop-blur-sm data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
         className
       )}
       {...props}
@@ -62,7 +62,7 @@ function DialogContent({
           <DialogPrimitive.Popup
             data-slot="dialog-content"
             className={cn(
-              "relative flex w-full max-w-lg flex-col overflow-hidden rounded-[2rem] border border-glass-border bg-popover text-sm text-popover-foreground shadow-lift duration-500 ease-out-expo outline-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-90 data-open:slide-in-from-bottom-6 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-closed:duration-200",
+              "relative flex w-full max-w-lg flex-col overflow-hidden rounded-[2rem] border border-glass-border bg-popover text-sm text-popover-foreground shadow-lift duration-200 ease-out-expo outline-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-[0.97] data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-[0.97] data-closed:duration-150 transform-gpu will-change-transform",
               className
             )}
             {...props}

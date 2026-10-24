@@ -70,14 +70,19 @@ export function ProductListing({
     );
   }
 
-  const dimmed = isFetching && "opacity-60 transition-opacity";
+  const dimmed = cn("transition-opacity duration-300 ease-out", isFetching && "opacity-60");
 
   if (layout === "list") {
     return (
       <Stack as="ul" gap="3" className={cn(dimmed, className)}>
-        {products.map((product) => (
-          <Box as="li" key={product.id}>
-            <ProductListItem product={product} />
+        {products.map((product, index) => (
+          <Box
+            as="li"
+            key={product.id}
+            className="animate-fade-up"
+            style={{ animationDelay: `${Math.min(index, 11) * 35}ms` }}
+          >
+            <ProductListItem product={product} eager={index < eagerCount} morph />
           </Box>
         ))}
       </Stack>

@@ -43,12 +43,12 @@ export function RegisterForm() {
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      // Form `fullName`, API `name` — mapping submit handler mein (FLOW-MD 08 §10)
+      // Form `fullName`, API `name` — mapping submit handler mein
       await registerUser.mutateAsync({ name: data.fullName, email: data.email, password: data.password });
       toastSuccess("Account created", "Sign in to start your first basket.");
       router.push(publicRoutes.login);
     } catch (error) {
-      // 409 email exists → field par hi dikhao (FLOW-MD 09 §3.4)
+      // 409 email exists → field par hi dikhao
       if (error instanceof ApiError && error.status === 409) {
         setError("email", { message: error.message });
       }
@@ -57,8 +57,8 @@ export function RegisterForm() {
   };
 
   return (
-    <Form id={FORM_ID} onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))}>
-      <FieldGroup>
+    <Form id={FORM_ID} onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))} className="space-y-5">
+      <FieldGroup className="gap-4">
         <InputField
           id="fullName"
           label="Full name"
@@ -80,7 +80,7 @@ export function RegisterForm() {
           error={errors.email?.message}
           {...register("email")}
         />
-        <Stack gap="3">
+        <Stack gap="2.5">
           <PasswordField
             id="password"
             label="Password"
@@ -116,13 +116,16 @@ export function RegisterForm() {
         />
       </FieldGroup>
 
-      <LoadingButton type="submit" variant="fresh" size="xl" isLoading={isSubmitting} className="w-full">
+      <LoadingButton type="submit" variant="fresh" size="xl" isLoading={isSubmitting} className="w-full shadow-soft">
         Create account
         {!isSubmitting && <ArrowRight aria-hidden="true" />}
       </LoadingButton>
 
-      <Text tone="muted" className="text-center">
-        Already have an account? <TextLink href={publicRoutes.login}>Sign in</TextLink>
+      <Text tone="muted" className="text-center text-fs-14">
+        Already have an account?{" "}
+        <TextLink href={publicRoutes.login} className="font-semibold text-foreground hover:text-brand">
+          Sign in
+        </TextLink>
       </Text>
     </Form>
   );

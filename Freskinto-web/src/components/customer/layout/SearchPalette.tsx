@@ -2,7 +2,7 @@
 
 import { ArrowRight, Moon, Package, Search, ShoppingBasket, Store, Sun, TrendingUp } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box } from "@/components/ui/box";
 import {
   Command,
@@ -52,26 +52,38 @@ export function SearchPalette({ open, onOpenChange }: SearchPaletteProps) {
       description="Find products, jump to an aisle or a page"
       className="sm:max-w-2xl"
     >
-      {/* Band hone par body unmount — agli dafa khali query se shuru */}
-      {open && <SearchPaletteBody onClose={() => onOpenChange(false)} />}
+      <SearchPaletteBody isOpen={open} onClose={() => onOpenChange(false)} />
     </CommandDialog>
   );
 }
 
-function SearchPaletteBody({ onClose }: { onClose: () => void }) {
+function SearchPaletteBody({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
   const setCartOpen = useShopStore((state) => state.setCartOpen);
   const { aisles } = useAisles();
   const [value, setValue] = useState("");
+
+  // When modal closes, delay clearing input so the exit animation remains visually smooth
+  useEffect(() => {
+    if (!isOpen) {
+      const timer = setTimeout(() => {
+        setValue("");
+      }, 200);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
   const query = useDebounce(value.trim(), 200);
-  const enabled = query.length >= MIN_QUERY;
+  const enabled = isOpen && query.length >= MIN_QUERY;
   const { data, isFetching } = useGetProducts({ q: query, limit: SUGGESTION_LIMIT }, enabled);
   const products = enabled ? (data?.data ?? []) : [];
   const typed = value.trim();
-  const matchingAisles = typed
-    ? aisles.filter((aisle) => aisle.name.toLowerCase().includes(typed.toLowerCase()))
-    : aisles.slice(0, 6);
+  const matchingAisles = useMemo(() => {
+    return typed
+      ? aisles.filter((aisle) => aisle.name.toLowerCase().includes(typed.toLowerCase()))
+      : aisles.slice(0, 6);
+  }, [aisles, typed]);
 
   const go = (href: string) => {
     onClose();

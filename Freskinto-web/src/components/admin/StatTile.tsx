@@ -38,7 +38,7 @@ export function StatTile({
         align="center"
         justify="center"
         aria-hidden="true"
-        className={cn("size-10 shrink-0 rounded-2xl [&_svg]:size-4", tone)}
+        className={cn("size-11 shrink-0 rounded-2xl shadow-xs [&_svg]:size-5", tone)}
       >
         <Icon />
       </Flex>
@@ -64,7 +64,7 @@ export function StatTile({
   );
 
   if (!onSelect) {
-    return <Card className="flex-row items-start gap-3 rounded-[1.5rem] p-4">{body}</Card>;
+    return <Card className="group/tile flex-row items-start gap-3.5 rounded-[1.5rem] p-4.5 transition-[translate,box-shadow,border-color] duration-300 ease-out-expo hover:-translate-y-0.5 hover:border-foreground/20 hover:shadow-soft">{body}</Card>;
   }
 
   return (

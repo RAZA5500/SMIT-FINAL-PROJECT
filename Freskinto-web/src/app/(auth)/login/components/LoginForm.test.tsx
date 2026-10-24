@@ -2,6 +2,7 @@ import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw/http";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { AuthShell } from "@/components/customer/auth/AuthShell";
 import { useAuthStore } from "@/stores/auth-store";
 import { server } from "@/test/msw-server";
 import { renderWithProviders, TEST_API } from "@/test/render";
@@ -79,5 +80,39 @@ describe("LoginForm", () => {
     await waitFor(() => expect(screen.getByRole("button", { name: /sign in/i })).not.toBeDisabled());
     expect(replace).not.toHaveBeenCalled();
     expect(useAuthStore.getState().token).toBeNull();
+  });
+
+  it("Customer and Admin demo buttons auto-fill login credentials", async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<LoginForm redirectTo={null} />);
+
+    const customerDemoBtn = screen.getByRole("button", { name: /customer demo/i });
+    const adminDemoBtn = screen.getByRole("button", { name: /admin demo/i });
+    expect(customerDemoBtn).toBeInTheDocument();
+    expect(adminDemoBtn).toBeInTheDocument();
+
+    await user.click(customerDemoBtn);
+    expect(screen.getByLabelText("Email Address")).toHaveValue("ali@test.local");
+    expect(screen.getByLabelText("Password")).toHaveValue("secret123");
+
+    await user.click(adminDemoBtn);
+    expect(screen.getByLabelText("Email Address")).toHaveValue("admin@freskinto.com");
+    expect(screen.getByLabelText("Password")).toHaveValue("Admin@123");
+  });
+
+  it("AuthShell mounts static showcase and excludes 3D HeroOrbit on auth pages", () => {
+    const { container } = renderWithProviders(
+      <AuthShell>
+        <div>Test Auth Children</div>
+      </AuthShell>,
+    );
+
+    expect(screen.getByText("Test Auth Children")).toBeInTheDocument();
+    expect(screen.getByText("256-bit SSL encrypted")).toBeInTheDocument();
+    expect(screen.getByText("100% fresh guarantee")).toBeInTheDocument();
+    // Confirms static packshot exists
+    expect(screen.getByAltText("Farm Fresh Produce")).toBeInTheDocument();
+    // Confirms HeroOrbit circular text / orbit carousel is NOT present
+    expect(container.querySelector(".animate-spin-orbit")).not.toBeInTheDocument();
   });
 });

@@ -34,12 +34,18 @@ export function HomeHero() {
   const productCount = data?.meta.total;
 
   return (
-    <Grid as="section" aria-labelledby="home-hero-heading" align="center" gap="10" className="min-h-[calc(100svh-6rem)] py-6 lg:grid-cols-[1.05fr_1fr] lg:gap-6">
+    <Grid
+      as="section"
+      aria-labelledby="home-hero-heading"
+      align="center"
+      gap="8"
+      className="min-h-[calc(100svh-3.5rem)] pt-0 pb-8 sm:pt-1 sm:pb-10 lg:grid-cols-[1.1fr_1fr] lg:gap-10 lg:pt-1 lg:pb-12"
+    >
       <Stack gap="7" className="relative z-10">
         <Flex
           align="center"
           gap="2.5"
-          className="glass w-fit animate-fade-up rounded-full border border-glass-border py-1.5 pr-4 pl-2.5"
+          className="glass w-fit animate-fade-up rounded-full border border-glass-border py-1.5 pr-4 pl-2.5 shadow-xs transition-colors hover:border-brand/40"
           style={rise(0)}
         >
           <Box as="span" className="relative flex size-2.5">
@@ -63,7 +69,7 @@ export function HomeHero() {
           </Text>
         </Heading>
 
-        <Text variant="lead" className="max-w-lg animate-fade-up" style={rise(3)}>
+        <Text variant="lead" className="max-w-xl animate-fade-up" style={rise(3)}>
           Produce, butcher cuts, warm bakes and everyday essentials from your neighbourhood market — at your door, or
           ready to collect.
         </Text>
@@ -73,7 +79,7 @@ export function HomeHero() {
         </Box>
 
         <Flex wrap align="center" gap="3" className="animate-fade-up" style={rise(5)}>
-          <ButtonLink href={publicRoutes.shop} variant="fresh" size="xl">
+          <ButtonLink href={publicRoutes.shop} transitionTypes={["nav-forward"]} variant="fresh" size="xl">
             Start shopping
             <ArrowRight aria-hidden="true" className="transition-transform duration-300 group-hover/button:translate-x-1" />
           </ButtonLink>
@@ -82,7 +88,7 @@ export function HomeHero() {
           </ButtonLink>
         </Flex>
 
-        <Flex align="center" gap="5" className="animate-fade-up pt-1" style={rise(6)}>
+        <Flex align="center" gap="5" className="animate-fade-up flex-wrap pt-1 sm:flex-nowrap sm:gap-6" style={rise(6)}>
           <Stat value={productCount} label="fresh products" />
           <Separator orientation="vertical" className="data-vertical:h-9" />
           <Stat value={aisles.length || undefined} label="aisles to explore" />
@@ -96,9 +102,27 @@ export function HomeHero() {
             </Text>
           </Stack>
         </Flex>
+
+        {/* Quick promise tags that fill the section nicely on smaller screens where orbit chips are hidden */}
+        <Flex as="ul" wrap gap="2" className="animate-fade-up pt-1 sm:hidden" style={rise(7)}>
+          {CHIPS.map(({ icon: Icon, text }) => (
+            <Flex
+              as="li"
+              key={text}
+              align="center"
+              gap="1.5"
+              className="glass rounded-full border border-glass-border px-3 py-1 text-fs-12 font-medium"
+            >
+              <Icon className="size-3 text-brand" />
+              <Text as="span" tone="inherit">
+                {text}
+              </Text>
+            </Flex>
+          ))}
+        </Flex>
       </Stack>
 
-      <Box className="relative mx-auto w-full max-w-xl animate-pop-in [animation-delay:250ms]">
+      <Box className="relative mx-auto w-full max-w-xl lg:max-w-2xl animate-pop-in [animation-delay:250ms]">
         {/* 3D layers ki chhupi seemaayein page ko sideways scroll na karayein — kuch rem bahar tak paint hota hai */}
         <Box className="@container overflow-clip [overflow-clip-margin:1rem]">
           {/* Phone par chips nahi — orbit ka khaali upar/neeche kaat kar stage chapta */}

@@ -57,7 +57,8 @@ export function ProductImage({
           alt={alt}
           fill
           sizes={sizes}
-          loading={eager ? "eager" : "lazy"}
+          priority={eager}
+          loading={eager ? undefined : "lazy"}
           className={cn(
             "product-float object-contain p-[13%] transition-[translate,rotate,scale] duration-700 ease-out-expo",
             muted && "opacity-60",

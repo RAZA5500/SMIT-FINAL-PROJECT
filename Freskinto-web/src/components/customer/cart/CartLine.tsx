@@ -42,7 +42,7 @@ export function CartLine({ item, compact = false, onNavigate, className }: CartL
         nativeButton={false}
         tabIndex={-1}
         aria-hidden="true"
-        render={<Link href={publicRoutes.product(item.productId)} onClick={onNavigate} />}
+        render={<Link href={publicRoutes.product(item.productId)} transitionTypes={["nav-forward"]} onClick={onNavigate} />}
         className="h-auto shrink-0 self-start overflow-hidden rounded-2xl p-0 hover:bg-transparent active:scale-100"
       >
         <ProductImage
@@ -59,6 +59,7 @@ export function CartLine({ item, compact = false, onNavigate, className }: CartL
           <Stack gap="0.5" className="min-w-0">
             <TextLink
               href={publicRoutes.product(item.productId)}
+              transitionTypes={["nav-forward"]}
               onClick={onNavigate}
               tone="default"
               className="line-clamp-2 text-sm leading-5 font-bold"

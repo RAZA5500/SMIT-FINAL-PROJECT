@@ -98,7 +98,7 @@ function FilledBasket({ cart, onClear }: { cart: ICart; onClear: () => void }) {
       <ArrowRight aria-hidden="true" />
     </Button>
   ) : (
-    <ButtonLink href={customerRoutes.checkout} variant="fresh" size="xl" className="w-full">
+    <ButtonLink href={customerRoutes.checkout} transitionTypes={["nav-forward"]} variant="fresh" size="xl" className="w-full">
       Checkout
       <ArrowRight aria-hidden="true" />
     </ButtonLink>
@@ -146,10 +146,10 @@ function FilledBasket({ cart, onClear }: { cart: ICart; onClear: () => void }) {
 
         <CartSummaryCard cart={cart} className="lg:sticky lg:top-28 lg:col-span-4">
           {checkoutAction}
-          <ButtonLink href={customerRoutes.cartSummary} variant="outline" className="w-full">
+          <ButtonLink href={customerRoutes.cartSummary} transitionTypes={["nav-forward"]} variant="outline" className="w-full">
             Review order summary
           </ButtonLink>
-          <ButtonLink href={shopUrl()} variant="ghost" className="w-full">
+          <ButtonLink href={shopUrl()} transitionTypes={["nav-back"]} variant="ghost" className="w-full">
             Continue shopping
           </ButtonLink>
         </CartSummaryCard>

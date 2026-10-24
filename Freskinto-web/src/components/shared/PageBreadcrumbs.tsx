@@ -35,7 +35,7 @@ export function PageBreadcrumbs({ items, root, className }: PageBreadcrumbsProps
               {index > 0 && <BreadcrumbSeparator />}
               <BreadcrumbItem className="min-w-0">
                 {crumb.href && !last ? (
-                  <BreadcrumbLink render={<Link href={crumb.href} />}>{crumb.label}</BreadcrumbLink>
+                  <BreadcrumbLink render={<Link href={crumb.href} transitionTypes={["nav-back"]} />}>{crumb.label}</BreadcrumbLink>
                 ) : (
                   <BreadcrumbPage className={cn("max-w-56 truncate")}>{crumb.label}</BreadcrumbPage>
                 )}

@@ -33,8 +33,8 @@ export function AddressCard({ address, settingDefault, onEdit, onSetDefault, onD
     <Card
       render={<Box as="article" />}
       className={cn(
-        "h-full gap-3 transition-colors hover:border-foreground/15 has-data-[slot=card-footer]:pb-0",
-        address.isDefault && "border-brand/50 hover:border-brand/50",
+        "h-full gap-3 rounded-[1.75rem] transition-[translate,box-shadow,border-color] duration-500 ease-out-expo hover:-translate-y-0.5 hover:border-foreground/15 hover:shadow-lift has-data-[slot=card-footer]:pb-0",
+        address.isDefault && "border-brand/50 hover:border-brand/50 shadow-soft",
       )}
     >
       <CardHeader className="flex-row items-start justify-between gap-3">
@@ -43,8 +43,8 @@ export function AddressCard({ address, settingDefault, onEdit, onSetDefault, onD
           justify="center"
           aria-hidden="true"
           className={cn(
-            "size-9 rounded-md [&_svg]:size-4",
-            address.isDefault ? "bg-fresh text-[#06100b]" : "bg-muted text-muted-foreground",
+            "size-10 rounded-2xl shadow-xs [&_svg]:size-4.5",
+            address.isDefault ? "bg-fresh text-[#06100b] shadow-glow" : "bg-muted text-muted-foreground",
           )}
         >
           <Icon />

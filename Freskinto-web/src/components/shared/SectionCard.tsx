@@ -18,17 +18,17 @@ interface SectionCardProps {
 /** Page ke andar ek titled panel (shadcn Card) — orders, profile, forms; header hairline se alag */
 export function SectionCard({ title, description, icon, action, children, className, bodyClassName }: SectionCardProps) {
   return (
-    <Card render={<Box as="section" />} className={cn("gap-0 py-0", className)}>
+    <Card render={<Box as="section" />} className={cn("gap-0 rounded-[1.75rem] py-0", className)}>
       <CardHeader className="border-b border-border py-4">
         <CardTitle render={<Box as="span" />}>
-          <Flex as="span" align="center" gap="2" className="text-base font-semibold">
+          <Flex as="span" align="center" gap="2.5" className="text-base font-semibold">
             {icon && (
               <Flex
                 as="span"
                 align="center"
                 justify="center"
                 aria-hidden="true"
-                className="size-7 rounded-md bg-muted text-muted-foreground [&_svg]:size-4"
+                className="size-8 rounded-xl bg-muted/80 text-muted-foreground shadow-xs [&_svg]:size-4"
               >
                 {icon}
               </Flex>

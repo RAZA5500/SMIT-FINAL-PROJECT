@@ -32,7 +32,7 @@ export function EditProductView({ id }: { id: string }) {
       <AdminPage
         title="Edit product"
         actions={
-          <ButtonLink href={adminRoutes.products} variant="outline">
+          <ButtonLink href={adminRoutes.products} transitionTypes={["nav-back"]} variant="outline">
             <ArrowLeft data-icon="inline-start" aria-hidden="true" />
             All products
           </ButtonLink>

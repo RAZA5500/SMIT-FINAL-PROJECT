@@ -14,16 +14,16 @@ export const buttonVariants = cva(
         default:
           "bg-primary text-primary-foreground shadow-[0_10px_24px_-12px_rgb(12_26_20/0.7)] hover:-translate-y-0.5 hover:shadow-[0_16px_30px_-14px_rgb(12_26_20/0.65)] dark:shadow-[0_10px_30px_-14px_rgb(236_242_238/0.35)]",
         fresh:
-          "bg-fresh text-[#06100b] shadow-glow before:absolute before:inset-0 before:-z-10 before:-translate-x-full before:bg-[linear-gradient(105deg,transparent_25%,rgb(255_255_255/0.6)_50%,transparent_75%)] before:transition-transform before:duration-700 before:ease-out-expo hover:-translate-y-0.5 hover:bg-[position:100%_50%] hover:before:translate-x-full",
+          "bg-fresh text-[#06100b] shadow-glow before:absolute before:inset-0 before:-z-10 before:-translate-x-full before:bg-[linear-gradient(105deg,transparent_25%,rgb(255_255_255/0.6)_50%,transparent_75%)] before:transition-transform before:duration-700 before:ease-out-expo hover:-translate-y-0.5 hover:shadow-[0_12px_36px_-8px_rgb(20_192_176/0.75)] hover:bg-[position:100%_50%] hover:before:translate-x-full",
         outline:
-          "border-border bg-card/70 text-foreground backdrop-blur-md hover:-translate-y-0.5 hover:border-foreground/20 hover:bg-card hover:shadow-soft aria-expanded:bg-card dark:bg-card/50",
+          "border-border bg-card/70 text-foreground backdrop-blur-md hover:-translate-y-0.5 hover:border-foreground/20 hover:bg-card hover:shadow-soft aria-expanded:bg-card dark:bg-card/50 dark:hover:border-white/20",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/70 aria-expanded:bg-secondary/70",
         ghost: "text-foreground hover:bg-foreground/[0.06] aria-expanded:bg-foreground/[0.06] dark:hover:bg-foreground/[0.09]",
         destructive:
           "bg-destructive text-white hover:-translate-y-0.5 hover:bg-destructive/90 focus-visible:ring-destructive/30 dark:text-background",
         "destructive-outline":
           "border-destructive/30 bg-card/70 text-destructive hover:bg-destructive-soft focus-visible:ring-destructive/25",
-        link: "rounded-md text-brand-ink underline-offset-4 hover:underline active:scale-100",
+        link: "rounded-md text-brand-ink hover:text-brand-ink/80 dark:text-brand dark:hover:text-brand/80 underline-offset-4 hover:underline active:scale-100 transition-colors",
       },
       size: {
         xs: "h-7 px-3 text-xs [&_svg:not([class*='size-'])]:size-3.5",

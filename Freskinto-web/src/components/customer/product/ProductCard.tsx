@@ -75,7 +75,7 @@ export function ProductCard({ product, eager = false, morph = false, className }
       render={<Box as="article" />}
       data-product-card=""
       className={cn(
-        "group/product relative h-full gap-0 rounded-[1.9rem] p-2 transition-[translate,box-shadow] duration-500 ease-out-expo hover:-translate-y-1.5 hover:shadow-lift",
+        "group/product relative h-full gap-0 rounded-[1.9rem] p-2 transition-[translate,box-shadow,border-color] duration-500 ease-out-expo hover:-translate-y-1.5 hover:border-foreground/15 hover:shadow-lift dark:hover:border-white/20",
         className,
       )}
     >
@@ -103,6 +103,7 @@ export function ProductCard({ product, eager = false, morph = false, className }
             {/* Stretched link: poora card clickable, basket control + quick view upar (z-10/z-20) */}
             <TextLink
               href={publicRoutes.product(product.id)}
+              transitionTypes={["nav-forward"]}
               tone="default"
               className="font-bold after:absolute after:inset-0 after:rounded-[1.9rem] hover:text-foreground hover:no-underline focus-visible:ring-0 focus-visible:after:ring-4 focus-visible:after:ring-ring/30"
             >
