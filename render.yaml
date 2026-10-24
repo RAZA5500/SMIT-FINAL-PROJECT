@@ -1,13 +1,29 @@
+# Full stack on Render: PostgreSQL + NestJS API + Next.js web.
+# Dashboard → New + → Blueprint → select this repo → Apply.
+#
+# Public URLs are https://<service-name>.onrender.com. If Render had to add a suffix
+# because a name was taken, update NEXT_PUBLIC_BASE_URL (web) and CORS_ORIGINS (api)
+# to the real URLs, then redeploy the web service (NEXT_PUBLIC_* is baked in at build).
 services:
   - type: web
     name: freskinto-api
     runtime: node
+    region: singapore
     rootDir: Freskinto-api
     plan: free
-    buildCommand: npm install --include=dev && npm run build
-    startCommand: npm run db:deploy && npm run start:prod
+    buildCommand: bun install --frozen-lockfile && bun run build
+    # Free instances have no Shell / pre-deploy step, so migrations and the (idempotent)
+    # admin seed run on every start. A failed seed is logged but doesn't block the API.
+    startCommand: >-
+      bun run db:deploy &&
+      (TS_NODE_TRANSPILE_ONLY=true bun run db:seed || echo "Admin seed failed - check ADMIN_* env vars") &&
+      bun run start:prod
     healthCheckPath: /v1/health
     envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: BUN_VERSION
+        value: 1.4.3
       - key: NODE_ENV
         value: production
       - key: PORT
@@ -23,8 +39,7 @@ services:
       - key: JWT_EXPIRES_IN
         value: 7d
       - key: CORS_ORIGINS
-        value: "*"
-        sync: false # Set to your Vercel frontend URL, e.g. https://freskinto-web.vercel.app,https://*.vercel.app
+        value: https://freskinto-web.onrender.com
       - key: PAYMENT_WEBHOOK_SECRET
         generateValue: true
       - key: ADMIN_EMAIL
@@ -34,8 +49,28 @@ services:
       - key: ADMIN_NAME
         value: Store Admin
 
+  - type: web
+    name: freskinto-web
+    runtime: node
+    region: singapore
+    rootDir: Freskinto-web
+    plan: free
+    buildCommand: bun install --frozen-lockfile && bun run build
+    startCommand: bun run start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: BUN_VERSION
+        value: 1.4.3
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_BASE_URL
+        value: https://freskinto-api.onrender.com/v1
+
 databases:
   - name: freskinto-db
+    region: singapore
     databaseName: onlinemart
     user: onlinemart
     plan: free

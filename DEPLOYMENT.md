@@ -1,8 +1,10 @@
-# Deployment Guide: Backend on Render & Frontend on Vercel
+# Deployment Guide: Full Stack on Render
 
 This repository contains a full-stack e-commerce application:
-- **Backend API**: NestJS 11 + Prisma 7 + PostgreSQL located in [`Freskinto-api/`](file:///D:/SMIT_FINAL-PROJECT/Freskinto-api/)
-- **Frontend Web**: Next.js 16 (App Router + Turbopack) located in [`Freskinto-web/`](file:///D:/SMIT_FINAL-PROJECT/Freskinto-web/)
+- **Backend API**: NestJS 11 + Prisma 7 + PostgreSQL in [`Freskinto-api/`](Freskinto-api/)
+- **Frontend Web**: Next.js 16 (App Router + Turbopack) in [`Freskinto-web/`](Freskinto-web/)
+
+[`render.yaml`](render.yaml) is a Render Blueprint that creates all three pieces in one go.
 
 ---
 
@@ -11,217 +13,140 @@ This repository contains a full-stack e-commerce application:
 ```text
 [ Browser / Customer / Admin ]
         │
-        ├───► [ Vercel ] Next.js Frontend (Freskinto-web)
-        │         │ NEXT_PUBLIC_BASE_URL = https://freskinto-api.onrender.com/v1
-        │         ▼
-        └───► [ Render ] NestJS Web Service (Freskinto-api)
-                  │
+        ├───► [ Render ] freskinto-web  (Next.js, https://freskinto-web.onrender.com)
+        │         NEXT_PUBLIC_BASE_URL = https://freskinto-api.onrender.com/v1
+        │
+        └───► [ Render ] freskinto-api  (NestJS, https://freskinto-api.onrender.com/v1)
+                  │       CORS_ORIGINS = https://freskinto-web.onrender.com
                   ▼
-              [ Render ] PostgreSQL Database
+              [ Render ] freskinto-db   (PostgreSQL, internal connection string)
 ```
 
----
-
-## Part 1: Deploy Backend on Render
-
-You can deploy the backend using either **Method A (Automated Blueprint)** or **Method B (Manual Setup)**.
-
-### Method A: Automated Deployment via Blueprint (Recommended)
-
-1. Push your repository to GitHub or GitLab.
-2. Log in to [Render Dashboard](https://dashboard.render.com).
-3. Click **New +** > **Blueprint**.
-4. Connect your repository.
-5. Render detects [`render.yaml`](file:///D:/SMIT_FINAL-PROJECT/render.yaml) automatically. It will provision:
-   - A managed **PostgreSQL database** (`freskinto-db`).
-   - A **Node.js Web Service** (`freskinto-api`) configured with all required build and start commands.
-6. When prompted for environment variables:
-   - `CORS_ORIGINS`: Set to your Vercel URL (e.g. `https://freskinto-web.vercel.app,https://*.vercel.app`) or `*` temporarily.
-   - `ADMIN_EMAIL`: Initial admin login email (e.g. `admin@example.com`).
-   - `ADMIN_PASSWORD`: Strong password (8-72 chars).
-7. Click **Apply**. Render will build and deploy both services.
+The browser calls the API directly, so both services must be public and the API's CORS list must contain the
+web's URL. All three resources are created in the **Singapore** region on the **Free** plan (change `region` /
+`plan` in `render.yaml` before the first deploy if you want something else; the database and API must share a
+region).
 
 ---
 
-### Method B: Manual Setup on Render Dashboard
+## Step 1: Push the repository
 
-#### Step 1: Create PostgreSQL Database on Render
-1. In Render Dashboard, click **New +** > **PostgreSQL**.
-2. Set Name: `freskinto-db` (or any name).
-3. Database: `onlinemart`.
-4. User: `onlinemart`.
-5. Region: Choose the region closest to your users (e.g. `Frankfurt` or `Oregon`).
-6. Plan: **Free** (or Starter).
-7. Click **Create Database**.
-8. Once provisioned, copy the **Internal Database URL** (if deploying the web service in the same Render region) or **External Database URL**.
+Render deploys from Git. Push `main` (including `render.yaml`) to GitHub.
 
-#### Step 2: Create Web Service for NestJS API
-1. In Render Dashboard, click **New +** > **Web Service**.
-2. Connect your Git repository.
-3. Configure the following fields:
-   - **Name**: `freskinto-api`
-   - **Region**: Same region as your database.
-   - **Branch**: `main` (or your active branch).
-   - **Root Directory**: `Freskinto-api` *(CRITICAL: Must point to the backend folder)*
-   - **Runtime**: `Node` (or `Docker` using the provided [`Dockerfile`](file:///D:/SMIT_FINAL-PROJECT/Freskinto-api/Dockerfile))
-   - **Build Command**:
-     ```bash
-     npm install --include=dev && npm run build
-     ```
-     *(CRITICAL: `--include=dev` is necessary because `NODE_ENV=production` causes npm to omit devDependencies like `@nestjs/cli` and `typescript`)*
-   - **Start Command**:
-     ```bash
-     npm run db:deploy && npm run start:prod
-     ```
-     *(This automatically runs Prisma migrations on every deploy before starting the server)*
-   - **Health Check Path**: `/v1/health`
+## Step 2: Create the Blueprint
 
-#### Step 3: Add Backend Environment Variables on Render
-Under the **Environment** tab of the Web Service, add:
+1. Log in to the [Render Dashboard](https://dashboard.render.com).
+2. Click **New +** → **Blueprint** and connect the GitHub repository.
+3. Render reads `render.yaml` and lists `freskinto-db`, `freskinto-api` and `freskinto-web`.
+4. Fill in the two prompted values:
+   - `ADMIN_EMAIL`: login email of the single store admin.
+   - `ADMIN_PASSWORD`: strong password, 8–72 characters.
+5. Click **Apply**.
+
+What happens next:
+- `JWT_SECRET` and `PAYMENT_WEBHOOK_SECRET` are generated by Render; `DATABASE_URL` is wired to the database.
+- Both services install from the committed `bun.lock` (`bun install --frozen-lockfile`) and build.
+- Every API start runs `prisma migrate deploy`, then the admin seed (it does nothing if an admin already
+  exists), then the server. Free instances have no Shell, so the seed can't be run by hand there.
+- The first deploy takes several minutes; the API may restart once while the database finishes provisioning.
+
+## Step 3: Check the service URLs
+
+Open each service in the dashboard and compare its URL with the defaults:
+
+| Service | Expected URL | Used in |
+| :--- | :--- | :--- |
+| `freskinto-api` | `https://freskinto-api.onrender.com` | `NEXT_PUBLIC_BASE_URL` on **freskinto-web** (`…/v1`) |
+| `freskinto-web` | `https://freskinto-web.onrender.com` | `CORS_ORIGINS` on **freskinto-api** |
+
+If Render added a suffix (e.g. `freskinto-api-x1y2.onrender.com`) because the name was already taken:
+1. **freskinto-web** → **Environment** → set `NEXT_PUBLIC_BASE_URL` to `https://<real-api-host>/v1`, save, then
+   **Manual Deploy → Clear build cache & deploy** (the value is baked into the browser bundle at build time).
+2. **freskinto-api** → **Environment** → set `CORS_ORIGINS` to `https://<real-web-host>` (comma-separate several
+   origins; `https://*.example.com` wildcards are supported) and save.
+
+## Step 4: Verify
+
+1. [ ] `https://<api>/v1/health` returns `{"status":"ok","database":"up"}`.
+2. [ ] `https://<web>` renders the home page with categories and products (no CORS errors in the console).
+3. [ ] Register a customer at `/register` → redirected to `/shop`, session kept.
+4. [ ] Add items to the cart → `/checkout` → mock payment.
+5. [ ] Log in at `/login` with `ADMIN_EMAIL` / `ADMIN_PASSWORD` → admin workspace; create a category and a
+       product.
+
+The API logs show `Admin created: …` on the first start and `Admin already exists … — skipping.` afterwards.
+
+---
+
+## Environment variables reference
+
+**freskinto-api**
 
 | Variable | Value | Notes |
 | :--- | :--- | :--- |
-| `NODE_ENV` | `production` | Enables production optimizations & disables public Swagger |
-| `PORT` | `10000` | Render default port (our code binds to `0.0.0.0`) |
-| `URL_PREFIX` | `v1` | Global API prefix for all routes |
-| `DATABASE_URL` | *Internal Connection String* | From your Render PostgreSQL database |
-| `JWT_SECRET` | *Random string >= 32 chars* | Generate a secure secret (e.g. `openssl rand -hex 32`) |
-| `JWT_EXPIRES_IN` | `7d` | Token lifetime (e.g. `7d` or `1d`) |
-| `CORS_ORIGINS` | `https://freskinto-web.vercel.app,https://*.vercel.app` | Comma-separated allowed frontend origins |
-| `PAYMENT_WEBHOOK_SECRET` | *Random string >= 16 chars* | Secret for webhook HMAC verification |
-| `ADMIN_EMAIL` | `admin@example.com` | Initial admin account email for seed script |
-| `ADMIN_PASSWORD` | `SecureAdminPass123!` | Initial admin password (8-72 chars) |
-| `ADMIN_NAME` | `Store Admin` | Admin display name |
+| `NODE_VERSION` | `22` | Node runtime on Render |
+| `BUN_VERSION` | `1.4.3` | Same Bun as the lockfile was made with |
+| `NODE_ENV` | `production` | Disables Swagger |
+| `PORT` | `10000` | Render's default port (the app binds `0.0.0.0`) |
+| `URL_PREFIX` | `v1` | Global API prefix |
+| `DATABASE_URL` | from `freskinto-db` | Internal connection string |
+| `JWT_SECRET` | generated | ≥ 32 characters |
+| `JWT_EXPIRES_IN` | `7d` | |
+| `CORS_ORIGINS` | `https://freskinto-web.onrender.com` | Comma-separated allowed origins |
+| `PAYMENT_WEBHOOK_SECRET` | generated | ≥ 16 characters, HMAC for the mock gateway |
+| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | prompted | Used by the admin seed |
+| `ADMIN_NAME` | `Store Admin` | |
 
-Click **Save Changes**. Render will automatically build and deploy the web service.
+**freskinto-web**
 
----
+| Variable | Value | Notes |
+| :--- | :--- | :--- |
+| `NODE_VERSION` / `BUN_VERSION` | `22` / `1.4.3` | |
+| `NODE_ENV` | `production` | |
+| `NEXT_PUBLIC_BASE_URL` | `https://freskinto-api.onrender.com/v1` | Build-time; `/v1` is appended if missing |
 
-### Step 4: Seed the Initial Admin Account
-
-To seed the initial admin account:
-
-**Option 1: Via Render Shell (Dashboard)**
-1. In your `freskinto-api` service on Render, open the **Shell** tab.
-2. Run:
-   ```bash
-   npm run db:seed
-   ```
-   Output: `Admin created: admin@example.com`.
-
-**Option 2: From your local machine**
-```bash
-cd Freskinto-api
-DATABASE_URL="<External Database URL from Render>" ADMIN_EMAIL="admin@example.com" ADMIN_PASSWORD="SecureAdminPass123!" ADMIN_NAME="Store Admin" npm run db:seed
-```
+`next start` listens on Render's `PORT` automatically.
 
 ---
 
-### Step 5: Verify Backend Health
+## Free plan limits
 
-Once deployment finishes, Render gives you a public URL (e.g., `https://freskinto-api.onrender.com`).
-Visit:
-```text
-https://<your-render-service>.onrender.com/v1/health
-```
-Expected response:
-```json
-{
-  "status": "ok",
-  "database": "up"
-}
-```
+- **Cold starts**: free web services sleep after 15 minutes without traffic and take about a minute to wake.
+  The web and API sleep separately, so the first visit can wake both. An uptime pinger (UptimeRobot,
+  cron-job.org) hitting `/v1/health` and `/` every 10 minutes keeps them awake, or upgrade to Starter.
+- **Database expiry**: a free Render PostgreSQL database **expires 30 days after creation** (then a 14-day grace
+  period before deletion). Upgrade it before then to keep the data. Only one free database is allowed per
+  workspace.
+- **No Shell / pre-deploy command** on free instances, which is why migrations and the seed run in the start
+  command.
 
 ---
 
-## Part 2: Deploy Frontend on Vercel
+## Alternative: frontend on Vercel
 
-### Method A: Via Vercel Web Dashboard (Recommended)
-
-1. Go to [Vercel Dashboard](https://vercel.com/dashboard) and click **Add New...** > **Project**.
-2. Import your Git repository.
-3. In the **Configure Project** screen:
-   - **Project Name**: `freskinto-web` (or any custom name).
-   - **Framework Preset**: `Next.js` (detected automatically).
-   - **Root Directory**: Click **Edit** and select `Freskinto-web`. *(CRITICAL: Do not leave at repo root).*
-   - **Build and Output Settings**: Keep default (`next build`).
-4. In **Environment Variables**, add:
-   - **Key**: `NEXT_PUBLIC_BASE_URL`
-   - **Value**: `https://<your-render-service>.onrender.com/v1`
-     *(Note: The frontend automatically normalizes this URL — trailing slashes are stripped and `/v1` is automatically appended if accidentally omitted).*
-5. Click **Deploy**.
+Keep the database and API on Render and deploy only the web on Vercel:
+1. Delete the `freskinto-web` block from `render.yaml` (or just suspend that service).
+2. Vercel → **Add New… → Project** → import the repo, **Root Directory** = `Freskinto-web`, add
+   `NEXT_PUBLIC_BASE_URL=https://<api>/v1`, deploy ([`vercel.json`](Freskinto-web/vercel.json) is included).
+3. Set the API's `CORS_ORIGINS` to `https://<project>.vercel.app,https://*.vercel.app` (the wildcard also allows
+   preview deployments).
 
 ---
 
-### Method B: Via Vercel CLI
+## Troubleshooting
 
-```bash
-# Navigate to the frontend directory
-cd Freskinto-web
+### CORS errors in the browser console
+`Access to fetch at … has been blocked by CORS policy` means the web's exact origin (`https://` + host, no path)
+is missing from the API's `CORS_ORIGINS`. Trailing slashes are ignored.
 
-# Log in to Vercel
-npx vercel login
+### Web calls `localhost:4000` or the wrong API host
+`NEXT_PUBLIC_BASE_URL` was missing or wrong at build time. Fix it and redeploy the web with
+**Clear build cache & deploy**; changing the variable alone doesn't rebuild the bundle.
 
-# Link and deploy
-npx vercel
+### API fails on start with `Can't reach database server`
+The database is still provisioning (wait, Render retries) or the API and database are in different regions
+(the internal connection string only works inside one region).
 
-# When deploying to production
-npx vercel --prod
-```
-When prompted for environment variables, add `NEXT_PUBLIC_BASE_URL=https://<your-render-service>.onrender.com/v1`.
-
----
-
-## Part 3: Synchronize CORS on Render
-
-Once your Vercel deployment completes, Vercel will assign you a domain:
-- Example: `https://freskinto-web.vercel.app`
-
-1. Go to **Render Dashboard** > `freskinto-api` > **Environment**.
-2. Update `CORS_ORIGINS`:
-   ```env
-   CORS_ORIGINS=https://freskinto-web.vercel.app,https://*.vercel.app
-   ```
-   *(Including `https://*.vercel.app` allows Vercel preview branch deployments to communicate with your backend).*
-3. Save changes. Render will automatically redeploy with the updated CORS policy.
-
----
-
-## Part 4: Production Verification Checklist
-
-1. [ ] **Health Check**: `https://<render-backend>/v1/health` returns `{"status":"ok","database":"up"}`.
-2. [ ] **Frontend Loading**: `https://<vercel-frontend>` renders the landing page, products, and categories.
-3. [ ] **Customer Authentication**:
-   - Register a new customer at `/register`.
-   - Verify redirect to `/shop` with session preserved.
-4. [ ] **Cart & Checkout**:
-   - Add items to cart.
-   - Proceed to `/checkout` and initiate mock payment.
-5. [ ] **Admin Authentication**:
-   - Log in with the seeded admin account at `/login`.
-   - Confirm automatic redirect to `/admin/dashboard` or `/admin/orders`.
-   - Test category and product creation in the admin workspace.
-
----
-
-## Troubleshooting & FAQ
-
-### 1. Render Free Tier Cold Starts
-- **Symptom**: The first API request after 15 minutes of inactivity takes 40-50 seconds to respond.
-- **Why**: Render free web services spin down after 15 minutes without inbound HTTP requests.
-- **Solution**:
-  - The frontend has built-in retry and friendly network error handling.
-  - To keep the service warm on the free tier, you can use a free uptime monitoring tool (like UptimeRobot or Cron-job.org) to ping `https://<your-render-backend>/v1/health` every 10 minutes.
-  - Alternatively, upgrade the Web Service to Render's "Starter" tier ($7/month) for continuous zero-cold-start availability.
-
-### 2. CORS Errors in Browser Console
-- **Symptom**: `Access to fetch at ... has been blocked by CORS policy`.
-- **Check**:
-  - Ensure `CORS_ORIGINS` in Render environment matches your Vercel URL scheme (`https://`) and hostname.
-  - Our updated CORS configuration strips trailing slashes and supports wildcard subdomains like `https://*.vercel.app`.
-
-### 3. Database Connection Errors on Render
-- **Symptom**: Server crashes on startup with `Can't reach database server`.
-- **Check**:
-  - If both Web Service and Database are on Render, use the **Internal Database URL** for lower latency and free internal bandwidth.
-  - If using an external database (Neon, Supabase), ensure `?sslmode=require` is present in the `DATABASE_URL`.
+### `Admin seed failed - check ADMIN_* env vars` in the API logs
+`ADMIN_EMAIL`, `ADMIN_PASSWORD` (8–72 chars) or `ADMIN_NAME` is missing or invalid. Fix it in **Environment**;
+the next start creates the admin. The API itself still starts.
