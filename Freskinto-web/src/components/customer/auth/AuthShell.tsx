@@ -13,21 +13,20 @@ import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { STORE } from "@/constants/store";
 import { publicRoutes } from "@/lib/routes/routes";
 import { AuthCard } from "./AuthCard";
-import { AuthShowcase } from "./AuthShowcase";
+import { AuthListPicker } from "./AuthListPicker";
 
 /** Module load par ek dafa — render ke dauran current date nahi padhte */
 const YEAR = new Date().getFullYear();
 
 /**
- * /login aur /register ka frame:
- * Left: glass auth card (Sign in ↔ Create account switch, cursor glow)
- * Right (lg+): brand-green panel — tagline, aisles ka bento grid, store ke wade
+ * /login aur /register ka frame: upar logo + theme/back links; beech mein left par tap-to-pick
+ * list (lg+) aur right par glass auth card (Sign in ↔ Create account switch); neeche copyright
  */
 export function AuthShell({ children }: { children: ReactNode }) {
   return (
-    <Grid className="relative isolate min-h-dvh flex-1 lg:grid-cols-[1fr_1.05fr]">
+    <Grid className="relative isolate min-h-dvh flex-1">
       <Aurora />
-      <Stack as="main" id="content" className="px-5 py-4 sm:px-10">
+      <Stack as="main" id="content" className="px-5 py-2 sm:px-10">
         <Flex align="center" justify="between" gap="4">
           <Button
             variant="ghost"
@@ -46,18 +45,24 @@ export function AuthShell({ children }: { children: ReactNode }) {
           </Flex>
         </Flex>
 
-        <Flex align="center" justify="center" className="flex-1 py-6">
-          <Box className="w-full max-w-form animate-fade-up">
+        <Grid align="center" className="mx-auto w-full max-w-page flex-1 gap-12 py-2 lg:grid-cols-[1.15fr_1fr] xl:gap-20">
+          {/* Left (lg+): tap-to-pick list — card ke bagal mein khaali jagah ko zinda karta hai */}
+          <Stack align="center" gap="5" className="hidden lg:flex">
+            <AuthListPicker />
+            <Text tone="muted" className="w-full max-w-xl text-fs-12">
+              © {YEAR} {STORE.name}. All rights reserved.
+            </Text>
+          </Stack>
+          <Box className="mx-auto w-full max-w-form animate-fade-up lg:mx-0 lg:justify-self-center">
             <AuthCard>{children}</AuthCard>
           </Box>
-        </Flex>
+        </Grid>
 
-        <Text tone="muted" className="text-center text-fs-12 sm:text-left">
+        {/* lg+ par copyright left column mein — page ki height viewport mein samaye, scroll na ho */}
+        <Text tone="muted" className="text-center text-fs-12 sm:text-left lg:hidden">
           © {YEAR} {STORE.name}. All rights reserved.
         </Text>
       </Stack>
-
-      <AuthShowcase />
     </Grid>
   );
 }

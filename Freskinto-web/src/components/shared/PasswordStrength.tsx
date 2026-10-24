@@ -1,15 +1,18 @@
-import { Check, Circle } from "lucide-react";
 import { Box } from "@/components/ui/box";
-import { Flex, Stack } from "@/components/ui/flex";
-import { Grid } from "@/components/ui/grid";
+import { Flex } from "@/components/ui/flex";
 import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 
 const RULES = [
-  { key: "length", label: "At least 8 characters", test: (value: string) => value.length >= 8 },
-  { key: "case", label: "Upper & lower case letters", test: (value: string) => /[a-z]/.test(value) && /[A-Z]/.test(value) },
-  { key: "number", label: "A number", test: (value: string) => /\d/.test(value) },
-  { key: "symbol", label: "A symbol (e.g. ! ? #)", test: (value: string) => /[^A-Za-z0-9]/.test(value) },
+  { key: "length", label: "At least 8 characters", hint: "8+ characters", test: (value: string) => value.length >= 8 },
+  {
+    key: "case",
+    label: "Upper & lower case letters",
+    hint: "upper & lower case",
+    test: (value: string) => /[a-z]/.test(value) && /[A-Z]/.test(value),
+  },
+  { key: "number", label: "A number", hint: "a number", test: (value: string) => /\d/.test(value) },
+  { key: "symbol", label: "A symbol (e.g. ! ? #)", hint: "a symbol", test: (value: string) => /[^A-Za-z0-9]/.test(value) },
 ] as const;
 
 const LEVELS = [
@@ -20,51 +23,47 @@ const LEVELS = [
   { label: "Strong", bar: "bg-success" },
 ] as const;
 
-/** Live password feedback — sirf dikhawa, asli validation Zod schema karta hai */
+/**
+ * Live password feedback ek hi line mein — bars + level + agla kya chahiye. Auth card bina scroll ke
+ * screen mein rahe. Poori checklist screen readers ke liye `sr-only` list mein. Sirf dikhawa, asli
+ * validation Zod schema karta hai.
+ */
 export function PasswordStrength({ password, className }: { password: string; className?: string }) {
   if (!password) return null;
 
   const passed = RULES.filter((rule) => rule.test(password)).length;
   const level = LEVELS[password.length < 8 ? 0 : passed];
+  const missing = RULES.filter((rule) => !rule.test(password));
 
   return (
-    <Stack gap="3" className={cn("rounded-lg border border-border bg-muted/40 p-3", className)}>
-      <Flex align="center" gap="3">
-        <Flex aria-hidden="true" gap="1.5" className="flex-1">
-          {RULES.map((rule, index) => (
-            <Box
-              as="span"
-              key={rule.key}
-              className={cn("h-1 flex-1 rounded-full bg-border transition-colors", index < passed && level.bar)}
-            />
-          ))}
-        </Flex>
-        <Text aria-live="polite" weight="medium" className="w-16 text-right text-fs-12">
+    <Flex align="center" gap="3" className={cn("min-h-4", className)}>
+      <Flex aria-hidden="true" gap="1" className="w-24 shrink-0">
+        {RULES.map((rule, index) => (
+          <Box
+            as="span"
+            key={rule.key}
+            className={cn("h-1 flex-1 rounded-full bg-border transition-colors duration-300", index < passed && level.bar)}
+          />
+        ))}
+      </Flex>
+      <Text aria-live="polite" className="min-w-0 truncate text-fs-12">
+        <Text as="span" weight="semibold">
           {level.label}
         </Text>
-      </Flex>
-      <Grid as="ul" gap="1.5" className="sm:grid-cols-2">
-        {RULES.map((rule) => {
-          const ok = rule.test(password);
-          return (
-            <Flex
-              as="li"
-              key={rule.key}
-              align="center"
-              gap="2"
-              className={cn("text-fs-12", ok ? "text-success-ink" : "text-muted-foreground")}
-            >
-              {ok ? <Check aria-hidden="true" className="size-3.5" /> : <Circle aria-hidden="true" className="size-3.5" />}
-              <Text as="span" tone="inherit" className="text-fs-12">
-                {rule.label}
-              </Text>
-              <Text as="span" className="sr-only">
-                {ok ? "(met)" : "(not met)"}
-              </Text>
-            </Flex>
-          );
-        })}
-      </Grid>
-    </Stack>
+        {missing.length > 0 && (
+          <Text as="span" tone="muted" aria-hidden="true">
+            {" "}
+            · add {missing.map((rule) => rule.hint).join(", ")}
+          </Text>
+        )}
+      </Text>
+      <Box as="ul" className="sr-only">
+        {RULES.map((rule) => (
+          <Box as="li" key={rule.key}>
+            {rule.label} {rule.test(password) ? "(met)" : "(not met)"}
+          </Box>
+        ))}
+      </Box>
+    </Flex>
   );
 }

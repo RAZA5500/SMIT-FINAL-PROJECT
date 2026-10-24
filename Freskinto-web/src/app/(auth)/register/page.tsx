@@ -8,7 +8,6 @@ export default function RegisterPage() {
   return (
     <>
       <AuthHeading
-        eyebrow="Join the market"
         title="Create your account"
         subtitle="Free delivery, saved addresses and order tracking — set up in under a minute."
       />

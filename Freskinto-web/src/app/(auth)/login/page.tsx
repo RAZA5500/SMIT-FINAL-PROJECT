@@ -10,7 +10,6 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   return (
     <>
       <AuthHeading
-        eyebrow="Welcome back"
         title="Sign in to your basket"
         subtitle="Pick up where you left off — your basket and orders are waiting."
       />

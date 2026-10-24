@@ -100,7 +100,7 @@ describe("LoginForm", () => {
     expect(screen.getByLabelText("Password")).toHaveValue("Admin@123");
   });
 
-  it("AuthShell mounts the mode switch and the aisle bento, without the 3D HeroOrbit", () => {
+  it("AuthShell mounts the mode switch and the tap-to-pick list, without the 3D HeroOrbit", async () => {
     const { container } = renderWithProviders(
       <AuthShell>
         <div>Test Auth Children</div>
@@ -114,11 +114,17 @@ describe("LoginForm", () => {
     expect(within(nav).getByRole("link", { name: "Sign in" })).toHaveAttribute("aria-current", "page");
     expect(within(nav).getByRole("link", { name: "Create account" })).toHaveAttribute("href", "/register");
 
-    // Bento tiles link into the shop (falls back to all products until aisles load)
-    const aside = screen.getByRole("complementary", { name: /aisles/i });
-    for (const name of [/fruit & veg/i, /bakery/i, /dairy/i, /meat & poultry/i]) {
-      expect(within(aside).getByRole("link", { name })).toHaveAttribute("href", expect.stringMatching(/^\/shop/));
-    }
+    // Tapping products adds them to the list tray, tapping again removes them
+    const user = userEvent.setup();
+    expect(screen.getByText(/your list is empty/i)).toBeInTheDocument();
+    const apples = screen.getByRole("button", { name: "Apples" });
+    await user.click(apples);
+    await user.click(screen.getByRole("button", { name: "Milk" }));
+    expect(apples).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("2 favourites on your list")).toBeInTheDocument();
+    await user.click(apples);
+    expect(apples).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByText("1 favourite on your list")).toBeInTheDocument();
 
     // HeroOrbit circular text / orbit carousel is NOT present
     expect(container.querySelector(".animate-spin-orbit")).not.toBeInTheDocument();

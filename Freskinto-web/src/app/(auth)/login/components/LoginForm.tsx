@@ -88,7 +88,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
   };
 
   return (
-    <Form id={FORM_ID} onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))} className="space-y-4">
+    <Form id={FORM_ID} onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))} className="gap-3.5">
       <FieldGroup className="gap-4">
         <InputField
           id="email"

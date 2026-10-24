@@ -72,7 +72,7 @@ export function ForgotPasswordForm() {
     <Form
       id={FORM_ID}
       onSubmit={handleSubmit(({ email }) => setSubmittedEmail(email), () => scrollToFirstError(FORM_ID))}
-      className={cn("space-y-5")}
+      className={cn("gap-5")}
     >
       <FieldGroup className={cn("gap-4")}>
         <InputField

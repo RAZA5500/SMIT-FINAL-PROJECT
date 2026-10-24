@@ -22,7 +22,7 @@ function AuthModeSwitch({ pathname }: { pathname: string }) {
   if (activeIndex === -1) return null;
 
   return (
-    <Grid as="nav" aria-label="Account" className="relative mb-6 grid-cols-2 rounded-full bg-muted/70 p-1">
+    <Grid as="nav" aria-label="Account" className="relative mb-4 grid-cols-2 rounded-full bg-muted/70 p-1">
       <Box
         aria-hidden="true"
         className={cn(
@@ -60,7 +60,7 @@ export function AuthCard({ children }: { children: ReactNode }) {
   return (
     <Box
       onPointerMove={onPointerMove}
-      className="group/card glass relative isolate rounded-[2rem] border border-glass-border p-6 shadow-lift sm:p-8"
+      className="group/card glass relative isolate rounded-[2rem] border border-glass-border p-6 shadow-lift sm:p-7 [@media(max-height:760px)]:sm:p-6"
     >
       {/* Border ki chamak: gradient sirf 1px ring mein dikhta hai (mask), andar ka glass saaf */}
       <Box

@@ -57,8 +57,8 @@ export function RegisterForm() {
   };
 
   return (
-    <Form id={FORM_ID} onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))} className="space-y-4">
-      <FieldGroup className="gap-4">
+    <Form id={FORM_ID} onSubmit={handleSubmit(onSubmit, () => scrollToFirstError(FORM_ID))} className="gap-3.5">
+      <FieldGroup className="gap-3">
         <InputField
           id="fullName"
           label="Full name"
@@ -80,7 +80,7 @@ export function RegisterForm() {
           error={errors.email?.message}
           {...register("email")}
         />
-        <Stack gap="2.5">
+        <Stack gap="2">
           <PasswordField
             id="password"
             label="Password"
