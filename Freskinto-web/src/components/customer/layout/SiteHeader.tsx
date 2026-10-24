@@ -44,7 +44,7 @@ function HomeLink() {
   );
 }
 
-/** Floating glass pill header — sits tight near top without excessive vertical gap */
+/** Floating glass pill header — top aur neeche ke content se halki si saans leti jagah */
 export function SiteHeader({ variant = "default" }: { variant?: "default" | "checkout" }) {
   return variant === "checkout" ? <CheckoutHeader /> : <MarketHeader />;
 }
@@ -60,7 +60,7 @@ function MarketHeader() {
     <Box
       as="header"
       style={ANCHOR}
-      className="sticky top-0 z-40 w-full mt-0 px-1 pt-0 pb-0 sm:px-2"
+      className="sticky top-0 z-40 w-full mt-0 px-1 pt-2 pb-2 sm:px-2 sm:pt-3"
     >
       <SkipLink />
       <Flex
@@ -95,7 +95,7 @@ function CheckoutHeader() {
     <Box
       as="header"
       style={ANCHOR}
-      className="sticky top-0 z-40 w-full mt-0 px-1 pt-0 pb-0 sm:px-2"
+      className="sticky top-0 z-40 w-full mt-0 px-1 pt-2 pb-2 sm:px-2 sm:pt-3"
     >
       <SkipLink />
       <Flex

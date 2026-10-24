@@ -39,7 +39,7 @@ export function HomeHero() {
       aria-labelledby="home-hero-heading"
       align="center"
       gap="8"
-      className="min-h-[calc(100svh-3.5rem)] pt-0 pb-8 sm:pt-1 sm:pb-10 lg:grid-cols-[1.1fr_1fr] lg:gap-10 lg:pt-1 lg:pb-12"
+      className="min-h-[calc(100svh-5rem)] pt-6 pb-8 sm:pt-8 sm:pb-10 lg:grid-cols-[1.1fr_1fr] lg:gap-10 lg:pt-10 lg:pb-12"
     >
       <Stack gap="7" className="relative z-10">
         <Flex

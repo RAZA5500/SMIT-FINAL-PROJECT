@@ -84,23 +84,24 @@ describe("ThemeToggle & SiteHeader", () => {
     delete docWithTransitions.startViewTransition;
   });
 
-  it("SiteHeader mounts flush sticky at top without laggy layout classes", () => {
+  it("SiteHeader mounts sticky at top with breathing room around the pill", () => {
     const { unmount } = renderWithProviders(<SiteHeader />);
 
     const header = screen.getByRole("banner");
     expect(header).toBeInTheDocument();
-    // Flush at top with full width, z-40 stacking, and tight padding
+    // Sticky at top with full width, z-40 stacking, and a small gap above/below the pill
     expect(header.className).toContain("sticky top-0");
     expect(header.className).toContain("z-40");
     expect(header.className).toContain("w-full");
     expect(header.className).toContain("mt-0");
-    expect(header.className).toContain("pt-0");
-    expect(header.className).toContain("pb-0");
+    expect(header.className).toContain("pt-2");
+    expect(header.className).toContain("pb-2");
+    expect(header.className).toContain("sm:pt-3");
     expect(header.className).toContain("px-1");
     expect(header.className).toContain("sm:px-2");
-    // Does NOT have excessive padding
-    expect(header.className).not.toContain("pt-3");
-    expect(header.className).not.toContain("pt-0.5");
+    // Does NOT stick flush to the content below
+    expect(header.className.split(" ")).not.toContain("pt-0");
+    expect(header.className.split(" ")).not.toContain("pb-0");
     expect(header.className.split(" ")).not.toContain("px-2");
     expect(header.className).not.toContain("sm:px-3");
     expect(header.className).not.toContain("sm:px-4");
@@ -126,8 +127,8 @@ describe("ThemeToggle & SiteHeader", () => {
     expect(checkoutHeader.className).toContain("sticky top-0");
     expect(checkoutHeader.className).toContain("z-40");
     expect(checkoutHeader.className).toContain("mt-0");
-    expect(checkoutHeader.className).toContain("pt-0");
-    expect(checkoutHeader.className).toContain("pb-0");
+    expect(checkoutHeader.className).toContain("pt-2");
+    expect(checkoutHeader.className).toContain("pb-2");
     expect(checkoutHeader.className).toContain("px-1");
     expect(checkoutHeader.className).toContain("sm:px-2");
     const checkoutPill = checkoutHeader.firstElementChild?.nextElementSibling;
