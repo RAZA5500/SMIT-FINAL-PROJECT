@@ -1,199 +1,140 @@
 "use client";
 
-import { Croissant, Leaf, Milk, type LucideIcon } from "lucide-react";
+import { ArrowUpRight, Check } from "lucide-react";
 import Image from "next/image";
-import { useRef, useState, type PointerEvent } from "react";
+import Link from "next/link";
 import { Box } from "@/components/ui/box";
-import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Flex, Stack } from "@/components/ui/flex";
 import { Grid } from "@/components/ui/grid";
 import { Heading, Text } from "@/components/ui/typography";
 import { STORE } from "@/constants/store";
+import { shopUrl } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
+import { useAisles } from "../shop/use-aisles";
 
-interface Slide {
-  image: string;
-  icon: LucideIcon;
-  aisle: string;
-  title: string;
-  text: string;
-}
-
-/** Store ke teen hisse — har slide ek asli editorial photo + uska wada */
-const SLIDES: Slide[] = [
+/**
+ * Bento tiles — store ke chaar aisles, har ek apni editorial photo ke saath. `pattern` se asli
+ * category dhoondte hain (link us aisle par); API na chale to tile poori shop kholta hai.
+ */
+const TILES = [
   {
+    name: "Fruit & veg",
+    note: "Picked for crunch and colour",
+    pattern: /veg|produce|fruit/i,
     image: "/images/editorial/produce-aisle.webp",
-    icon: Leaf,
-    aisle: "Fruit & veg",
-    title: "Fresh produce, straight to your door.",
-    text: "Crisp veg and ripe fruit from your neighbourhood market — delivered free on every order.",
+    className: "row-span-2",
   },
+  { name: "Bakery", note: "Warm loaves", pattern: /bak|bread/i, image: "/images/editorial/artisan-bread.webp", className: "" },
+  { name: "Dairy", note: "Milk, eggs & more", pattern: /dairy|milk|egg/i, image: "/images/editorial/milk-bottle.webp", className: "" },
   {
-    image: "/images/editorial/artisan-bread.webp",
-    icon: Croissant,
-    aisle: "Bakery",
-    title: "Warm bakes, ready when you are.",
-    text: "Order online, then pick a click & collect slot that suits you — or let us bring it round.",
-  },
-  {
-    image: "/images/editorial/cheese-board.webp",
-    icon: Milk,
-    aisle: "Deli & dairy",
-    title: "Everyday essentials in one basket.",
-    text: "Sign in to save your addresses and follow every order from basket to door.",
+    name: "Meat & poultry",
+    note: "Butcher-counter cuts",
+    pattern: /meat|butcher|beef|poultry|chicken/i,
+    image: "/images/editorial/butcher-mince.webp",
+    className: "col-span-2",
   },
 ];
 
-const pad = (value: number) => String(value).padStart(2, "0");
+const PERKS = ["Free delivery", "Click & collect", `Pay in ${STORE.paymentWindowMinutes} minutes`];
 
-/**
- * Auth page ka right panel: poori photo ka slideshow (crossfade + dheema zoom), neeche headline
- * aur story-style progress bars jo tabs ka kaam karte hain. Hover/focus par slideshow rukta hai,
- * mouse se photo halka khisakti hai. Timer progress bar ki CSS animation hai — `animationend`
- * par agli slide, isliye pause muft mein. Reduced motion par khud nahi badalta.
- */
+/** Auth page ka right panel: brand-green panel par tagline, aisles ka bento grid aur store ke wade */
 export function AuthShowcase() {
-  const [active, setActive] = useState(0);
-  const rafRef = useRef<number | null>(null);
-  const slide = SLIDES[active];
-  const SlideIcon = slide.icon;
-
-  const next = () => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    setActive((index) => (index + 1) % SLIDES.length);
-  };
-
-  const onPointerMove = (event: PointerEvent<HTMLElement>) => {
-    if (event.pointerType !== "mouse") return;
-    const element = event.currentTarget;
-    const rect = element.getBoundingClientRect();
-    const { clientX, clientY } = event;
-
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(() => {
-      rafRef.current = null;
-      element.style.setProperty("--px", (((clientX - rect.left) / rect.width) * 2 - 1).toFixed(3));
-      element.style.setProperty("--py", (((clientY - rect.top) / rect.height) * 2 - 1).toFixed(3));
-    });
-  };
-
-  const onPointerLeave = (event: PointerEvent<HTMLElement>) => {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    rafRef.current = null;
-    event.currentTarget.style.setProperty("--px", "0");
-    event.currentTarget.style.setProperty("--py", "0");
-  };
+  const { aisles } = useAisles();
 
   return (
-    <Box
+    <Stack
       as="aside"
-      aria-label={`Inside ${STORE.name}`}
-      aria-roledescription="carousel"
-      onPointerMove={onPointerMove}
-      onPointerLeave={onPointerLeave}
-      className="group/show dark sticky top-3 m-3 hidden h-[calc(100dvh-1.5rem)] overflow-hidden rounded-[2.5rem] bg-[#0b1611] text-foreground [--px:0] [--py:0] lg:block"
+      aria-label={`Shop the ${STORE.name} aisles`}
+      gap="6"
+      className="sticky top-3 m-3 hidden h-[calc(100dvh-1.5rem)] overflow-hidden rounded-[2.5rem] bg-[linear-gradient(150deg,#0f5c42_0%,#0b3a2b_55%,#06100b_100%)] p-8 text-white lg:flex xl:p-10"
     >
-      {/* Photos — active wali dikhti hai aur dheere zoom-out hoti hai; mouse ke ulta halka khisakti hain */}
-      {SLIDES.map((item, index) => (
-        <Box
-          key={item.image}
-          aria-hidden="true"
-          className={cn(
-            "absolute inset-0 transition-opacity duration-1000 ease-out",
-            index === active ? "opacity-100" : "opacity-0",
-          )}
-        >
-          <Box className="absolute -inset-6 transition-[translate] duration-700 ease-out-expo motion-safe:[translate:calc(var(--px)*-14px)_calc(var(--py)*-14px)]">
-            <Image
-              src={item.image}
-              alt=""
-              fill
-              priority={index === 0}
-              sizes="50vw"
-              className={cn("object-cover", index === active && "animate-ken-burns")}
-            />
-          </Box>
-        </Box>
-      ))}
+      <Box aria-hidden="true" className="absolute -top-32 -right-24 -z-0 size-[28rem] rounded-full bg-[radial-gradient(closest-side,rgb(34_211_138/0.35),transparent)]" />
+      <Box aria-hidden="true" className="grain absolute inset-0 opacity-[0.06] mix-blend-screen" />
 
-      {/* Text padhne layak rahe — neeche gehra, upar halka saaya */}
-      <Box aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(to_top,rgb(6_16_11/0.94)_0%,rgb(6_16_11/0.6)_38%,transparent_68%)]" />
-      <Box aria-hidden="true" className="absolute inset-x-0 top-0 h-40 bg-[linear-gradient(to_bottom,rgb(6_16_11/0.55),transparent)]" />
-
-      <Stack justify="between" className="relative h-full p-8 xl:p-10">
-        <Flex align="center" justify="between" gap="4">
-          <Flex align="center" gap="2.5" className="glass w-fit rounded-full border border-glass-border py-1.5 pr-4 pl-2.5">
-            <Box as="span" className="relative flex size-2.5">
-              <Box as="span" className="absolute inline-flex size-full animate-ping-soft rounded-full bg-fresh" />
-              <Box as="span" className="relative inline-flex size-2.5 rounded-full bg-fresh" />
-            </Box>
-            <Text as="span" weight="semibold" className="text-fs-13">
-              Open now · free delivery on every order
-            </Text>
-          </Flex>
-          <Text as="span" tone="inherit" numeric className="text-fs-13 font-semibold text-white/70">
-            {pad(active + 1)} <Text as="span" tone="inherit" className="text-white/40">/ {pad(SLIDES.length)}</Text>
+      <Stack gap="2" className="relative animate-fade-up">
+        <Text variant="eyebrow" tone="inherit" className="text-white/60">
+          Why {STORE.name}
+        </Text>
+        <Heading as="h2" size="display" tone="inherit">
+          The neighbourhood market,{" "}
+          <Text as="em" variant="accent">
+            delivered
           </Text>
-        </Flex>
-
-        <Stack gap="6">
-          <Stack key={active} gap="3" aria-live="polite" className="max-w-lg">
-            <Flex align="center" gap="2" className="animate-fade-up">
-              <Flex as="span" align="center" justify="center" className="size-7 rounded-full bg-fresh text-[#06100b]">
-                <SlideIcon aria-hidden="true" className="size-3.5" />
-              </Flex>
-              <Text variant="eyebrow" tone="inherit" className="text-white/80">
-                {slide.aisle}
-              </Text>
-            </Flex>
-            <Heading as="h2" size="display" className="animate-fade-up text-white [animation-delay:80ms]">
-              {slide.title}
-            </Heading>
-            <Text tone="inherit" className="animate-fade-up text-base leading-relaxed text-white/75 [animation-delay:160ms]">
-              {slide.text}
-            </Text>
-          </Stack>
-
-          {/* Story-style bars = tabs: click se slide chuno, bhari hui bar batati hai agli kab aayegi */}
-          <Grid gap="3" className="grid-cols-3">
-            {SLIDES.map((item, index) => (
-              <Button
-                key={item.image}
-                type="button"
-                variant="ghost"
-                aria-label={`Show ${item.aisle}`}
-                aria-current={index === active || undefined}
-                onClick={() => setActive(index)}
-                className="group/bar h-auto flex-col items-stretch gap-2 rounded-lg p-0 py-1 text-left hover:bg-transparent"
-              >
-                <Box as="span" className="block h-1 w-full overflow-hidden rounded-full bg-white/20 transition-colors group-hover/bar:bg-white/30">
-                  <Box
-                    as="span"
-                    onAnimationEnd={index === active ? next : undefined}
-                    className={cn(
-                      "block h-full origin-left rounded-full bg-fresh",
-                      index < active && "scale-x-100",
-                      index > active && "scale-x-0",
-                      index === active &&
-                        "animate-slide-progress group-hover/show:[animation-play-state:paused] group-focus-within/show:[animation-play-state:paused]",
-                    )}
-                  />
-                </Box>
-                <Text
-                  as="span"
-                  tone="inherit"
-                  className={cn(
-                    "text-fs-12 font-semibold transition-colors",
-                    index === active ? "text-white" : "text-white/50 group-hover/bar:text-white/80",
-                  )}
-                >
-                  {item.aisle}
-                </Text>
-              </Button>
-            ))}
-          </Grid>
-        </Stack>
+          .
+        </Heading>
       </Stack>
-    </Box>
+
+      <Grid gap="3" className="relative min-h-0 flex-1 grid-cols-[1.25fr_1fr_1fr] grid-rows-2">
+        {TILES.map((tile, index) => {
+          const aisle = aisles.find((item) => tile.pattern.test(item.name));
+          return (
+            <Card
+              key={tile.name}
+              render={<Link href={aisle ? shopUrl({ category: aisle.id }) : shopUrl()} transitionTypes={["nav-forward"]} />}
+              className={cn(
+                "group/tile relative isolate min-h-0 animate-fade-up justify-end gap-0 overflow-hidden rounded-[1.75rem] border-0 p-0 text-white shadow-none ring-1 ring-white/10 transition-[translate,box-shadow] duration-500 ease-out-expo outline-none hover:-translate-y-1 hover:shadow-[0_24px_48px_-20px_rgb(0_0_0/0.6)] hover:ring-fresh/50 focus-visible:ring-3 focus-visible:ring-fresh",
+                tile.className,
+              )}
+              style={{ animationDelay: `${120 + index * 80}ms` }}
+            >
+              <Image
+                src={tile.image}
+                alt=""
+                fill
+                sizes="(min-width: 1024px) 25vw, 0px"
+                priority={index < 2}
+                className="-z-20 object-cover transition-[scale] duration-1000 ease-out-expo group-hover/tile:scale-110"
+              />
+              <Box
+                aria-hidden="true"
+                className="absolute inset-0 -z-10 bg-linear-to-t from-[#06100b]/85 via-[#06100b]/15 to-transparent transition-opacity duration-500 group-hover/tile:opacity-90"
+              />
+
+              <Flex align="end" justify="between" gap="3" className="p-4 xl:p-5">
+                <Stack gap="0.5" className="min-w-0">
+                  <Text as="span" tone="inherit" weight="semibold" className="font-display text-lg leading-tight tracking-[-0.02em] xl:text-xl">
+                    {tile.name}
+                  </Text>
+                  <Text
+                    as="span"
+                    tone="inherit"
+                    className="max-h-0 truncate text-fs-12 text-white/75 opacity-0 transition-all duration-500 ease-out-expo group-hover/tile:max-h-5 group-hover/tile:opacity-100 group-focus-visible/tile:max-h-5 group-focus-visible/tile:opacity-100"
+                  >
+                    {tile.note}
+                  </Text>
+                </Stack>
+                <Flex
+                  as="span"
+                  align="center"
+                  justify="center"
+                  aria-hidden="true"
+                  className="size-9 shrink-0 rounded-full bg-white/15 text-white backdrop-blur transition-[rotate,background-color,color] duration-500 ease-spring group-hover/tile:rotate-45 group-hover/tile:bg-fresh group-hover/tile:text-[#06100b]"
+                >
+                  <ArrowUpRight className="size-4" />
+                </Flex>
+              </Flex>
+            </Card>
+          );
+        })}
+      </Grid>
+
+      <Flex as="ul" wrap gap="2" className="relative">
+        {PERKS.map((perk) => (
+          <Flex
+            as="li"
+            key={perk}
+            align="center"
+            gap="1.5"
+            className="rounded-full border border-white/15 bg-white/[0.06] py-1.5 pr-3.5 pl-2 text-fs-13 font-semibold"
+          >
+            <Flex as="span" align="center" justify="center" aria-hidden="true" className="size-5 rounded-full bg-fresh text-[#06100b]">
+              <Check className="size-3" strokeWidth={3} />
+            </Flex>
+            {perk}
+          </Flex>
+        ))}
+      </Flex>
+    </Stack>
   );
 }

@@ -21,7 +21,7 @@ const YEAR = new Date().getFullYear();
 /**
  * /login aur /register ka frame:
  * Left: glass auth card (Sign in ↔ Create account switch, cursor glow)
- * Right (lg+): store ki photos ka slideshow — headline + story-style tabs
+ * Right (lg+): brand-green panel — tagline, aisles ka bento grid, store ke wade
  */
 export function AuthShell({ children }: { children: ReactNode }) {
   return (

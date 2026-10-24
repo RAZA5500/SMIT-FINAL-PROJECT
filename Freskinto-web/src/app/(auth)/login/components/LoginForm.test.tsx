@@ -100,7 +100,7 @@ describe("LoginForm", () => {
     expect(screen.getByLabelText("Password")).toHaveValue("Admin@123");
   });
 
-  it("AuthShell mounts the mode switch and the photo showcase, without the 3D HeroOrbit", async () => {
+  it("AuthShell mounts the mode switch and the aisle bento, without the 3D HeroOrbit", () => {
     const { container } = renderWithProviders(
       <AuthShell>
         <div>Test Auth Children</div>
@@ -114,12 +114,11 @@ describe("LoginForm", () => {
     expect(within(nav).getByRole("link", { name: "Sign in" })).toHaveAttribute("aria-current", "page");
     expect(within(nav).getByRole("link", { name: "Create account" })).toHaveAttribute("href", "/register");
 
-    // Showcase tabs switch the slide headline
-    expect(screen.getByRole("heading", { name: /fresh produce/i })).toBeInTheDocument();
-    const bakeryTab = screen.getByRole("button", { name: "Show Bakery" });
-    await userEvent.setup().click(bakeryTab);
-    expect(bakeryTab).toHaveAttribute("aria-current", "true");
-    expect(screen.getByRole("heading", { name: /warm bakes/i })).toBeInTheDocument();
+    // Bento tiles link into the shop (falls back to all products until aisles load)
+    const aside = screen.getByRole("complementary", { name: /aisles/i });
+    for (const name of [/fruit & veg/i, /bakery/i, /dairy/i, /meat & poultry/i]) {
+      expect(within(aside).getByRole("link", { name })).toHaveAttribute("href", expect.stringMatching(/^\/shop/));
+    }
 
     // HeroOrbit circular text / orbit carousel is NOT present
     expect(container.querySelector(".animate-spin-orbit")).not.toBeInTheDocument();
