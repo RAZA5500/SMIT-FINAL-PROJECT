@@ -49,8 +49,12 @@ export function scrollToFirstError(formId: string): void {
     .getElementById(formId)
     ?.querySelector<HTMLElement>("[aria-invalid='true']");
   if (!field) return;
-  field.scrollIntoView({ behavior: "smooth", block: "center" });
-  field.focus({ preventScroll: true });
+  if (typeof field.scrollIntoView === "function") {
+    field.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+  if (typeof field.focus === "function") {
+    field.focus({ preventScroll: true });
+  }
 }
 
 /** Backend money hamesha string ("12.50") bhejta hai — UI sirf format karti hai, hisaab nahi */

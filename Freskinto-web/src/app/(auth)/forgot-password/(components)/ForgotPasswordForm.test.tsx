@@ -31,6 +31,6 @@ describe("ForgotPasswordForm", () => {
 
     expect(await screen.findByText("Email reset isn't available yet")).toBeInTheDocument();
     expect(screen.getByText("customer@example.com")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /back to sign in/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /back to sign in/i })).toBeInTheDocument();
   });
 });

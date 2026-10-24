@@ -15,6 +15,7 @@ import { STORE } from "@/constants/store";
 import { customerRoutes, publicRoutes, shopUrl } from "@/lib/routes/routes";
 import { useAisles } from "../shop/use-aisles";
 import { FooterWordmark } from "./FooterWordmark";
+import { SocialLinks } from "./SocialLinks";
 
 const FOOTER_AISLE_LIMIT = 6;
 /** Module load par ek dafa — render ke dauran current date nahi padhte */
@@ -154,15 +155,13 @@ export function SiteFooter({ compact = false }: { compact?: boolean }) {
         <Flex
           direction="col"
           justify="between"
-          gap="1"
+          gap="4"
           className="border-t border-white/[0.08] px-6 py-5 text-fs-12 text-white/45 sm:flex-row sm:items-center sm:px-10 lg:px-14"
         >
           <Text tone="inherit" className="text-fs-12">
             © {COPYRIGHT_YEAR} {STORE.name}. All rights reserved.
           </Text>
-          <Text tone="inherit" className="text-fs-12">
-            {/* Demo store — payments are simulated, no real card is charged. */}
-          </Text>
+          <SocialLinks />
         </Flex>
       </Box>
     </Box>
