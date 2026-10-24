@@ -1,5 +1,4 @@
-import { ArrowLeft, Leaf, ShieldCheck, Zap } from "lucide-react";
-import Image from "next/image";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Box } from "@/components/ui/box";
@@ -14,20 +13,15 @@ import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { STORE } from "@/constants/store";
 import { publicRoutes } from "@/lib/routes/routes";
 import { AuthCard } from "./AuthCard";
-
-const TRUST = [
-  { icon: ShieldCheck, text: "256-bit SSL encrypted" },
-  { icon: Zap, text: "Instant access" },
-  { icon: Leaf, text: "100% fresh guarantee" },
-];
+import { AuthShowcase } from "./AuthShowcase";
 
 /** Module load par ek dafa — render ke dauran current date nahi padhte */
 const YEAR = new Date().getFullYear();
 
 /**
  * /login aur /register ka frame:
- * Left: glass auth card (Sign in ↔ Create account switch, cursor glow) + trust line
- * Right (lg+): storefront ka screenshot
+ * Left: glass auth card (Sign in ↔ Create account switch, cursor glow)
+ * Right (lg+): store ki photos ka slideshow — headline + story-style tabs
  */
 export function AuthShell({ children }: { children: ReactNode }) {
   return (
@@ -55,15 +49,6 @@ export function AuthShell({ children }: { children: ReactNode }) {
         <Flex align="center" justify="center" className="flex-1 py-6">
           <Box className="w-full max-w-form animate-fade-up">
             <AuthCard>{children}</AuthCard>
-
-            <Flex as="ul" wrap align="center" justify="center" className="mt-5 gap-x-4 gap-y-2 text-fs-12 text-muted-foreground">
-              {TRUST.map(({ icon: Icon, text }) => (
-                <Flex as="li" key={text} align="center" gap="1.5">
-                  <Icon aria-hidden="true" className="size-4 text-brand" />
-                  <Text as="span">{text}</Text>
-                </Flex>
-              ))}
-            </Flex>
           </Box>
         </Flex>
 
@@ -72,31 +57,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
         </Text>
       </Stack>
 
-      {/* Right (lg+): sirf storefront ki tasveer — ek saada browser frame mein */}
-      <Flex
-        as="aside"
-        aria-label={`${STORE.name} storefront preview`}
-        align="center"
-        justify="center"
-        className="sticky top-3 m-3 hidden h-[calc(100dvh-1.5rem)] overflow-hidden rounded-[2.5rem] bg-brand-soft/60 p-8 lg:flex xl:p-12"
-      >
-        <Box className="w-full max-w-3xl animate-fade-up overflow-hidden rounded-2xl border border-border bg-background shadow-lift">
-          <Flex align="center" gap="1.5" aria-hidden="true" className="border-b border-border px-4 py-3">
-            <Box as="span" className="size-2.5 rounded-full bg-[#ff5f57]" />
-            <Box as="span" className="size-2.5 rounded-full bg-[#febc2e]" />
-            <Box as="span" className="size-2.5 rounded-full bg-[#28c840]" />
-          </Flex>
-          <Image
-            src="/images/site/home-preview.webp"
-            alt={`${STORE.name} home page — fresh food, beautifully delivered`}
-            width={1518}
-            height={776}
-            priority
-            sizes="(min-width: 1024px) 50vw, 0px"
-            className="h-auto w-full"
-          />
-        </Box>
-      </Flex>
+      <AuthShowcase />
     </Grid>
   );
 }

@@ -100,7 +100,7 @@ describe("LoginForm", () => {
     expect(screen.getByLabelText("Password")).toHaveValue("Admin@123");
   });
 
-  it("AuthShell mounts the mode switch and the storefront preview, without the 3D HeroOrbit", () => {
+  it("AuthShell mounts the mode switch and the photo showcase, without the 3D HeroOrbit", async () => {
     const { container } = renderWithProviders(
       <AuthShell>
         <div>Test Auth Children</div>
@@ -108,16 +108,18 @@ describe("LoginForm", () => {
     );
 
     expect(screen.getByText("Test Auth Children")).toBeInTheDocument();
-    expect(screen.getByText("256-bit SSL encrypted")).toBeInTheDocument();
-    expect(screen.getByText("100% fresh guarantee")).toBeInTheDocument();
 
     // Sign in ↔ Create account switch marks the current page
     const nav = screen.getByRole("navigation", { name: "Account" });
     expect(within(nav).getByRole("link", { name: "Sign in" })).toHaveAttribute("aria-current", "page");
     expect(within(nav).getByRole("link", { name: "Create account" })).toHaveAttribute("href", "/register");
 
-    // Right panel is a plain screenshot of the storefront
-    expect(screen.getByRole("img", { name: /home page/i })).toBeInTheDocument();
+    // Showcase tabs switch the slide headline
+    expect(screen.getByRole("heading", { name: /fresh produce/i })).toBeInTheDocument();
+    const bakeryTab = screen.getByRole("button", { name: "Show Bakery" });
+    await userEvent.setup().click(bakeryTab);
+    expect(bakeryTab).toHaveAttribute("aria-current", "true");
+    expect(screen.getByRole("heading", { name: /warm bakes/i })).toBeInTheDocument();
 
     // HeroOrbit circular text / orbit carousel is NOT present
     expect(container.querySelector(".animate-spin-orbit")).not.toBeInTheDocument();
